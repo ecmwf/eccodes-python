@@ -112,10 +112,6 @@ Lead developer:
 
 - `Alessandro Amici <https://github.com/alexamici>`_ - `B-Open <https://bopen.eu>`_
 
-Main contributors:
-
-- Baudouin Raoult - `ECMWF <https://ecmwf.int>`_
-
 See also the list of `contributors <https://github.com/ecmwf/eccodes-python/contributors>`_
 who participated in this project.
 
