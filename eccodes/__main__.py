@@ -17,48 +17,25 @@
 #   Alessandro Amici - B-Open - https://bopen.eu
 #
 
-import os.path
+import argparse
 
-import click
-
-# NOTE: imports are executed inside functions so missing dependencies don't break all commands
+from . import bindings
 
 
-@click.group()
-def cfgrib_cli():
-    pass
-
-
-@cfgrib_cli.command('selfcheck')
 def selfcheck():
-    from . import bindings
-
     print("Found: ecCodes v%s." % bindings.codes_get_api_version())
     print("Your system is ready.")
 
 
-@cfgrib_cli.command('to_netcdf')
-@click.argument('inpaths', nargs=-1)
-@click.option('--outpath', '-o', default=None)
-@click.option('--cdm', '-c', default=None)
-@click.option('--engine', '-e', default='cfgrib')
-def to_netcdf(inpaths, outpath, cdm, engine):
-    import cf2cdm
-    import xarray as xr
-
-    # NOTE: noop if no input argument
-    if len(inpaths) == 0:
-        return
-
-    if not outpath:
-        outpath = os.path.splitext(inpaths[0])[0] + '.nc'
-
-    ds = xr.open_mfdataset(inpaths, engine=engine)
-    if cdm:
-        coord_model = getattr(cf2cdm, cdm)
-        ds = cf2cdm.translate_coords(ds, coord_model=coord_model)
-    ds.to_netcdf(outpath)
+def main(argv=None):
+    parser = argparse.ArgumentParser()
+    parser.add_argument('command')
+    args = parser.parse_args(args=argv)
+    if args.command == 'selfcheck':
+        selfcheck()
+    else:
+        raise RuntimeError("Command not recognised %r. See usage with --help." % args.command)
 
 
 if __name__ == '__main__':  # pragma: no cover
-    cfgrib_cli()
+    main()
