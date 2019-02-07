@@ -263,31 +263,6 @@ def codes_index_get_string(indexid, key, length=256):
     return [ffi.string(values[i]) for i in range(size_p[0])]
 
 
-def codes_index_get(indexid, key, ktype=bytes):
-    # type: (cffi.FFI.CData, bytes, type) -> list
-    if ktype is int:
-        result = codes_index_get_long(indexid, key)  # type: T.List[T.Any]
-    elif ktype is float:
-        result = codes_index_get_double(indexid, key)
-    elif ktype is bytes:
-        result = codes_index_get_string(indexid, key)
-    else:
-        raise TypeError("ktype not supported %r" % ktype)
-    return result
-
-
-def codes_index_get_autotype(indexid, key):
-    # type: (cffi.FFI.CData, bytes) -> list
-    try:
-        return codes_index_get_long(indexid, key)
-    except EcCodesError:
-        pass
-    try:
-        return codes_index_get_double(indexid, key)
-    except EcCodesError:
-        return codes_index_get_string(indexid, key)
-
-
 def codes_index_select_long(indexid, key, value):
     # type: (cffi.FFI.CData, bytes, int) -> None
     """
@@ -325,26 +300,6 @@ def codes_index_select_string(indexid, key, value):
     """
     codes_index_select_string = check_return(lib.codes_index_select_string)
     codes_index_select_string(indexid, key, value)
-
-
-def codes_index_select(indexid, key, value):
-    # type: (cffi.FFI.CData, bytes, T.Any) -> None
-    """
-    Select the message subset with key==value.
-
-    :param indexid: id of an index created from a file.
-        The index must have been created with the key in argument.
-    :param bytes key: key to be selected
-    :param bytes value: value of the key to select
-    """
-    if isinstance(value, int):
-        codes_index_select_long(indexid, key, value)
-    elif isinstance(value, float):
-        codes_index_select_double(indexid, key, value)
-    elif isinstance(value, bytes):
-        codes_index_select_string(indexid, key, value)
-    else:
-        raise RuntimeError("Key value not recognised: %r %r (type %r)" % (key, value, type(value)))
 
 
 _codes_get_size = check_return(lib.codes_get_size)
@@ -629,18 +584,6 @@ def codes_set_string(handle, key, value):
     size = ffi.new('size_t *', len(value))
     codes_set_string = check_return(lib.codes_set_string)
     codes_set_string(handle, key, value, size)
-
-
-def codes_set(handle, key, value):
-    """"""
-    if isinstance(value, int):
-        codes_set_long(handle, key, value)
-    elif isinstance(value, float):
-        codes_set_double(handle, key, value)
-    elif isinstance(value, bytes):
-        codes_set_string(handle, key, value)
-    else:
-        raise TypeError("Unsupported type %r" % type(value))
 
 
 def codes_set_double_array(handle, key, values):
