@@ -486,8 +486,8 @@ def codes_get_long(handle, key):
 def codes_get_double(handle, key):
     # type: (cffi.FFI.CData, bytes) -> int
     value = ffi.new('double *')
-    _codes_get_long = check_return(lib.codes_get_double)
-    _codes_get_long(handle, key, value)
+    _codes_get_double = check_return(lib.codes_get_double)
+    _codes_get_double(handle, key, value)
     return value[0]
 
 
