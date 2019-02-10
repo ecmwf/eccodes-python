@@ -17,4 +17,5 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 __version__ = '0.8.0.dev0'
 
+from .eccodes import *
 from .messages import Message, FileStream

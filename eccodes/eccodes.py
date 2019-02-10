@@ -19,7 +19,35 @@
 
 from __future__ import absolute_import, division, print_function, unicode_literals
 
+import functools
+import inspect
+
 from . import bindings
+
+
+def _str_to_bytes_args(func):
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        bargs = [a.encode(bindings.ENC) if isinstance(a, str) else a for a in args]
+        bkwargs = {k: v.encode(bindings.ENC) if isinstance(v, str) else v for k, v in kwargs.items()}
+        retval = func(*bargs, **bkwargs)
+        if isinstance(retval, bytes):
+            retval = retval.decode(bindings.ENC)
+        if isinstance(retval, list) and retval and isinstance(retval[0], bytes):
+            retval = [r.decode(bindings.ENC) for r in retval]
+        return retval
+    return wrapper
+
+
+def _fix_args(source_items, target_namespace):
+    for name, obj in source_items:
+        if (name.startswith('codes_') or name.startswith('grib_')) and callable(obj):
+            target_namespace[name] = _str_to_bytes_args(obj)
+        elif name.startswith('CODES_') or name.startswith('GRIB_'):
+            target_namespace[name] = obj
+
+
+_fix_args(inspect.getmembers(bindings), globals())
 
 
 def codes_index_get(indexid, key, ktype=bytes):
