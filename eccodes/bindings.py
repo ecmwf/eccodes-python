@@ -18,7 +18,7 @@
 #
 
 from __future__ import absolute_import, division, print_function, unicode_literals
-from builtins import bytes, float, int, isinstance
+from builtins import float, int, isinstance
 from future.utils import raise_from
 
 import functools
@@ -302,9 +302,6 @@ def codes_index_select_string(indexid, key, value):
     codes_index_select_string(indexid, key, value)
 
 
-_codes_get_size = check_return(lib.codes_get_size)
-
-
 def codes_get_size(handle, key):
     # type: (cffi.FFI.CData, bytes) -> int
     """
@@ -316,11 +313,8 @@ def codes_get_size(handle, key):
     :rtype: int
     """
     size = ffi.new('size_t *')
-    _codes_get_size(handle, key, size)
+    check_return(lib.codes_get_size)(handle, key, size)
     return size[0]
-
-
-_codes_get_length = check_return(lib.codes_get_length)
 
 
 def codes_get_length(handle, key):
@@ -334,11 +328,8 @@ def codes_get_length(handle, key):
     :rtype: int
     """
     size = ffi.new('size_t *')
-    _codes_get_length(handle, key, size)
+    check_return(lib.codes_get_length)(handle, key, size)
     return size[0]
-
-
-_codes_get_bytes = check_return(lib.codes_get_bytes)
 
 
 def codes_get_bytes_array(handle, key, size):
@@ -352,11 +343,8 @@ def codes_get_bytes_array(handle, key, size):
     """
     values = ffi.new('unsigned char[]', size)
     size_p = ffi.new('size_t *', size)
-    _codes_get_bytes(handle, key, values, size_p)
+    check_return(lib.codes_get_bytes)(handle, key, values, size_p)
     return list(values)
-
-
-_codes_get_long_array = check_return(lib.codes_get_long_array)
 
 
 def codes_get_long_array(handle, key, size):
@@ -370,11 +358,8 @@ def codes_get_long_array(handle, key, size):
     """
     values = ffi.new('long[]', size)
     size_p = ffi.new('size_t *', size)
-    _codes_get_long_array(handle, key, values, size_p)
+    check_return(lib.codes_get_long_array)(handle, key, values, size_p)
     return list(values)
-
-
-_codes_get_double_array = check_return(lib.codes_get_double_array)
 
 
 def codes_get_double_array(handle, key, size):
@@ -388,11 +373,8 @@ def codes_get_double_array(handle, key, size):
     """
     values = ffi.new('double[]', size)
     size_p = ffi.new('size_t *', size)
-    _codes_get_double_array(handle, key, values, size_p)
+    check_return(lib.codes_get_double_array)(handle, key, values, size_p)
     return list(values)
-
-
-_codes_get_string_array = check_return(lib.codes_get_string_array)
 
 
 def codes_get_string_array(handle, key, size, length=None):
@@ -409,7 +391,7 @@ def codes_get_string_array(handle, key, size, length=None):
     values_keepalive = [ffi.new('char[]', length) for _ in range(size)]
     values = ffi.new('char*[]', values_keepalive)
     size_p = ffi.new('size_t *', size)
-    _codes_get_string_array(handle, key, values, size_p)
+    check_return(lib.codes_get_string_array)(handle, key, values, size_p)
     return [ffi.string(values[i]) for i in range(size_p[0])]
 
 
@@ -470,13 +452,10 @@ def codes_get_string(handle, key, length=None):
     return ffi.string(values, length_p[0])
 
 
-_codes_get_native_type = check_return(lib.codes_get_native_type)
-
-
 def codes_get_native_type(handle, key):
     # type: (cffi.FFI.CData, bytes) -> int
     grib_type = ffi.new('int *')
-    _codes_get_native_type(handle, key, grib_type)
+    check_return(lib.codes_get_native_type)(handle, key, grib_type)
     return grib_type[0]
 
 
