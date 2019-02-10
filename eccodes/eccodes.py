@@ -105,3 +105,14 @@ def codes_set(handle, key, value):
         bindings.codes_set_string(handle, key, value)
     else:
         raise TypeError("Unsupported type %r" % type(value))
+
+
+def codes_grib_new_from_file(fileobj, context=None):
+    try:
+        return bindings.codes_handle_new_from_file(fileobj, bindings.CODES_PRODUCT_GRIB, context)
+    except EOFError:
+        return None
+
+
+def codes_release(handle):
+    return bindings.codes_handle_delete(handle)
