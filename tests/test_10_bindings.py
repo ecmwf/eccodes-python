@@ -125,21 +125,6 @@ def test_codes_index_get_size():
     assert res == 1
 
 
-@pytest.mark.parametrize('key, ktype, expected_value', [
-    (b'numberOfDataPoints', int, 7320),
-    (b'latitudeOfFirstGridPointInDegrees', float, 90.0),
-    (b'gridType', bytes, b'regular_ll'),
-])
-def test_codes_index_get(key, ktype, expected_value):
-    grib_index = bindings.codes_index_new_from_file(TEST_DATA_B, [key])
-
-    res = bindings.codes_index_get(grib_index, key, ktype=ktype)
-
-    assert len(res) == 1
-    assert isinstance(res[0], ktype)
-    assert res[0] == expected_value
-
-
 @pytest.mark.parametrize('key, expected_value', [
     (b'numberOfDataPoints', [7320]),
     (b'latitudeOfFirstGridPointInDegrees', [90.0]),
@@ -165,24 +150,10 @@ def test_codes_get_array_errors():
     assert err.value.code == bindings.lib.GRIB_NOT_IMPLEMENTED
 
 
-@pytest.mark.parametrize('key, value', [
-    (b'numberOfDataPoints', 7320),
-    (b'gridType', b'regular_ll'),
-])
-def test_codes_index_select(key, value):
-    grib_index = bindings.codes_index_new_from_file(TEST_DATA_B, [key])
-
-    bindings.codes_index_select(grib_index, key, value)
-    grib_handle = bindings.codes_new_from_index(grib_index)
-
-    result = bindings.codes_get(grib_handle, key)
-
-    assert result == value
-
-
+@pytest.mark.xfail(reason='')
 def test_codes_get_length():
     grib_index = bindings.codes_index_new_from_file(TEST_DATA_B, [b'paramId'])
-    bindings.codes_index_select(grib_index, b'paramId', 130)
+    bindings.codes_index_select_long(grib_index, b'paramId', 130)
     grib_handle = bindings.codes_new_from_index(grib_index)
 
     result = []
@@ -232,17 +203,6 @@ def test_codes_new_from_samples():
 def test_codes_new_from_samples_errors():
     with pytest.raises(ValueError):
         bindings.codes_new_from_samples(b'non-existent')
-
-
-def test_codes_set():
-    message_id = bindings.codes_new_from_samples(b'regular_ll_sfc_grib2')
-
-    bindings.codes_set(message_id, b'endStep', 2)
-    bindings.codes_set(message_id, b'longitudeOfFirstGridPointInDegrees', 1.)
-    bindings.codes_set(message_id, b'gridType', b'regular_ll')
-
-    with pytest.raises(TypeError):
-        bindings.codes_set(message_id, b'endStep', [])
 
 
 def test_codes_set_array():
