@@ -38,6 +38,7 @@ import typing as T
 import attr
 
 from . import bindings
+from . import eccodes
 
 
 LOG = logging.getLogger(__name__)
@@ -106,7 +107,7 @@ class Message(collections.MutableMapping):
         else:
             if isinstance(value, str):
                 value = value.encode(self.encoding)
-            bindings.codes_set(self.codes_id, key, value)
+            eccodes.codes_set(self.codes_id, key, value)
 
     def message_iterkeys(self, namespace=None):
         # type: (str) -> T.Generator[str, None, None]
