@@ -481,3 +481,4 @@ const char* codes_keys_iterator_get_name(codes_keys_iterator *kiter);
 int codes_keys_iterator_delete( codes_keys_iterator* kiter);
 int codes_get_native_type(codes_handle* h, const char* name,int* type);
 
+int codes_set_missing(codes_handle* h, const char* key);
