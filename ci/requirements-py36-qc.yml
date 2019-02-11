@@ -12,6 +12,7 @@ dependencies:
   - pip:
     - attrs
     - coveralls
+    - future
     - pytest-cov
     - pytest-flakes
     - pytest-mccabe

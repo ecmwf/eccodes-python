@@ -33,4 +33,3 @@ sphinx==1.8.3
 sphinxcontrib-websupport==1.1.0  # via sphinx
 typing==3.6.6
 urllib3==1.24.1           # via requests
-xarray==0.11.0

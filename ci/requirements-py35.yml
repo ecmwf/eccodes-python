@@ -3,17 +3,12 @@ channels:
   - conda-forge
 dependencies:
   - cffi
-  - click
-  - dask
   - eccodes
   - nomkl
   - numpy
   - pytest
   - python=3.5
-  - scipy
   - typing
-  - toolz
-  - xarray=0.11.0
   - pip:
     - attrs
     - coveralls
