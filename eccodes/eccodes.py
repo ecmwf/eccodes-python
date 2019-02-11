@@ -25,17 +25,37 @@ import inspect
 from . import bindings
 
 
+def _encode(obj, encoding='ascii'):
+    if isinstance(obj, str):
+        return obj.encode(encoding=encoding)
+    elif isinstance(obj, tuple):
+        return tuple(_encode(item, encoding=encoding) for item in obj)
+    elif isinstance(obj, list):
+        return [_encode(item, encoding=encoding) for item in obj]
+    elif isinstance(obj, dict):
+        return {key: _encode(value, encoding=encoding) for key, value in obj.items()}
+    return obj
+
+
+def _decode(obj, encoding='ascii'):
+    if isinstance(obj, bytes):
+        return obj.decode(encoding=encoding)
+    elif isinstance(obj, tuple):
+        return tuple(_encode(item, encoding=encoding) for item in obj)
+    elif isinstance(obj, list):
+        return [_encode(item, encoding=encoding) for item in obj]
+    elif isinstance(obj, dict):
+        return {key: _encode(value, encoding=encoding) for key, value in obj.items()}
+    return obj
+
+
 def _str_to_bytes_args(func):
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
-        bargs = [a.encode(bindings.ENC) if isinstance(a, str) else a for a in args]
-        bkwargs = {k: v.encode(bindings.ENC) if isinstance(v, str) else v for k, v in kwargs.items()}
-        retval = func(*bargs, **bkwargs)
-        if isinstance(retval, bytes):
-            retval = retval.decode(bindings.ENC)
-        if isinstance(retval, list) and retval and isinstance(retval[0], bytes):
-            retval = [r.decode(bindings.ENC) for r in retval]
-        return retval
+        bargs = _encode(args, bindings.ENC)
+        bkwargs = _encode(kwargs, bindings.ENC)
+        retval = func(*_encode(bargs), **bkwargs)
+        return _decode(retval, bindings.ENC)
     return wrapper
 
 
@@ -50,6 +70,7 @@ def _fix_args(source_items, target_namespace):
 _fix_args(inspect.getmembers(bindings), globals())
 
 
+@_str_to_bytes_args
 def codes_index_get(indexid, key, ktype=bytes):
     # type: (cffi.FFI.CData, bytes, type) -> list
     if ktype is int:
@@ -63,6 +84,7 @@ def codes_index_get(indexid, key, ktype=bytes):
     return result
 
 
+@_str_to_bytes_args
 def codes_index_get_autotype(indexid, key):
     # type: (cffi.FFI.CData, bytes) -> list
     try:
@@ -75,6 +97,7 @@ def codes_index_get_autotype(indexid, key):
         return bindings.codes_index_get_string(indexid, key)
 
 
+@_str_to_bytes_args
 def codes_index_select(indexid, key, value):
     # type: (cffi.FFI.CData, bytes, T.Any) -> None
     """
@@ -95,6 +118,7 @@ def codes_index_select(indexid, key, value):
         raise RuntimeError("Key value not recognised: %r %r (type %r)" % (key, value, type(value)))
 
 
+@_str_to_bytes_args
 def codes_set(handle, key, value):
     """"""
     if isinstance(value, int):
