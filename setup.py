@@ -51,6 +51,7 @@ setuptools.setup(
     install_requires=[
         'attrs',
         'cffi',
+        'future',
         'numpy',
     ],
     tests_require=[
