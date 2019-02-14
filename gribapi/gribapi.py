@@ -1,12 +1,12 @@
 """
 @package gribapi
-@brief This package is the \b Python interface to ecCodes. It offers almost one to one bindings to the C API functions.
+@brief This package is the \b Python 3 interface to ecCodes. It offers almost one to one bindings to the C API functions.
 
-The Python interface to ecCodes uses the <a href="http://numpy.scipy.org/"><b>NumPy</b></a> package
+The Python 3 interface to ecCodes uses the <a href="http://numpy.scipy.org/"><b>NumPy</b></a> package
 as the container of choice for the possible arrays of values that can be encoded/decoded in and from a message.
 Numpy is a package used for scientific computing in Python and an efficient container for generic data.
 
-The Python interface can be enabled/disabled from CMake by using the following flag:\n
+The Python 3 interface can be enabled/disabled from CMake by using the following flag:\n
 
 @code{.unparsed}
     -DENABLE_PYTHON=ON
@@ -18,19 +18,26 @@ When this is enabed, then the system Python will be used to build the interface.
 
 @em Requirements:
 
-    - Python 2.6 or higher
+    - Python 3.5 or higher
     - NumPy
 
 """
-import gribapi_swig as _internal
 # from gribapi import gribapi_swig as _internal
+from . import gribapi_swig as _internal
 import types
 import sys
 import os
 from functools import wraps
 # import inspect
 from . import errors
-from errors import *  # noqa
+from .errors import *  # noqa
+
+try:
+   type(file)
+except NameError:
+   import io
+   file=io.IOBase
+   long=int
 
 KEYTYPES = {
     1: int,
@@ -76,12 +83,12 @@ def require(**_params_):
         @wraps(_func_)
         # The wrapper function. Replaces the target function and receives its args
         def modified(*args, **kw):
-            arg_names = _func_.func_code.co_varnames
+            arg_names = _func_.__code__.co_varnames
             # argnames, varargs, kwargs, defaults = inspect.getargspec(_func_)
             kw.update(zip(arg_names, args))
-            for name, allowed_types in _params_.iteritems():
+            for name, allowed_types in _params_.items():
                 param = kw[name]
-                if isinstance(allowed_types, types.TypeType):
+                if isinstance(allowed_types, type):
                     allowed_types = (allowed_types,)
                 assert any([isinstance(param, type1) for type1 in allowed_types]), \
                     "Parameter '%s' should be of type %s" % (name, " or ".join([t.__name__ for t in allowed_types]))
@@ -227,7 +234,9 @@ def any_new_from_file(fileobj, headers_only=False):
     @return               id of the message loaded in memory
     @exception GribInternalError
     """
-    err, msgid = _internal.grib_c_new_any_from_file(fileobj, headers_only, 0)
+    fd = fileobj.fileno()
+    fn = fileobj.name
+    err, msgid = _internal.grib_c_new_any_from_file(fileobj, fd, fn, headers_only, 0)
     if err:
         if err == _internal.GRIB_END_OF_FILE:
             return None
@@ -252,7 +261,9 @@ def bufr_new_from_file(fileobj, headers_only=False):
     @return               id of the BUFR loaded in memory
     @exception GribInternalError
     """
-    err, bufrid = _internal.grib_c_new_bufr_from_file(fileobj, headers_only, 0)
+    fd = fileobj.fileno()
+    fn = fileobj.name
+    err, bufrid = _internal.grib_c_new_bufr_from_file(fileobj, fd, fn, headers_only, 0)
     if err:
         if err == _internal.GRIB_END_OF_FILE:
             return None
@@ -284,7 +295,10 @@ def grib_new_from_file(fileobj, headers_only=False):
     @return               id of the grib loaded in memory
     @exception GribInternalError
     """
-    err, gribid = _internal.grib_c_new_from_file(fileobj, 0, headers_only)
+    fd = fileobj.fileno()
+    fn = fileobj.name
+    #print('Python gribapi.py  grib_new_from_file: ', fd,'  ', fn)
+    err, gribid = _internal.grib_c_new_from_file(fileobj, fd, fn, 0, headers_only)
     if err:
         if err == _internal.GRIB_END_OF_FILE:
             return None
@@ -292,6 +306,16 @@ def grib_new_from_file(fileobj, headers_only=False):
             GRIB_CHECK(err)
     else:
         return gribid
+
+
+@require(fileobj=file)
+def codes_close_file(fileobj):
+    # The client must call this BEFORE calling close() on the file object
+    # so we can remove the entry in our cache
+    err = _internal.codes_c_close_file(fileobj.fileno(), fileobj.name)
+    # Note: it is safe calling close() here as subsequent calls will have no effect
+    fileobj.close()
+    GRIB_CHECK(err)
 
 
 @require(fileobj=file)
@@ -816,7 +840,7 @@ def grib_set_long(msgid, key, value):
     except (ValueError, TypeError):
         raise TypeError("Invalid type")
 
-    if value > sys.maxint:
+    if value > sys.maxsize:
         raise TypeError("Invalid type")
 
     GRIB_CHECK(_internal.grib_c_set_long(msgid, key, value))
@@ -1479,7 +1503,7 @@ def grib_set_key_vals(gribid, key_vals):
             key_vals_str += kv
     elif isinstance(key_vals, dict):
         # A dictionary mapping keys to values
-        for key in key_vals.iterkeys():
+        for key in key_vals.keys():
             if len(key_vals_str) > 0:
                 key_vals_str += ','
             key_vals_str += key + '=' + str(key_vals[key])
@@ -1755,12 +1779,15 @@ def grib_set_array(msgid, key, value):
 
     if isinstance(val0, float):
         grib_set_double_array(msgid, key, value)
-    elif isinstance(val0, int):
-        grib_set_long_array(msgid, key, value)
     elif isinstance(val0, str):
         grib_set_string_array(msgid, key, value)
     else:
-        raise errors.GribInternalError("Invalid type of value when setting key '%s'." % key)
+        # Note: Cannot do isinstance(val0,int) for numpy.int64
+        try:
+            n = int(val0)
+        except (ValueError, TypeError):
+            raise errors.GribInternalError("Invalid type of value when setting key '%s'." % key)
+        grib_set_long_array(msgid, key, value)
 
 
 @require(indexid=int, key=str)

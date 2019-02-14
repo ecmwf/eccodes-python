@@ -43,6 +43,41 @@ typedef struct grib_handle    grib_handle;
 */
 typedef struct grib_context   grib_context;
 
+/*! \defgroup grib_handle The grib_handle
+The grib_handle is the structure giving access to parsed grib values by keys.
+*/
+/*! @{*/
+/**
+*  Counts the messages contained in a file resource.
+*
+* @param c           : the context from which the handle will be created (NULL for default context)
+* @param f           : the file resource
+* @param n           : the number of messages in the file
+* @return            0 if OK, integer value on error
+*/
+int grib_count_in_file(grib_context* c, FILE* f,int* n);
+
+/**
+*  Turn on support for multiple fields in single grib messages
+*
+* @param c            : the context to be modified
+*/
+void grib_multi_support_on(grib_context* c);
+
+/**
+*  Turn off support for multiple fields in single GRIB messages
+*
+* @param c            : the context to be modified
+*/
+void grib_multi_support_off(grib_context* c);
+
+/**
+*  Get the API version
+*
+*  @return        API version
+*/
+long grib_get_api_version(void);
+
 /**
 * Convert an error code into a string
 * @param code       : the error code
