@@ -40,7 +40,8 @@ for libname in ['eccodes', 'libeccodes.so', 'libeccodes']:
         break
     except OSError as exc:
         # lazy exception
-        raise RuntimeError("ecCodes library not found using name '%s'." % libname)
+        lib = None
+        LOG.info("ecCodes library not found using name '%s'.", libname)
 
 # default encoding for ecCodes strings
 ENC = 'ascii'
