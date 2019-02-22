@@ -23,7 +23,8 @@ When this is enabed, then the system Python will be used to build the interface.
 
 """
 # from gribapi import gribapi_swig as _internal
-from . import gribapi_swig as _internal
+from .bindings import ENC, ffi, lib
+import functools
 import types
 import sys
 import os
@@ -127,6 +128,18 @@ class Bunch(dict):
                  in self.__dict__.items()]
         return '\n'.join(state)
 # @endcond
+
+
+def err_last(func):
+
+    @functools.wraps(func)
+    def wrapper(*args):
+        err = ffi.new('int *')
+        args += (err,)
+        retval = func(*args)
+        return err[0], retval
+
+    return wrapper
 
 
 # @cond
@@ -236,9 +249,9 @@ def any_new_from_file(fileobj, headers_only=False):
     """
     fd = fileobj.fileno()
     fn = fileobj.name
-    err, msgid = _internal.grib_c_new_any_from_file(fileobj, fd, fn, headers_only, 0)
+    err, msgid = err_last(lib.codes_handle_new_from_file)(ffi.NULL, fileobj, CODES_PRODUCT_ANY)
     if err:
-        if err == _internal.GRIB_END_OF_FILE:
+        if err == lib.GRIB_END_OF_FILE:
             return None
         else:
             GRIB_CHECK(err)
@@ -376,14 +389,13 @@ def grib_get_string(msgid, key):
     @exception GribInternalError
     """
     length = grib_get_string_length(msgid, key)
-    err, value = _internal.grib_c_get_string(msgid, key, length)
+
+    values = ffi.new('char[]', length)
+    length_p = ffi.new('size_t *', length)
+    err = lib.grib_get_string(msgid, key.encode(ENC), values, length_p)
     GRIB_CHECK(err)
 
-    stpos = value.find('\0')
-    if stpos != -1:
-        value = value[0:stpos]
-
-    return value
+    return ffi.string(values, length_p[0])
 
 
 @require(msgid=int, key=str, value=str)
@@ -489,9 +501,10 @@ def grib_get_string_length(msgid, key):
     @param key        name of the key
     @exception GribInternalError
     """
-    err, result = _internal.grib_c_get_string_length(msgid, key)
+    size = ffi.new('size_t *')
+    err = lib.codes_get_length(msgid, key.encode(ENC), size)
     GRIB_CHECK(err)
-    return result
+    return size[0]
 
 
 @require(iterid=int)
@@ -1909,7 +1922,7 @@ def grib_get_api_version():
     Returns the version of the API as a string in the format "major.minor.revision".
     """
     div = lambda v, d: (v / d, v % d)
-    v = _internal.grib_c_get_api_version()
+    v = lib.grib_get_api_version()
     v, revision = div(v, 100)
     v, minor = div(v, 100)
     major = v

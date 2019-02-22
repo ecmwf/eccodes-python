@@ -2,7 +2,7 @@
 Exception class hierarchy
 """
 
-from . import gribapi_swig as _internal
+from .bindings import ENC, ffi, lib
 
 
 class GribInternalError(Exception):

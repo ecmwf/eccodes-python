@@ -27,7 +27,10 @@ import cffi
 LOG = logging.getLogger(__name__)
 
 ffi = cffi.FFI()
-ffi.cdef(pkgutil.get_data(__name__, 'grib_api.h').decode('utf-8'))
+ffi.cdef(
+    pkgutil.get_data(__name__, 'grib_api.h').decode('utf-8') +
+    pkgutil.get_data(__name__, 'eccodes.h').decode('utf-8')
+)
 
 
 for libname in ['eccodes', 'libeccodes.so', 'libeccodes']:
