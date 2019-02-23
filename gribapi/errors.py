@@ -16,8 +16,8 @@ class GribInternalError(Exception):
         # Call the base class constructor with the parameters it needs
         Exception.__init__(self, value)
         if type(value) is int:
-            err, self.msg = _internal.grib_c_get_error_string(value, 1024)
-            assert err == 0
+
+            self.msg = ffi.string(lib.grib_get_error_message(value)).decode(ENC)
         else:
             self.msg = value
 

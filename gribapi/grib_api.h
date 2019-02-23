@@ -180,7 +180,17 @@ int grib_set_double_array (grib_handle* h, const char*  key , const double*     
 */
 long grib_get_api_version(void);
 
+/**
+* Convert an error code into a string
+* @param code       : the error code
+* @return           the error message
+*/
+const char* grib_get_error_message(int code);
+
 int grib_get_native_type(grib_handle* h, const char* name,int* type);
+
+/* aa: changed off_t to long int */
+int grib_get_message_offset ( grib_handle* h,long int* offset);
 
 /*! \defgroup errors Error codes
 Error codes returned by the grib_api functions.

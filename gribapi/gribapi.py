@@ -318,12 +318,11 @@ def grib_new_from_file(fileobj, headers_only=False):
     fd = fileobj.fileno()
     fn = fileobj.name
     #print('Python gribapi.py  grib_new_from_file: ', fd,'  ', fn)
-    err, gribid = err_last(lib.grib_handle_new_from_file)(ffi.NULL, fileobj)
+    err, gribid = err_last(lib.grib_new_from_file)(ffi.NULL, fileobj, headers_only)
+    if gribid == ffi.NULL or err == lib.GRIB_END_OF_FILE:
+        return None
     if err:
-        if err == lib.GRIB_END_OF_FILE:
-            return None
-        else:
-            GRIB_CHECK(err)
+        GRIB_CHECK(err)
     else:
         return int(ffi.cast('long', gribid))
 
@@ -1437,9 +1436,11 @@ def grib_get_message_offset(msgid):
     @return         offset in bytes of the message
     @exception GribInternalError
     """
-    err, value = _internal.grib_c_get_message_offset(msgid)
+    h = get_handle(msgid)
+    offset_p = ffi.new('long int*')
+    err = lib.grib_get_message_offset(h, offset_p)
     GRIB_CHECK(err)
-    return value
+    return offset_p[0]
 
 
 @require(msgid=int, key=str, index=int)
