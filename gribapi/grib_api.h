@@ -139,6 +139,18 @@ int grib_get_double       (grib_handle* h, const char* key, double* value);
 int grib_get_string(grib_handle* h, const char* key, char* mesg, size_t *length);
 
 /**
+*  Get double array values from a key. If several keys of the same name are present, the last one is returned
+* @see  grib_set_double_array
+*
+* @param h           : the handle to get the data from
+* @param key         : the key to be searched
+* @param vals       : the address of a double array where the data will be retrieved
+* @param length      : the address of a size_t that contains allocated length of the double array on input, and that contains the actual length of the double array on output
+* @return            0 if OK, integer value on error
+*/
+int grib_get_double_array (grib_handle* h, const char* key, double* vals, size_t *length);
+
+/**
 *  Set a long value from a key. If several keys of the same name are present, the last one is set
 *  @see  grib_get_long
 *
