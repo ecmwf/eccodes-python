@@ -3,6 +3,7 @@ import sys
 
 from .eccodes import *
 from .eccodes import __version__
+version = '0.8.0'
 
 if sys.version_info >= (2, 6):
     from .high_level.gribfile import GribFile
