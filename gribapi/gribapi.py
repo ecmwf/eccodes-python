@@ -291,14 +291,13 @@ def bufr_new_from_file(fileobj, headers_only=False):
     """
     fd = fileobj.fileno()
     fn = fileobj.name
-    err, bufrid = _internal.grib_c_new_bufr_from_file(fileobj, fd, fn, headers_only, 0)
+    err, msgid = err_last(lib.codes_handle_new_from_file)(ffi.NULL, fileobj, CODES_PRODUCT_BUFR)
+    if msgid == ffi.NULL or err == lib.GRIB_END_OF_FILE:
+        return None
     if err:
-        if err == _internal.GRIB_END_OF_FILE:
-            return None
-        else:
-            GRIB_CHECK(err)
+        GRIB_CHECK(err)
     else:
-        return bufrid
+        return int(ffi.cast('unsigned long', msgid))
 
 
 @require(fileobj=file)
