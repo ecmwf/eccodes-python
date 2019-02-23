@@ -23,6 +23,22 @@ typedef struct grib_handle    grib_handle;
 */
 typedef struct grib_context   grib_context;
 
+/*! @} */
+
+/*! \defgroup grib_handle The grib_handle
+The grib_handle is the structure giving access to parsed grib values by keys.
+*/
+/*! @{*/
+/**
+*  Counts the messages contained in a file resource.
+*
+* @param c           : the context from which the handle will be created (NULL for default context)
+* @param f           : the file resource
+* @param n           : the number of messages in the file
+* @return            0 if OK, integer value on error
+*/
+int grib_count_in_file(grib_context* c, FILE* f,int* n);
+
 /**
 *  Create a handle from a file resource.
 *  The file is read until a message is found. The message is then copied.
@@ -67,6 +83,16 @@ int   grib_handle_delete   (grib_handle* h);
 * @return            0 if OK, integer value on error
 */
 int grib_get_message(grib_handle* h ,const void** message, size_t *message_length);
+
+/**
+*  Get the number of coded value from a key, if several keys of the same name are present, the total sum is returned
+*
+* @param h           : the handle to get the offset from
+* @param key         : the key to be searched
+* @param size        : the address of a size_t where the size will be set
+* @return            0 if OK, integer value on error
+*/
+int         grib_get_size(grib_handle* h, const char* key,size_t *size);
 
 /**
 *  Get the length of the string representation of the key, if several keys of the same name are present, the maximum length is returned

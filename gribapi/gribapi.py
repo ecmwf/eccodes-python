@@ -142,6 +142,11 @@ def err_last(func):
     return wrapper
 
 
+def get_handle(msgid):
+    assert isinstance(msgid, int)
+    return ffi.cast('grib_handle*', msgid)
+
+
 # @cond
 @require(errid=int)
 def GRIB_CHECK(errid):
@@ -344,9 +349,10 @@ def grib_count_in_file(fileobj):
     @return         number of messages in the file
     @exception GribInternalError
     """
-    err, num = _internal.grib_c_count_in_file(fileobj)
+    num_p = ffi.new('int*')
+    err = lib.grib_count_in_file(ffi.NULL, fileobj, num_p)
     GRIB_CHECK(err)
-    return num
+    return num_p[0]
 
 
 def grib_multi_support_on():
@@ -377,8 +383,8 @@ def grib_release(msgid):
     @param msgid      id of the message loaded in memory
     @exception GribInternalError
     """
-    handle = ffi.cast('grib_handle *', msgid)
-    GRIB_CHECK(lib.grib_handle_delete(handle))
+    h = get_handle(msgid)
+    GRIB_CHECK(lib.grib_handle_delete(h))
 
 
 @require(msgid=int, key=str)
@@ -393,10 +399,10 @@ def grib_get_string(msgid, key):
     """
     length = grib_get_string_length(msgid, key)
 
-    handle = ffi.cast('grib_handle *', msgid)
+    h = get_handle(msgid)
     values = ffi.new('char[]', length)
     length_p = ffi.new('size_t *', length)
-    err = lib.grib_get_string(handle, key.encode(ENC), values, length_p)
+    err = lib.grib_get_string(h, key.encode(ENC), values, length_p)
     GRIB_CHECK(err)
 
     return ffi.string(values, length_p[0])
@@ -412,10 +418,10 @@ def grib_set_string(msgid, key, value):
     @param value      string value
     @exception GribInternalError
     """
-    handle = ffi.cast('grib_handle *', msgid)
+    h = get_handle(msgid)
     bvalue = value.encode(ENC)
     length_p = ffi.new('size_t *', len(bvalue))
-    GRIB_CHECK(lib.grib_set_string(handle, key.encode(ENC), bvalue, length_p))
+    GRIB_CHECK(lib.grib_set_string(h, key.encode(ENC), bvalue, length_p))
 
 
 def grib_gribex_mode_on():
@@ -447,10 +453,10 @@ def grib_write(msgid, fileobj):
     @param fileobj    python file object
     @exception GribInternalError
     """
-    handle = ffi.cast('grib_handle *', msgid)
+    h = get_handle(msgid)
     msg_p = ffi.new('const void**')
     size_p = ffi.new('size_t*')
-    GRIB_CHECK(lib.grib_get_message(handle, msg_p, size_p))
+    GRIB_CHECK(lib.grib_get_message(h, msg_p, size_p))
     msg_bytes = ffi.string(ffi.cast('char*', msg_p[0]), size_p[0])
     fileobj.write(msg_bytes)
     fileobj.flush()
@@ -500,9 +506,11 @@ def grib_get_size(msgid, key):
     @param key        name of the key
     @exception GribInternalError
     """
-    err, result = _internal.grib_c_get_size_long(msgid, key)
+    h = get_handle(msgid)
+    size_p = ffi.new('size_t*')
+    err = lib.grib_get_size(h, key.encode(ENC), size_p)
     GRIB_CHECK(err)
-    return result
+    return size_p[0]
 
 
 @require(msgid=int, key=str)
@@ -514,9 +522,9 @@ def grib_get_string_length(msgid, key):
     @param key        name of the key
     @exception GribInternalError
     """
-    handle = ffi.cast('grib_handle *', msgid)
+    h = get_handle(msgid)
     size = ffi.new('size_t *')
-    err = lib.grib_get_length(handle, key.encode(ENC), size)
+    err = lib.grib_get_length(h, key.encode(ENC), size)
     GRIB_CHECK(err)
     return size[0]
 
@@ -829,9 +837,9 @@ def grib_get_long(msgid, key):
     @return            value of key as int
     @exception GribInternalError
     """
-    handle = ffi.cast('grib_handle *', msgid)
+    h = get_handle(msgid)
     value_p = ffi.new('long*')
-    err = lib.grib_get_long(handle, key.encode(ENC), value_p)
+    err = lib.grib_get_long(h, key.encode(ENC), value_p)
     GRIB_CHECK(err)
     return value_p[0]
 
@@ -846,9 +854,9 @@ def grib_get_double(msgid, key):
     @return           value of key as float
     @exception GribInternalError
     """
-    handle = ffi.cast('grib_handle *', msgid)
+    h = get_handle(msgid)
     value_p = ffi.new('double*')
-    err = lib.grib_get_double(handle, key.encode(ENC), value_p)
+    err = lib.grib_get_double(h, key.encode(ENC), value_p)
     GRIB_CHECK(err)
     return value_p[0]
 
@@ -874,8 +882,8 @@ def grib_set_long(msgid, key, value):
     if value > sys.maxsize:
         raise TypeError("Invalid type")
 
-    handle = ffi.cast('grib_handle *', msgid)
-    GRIB_CHECK(lib.grib_set_long(handle, key.encode(ENC), value))
+    h = get_handle(msgid)
+    GRIB_CHECK(lib.grib_set_long(h, key.encode(ENC), value))
 
 
 @require(msgid=int, key=str, value=(int, long, float, str))
@@ -1017,8 +1025,8 @@ def grib_set_double_array(msgid, key, inarray):
     @param inarray  tuple,list,array,numpy.ndarray
     @exception GribInternalError
     """
-    handle = ffi.cast('grib_handle *', msgid)
-    GRIB_CHECK(lib.grib_set_double_array(handle, key.encode(ENC), inarray, len(inarray)))
+    h = get_handle(msgid)
+    GRIB_CHECK(lib.grib_set_double_array(h, key.encode(ENC), inarray, len(inarray)))
 
 
 @require(msgid=int, key=str)
@@ -1642,9 +1650,9 @@ def grib_get_native_type(msgid, key):
     @return        type of key given as input or None if not determined
     @exception GribInternalError
     """
-    handle = ffi.cast('grib_handle *', msgid)
+    h = get_handle(msgid)
     itype_p = ffi.new('int*')
-    err = lib.grib_get_native_type(handle, key.encode(ENC), itype_p)
+    err = lib.grib_get_native_type(h, key.encode(ENC), itype_p)
     GRIB_CHECK(err)
     if itype_p[0] in KEYTYPES:
         return KEYTYPES[itype_p[0]]
