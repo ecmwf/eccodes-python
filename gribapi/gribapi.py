@@ -265,14 +265,13 @@ def any_new_from_file(fileobj, headers_only=False):
     """
     fd = fileobj.fileno()
     fn = fileobj.name
-    err, msgid = _internal.grib_c_new_any_from_file(fileobj, fd, fn, headers_only, 0)
+    err, msgid = err_last(lib.codes_handle_new_from_file)(ffi.NULL, fileobj, CODES_PRODUCT_ANY)
+    if msgid == ffi.NULL or err == lib.GRIB_END_OF_FILE:
+        return None
     if err:
-        if err == _internal.GRIB_END_OF_FILE:
-            return None
-        else:
-            GRIB_CHECK(err)
+        GRIB_CHECK(err)
     else:
-        return msgid
+        return int(ffi.cast('unsigned long', msgid))
 
 
 @require(fileobj=file)
@@ -413,7 +412,7 @@ def grib_get_string(msgid, key):
     err = lib.grib_get_string(h, key.encode(ENC), values, length_p)
     GRIB_CHECK(err)
 
-    return ffi.string(values, length_p[0])
+    return ffi.string(values, length_p[0]).decode(ENC)
 
 
 @require(msgid=int, key=str, value=str)

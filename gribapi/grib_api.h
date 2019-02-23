@@ -13,6 +13,8 @@
 
 */
 
+typedef enum ProductKind {PRODUCT_ANY, PRODUCT_GRIB, PRODUCT_BUFR, PRODUCT_METAR, PRODUCT_GTS, PRODUCT_TAF} ProductKind;
+
 /*! Grib handle,   structure giving access to parsed message values by keys
     \ingroup grib_handle
 */
