@@ -147,6 +147,11 @@ def get_handle(msgid):
     return ffi.cast('grib_handle*', msgid)
 
 
+def get_index(indexid):
+    assert isinstance(indexid, int)
+    return ffi.cast('grib_index*', indexid)
+
+
 # @cond
 @require(errid=int)
 def GRIB_CHECK(errid):
@@ -324,7 +329,7 @@ def grib_new_from_file(fileobj, headers_only=False):
     if err:
         GRIB_CHECK(err)
     else:
-        return int(ffi.cast('long', gribid))
+        return int(ffi.cast('unsigned long', gribid))
 
 
 @require(fileobj=file)
@@ -452,11 +457,7 @@ def grib_write(msgid, fileobj):
     @param fileobj    python file object
     @exception GribInternalError
     """
-    h = get_handle(msgid)
-    msg_p = ffi.new('const void**')
-    size_p = ffi.new('size_t*')
-    GRIB_CHECK(lib.grib_get_message(h, msg_p, size_p))
-    msg_bytes = ffi.string(ffi.cast('char*', msg_p[0]), size_p[0])
+    msg_bytes = grib_get_message(msgid)
     fileobj.write(msg_bytes)
     fileobj.flush()
 
@@ -944,10 +945,10 @@ def grib_new_from_samples(samplename):
     @return             id of the message loaded in memory
     @exception GribInternalError
     """
-    handle = lib.grib_handle_new_from_samples(ffi.NULL, samplename.encode(ENC))
-    if handle == ffi.NULL:
+    h = lib.grib_handle_new_from_samples(ffi.NULL, samplename.encode(ENC))
+    if h == ffi.NULL:
         errors.raise_grib_error(errors.FileNotFoundError)
-    return int(ffi.cast('long', handle))
+    return int(ffi.cast('unsigned long', h))
 
 
 @require(samplename=str)
@@ -1001,9 +1002,11 @@ def grib_clone(msgid_src):
     @return            id of clone
     @exception GribInternalError
     """
-    err, newmsgid_src = _internal.grib_c_clone(msgid_src, 0)
-    GRIB_CHECK(err)
-    return newmsgid_src
+    h_src = get_handle(msgid_src)
+    h_dest = lib.grib_handle_clone(h_src)
+    if h_dest == ffi.NULL:
+        raise errors.InvalidGribError
+    return int(ffi.cast('unsigned long', h_dest))
 
 
 @require(msgid=int, key=str)
@@ -1187,9 +1190,9 @@ def grib_index_new_from_file(filename, keys):
     @exception GribInternalError
     """
     ckeys = ",".join(keys)
-    err, iid = _internal.grib_c_index_new_from_file(filename, ckeys)
+    err, iid = err_last(lib.grib_index_new_from_file)(ffi.NULL, filename.encode(ENC), ckeys.encode(ENC))
     GRIB_CHECK(err)
-    return iid
+    return int(ffi.cast('unsigned long', iid))
 
 
 @require(indexid=int, filename=str)
@@ -1217,7 +1220,8 @@ def grib_index_release(indexid):
     @param indexid   id of an index created from a file.
     @exception GribInternalError
     """
-    GRIB_CHECK(_internal.grib_c_index_release(indexid))
+    ih = get_index(indexid)
+    lib.grib_index_delete(ih)
 
 
 @require(indexid=int, key=str)
@@ -1233,9 +1237,11 @@ def grib_index_get_size(indexid, key):
     @return           number of distinct values for key in index
     @exception GribInternalError
     """
-    err, value = _internal.grib_c_index_get_size_long(indexid, key)
+    ih = get_index(indexid)
+    size_p = ffi.new('size_t*')
+    err = lib.grib_index_get_size(ih, key.encode(ENC), size_p)
     GRIB_CHECK(err)
-    return value
+    return size_p[0]
 
 
 @require(indexid=int, key=str)
@@ -1286,21 +1292,14 @@ def grib_index_get_string(indexid, key):
     @exception GribInternalError
     """
     nval = grib_index_get_size(indexid, key)
+    ih = get_index(indexid)
     max_val_size = 1024
-
-    err, raw_result, outnval = _internal.grib_c_index_get_string(indexid, key, max_val_size, nval)
+    values_keepalive = [ffi.new('char[]', max_val_size) for _ in range(nval)]
+    values = ffi.new('const char *[]', values_keepalive)
+    size_p = ffi.new('size_t *', max_val_size)
+    err = lib.grib_index_get_string(ih, key.encode(ENC), values, size_p)
     GRIB_CHECK(err)
-
-    assert nval == outnval
-
-    result = []
-    for i in range(nval):
-        low = i * max_val_size
-        high = (i + 1) * max_val_size
-        value = raw_result[low:high].rstrip()
-        result.append(value)
-
-    return tuple(result)
+    return tuple(ffi.string(values[i]).decode(ENC) for i in range(size_p[0]))
 
 
 @require(indexid=int, key=str)
@@ -1386,7 +1385,8 @@ def grib_index_select_string(indexid, key, value):
     @param value     value of the key to select
     @exception GribInternalError
     """
-    GRIB_CHECK(_internal.grib_c_index_select_string(indexid, key, value))
+    ih = get_index(indexid)
+    GRIB_CHECK(lib.grib_index_select_string(ih, key.encode(ENC), value.encode(ENC)))
 
 
 @require(indexid=int)
@@ -1405,15 +1405,15 @@ def grib_new_from_index(indexid):
     @return          id of the message loaded in memory or None if end of index
     @exception GribInternalError
     """
-    err, gribid = _internal.grib_c_new_from_index(indexid, 0)
+    ih = get_index(indexid)
+    err, gribid = err_last(lib.grib_handle_new_from_index)(ih)
 
-    if err:
-        if err == _internal.GRIB_END_OF_INDEX:
-            return None
-        else:
-            GRIB_CHECK(err)
+    if gribid == ffi.NULL or err == lib.GRIB_END_OF_INDEX:
+        return None
+    elif err:
+        GRIB_CHECK(err)
     else:
-        return gribid
+        return int(ffi.cast('unsigned long', gribid))
 
 
 @require(msgid=int)
@@ -1517,7 +1517,8 @@ def grib_set_missing(msgid, key):
     @param  key       key name
     @exception GribInternalError
     """
-    GRIB_CHECK(_internal.grib_c_set_missing(msgid, key))
+    h = get_handle(msgid)
+    GRIB_CHECK(lib.grib_set_missing(h, key.encode(ENC)))
 
 
 @require(gribid=int)
@@ -1574,7 +1575,8 @@ def grib_is_missing(msgid, key):
     @return           0->not missing, 1->missing
     @exception GribInternalError
     """
-    err, value = _internal.grib_c_is_missing(msgid, key)
+    h = get_handle(msgid)
+    err, value = err_last(lib.grib_is_missing)(h, key.encode(ENC))
     GRIB_CHECK(err)
     return value
 
@@ -1905,7 +1907,8 @@ def grib_index_write(indexid, filename):
     @param filename   path of file to save the index to
     @exception GribInternalError
     """
-    GRIB_CHECK(_internal.grib_c_index_write(indexid, filename))
+    ih = get_index(indexid)
+    GRIB_CHECK(lib.grib_index_write(ih, filename.encode(ENC)))
 
 
 @require(filename=str)
@@ -1919,9 +1922,9 @@ def grib_index_read(filename):
     @return id of the loaded index
     @exception GribInternalError
     """
-    err, indexid = _internal.grib_c_index_read(filename)
+    err, ih = err_last(lib.grib_index_read)(ffi.NULL, filename.encode(ENC))
     GRIB_CHECK(err)
-    return indexid
+    return int(ffi.cast('unsigned long', ih))
 
 
 @require(flag=bool)
@@ -1980,12 +1983,15 @@ def grib_get_message(msgid):
     @return           binary string message associated with msgid
     @exception GribInternalError
     """
-    error, message = _internal.grib_c_get_message(msgid)
+    h = get_handle(msgid)
+    message_p = ffi.new('const void**')
+    message_length_p = ffi.new('size_t*')
+    error = lib.grib_get_message(h, message_p, message_length_p)
     GRIB_CHECK(error)
-    return message
+    return ffi.string(ffi.cast('char*', message_p[0]), message_length_p[0])
 
 
-@require(message=str)
+@require(message=bytes)
 def grib_new_from_message(message):
     """
     @brief Create a handle from a message in memory.
@@ -1998,9 +2004,10 @@ def grib_new_from_message(message):
     @return        msgid of the newly created message
     @exception GribInternalError
     """
-    error, msgid = _internal.grib_c_new_from_message(0, message, len(message))
-    GRIB_CHECK(error)
-    return msgid
+    h = lib.grib_handle_new_from_message_copy(ffi.NULL, message, len(message))
+    if h == ffi.NULL:
+        raise errors.InvalidGribError
+    return int(ffi.cast('unsigned long', h))
 
 
 @require(defs_path=str)

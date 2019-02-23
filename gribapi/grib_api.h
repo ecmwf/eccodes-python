@@ -23,6 +23,107 @@ typedef struct grib_handle    grib_handle;
 */
 typedef struct grib_context   grib_context;
 
+/*! \defgroup grib_index The grib_index
+The grib_index is the structure giving indexed access to messages in a file.
+ */
+/*! @{*/
+
+/*! index structure to access messages in a file.
+*/
+typedef struct grib_index grib_index;
+
+/**
+ *  Create a new index form a file. The file is indexed with the keys in argument.
+ *
+ * @param c           : context  (NULL for default context)
+ * @param filename    : name of the file of messages to be indexed
+ * @param keys        : comma separated list of keys for the index.
+ *    The type of the key can be explicitly declared appending :l for long,
+ *    (or alternatively :i)
+ *    :d for double, :s for string to the key name. If the type is not
+ *    declared explicitly, the native type is assumed.
+ * @param err         :  0 if OK, integer value on error
+ * @return            the newly created index
+ */
+grib_index* grib_index_new_from_file(grib_context* c,
+                            char* filename,const char* keys,int *err);
+
+/**
+ *  Indexes the file given in argument in the index given in argument.
+ *
+ * @param index       : index
+ * @param filename    : name of the file of messages to be indexed
+ * @return            0 if OK, integer value on error
+ */
+int grib_index_write(grib_index *index, const char *filename);
+grib_index* grib_index_read(grib_context* c,const char* filename,int *err);
+
+/**
+ *  Get the number of distinct values of the key in argument contained in the index. The key must belong to the index.
+ *
+ * @param index       : an index created from a file.
+ *     The index must have been created with the key in argument.
+ * @param key         : key for which the number of values is computed
+ * @param size        : number of distinct values of the key in the index
+ * @return            0 if OK, integer value on error
+ */
+int grib_index_get_size(grib_index* index,const char* key,size_t* size);
+
+/**
+ *  Get the distinct values of the key in argument contained in the index. The key must belong to the index. This function is used when the type of the key was explicitly defined as long or when the native type of the key is long.
+ *
+ * @param index       : an index created from a file.
+ *     The index must have been created with the key in argument.
+ * @param key         : key for which the values are returned
+ * @param values      : array of values. The array must be allocated before entering this function and its size must be enough to contain all the values.
+ * @param size        : size of the values array
+ * @return            0 if OK, integer value on error
+ */
+int grib_index_get_long(grib_index* index,const char* key,
+                        long* values,size_t *size);
+
+/**
+ *  Get the distinct values of the key in argument contained in the index. The key must belong to the index. This function is used when the type of the key was explicitly defined as string or when the native type of the key is string.
+ *
+ * @param index       : an index created from a file.
+ *     The index must have been created with the key in argument.
+ * @param key         : key for which the values are returned
+ * @param values      : array of values. The array must be allocated before entering this function and its size must be enough to contain all the values.
+ * @param size        : size of the values array
+ * @return            0 if OK, integer value on error
+ */
+int grib_index_get_string(grib_index* index,const char* key,
+                          char** values,size_t *size);
+
+/**
+ *  Select the message subset with key==value. The value is a string. The key must have been created with string type or have string as native type if the type was not explicitly defined in the index creation.
+ *
+ * @param index       : an index created from a file.
+ *     The index must have been created with the key in argument.
+ * @param key         : key to be selected
+ * @param value       : value of the key to select
+ * @return            0 if OK, integer value on error
+ */
+int grib_index_select_string(grib_index* index,const char* key,char* value);
+
+/**
+ *  Create a new handle from an index after having selected the key values.
+ *  All the keys belonging to the index must be selected before calling this function. Successive calls to this function will return all the handles compatible with the constraints defined selecting the values of the index keys.
+ * When no more handles are available from the index a NULL pointer is returned and the err variable is set to GRIB_END_OF_INDEX.
+ *
+ * @param index       : an index created from a file.
+ * @param err         :  0 if OK, integer value on error. GRIB_END_OF_INDEX when no more handles are contained in the index.
+ * @return            grib handle.
+ */
+grib_handle* grib_handle_new_from_index(grib_index* index,int *err);
+
+/**
+ *  Delete the index.
+ *
+ * @param index       : index to be deleted.
+ */
+void grib_index_delete(grib_index* index);
+
 /*! @} */
 
 /*! \defgroup grib_handle The grib_handle
@@ -53,6 +154,17 @@ int grib_count_in_file(grib_context* c, FILE* f,int* n);
 grib_handle* grib_handle_new_from_file(grib_context* c, FILE* f, int* error);
 
 /**
+*  Create a handle from a user message. The message is copied and will be freed with the handle
+*
+* @param c           : the context from which the handle will be created (NULL for default context)
+* @param data        : the actual message
+* @param data_len    : the length of the message in number of bytes
+* @return            the new handle, NULL if the message is invalid or a problem is encountered
+*/
+grib_handle* grib_handle_new_from_message_copy(grib_context* c, const void* data, size_t data_len);
+
+
+/**
  *  Create a handle from a GRIB message contained in the samples directory.
  *  The message is copied at the creation of the handle
  *
@@ -61,6 +173,17 @@ grib_handle* grib_handle_new_from_file(grib_context* c, FILE* f, int* error);
  * @return            the new handle, NULL if the resource is invalid or a problem is encountered
  */
 grib_handle* grib_handle_new_from_samples (grib_context* c, const char* sample_name);
+
+
+
+/**
+*  Clone an existing handle using the context of the original handle,
+*  The message is copied and reparsed
+*
+* @param h           : The handle to be cloned
+* @return            the new handle, NULL if the message is invalid or a problem is encountered
+*/
+grib_handle* grib_handle_clone             (grib_handle* h)                 ;
 
 /**
 *  Frees a handle, also frees the message if it is not a user message
@@ -203,6 +326,9 @@ int grib_get_native_type(grib_handle* h, const char* name,int* type);
 
 /* aa: changed off_t to long int */
 int grib_get_message_offset ( grib_handle* h,long int* offset);
+
+int grib_is_missing(grib_handle* h, const char* key, int* err);
+int grib_set_missing(grib_handle* h, const char* key);
 
 /*! \defgroup errors Error codes
 Error codes returned by the grib_api functions.
