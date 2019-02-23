@@ -23,6 +23,11 @@ typedef struct grib_handle    grib_handle;
 */
 typedef struct grib_context   grib_context;
 
+/*! Grib keys iterator. Iterator over keys.
+    \ingroup keys_iterator
+*/
+typedef struct grib_keys_iterator    grib_keys_iterator;
+
 /*! \defgroup grib_index The grib_index
 The grib_index is the structure giving indexed access to messages in a file.
  */
@@ -309,11 +314,59 @@ int grib_set_string       (grib_handle* h, const char*  key , const char* mesg, 
 int grib_set_double_array (grib_handle* h, const char*  key , const double*        vals   , size_t length);
 
 /**
+*  Turn on support for multiple fields in single grib messages
+*
+* @param c            : the context to be modified
+*/
+void grib_multi_support_on(grib_context* c);
+
+/**
+*  Turn off support for multiple fields in single GRIB messages
+*
+* @param c            : the context to be modified
+*/
+void grib_multi_support_off(grib_context* c);
+
+/**
 *  Get the API version
 *
 *  @return        API version
 */
 long grib_get_api_version(void);
+
+/*! \defgroup keys_iterator Iterating on keys names
+The keys iterator is designed to get the key names defined in a message.
+Key names on which the iteration is carried out can be filtered through their
+attributes or by the namespace they belong to.
+*/
+/*! @{ */
+/*! Create a new iterator from a valid and initialised handle.
+*  @param h             : the handle whose keys you want to iterate
+*  @param filter_flags  : flags to filter out some of the keys through their attributes
+*  @param name_space    : if not null the iteration is carried out only on
+*                         keys belonging to the namespace passed. (NULL for all the keys)
+*  @return              keys iterator ready to iterate through keys according to filter_flags
+*                       and namespace
+*/
+grib_keys_iterator* grib_keys_iterator_new(grib_handle* h,unsigned long filter_flags, const char* name_space);
+
+/*! Step to the next iterator.
+*  @param kiter         : valid grib_keys_iterator
+*  @return              1 if next iterator exists, 0 if no more elements to iterate on
+*/
+int grib_keys_iterator_next(grib_keys_iterator* kiter);
+
+/*! get the key name from the iterator
+*  @param kiter         : valid grib_keys_iterator
+*  @return              key name
+*/
+const char* grib_keys_iterator_get_name(grib_keys_iterator *kiter);
+
+/*! Delete the iterator.
+*  @param kiter         : valid grib_keys_iterator
+*  @return              0 if OK, integer value on error
+*/
+int grib_keys_iterator_delete(grib_keys_iterator* kiter);
 
 /**
 * Convert an error code into a string

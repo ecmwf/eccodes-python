@@ -152,6 +152,10 @@ def get_index(indexid):
     return ffi.cast('grib_index*', indexid)
 
 
+def get_keys_iterator(iterid):
+    assert isinstance(iterid, int)
+    return ffi.cast('grib_keys_iterator*', iterid)
+
 # @cond
 @require(errid=int)
 def GRIB_CHECK(errid):
@@ -365,7 +369,7 @@ def grib_multi_support_on():
 
     @exception GribInternalError
     """
-    _internal.grib_c_multi_support_on()
+    lib.grib_multi_support_on(ffi.NULL)
 
 
 def grib_multi_support_off():
@@ -374,7 +378,7 @@ def grib_multi_support_off():
 
     @exception GribInternalError
     """
-    _internal.grib_c_multi_support_off()
+    lib.grib_multi_support_off(ffi.NULL)
 
 
 @require(msgid=int)
@@ -689,9 +693,10 @@ def grib_keys_iterator_new(msgid, namespace=None):
     @return keys iterator id to be used in the keys iterator functions
     @exception GribInternalError
     """
-    err, iterid = _internal.grib_c_keys_iterator_new(msgid, namespace)
-    GRIB_CHECK(err)
-    return iterid
+    h = get_handle(msgid)
+    bnamespace = ffi.NULL if namespace is None else namespace.encode(ENC)
+    iterid = lib.grib_keys_iterator_new(h, 0, bnamespace)
+    return int(ffi.cast('unsigned long', iterid))
 
 
 @require(iterid=int)
@@ -704,7 +709,8 @@ def grib_keys_iterator_next(iterid):
     @param iterid      keys iterator id created with @ref grib_keys_iterator_new
     @exception GribInternalError
     """
-    res = _internal.grib_c_keys_iterator_next(iterid)
+    kih = get_keys_iterator(iterid)
+    res = lib.grib_keys_iterator_next(kih)
     if res < 0:
         GRIB_CHECK(res)
     return res
@@ -720,7 +726,9 @@ def grib_keys_iterator_delete(iterid):
     @param iterid      keys iterator id created with @ref grib_keys_iterator_new
     @exception GribInternalError
     """
-    GRIB_CHECK(_internal.grib_c_keys_iterator_delete(iterid))
+    # aa: THIS LEAKS MEMORY as it doesn't free all the connected iterators
+    kih = get_keys_iterator(iterid)
+    lib.grib_keys_iterator_delete(kih)
 
 
 @require(iterid=int)
@@ -734,9 +742,10 @@ def grib_keys_iterator_get_name(iterid):
     @return key name to be retrieved
     @exception GribInternalError
     """
-    err, name = _internal.grib_c_keys_iterator_get_name(iterid, 1024)
-    GRIB_CHECK(err)
-    return name
+    # aa: missing call to grib_keys_iterator_get_accessor
+    kih = get_keys_iterator(iterid)
+    name = lib.grib_keys_iterator_get_name(kih)
+    return ffi.string(name).decode(ENC)
 
 
 @require(iterid=int)
