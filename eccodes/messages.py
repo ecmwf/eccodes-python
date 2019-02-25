@@ -72,7 +72,7 @@ class Message(collections.MutableMapping):
         return cls(codes_id=codes_id, **kwargs)
 
     def __del__(self):
-        bindings.codes_handle_delete(self.codes_id)
+        eccodes.codes_release(self.codes_id)
 
     def message_get(self, key, key_type=None, size=None, length=None, default=_MARKER):
         # type: (str, int, int, int, T.Any) -> T.Any
@@ -171,20 +171,20 @@ class ComputedKeysMessage(Message):
 def make_message_schema(message, schema_keys, log=LOG):
     schema = collections.OrderedDict()
     for key in schema_keys:
-        bkey = key.encode(message.encoding)
         try:
-            key_type = bindings.codes_get_native_type(message.codes_id, bkey)
-        except bindings.EcCodesError as ex:
-            if ex.code != bindings.lib.GRIB_NOT_FOUND:  # pragma: no cover
+            key_type = eccodes.codes_get_native_type(message.codes_id, key)
+        except eccodes.GribInternalError as ex:
+            if isinstance(ex, eccodes.KeyValueNotFoundError):  # pragma: no cover
                 log.exception("key %r failed", key)
             schema[key] = ()
             continue
-        size = bindings.codes_get_size(message.codes_id, bkey)
-        if key_type == eccodes.CODES_TYPE_STRING:
-            length = bindings.codes_get_length(message.codes_id, bkey)
+        size = eccodes.codes_get_size(message.codes_id, key)
+        if key_type == str:
+            length = eccodes.codes_get_string_length(message.codes_id, key)
             schema[key] = (key_type, size, length)
         else:
             schema[key] = (key_type, size)
+        print(schema)
     return schema
 
 
