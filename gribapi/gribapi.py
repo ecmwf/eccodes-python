@@ -910,8 +910,8 @@ def grib_set_double(msgid, key, value):
         value = float(value)
     except (ValueError, TypeError):
         raise TypeError("Invalid type")
-
-    GRIB_CHECK(_internal.grib_c_set_double(msgid, key, value))
+    h = get_handle(msgid)
+    GRIB_CHECK(lib.grib_set_double(h, key.encode(ENC), value))
 
 
 @require(samplename=str, product_kind=int)

@@ -316,6 +316,17 @@ int grib_get_long_array(grib_handle* h, const char* key, long* vals, size_t *len
 int grib_set_long         (grib_handle* h, const char*  key , long val);
 
 /**
+*  Set a double value from a key. If several keys of the same name are present, the last one is set
+*  @see  grib_get_double
+*
+* @param h           : the handle to set the data to
+* @param key         : the key to be searched
+* @param val       : a double where the data will be read
+* @return            0 if OK, integer value on error
+*/
+int grib_set_double       (grib_handle* h, const char*  key , double   val);
+
+/**
 *  Set a string value from a key. If several keys of the same name are present, the last one is set
 *  @see  grib_get_string
 *

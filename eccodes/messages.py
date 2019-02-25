@@ -63,7 +63,7 @@ class Message(collections.MutableMapping):
 
     @classmethod
     def from_sample_name(cls, sample_name, product_kind=eccodes.CODES_PRODUCT_GRIB, **kwargs):
-        codes_id = bindings.codes_new_from_samples(sample_name.encode('ASCII'), product_kind)
+        codes_id = eccodes.codes_new_from_samples(sample_name, product_kind)
         return cls(codes_id=codes_id, **kwargs)
 
     @classmethod
@@ -90,15 +90,12 @@ class Message(collections.MutableMapping):
             return values[0]
         return values
 
-    def message_set(self, item, value):
+    def message_set(self, key, value):
         # type: (str, T.Any) -> None
-        key = item.encode(self.encoding)
         set_array = isinstance(value, T.Sequence) and not isinstance(value, (str, bytes))
         if set_array:
-            bindings.codes_set_array(self.codes_id, key, value)
+            eccodes.codes_set_array(self.codes_id, key, value)
         else:
-            if isinstance(value, str):
-                value = value.encode(self.encoding)
             eccodes.codes_set(self.codes_id, key, value)
 
     def message_iterkeys(self, namespace=None):
@@ -116,8 +113,8 @@ class Message(collections.MutableMapping):
         # type: (str, T.Any) -> None
         try:
             return self.message_set(item, value)
-        except bindings.EcCodesError as ex:
-            if self.errors == 'ignore' and ex.code == bindings.lib.GRIB_READ_ONLY:
+        except eccodes.GribInternalError as ex:
+            if self.errors == 'ignore' and isinstance(ex, eccodes.ReadOnlyError):
                 # Very noisy error when trying to set computed keys
                 pass
             else:
@@ -136,7 +133,7 @@ class Message(collections.MutableMapping):
         return sum(1 for _ in self)
 
     def write(self, file):
-        bindings.codes_write(self.codes_id, file)
+        eccodes.codes_write(self.codes_id, file)
 
 
 @attr.attrs()
