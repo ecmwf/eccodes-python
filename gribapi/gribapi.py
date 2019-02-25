@@ -2020,7 +2020,10 @@ def grib_get_message(msgid):
     message_length_p = ffi.new('size_t*')
     error = lib.grib_get_message(h, message_p, message_length_p)
     GRIB_CHECK(error)
-    return ffi.string(ffi.cast('char*', message_p[0]), message_length_p[0])
+    # NOTE: ffi.string would stop on the first nul-character.
+    fixed_length_buffer = ffi.buffer(ffi.cast('char*', message_p[0]), message_length_p[0])
+    # Convert to bytes
+    return fixed_length_buffer[:]
 
 
 @require(message=(bytes, str))
