@@ -160,6 +160,15 @@ def put_index(indexh):
     return int(ffi.cast('unsigned long', indexh))
 
 
+def get_iterator(iterid):
+    assert isinstance(iterid, int)
+    return ffi.cast('grib_iterator*', iterid)
+
+
+def put_iterator(iterh):
+    return int(ffi.cast('unsigned long', iterh))
+
+
 def get_keys_iterator(iterid):
     assert isinstance(iterid, int)
     return ffi.cast('grib_keys_iterator*', iterid)
@@ -643,9 +652,10 @@ def grib_iterator_new(gribid, mode):
     @param mode    flags for future use
     @return        geoiterator id
     """
-    err, iterid = _internal.grib_c_iterator_new(gribid, mode)
+    h = get_handle(gribid)
+    err, iterid = err_last(lib.grib_iterator_new)(h, mode)
     GRIB_CHECK(err)
-    return iterid
+    return put_iterator(iterid)
 
 
 @require(iterid=int)
@@ -658,7 +668,8 @@ def grib_iterator_delete(iterid):
     @param iterid  geoiterator id
     @exception GribInternalError
     """
-    GRIB_CHECK(_internal.grib_c_iterator_delete(iterid))
+    ih = get_iterator(iterid)
+    GRIB_CHECK(lib.grib_iterator_delete(ih))
 
 
 @require(iterid=int)
@@ -672,13 +683,17 @@ def grib_iterator_next(iterid):
     @return   tuple with the latitude, longitude and value
     @exception GribInternalError
     """
-    err, lat, lon, value = _internal.grib_c_iterator_next(iterid)
+    iterh = get_iterator(iterid)
+    lat_p = ffi.new('double*')
+    lon_p = ffi.new('double*')
+    value_p = ffi.new('double*')
+    err = lib.grib_iterator_next(iterh, lat_p, lon_p, value_p)
     if err == 0:
         return []
     elif err < 0:
         GRIB_CHECK(err)
     else:
-        return (lat, lon, value)
+        return (lat_p[0], lon_p[0], value_p[0])
 
 
 @require(msgid=int)

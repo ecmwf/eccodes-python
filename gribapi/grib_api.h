@@ -25,6 +25,11 @@ typedef struct grib_handle    grib_handle;
 */
 typedef struct grib_context   grib_context;
 
+/*! Grib iterator, structure supporting a geographic iteration of values on a GRIB message.
+    \ingroup grib_iterator
+*/
+typedef struct grib_iterator  grib_iterator;
+
 /*! Grib keys iterator. Iterator over keys.
     \ingroup keys_iterator
 */
@@ -213,6 +218,38 @@ int   grib_handle_delete   (grib_handle* h);
 * @return            0 if OK, integer value on error
 */
 int grib_get_message(grib_handle* h ,const void** message, size_t *message_length);
+
+/*! \defgroup iterators Iterating on latitude/longitude/values */
+/*! @{ */
+
+/*!
+* \brief Create a new iterator from a handle, using current geometry and values.
+*
+* \param h           : the handle from which the iterator will be created
+* \param flags       : flags for future use.
+* \param error       : error code
+* \return            the new iterator, NULL if no iterator can be created
+*/
+grib_iterator*      grib_iterator_new      (grib_handle*   h, unsigned long flags,int* error);
+
+/**
+* Get the next value from an iterator.
+*
+* @param i           : the iterator
+* @param lat         : on output latitude in degree
+* @param lon         : on output longitude in degree
+* @param value       : on output value of the point
+* @return            positive value if successful, 0 if no more data are available
+*/
+int                 grib_iterator_next     (grib_iterator *i, double* lat,double* lon,double* value);
+
+/**
+*  Frees an iterator from memory
+*
+* @param i           : the iterator
+* @return            0 if OK, integer value on error
+*/
+int                 grib_iterator_delete   (grib_iterator *i);
 
 /**
 *  Get the number of coded value from a key, if several keys of the same name are present, the total sum is returned
