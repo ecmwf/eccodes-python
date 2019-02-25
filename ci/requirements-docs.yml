@@ -2,11 +2,10 @@ name: test_env
 channels:
   - conda-forge
 dependencies:
-  - python=3.6
-  - nomkl
-  - eccodes
+  - attrs
   - cffi
-  - pip:
-    - future
-    - attrs
-    - sphinx
+  - eccodes
+  - nomkl
+  - python=3.6
+  - sphinx
+
