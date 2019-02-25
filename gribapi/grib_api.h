@@ -20,6 +20,11 @@ typedef enum ProductKind {PRODUCT_ANY, PRODUCT_GRIB, PRODUCT_BUFR, PRODUCT_METAR
 */
 typedef struct grib_handle    grib_handle;
 
+/*! Grib multi field handle,   structure used to build multi field GRIB messages.
+    \ingroup grib_handle
+ */
+typedef struct grib_multi_handle    grib_multi_handle;
+
 /*! Grib context,  structure containing the memory methods, the parsers and the formats.
     \ingroup grib_context
 */
@@ -204,6 +209,47 @@ grib_handle* grib_handle_clone             (grib_handle* h)                 ;
 * @return            0 if OK, integer value on error
 */
 int   grib_handle_delete   (grib_handle* h);
+
+/**
+ *  Create an empty multi field handle.
+ *  Remember always to delete the multi handle when it is not needed anymore to avoid
+ *  memory leaks.
+ *
+ * @param c           : the context from which the handle will be created (NULL for default context)
+ */
+grib_multi_handle* grib_multi_handle_new     (grib_context* c);
+
+/**
+ *  Append the sections starting with start_section of the message pointed by h at
+ *  the end of the multi field handle mh.
+ *  Remember always to delete the multi handle when it is not needed anymore to avoid
+ *  memory leaks.
+ *
+ * @param h           : The handle from which the sections are copied.
+ * @param start_section : section number. Starting from this section all the sections to the end of the message will be copied.
+ * @param mh           : The multi field handle on which the sections are appended.
+ * @return            0 if OK, integer value on error
+ */
+int grib_multi_handle_append(grib_handle* h,int start_section,grib_multi_handle* mh);
+
+/**
+ * Delete multi field handle.
+ *
+ * @param mh           : The multi field handle to be deleted.
+ * @return            0 if OK, integer value on error
+ */
+int grib_multi_handle_delete(grib_multi_handle* mh);
+
+/**
+ *  Write a multi field handle in a file.
+ *  Remember always to delete the multi handle when it is not needed anymore to avoid
+ *  memory leaks.
+ *
+ * @param mh           : The multi field handle to be written.
+ * @param f            : File on which the file handle is written.
+ * @return            0 if OK, integer value on error
+ */
+int grib_multi_handle_write(grib_multi_handle* mh,FILE* f);
 
 /*! @} */
 

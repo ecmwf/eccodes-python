@@ -151,6 +151,15 @@ def put_handle(handle):
     return int(ffi.cast('unsigned long', handle))
 
 
+def get_multi_handle(msgid):
+    assert isinstance(msgid, int)
+    return ffi.cast('grib_multi_handle*', msgid)
+
+
+def put_multi_handle(handle):
+    return int(ffi.cast('unsigned long', handle))
+
+
 def get_index(indexid):
     assert isinstance(indexid, int)
     return ffi.cast('grib_index*', indexid)
@@ -360,7 +369,7 @@ def grib_new_from_file(fileobj, headers_only=False):
 def codes_close_file(fileobj):
     # The client must call this BEFORE calling close() on the file object
     # so we can remove the entry in our cache
-    err = _internal.codes_c_close_file(fileobj.fileno(), fileobj.name)
+    # err = _internal.codes_c_close_file(fileobj.fileno(), fileobj.name)
     # Note: it is safe calling close() here as subsequent calls will have no effect
     fileobj.close()
     GRIB_CHECK(err)
@@ -432,7 +441,6 @@ def grib_get_string(msgid, key):
     length_p = ffi.new('size_t *', length)
     err = lib.grib_get_string(h, key.encode(ENC), values, length_p)
     GRIB_CHECK(err)
-
     return ffi.string(values, length_p[0]).decode(ENC)
 
 
@@ -497,7 +505,8 @@ def grib_multi_write(multigribid, fileobj):
     @param fileobj          python file object
     @exception GribInternalError
     """
-    GRIB_CHECK(_internal.grib_c_multi_write(multigribid, fileobj))
+    mh = get_multi_handle(multigribid)
+    GRIB_CHECK(lib.grib_multi_handle_write(mh, fileobj))
 
 
 @require(ingribid=int, startsection=int, multigribid=int)
@@ -516,7 +525,9 @@ def grib_multi_append(ingribid, startsection, multigribid):
     @param multigribid   id of the output multi-field GRIB
     @exception GribInternalError
     """
-    GRIB_CHECK(_internal.grib_c_multi_append(ingribid, startsection, multigribid))
+    h = get_handle(ingribid)
+    mh = get_multi_handle(multigribid)
+    GRIB_CHECK(lib.grib_multi_handle_append(h, startsection, mh))
 
 
 @require(msgid=int, key=str)
@@ -1176,9 +1187,10 @@ def grib_multi_new():
     @return id of the multi-field message
     @exception GribInternalError
     """
-    err, mgid = _internal.grib_c_multi_new()
-    GRIB_CHECK(err)
-    return mgid
+    mgid = lib.grib_multi_handle_new(ffi.NULL)
+    if mgid == ffi.NULL:
+        raise errors.InvalidGribError
+    return put_multi_handle(mgid)
 
 
 @require(gribid=int)
@@ -1191,7 +1203,8 @@ def grib_multi_release(gribid):
     @param gribid    id of the multi-field we want to release the memory for
     @exception GribInternalError
     """
-    GRIB_CHECK(_internal.grib_c_multi_release(gribid))
+    mh = get_multi_handle(gribid)
+    GRIB_CHECK(lib.grib_multi_handle_delete(mh))
 
 
 @require(gribid_src=int, namespace=str, gribid_dest=int)
