@@ -8,4 +8,3 @@ dependencies:
   - nomkl
   - python=3.6
   - sphinx
-

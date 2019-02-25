@@ -13,4 +13,3 @@ dependencies:
   - pytest-mccabe
   - pytest-pep8
   - python=3.6
-
