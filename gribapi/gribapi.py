@@ -147,14 +147,27 @@ def get_handle(msgid):
     return ffi.cast('grib_handle*', msgid)
 
 
+def put_handle(handle):
+    return int(ffi.cast('unsigned long', handle))
+
+
 def get_index(indexid):
     assert isinstance(indexid, int)
     return ffi.cast('grib_index*', indexid)
 
 
+def put_index(indexh):
+    return int(ffi.cast('unsigned long', indexh))
+
+
 def get_keys_iterator(iterid):
     assert isinstance(iterid, int)
     return ffi.cast('grib_keys_iterator*', iterid)
+
+
+def put_keys_iterator(iterh):
+    return int(ffi.cast('unsigned long', iterh))
+
 
 # @cond
 @require(errid=int)
@@ -186,14 +199,13 @@ def gts_new_from_file(fileobj, headers_only=False):
     """
     fd = fileobj.fileno()
     fn = fileobj.name
-    err, gtsid = _internal.grib_c_new_gts_from_file(fileobj, fd, fn, headers_only, 0)
+    err, h = err_last(lib.gts_new_from_file)(ffi.NULL, fileobj)
+    if h == ffi.NULL or err == lib.GRIB_END_OF_FILE:
+        return None
     if err:
-        if err == _internal.GRIB_END_OF_FILE:
-            return None
-        else:
-            GRIB_CHECK(err)
+        GRIB_CHECK(err)
     else:
-        return gtsid
+        return put_handle(h)
 
 
 @require(fileobj=file)
@@ -209,14 +221,15 @@ def metar_new_from_file(fileobj, headers_only=False):
     @return               id of the METAR loaded in memory
     @exception GribInternalError
     """
-    err, metarid = _internal.grib_c_new_metar_from_file(fileobj, headers_only, 0)
+    fd = fileobj.fileno()
+    fn = fileobj.name
+    err, h = err_last(lib.metar_new_from_file)(ffi.NULL, fileobj)
+    if h == ffi.NULL or err == lib.GRIB_END_OF_FILE:
+        return None
     if err:
-        if err == _internal.GRIB_END_OF_FILE:
-            return None
-        else:
-            GRIB_CHECK(err)
+        GRIB_CHECK(err)
     else:
-        return metarid
+        return put_handle(h)
 
 
 @require(fileobj=file, product_kind=int)
@@ -265,13 +278,13 @@ def any_new_from_file(fileobj, headers_only=False):
     """
     fd = fileobj.fileno()
     fn = fileobj.name
-    err, msgid = err_last(lib.codes_handle_new_from_file)(ffi.NULL, fileobj, CODES_PRODUCT_ANY)
-    if msgid == ffi.NULL or err == lib.GRIB_END_OF_FILE:
+    err, h = err_last(lib.codes_handle_new_from_file)(ffi.NULL, fileobj, CODES_PRODUCT_ANY)
+    if h == ffi.NULL or err == lib.GRIB_END_OF_FILE:
         return None
     if err:
         GRIB_CHECK(err)
     else:
-        return int(ffi.cast('unsigned long', msgid))
+        return put_handle(h)
 
 
 @require(fileobj=file)
@@ -291,13 +304,13 @@ def bufr_new_from_file(fileobj, headers_only=False):
     """
     fd = fileobj.fileno()
     fn = fileobj.name
-    err, msgid = err_last(lib.codes_handle_new_from_file)(ffi.NULL, fileobj, CODES_PRODUCT_BUFR)
-    if msgid == ffi.NULL or err == lib.GRIB_END_OF_FILE:
+    err, h = err_last(lib.codes_handle_new_from_file)(ffi.NULL, fileobj, CODES_PRODUCT_BUFR)
+    if h == ffi.NULL or err == lib.GRIB_END_OF_FILE:
         return None
     if err:
         GRIB_CHECK(err)
     else:
-        return int(ffi.cast('unsigned long', msgid))
+        return put_handle(h)
 
 
 @require(fileobj=file)
@@ -325,13 +338,13 @@ def grib_new_from_file(fileobj, headers_only=False):
     fd = fileobj.fileno()
     fn = fileobj.name
     #print('Python gribapi.py  grib_new_from_file: ', fd,'  ', fn)
-    err, gribid = err_last(lib.grib_new_from_file)(ffi.NULL, fileobj, headers_only)
-    if gribid == ffi.NULL or err == lib.GRIB_END_OF_FILE:
+    err, h = err_last(lib.grib_new_from_file)(ffi.NULL, fileobj, headers_only)
+    if h == ffi.NULL or err == lib.GRIB_END_OF_FILE:
         return None
     if err:
         GRIB_CHECK(err)
     else:
-        return int(ffi.cast('unsigned long', gribid))
+        return put_handle(h)
 
 
 @require(fileobj=file)
@@ -694,7 +707,7 @@ def grib_keys_iterator_new(msgid, namespace=None):
     h = get_handle(msgid)
     bnamespace = ffi.NULL if namespace is None else namespace.encode(ENC)
     iterid = lib.grib_keys_iterator_new(h, 0, bnamespace)
-    return int(ffi.cast('unsigned long', iterid))
+    return put_keys_iterator(iterid)
 
 
 @require(iterid=int)
@@ -955,7 +968,7 @@ def grib_new_from_samples(samplename):
     h = lib.grib_handle_new_from_samples(ffi.NULL, samplename.encode(ENC))
     if h == ffi.NULL:
         errors.raise_grib_error(errors.FileNotFoundError)
-    return int(ffi.cast('unsigned long', h))
+    return put_handle(h)
 
 
 @require(samplename=str)
@@ -1013,7 +1026,7 @@ def grib_clone(msgid_src):
     h_dest = lib.grib_handle_clone(h_src)
     if h_dest == ffi.NULL:
         raise errors.InvalidGribError
-    return int(ffi.cast('unsigned long', h_dest))
+    return put_handle(h_dest)
 
 
 @require(msgid=int, key=str)
@@ -1196,7 +1209,7 @@ def grib_index_new_from_file(filename, keys):
     ckeys = ",".join(keys)
     err, iid = err_last(lib.grib_index_new_from_file)(ffi.NULL, filename.encode(ENC), ckeys.encode(ENC))
     GRIB_CHECK(err)
-    return int(ffi.cast('unsigned long', iid))
+    return put_index(iid)
 
 
 @require(indexid=int, filename=str)
@@ -1410,14 +1423,14 @@ def grib_new_from_index(indexid):
     @exception GribInternalError
     """
     ih = get_index(indexid)
-    err, gribid = err_last(lib.grib_handle_new_from_index)(ih)
+    err, h = err_last(lib.grib_handle_new_from_index)(ih)
 
-    if gribid == ffi.NULL or err == lib.GRIB_END_OF_INDEX:
+    if h == ffi.NULL or err == lib.GRIB_END_OF_INDEX:
         return None
     elif err:
         GRIB_CHECK(err)
     else:
-        return int(ffi.cast('unsigned long', gribid))
+        return put_handle(h)
 
 
 @require(msgid=int)
@@ -1928,7 +1941,7 @@ def grib_index_read(filename):
     """
     err, ih = err_last(lib.grib_index_read)(ffi.NULL, filename.encode(ENC))
     GRIB_CHECK(err)
-    return int(ffi.cast('unsigned long', ih))
+    return put_index(ih)
 
 
 @require(flag=bool)
@@ -1995,7 +2008,7 @@ def grib_get_message(msgid):
     return ffi.string(ffi.cast('char*', message_p[0]), message_length_p[0])
 
 
-@require(message=bytes)
+@require(message=(bytes, str))
 def grib_new_from_message(message):
     """
     @brief Create a handle from a message in memory.
@@ -2008,10 +2021,12 @@ def grib_new_from_message(message):
     @return        msgid of the newly created message
     @exception GribInternalError
     """
+    if isinstance(message, str):
+        message = message.encode(ENC)
     h = lib.grib_handle_new_from_message_copy(ffi.NULL, message, len(message))
     if h == ffi.NULL:
         raise errors.InvalidGribError
-    return int(ffi.cast('unsigned long', h))
+    return put_handle(h)
 
 
 @require(defs_path=str)
