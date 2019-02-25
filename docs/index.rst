@@ -31,4 +31,3 @@ Limitations:
     :caption: Table of Contents
 
     messages
-    bindings
