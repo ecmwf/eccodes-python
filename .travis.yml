@@ -31,7 +31,7 @@ script:
   - if [[ "$ENV" == "docs" ]]; then
       sphinx-build -W -b html docs build/sphinx/html;
     elif [[ "$ENV" == *"-qc" ]]; then
-      pytest -v --flakes --doctest-glob="*.rst" --cov=eccodes --cov=gribapi --cov-report term-missing $EXTRA_FLAGS;
+      pytest -v --doctest-glob="*.rst" --cov=eccodes --cov=gribapi --cov-report term-missing $EXTRA_FLAGS;
     else
       pytest -v --cov=eccodes --cov=gribapi --cov-report term-missing $EXTRA_FLAGS;
     fi
