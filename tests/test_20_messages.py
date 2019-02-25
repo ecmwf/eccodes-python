@@ -5,7 +5,6 @@ import os.path
 
 import pytest
 
-from eccodes import bindings
 from eccodes import messages
 
 

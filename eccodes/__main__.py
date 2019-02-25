@@ -19,11 +19,11 @@
 
 import argparse
 
-from . import bindings
+from . import codes_get_api_version
 
 
 def selfcheck():
-    print("Found: ecCodes v%s." % bindings.codes_get_api_version())
+    print("Found: ecCodes v%s." % codes_get_api_version())
     print("Your system is ready.")
 
 

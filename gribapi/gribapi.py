@@ -1067,21 +1067,15 @@ def grib_get_string_array(msgid, key):
     @return        list
     @exception GribInternalError
     """
-    nval = grib_get_size(msgid, key)
-    a = _internal.new_stringArray(nval)
-    s = _internal.sizetp()
-    s.assign(nval)
-
-    GRIB_CHECK(_internal.grib_c_get_string_array(msgid, key, a, s))
-
-    newsize = s.value()
-    result = list()
-    for i in range(newsize):
-        result.append(_internal.stringArray_getitem(a, i))
-
-    _internal.delete_stringArray(a)
-
-    return result
+    length = grib_get_string_length(msgid, key)
+    size = grib_get_size(msgid, key)
+    h = get_handle(msgid)
+    values_keepalive = [ffi.new('char[]', length) for _ in range(size)]
+    values = ffi.new('char*[]', values_keepalive)
+    size_p = ffi.new('size_t *', size)
+    err = lib.grib_get_string_array(h, key.encode(ENC), values, size_p)
+    GRIB_CHECK(err)
+    return [ffi.string(values[i]).decode(ENC) for i in range(size_p[0])]
 
 
 @require(msgid=int, key=str)
@@ -1136,10 +1130,13 @@ def grib_get_long_array(msgid, key):
     @return           numpy.ndarray
     @exception GribInternalError
     """
+    h = get_handle(msgid)
     nval = grib_get_size(msgid, key)
-    err, result = _internal.grib_get_long_ndarray(msgid, key, nval)
+    lenght_p = ffi.new('size_t*', nval)
+    vals_p = ffi.new('long[]', nval)
+    err = lib.grib_get_long_array(h, key.encode(ENC), vals_p, lenght_p)
     GRIB_CHECK(err)
-    return result
+    return [vals_p[i] for i in range(lenght_p[0])]
 
 
 def grib_multi_new():

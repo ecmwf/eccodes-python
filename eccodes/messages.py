@@ -37,17 +37,11 @@ import typing as T
 
 import attr
 
-from . import bindings
 from . import eccodes
 
 
 LOG = logging.getLogger(__name__)
 _MARKER = object()
-
-#
-# No explicit support for MULTI-FIELD at Message level, let ecCodes simulate normal messages.
-#
-bindings.codes_grib_multi_support_on()
 
 
 @attr.attrs()
@@ -58,43 +52,41 @@ class Message(collections.MutableMapping):
     errors = attr.attrib(default='ignore', validator=attr.validators.in_(['ignore', 'strict']))
 
     @classmethod
-    def from_file(cls, file, offset=None, product_kind=bindings.CODES_PRODUCT_GRIB, **kwargs):
+    def from_file(cls, file, offset=None, product_kind=eccodes.CODES_PRODUCT_GRIB, **kwargs):
         # type: (T.IO[bytes], int, int, T.Any) -> Message
         if offset is not None:
             file.seek(offset)
-        codes_id = bindings.codes_handle_new_from_file(file, product_kind)
+        codes_id = eccodes.codes_any_new_from_file(file, product_kind)
+        if codes_id is None:
+            raise EOFError("End of file: %r" % file)
         return cls(codes_id=codes_id, **kwargs)
 
     @classmethod
-    def from_sample_name(cls, sample_name, product_kind=bindings.CODES_PRODUCT_GRIB, **kwargs):
+    def from_sample_name(cls, sample_name, product_kind=eccodes.CODES_PRODUCT_GRIB, **kwargs):
         codes_id = bindings.codes_new_from_samples(sample_name.encode('ASCII'), product_kind)
         return cls(codes_id=codes_id, **kwargs)
 
     @classmethod
     def from_message(cls, message, **kwargs):
-        codes_id = bindings.codes_handle_clone(message.codes_id)
+        codes_id = eccodes.codes_clone(message.codes_id)
         return cls(codes_id=codes_id, **kwargs)
 
     def __del__(self):
         bindings.codes_handle_delete(self.codes_id)
 
-    def message_get(self, item, key_type=None, size=None, length=None, default=_MARKER):
+    def message_get(self, key, key_type=None, size=None, length=None, default=_MARKER):
         # type: (str, int, int, int, T.Any) -> T.Any
         """Get value of a given key as its native or specified type."""
-        key = item.encode(self.encoding)
         try:
-            values = bindings.codes_get_array(self.codes_id, key, key_type, size, length)
-        except bindings.EcCodesError as ex:
-            if ex.code == bindings.lib.GRIB_NOT_FOUND:
-                if default is _MARKER:
-                    raise KeyError(item)
-                else:
-                    return default
-            else:  # pragma: no cover
-                raise
-        if values and isinstance(values[0], bytes):
-            values = [v.decode(self.encoding) for v in values]
-        if len(values) == 1:
+            values = eccodes.codes_get_array(self.codes_id, key, key_type)
+        except eccodes.KeyValueNotFoundError:
+            if default is _MARKER:
+                raise KeyError(key)
+            else:
+                return default
+        except Exception as ex:  # pragma: no cover
+            raise
+        if values and len(values) == 1:
             return values[0]
         return values
 
@@ -111,14 +103,10 @@ class Message(collections.MutableMapping):
 
     def message_iterkeys(self, namespace=None):
         # type: (str) -> T.Generator[str, None, None]
-        if namespace is not None:
-            bnamespace = namespace.encode(self.encoding)  # type: T.Optional[bytes]
-        else:
-            bnamespace = None
-        iterator = bindings.codes_keys_iterator_new(self.codes_id, namespace=bnamespace)
-        while bindings.codes_keys_iterator_next(iterator):
-            yield bindings.codes_keys_iterator_get_name(iterator).decode(self.encoding)
-        bindings.codes_keys_iterator_delete(iterator)
+        iterator = eccodes.codes_keys_iterator_new(self.codes_id, namespace=namespace)
+        while eccodes.codes_keys_iterator_next(iterator):
+            yield eccodes.codes_keys_iterator_get_name(iterator)
+        eccodes.codes_keys_iterator_delete(iterator)
 
     def __getitem__(self, item):
         # type: (str) -> T.Any
@@ -195,7 +183,7 @@ def make_message_schema(message, schema_keys, log=LOG):
             schema[key] = ()
             continue
         size = bindings.codes_get_size(message.codes_id, bkey)
-        if key_type == bindings.CODES_TYPE_STRING:
+        if key_type == eccodes.CODES_TYPE_STRING:
             length = bindings.codes_get_length(message.codes_id, bkey)
             schema[key] = (key_type, size, length)
         else:
@@ -278,7 +266,7 @@ class FileIndex(collections.Mapping):
                 if isinstance(value, list):
                     value = tuple(value)
                 header_values.append(value)
-            offset = message.message_get('offset', bindings.CODES_TYPE_LONG)
+            offset = message['offset']
             offsets.setdefault(tuple(header_values), []).append(offset)
         return cls(filestream=filestream, index_keys=index_keys, offsets=list(offsets.items()))
 
