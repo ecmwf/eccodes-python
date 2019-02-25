@@ -31,11 +31,11 @@ script:
   - if [[ "$ENV" == "docs" ]]; then
       sphinx-build -W -b html docs build/sphinx/html;
     elif [[ "$ENV" == *"-qc" ]]; then
-      pytest -v --flakes --doctest-glob="*.rst" --cov=eccodes --cov-report term-missing --pep8 --mccabe $EXTRA_FLAGS;
+      pytest -v --flakes --doctest-glob="*.rst" --cov=eccodes --cov=gribapi --cov-report term-missing --pep8 --mccabe $EXTRA_FLAGS;
     elif [[ "$ENV" == *"-without-xarray" ]]; then
-      pytest -v --flakes --cov=eccodes --cov-report term-missing $EXTRA_FLAGS eccodes tests;
+      pytest -v --flakes --cov=eccodes --cov=gribapi --cov-report term-missing $EXTRA_FLAGS eccodes tests;
     else
-      pytest -v --flakes --cov=eccodes --cov-report term-missing $EXTRA_FLAGS;
+      pytest -v --flakes --cov=eccodes --cov=gribapi --cov-report term-missing $EXTRA_FLAGS;
     fi
 
 after_success:
