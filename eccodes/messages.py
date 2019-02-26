@@ -40,7 +40,10 @@ class Message(collections.MutableMapping):
     """Dictionary-line interface to access Message headers."""
     codes_id = attr.attrib()
     encoding = attr.attrib(default='ascii', type=str)
-    errors = attr.attrib(default='ignore', validator=attr.validators.in_(['ignore', 'strict']))
+    errors = attr.attrib(
+        default='warn',
+        validator=attr.validators.in_(['ignore', 'warn', 'raise']),
+    )
 
     @classmethod
     def from_file(cls, file, offset=None, product_kind=eccodes.CODES_PRODUCT_GRIB, **kwargs):
@@ -175,7 +178,6 @@ def make_message_schema(message, schema_keys, log=LOG):
             schema[key] = (key_type, size, length)
         else:
             schema[key] = (key_type, size)
-        print(schema)
     return schema
 
 
@@ -184,7 +186,10 @@ class FileStream(collections.Iterable):
     """Iterator-like access to a filestream of Messages."""
     path = attr.attrib(type=str)
     message_class = attr.attrib(default=Message, type=Message, repr=False)
-    errors = attr.attrib(default='ignore', validator=attr.validators.in_(['ignore', 'strict']))
+    errors = attr.attrib(
+        default='warn',
+        validator=attr.validators.in_(['ignore', 'warn', 'raise']),
+    )
 
     def __iter__(self):
         # type: () -> T.Generator[Message, None, None]
@@ -223,6 +228,7 @@ def compat_create_exclusive(path, *args, **kwargs):
         try:
             yield file
         except Exception:
+            file.close()
             os.unlink(path)
             raise
 
