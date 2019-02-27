@@ -1669,42 +1669,27 @@ def grib_find_nearest(gribid, inlat, inlon, is_lsm=False, npoints=1):
     @return (npoints*(outlat,outlon,value,dist,index))
     @exception GribInternalError
     """
+    # generalise from 1 or 4 npoints to any number
     h = get_handle(gribid)
-    if npoints == 1:
-        inlats_p = ffi.new('double*', inlat)
-        inlons_p = ffi.new('double*', inlon)
-        outlats_p = ffi.new('double*')
-        outlons_p = ffi.new('double*')
-        values_p = ffi.new('double*')
-        distances_p = ffi.new('double*')
-        indexes_p = ffi.new('int*')
-        err = lib.grib_nearest_find_multiple(
-            h, is_lsm, inlats_p, inlons_p, 1,
-            outlats_p, outlons_p, values_p, distances_p, indexes_p,
-        )
-        return (Bunch(lat=outlats_p[0], lon=outlons_p[0], value=values_p[0], distance=distances_p[0], index=indexes_p[0]),)
-    elif npoints == 4:
-        inlats_p = ffi.new('double*', inlat)
-        inlons_p = ffi.new('double*', inlon)
-        outlats_p = ffi.new('double[]', npoints)
-        outlons_p = ffi.new('double[]', npoints)
-        values_p = ffi.new('double[]', npoints)
-        distances_p = ffi.new('double[]', npoints)
-        indexes_p = ffi.new('int[]', npoints)
+    inlats_p = ffi.new('double*', inlat)
+    inlons_p = ffi.new('double*', inlon)
+    outlats_p = ffi.new('double[]', npoints)
+    outlons_p = ffi.new('double[]', npoints)
+    values_p = ffi.new('double[]', npoints)
+    distances_p = ffi.new('double[]', npoints)
+    indexes_p = ffi.new('int[]', npoints)
 
-        err = lib.grib_nearest_find_multiple(
-            h, is_lsm, inlats_p, inlons_p, 1,
-            outlats_p, outlons_p, values_p, distances_p, indexes_p,
-        )
-        GRIB_CHECK(err)
+    err = lib.grib_nearest_find_multiple(
+        h, is_lsm, inlats_p, inlons_p, npoints,
+        outlats_p, outlons_p, values_p, distances_p, indexes_p,
+    )
+    GRIB_CHECK(err)
 
-        result = []
-        for i in range(4):
-            result.append(Bunch(lat=outlats_p[i], lon=outlons_p[i], value=values_p[i], distance=distances_p[i], index=indexes_p[i]))
+    result = []
+    for i in range(npoints):
+        result.append(Bunch(lat=outlats_p[i], lon=outlons_p[i], value=values_p[i], distance=distances_p[i], index=indexes_p[i]))
 
-        return tuple(result)
-    else:
-        raise ValueError("Invalid value for npoints. Expecting 1 or 4.")
+    return tuple(result)
 
 
 @require(msgid=int, key=str)
