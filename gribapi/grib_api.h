@@ -39,6 +39,7 @@ typedef struct grib_iterator  grib_iterator;
     \ingroup keys_iterator
 */
 typedef struct grib_keys_iterator    grib_keys_iterator;
+typedef struct bufr_keys_iterator    bufr_keys_iterator;
 
 /*! \defgroup grib_index The grib_index
 The grib_index is the structure giving indexed access to messages in a file.
@@ -298,6 +299,35 @@ int                 grib_iterator_next     (grib_iterator *i, double* lat,double
 int                 grib_iterator_delete   (grib_iterator *i);
 
 /**
+* Find the nearest point of a set of points whose latitudes and longitudes
+* are given in the inlats, inlons arrays respectively.
+* If the flag is_lsm is 1 the nearest land point is returned and the
+* GRIB passed as handle (h) is considered a land sea mask.
+* The land nearest point is the nearest point with land sea mask value>=0.5.
+* If no nearest land points are found the nearest value is returned.
+* If the flag is_lsm is 0 the nearest point is returned.
+* values, distances, indexes (in the "values" array) for the nearest points (ilons,ilats)
+* are returned.
+* The distances are given in kilometres.
+*
+* @param h           : handle from which geography and data values are taken
+* @param is_lsm      : lsm flag (1-> nearest land, 0-> nearest)
+* @param inlats      : latitudes of the points to search for
+* @param inlons      : longitudes of the points to search for
+* @param npoints     : number of points (size of the inlats,inlons,outlats,outlons,values,distances,indexes arrays)
+* @param outlats     : returned array of latitudes of the nearest points
+* @param outlons     : returned array of longitudes of the nearest points
+* @param values      : returned array of data values of the nearest points
+* @param distances   : returned array of distances from the nearest points
+* @param indexes     : returned array of indexes of the nearest points
+* @return            0 if OK, integer value on error
+*/
+int grib_nearest_find_multiple(grib_handle* h,int is_lsm,
+    double* inlats,double* inlons,long npoints,
+    double* outlats,double* outlons,
+    double* values,double* distances, int* indexes);
+
+/**
 *  Get the number of coded value from a key, if several keys of the same name are present, the total sum is returned
 *
 * @param h           : the handle to get the offset from
@@ -469,24 +499,28 @@ attributes or by the namespace they belong to.
 *                       and namespace
 */
 grib_keys_iterator* grib_keys_iterator_new(grib_handle* h,unsigned long filter_flags, const char* name_space);
+bufr_keys_iterator* codes_bufr_keys_iterator_new(grib_handle* h, unsigned long filter_flags);
 
 /*! Step to the next iterator.
 *  @param kiter         : valid grib_keys_iterator
 *  @return              1 if next iterator exists, 0 if no more elements to iterate on
 */
 int grib_keys_iterator_next(grib_keys_iterator* kiter);
+int codes_bufr_keys_iterator_next(bufr_keys_iterator* kiter);
 
 /*! get the key name from the iterator
 *  @param kiter         : valid grib_keys_iterator
 *  @return              key name
 */
 const char* grib_keys_iterator_get_name(grib_keys_iterator *kiter);
+char* codes_bufr_keys_iterator_get_name(bufr_keys_iterator* kiter);
 
 /*! Delete the iterator.
 *  @param kiter         : valid grib_keys_iterator
 *  @return              0 if OK, integer value on error
 */
 int grib_keys_iterator_delete(grib_keys_iterator* kiter);
+int codes_bufr_keys_iterator_delete(bufr_keys_iterator* kiter);
 
 /**
 * Convert an error code into a string

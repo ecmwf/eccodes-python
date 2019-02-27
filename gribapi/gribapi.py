@@ -178,14 +178,22 @@ def put_iterator(iterh):
     return int(ffi.cast('unsigned long', iterh))
 
 
-def get_keys_iterator(iterid):
+def get_grib_keys_iterator(iterid):
     assert isinstance(iterid, int)
     return ffi.cast('grib_keys_iterator*', iterid)
 
 
-def put_keys_iterator(iterh):
+def put_grib_keys_iterator(iterh):
     return int(ffi.cast('unsigned long', iterh))
 
+
+def get_bufr_keys_iterator(iterid):
+    assert isinstance(iterid, int)
+    return ffi.cast('bufr_keys_iterator*', iterid)
+
+
+def put_bufr_keys_iterator(iterh):
+    return int(ffi.cast('unsigned long', iterh))
 
 # @cond
 @require(errid=int)
@@ -733,7 +741,7 @@ def grib_keys_iterator_new(msgid, namespace=None):
     h = get_handle(msgid)
     bnamespace = ffi.NULL if namespace is None else namespace.encode(ENC)
     iterid = lib.grib_keys_iterator_new(h, 0, bnamespace)
-    return put_keys_iterator(iterid)
+    return put_grib_keys_iterator(iterid)
 
 
 @require(iterid=int)
@@ -746,7 +754,7 @@ def grib_keys_iterator_next(iterid):
     @param iterid      keys iterator id created with @ref grib_keys_iterator_new
     @exception GribInternalError
     """
-    kih = get_keys_iterator(iterid)
+    kih = get_grib_keys_iterator(iterid)
     res = lib.grib_keys_iterator_next(kih)
     if res < 0:
         GRIB_CHECK(res)
@@ -764,7 +772,7 @@ def grib_keys_iterator_delete(iterid):
     @exception GribInternalError
     """
     # aa: THIS LEAKS MEMORY as it doesn't free all the connected iterators
-    kih = get_keys_iterator(iterid)
+    kih = get_grib_keys_iterator(iterid)
     lib.grib_keys_iterator_delete(kih)
 
 
@@ -780,7 +788,7 @@ def grib_keys_iterator_get_name(iterid):
     @exception GribInternalError
     """
     # aa: missing call to grib_keys_iterator_get_accessor
-    kih = get_keys_iterator(iterid)
+    kih = get_grib_keys_iterator(iterid)
     name = lib.grib_keys_iterator_get_name(kih)
     return ffi.string(name).decode(ENC)
 
@@ -811,9 +819,11 @@ def codes_bufr_keys_iterator_new(msgid):
     @return keys iterator id to be used in the keys iterator functions
     @exception GribInternalError
     """
-    err, iterid = _internal.codes_c_bufr_keys_iterator_new(msgid)
-    GRIB_CHECK(err)
-    return iterid
+    h = get_handle(msgid)
+    bki = lib.codes_bufr_keys_iterator_new(h, 0)
+    if bki == ffi.NULL:
+        raise errors.InvalidKeysIteratorError
+    return put_bufr_keys_iterator(bki)
 
 
 @require(iterid=int)
@@ -826,7 +836,8 @@ def codes_bufr_keys_iterator_next(iterid):
     @param iterid      keys iterator id created with @ref codes_bufr_keys_iterator_new
     @exception GribInternalError
     """
-    res = _internal.codes_c_bufr_keys_iterator_next(iterid)
+    bki = get_bufr_keys_iterator(iterid)
+    res = lib.codes_bufr_keys_iterator_next(bki)
     if res < 0:
         GRIB_CHECK(res)
     return res
@@ -842,7 +853,8 @@ def codes_bufr_keys_iterator_delete(iterid):
     @param iterid      keys iterator id created with @ref codes_bufr_keys_iterator_new
     @exception GribInternalError
     """
-    GRIB_CHECK(_internal.codes_c_bufr_keys_iterator_delete(iterid))
+    bki = get_bufr_keys_iterator(iterid)
+    GRIB_CHECK(lib.codes_bufr_keys_iterator_delete(bki))
 
 
 @require(iterid=int)
@@ -856,9 +868,9 @@ def codes_bufr_keys_iterator_get_name(iterid):
     @return key name to be retrieved
     @exception GribInternalError
     """
-    err, name = _internal.codes_c_bufr_keys_iterator_get_name(iterid, 1024)
-    GRIB_CHECK(err)
-    return name
+    bki = get_bufr_keys_iterator(iterid)
+    name = lib.codes_bufr_keys_iterator_get_name(bki)
+    return ffi.string(name).decode(ENC)
 
 
 @require(iterid=int)
@@ -1657,32 +1669,38 @@ def grib_find_nearest(gribid, inlat, inlon, is_lsm=False, npoints=1):
     @return (npoints*(outlat,outlon,value,dist,index))
     @exception GribInternalError
     """
+    h = get_handle(gribid)
     if npoints == 1:
-        err, outlat, outlon, value, dist, idx = _internal.grib_c_find_nearest_single(gribid, is_lsm, inlat, inlon)
-        GRIB_CHECK(err)
-        return (Bunch(lat=outlat, lon=outlon, value=value, distance=dist, index=idx),)
+        inlats_p = ffi.new('double*', inlat)
+        inlons_p = ffi.new('double*', inlon)
+        outlats_p = ffi.new('double*')
+        outlons_p = ffi.new('double*')
+        values_p = ffi.new('double*')
+        distances_p = ffi.new('double*')
+        indexes_p = ffi.new('int*')
+        err = lib.grib_nearest_find_multiple(
+            h, is_lsm, inlats_p, inlons_p, 1,
+            outlats_p, outlons_p, values_p, distances_p, indexes_p,
+        )
+        return (Bunch(lat=outlats_p[0], lon=outlons_p[0], value=values_p[0], distance=distances_p[0], index=indexes_p[0]),)
     elif npoints == 4:
-        poutlat = _internal.new_doubleArray(4)
-        poutlon = _internal.new_doubleArray(4)
-        pvalues = _internal.new_doubleArray(4)
-        pdist = _internal.new_doubleArray(4)
-        pidx = _internal.new_intArray(4)
+        inlats_p = ffi.new('double*', inlat)
+        inlons_p = ffi.new('double*', inlon)
+        outlats_p = ffi.new('double[]', npoints)
+        outlons_p = ffi.new('double[]', npoints)
+        values_p = ffi.new('double[]', npoints)
+        distances_p = ffi.new('double[]', npoints)
+        indexes_p = ffi.new('int[]', npoints)
 
-        GRIB_CHECK(_internal.grib_c_find_nearest_four_single(gribid, is_lsm, inlat, inlon, poutlat, poutlon, pvalues, pdist, pidx))
+        err = lib.grib_nearest_find_multiple(
+            h, is_lsm, inlats_p, inlons_p, 1,
+            outlats_p, outlons_p, values_p, distances_p, indexes_p,
+        )
+        GRIB_CHECK(err)
 
         result = []
         for i in range(4):
-            result.append(Bunch(lat=_internal.doubleArray_getitem(poutlat, i),
-                                lon=_internal.doubleArray_getitem(poutlon, i),
-                                value=_internal.doubleArray_getitem(pvalues, i),
-                                distance=_internal.doubleArray_getitem(pdist, i),
-                                index=_internal.intArray_getitem(pidx, i)))
-
-        _internal.delete_doubleArray(poutlat)
-        _internal.delete_doubleArray(poutlon)
-        _internal.delete_doubleArray(pvalues)
-        _internal.delete_doubleArray(pdist)
-        _internal.delete_intArray(pidx)
+            result.append(Bunch(lat=outlats_p[i], lon=outlons_p[i], value=values_p[i], distance=distances_p[i], index=indexes_p[i]))
 
         return tuple(result)
     else:
