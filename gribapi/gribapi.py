@@ -474,7 +474,7 @@ def grib_gribex_mode_on():
 
     @exception GribInternalError
     """
-    _internal.grib_c_gribex_mode_on()
+    lib.grib_c_gribex_mode_on(ffi.NULL)
 
 
 def grib_gribex_mode_off():
@@ -483,7 +483,7 @@ def grib_gribex_mode_off():
 
     @exception GribInternalError
     """
-    _internal.grib_c_gribex_mode_off()
+    lib.grib_c_gribex_mode_off(ffi.NULL)
 
 
 @require(msgid=int, fileobj=file)
@@ -585,7 +585,8 @@ def grib_skip_computed(iterid):
     @param iterid      keys iterator id
     @exception GribInternalError
     """
-    GRIB_CHECK(_internal.grib_c_skip_computed(iterid))
+    gki = get_grib_keys_iterator(iterid)
+    lib.grib_keys_iterator_set_flags(gki, lib.GRIB_KEYS_ITERATOR_SKIP_COMPUTED)
 
 
 @require(iterid=int)
@@ -600,7 +601,8 @@ def grib_skip_coded(iterid):
     @param iterid      keys iterator id
     @exception GribInternalError
     """
-    GRIB_CHECK(_internal.grib_c_skip_coded(iterid))
+    gki = get_grib_keys_iterator(iterid)
+    lib.grib_keys_iterator_set_flags(gki, lib.GRIB_KEYS_ITERATOR_SKIP_CODED)
 
 
 @require(iterid=int)
@@ -613,7 +615,8 @@ def grib_skip_edition_specific(iterid):
     @param iterid      keys iterator id
     @exception GribInternalError
     """
-    GRIB_CHECK(_internal.grib_c_skip_edition_specific(iterid))
+    gki = get_grib_keys_iterator(iterid)
+    lib.grib_keys_iterator_set_flags(gki, lib.GRIB_KEYS_ITERATOR_SKIP_EDITION_SPECIFIC)
 
 
 @require(iterid=int)
@@ -626,7 +629,8 @@ def grib_skip_duplicates(iterid):
     @param iterid      keys iterator id
     @exception GribInternalError
     """
-    GRIB_CHECK(_internal.grib_c_skip_duplicates(iterid))
+    gki = get_grib_keys_iterator(iterid)
+    lib.grib_keys_iterator_set_flags(gki, lib.GRIB_KEYS_ITERATOR_SKIP_DUPLICATES)
 
 
 @require(iterid=int)
@@ -641,7 +645,8 @@ def grib_skip_read_only(iterid):
     @param iterid      keys iterator id
     @exception GribInternalError
     """
-    GRIB_CHECK(_internal.grib_c_skip_read_only(iterid))
+    gki = get_grib_keys_iterator(iterid)
+    lib.grib_keys_iterator_set_flags(gki, lib.GRIB_KEYS_ITERATOR_SKIP_READ_ONLY)
 
 
 @require(iterid=int)
@@ -654,7 +659,8 @@ def grib_skip_function(iterid):
     @param iterid      keys iterator id
     @exception GribInternalError
     """
-    GRIB_CHECK(_internal.grib_c_skip_function(iterid))
+    gki = get_grib_keys_iterator(iterid)
+    lib.grib_keys_iterator_set_flags(gki, lib.GRIB_KEYS_ITERATOR_SKIP_FUNCTION)
 
 
 @require(gribid=int, mode=int)
@@ -1024,9 +1030,11 @@ def codes_bufr_new_from_samples(samplename):
     @return             id of the message loaded in memory
     @exception GribInternalError
     """
-    err, msgid = _internal.grib_c_bufr_new_from_samples(0, samplename)
-    GRIB_CHECK(err)
-    return msgid
+    h = lib.codes_bufr_handle_new_from_samples(ffi.NULL, samplename.encode(ENC))
+    if h == ffi.NULL:
+        errors.raise_grib_error(errors.FileNotFoundError)
+    return put_handle(h)
+
 
 @require(msgid_src=int, msgid_dst=int)
 def codes_bufr_copy_data(msgid_src, msgid_dst):

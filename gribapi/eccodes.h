@@ -8,6 +8,18 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
+/*! Codes handle,   structure giving access to parsed values by keys
+    \ingroup codes_handle
+    \struct codes_handle
+*/
+typedef struct grib_handle            codes_handle;
+
+/*! Codes context,  structure containing the memory methods, the parsers and the formats.
+    \ingroup codes_context
+    \struct codes_context
+*/
+typedef struct grib_context           codes_context;
+
 /**
 *  Create a handle from a file resource.
 *  The file is read until a message is found. The message is then copied.
@@ -21,4 +33,14 @@
 * @return            the new handle, NULL if the resource is invalid or a problem is encountered
 */
 grib_handle* codes_handle_new_from_file(grib_context* c, FILE* f, ProductKind product, int* error);
+
+/**
+ *  Create a handle from a BUFR message contained in a samples directory.
+ *  The message is copied at the creation of the handle
+ *
+ * @param c           : the context from which the handle will be created (NULL for default context)
+ * @param sample_name : the name of the sample file (without the .tmpl extension)
+ * @return            the new handle, NULL if the resource is invalid or a problem is encountered
+ */
+codes_handle* codes_bufr_handle_new_from_samples (codes_context* c, const char* sample_name);
 
