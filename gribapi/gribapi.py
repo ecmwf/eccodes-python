@@ -30,6 +30,9 @@ import sys
 import os
 from functools import wraps
 # import inspect
+
+import numpy as np
+
 from . import errors
 from .errors import *  # noqa
 
@@ -1100,6 +1103,8 @@ def grib_set_double_array(msgid, key, inarray):
     @exception GribInternalError
     """
     h = get_handle(msgid)
+    if isinstance(inarray, np.ndarray):
+        inarray = inarray.tolist()
     GRIB_CHECK(lib.grib_set_double_array(h, key.encode(ENC), inarray, len(inarray)))
 
 
@@ -1183,7 +1188,9 @@ def grib_set_long_array(msgid, key, inarray):
     @exception GribInternalError
     """
     h = get_handle(msgid)
-    GRIB_CHECK(lib.grib_set_double_array(h, key.encode(ENC), inarray, len(inarray)))
+    if isinstance(inarray, np.ndarray):
+        inarray = inarray.tolist()
+    GRIB_CHECK(lib.grib_set_long_array(h, key.encode(ENC), inarray, len(inarray)))
 
 
 @require(msgid=int, key=str)
@@ -2061,8 +2068,8 @@ def grib_get_message(msgid):
     h = get_handle(msgid)
     message_p = ffi.new('const void**')
     message_length_p = ffi.new('size_t*')
-    error = lib.grib_get_message(h, message_p, message_length_p)
-    GRIB_CHECK(error)
+    err = lib.grib_get_message(h, message_p, message_length_p)
+    GRIB_CHECK(err)
     # NOTE: ffi.string would stop on the first nul-character.
     fixed_length_buffer = ffi.buffer(ffi.cast('char*', message_p[0]), message_length_p[0])
     # Convert to bytes

@@ -552,6 +552,18 @@ int grib_set_string       (grib_handle* h, const char*  key , const char* mesg, 
 int grib_set_double_array (grib_handle* h, const char*  key , const double*        vals   , size_t length);
 
 /**
+*  Set a long array from a key. If several keys of the same name are present, the last one is set
+*  @see  grib_get_long_array
+*
+* @param h           : the handle to set the data to
+* @param key         : the key to be searched
+* @param vals        : the address of a long array where the data will be read
+* @param length      : a size_t that contains the length of the long array on input
+* @return            0 if OK, integer value on error
+*/
+int grib_set_long_array   (grib_handle* h, const char*  key , const long*          vals   , size_t length);
+
+/**
 *  Get the static default context
 *
 * @return            the default context, NULL it the context is not available
