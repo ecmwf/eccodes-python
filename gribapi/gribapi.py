@@ -144,10 +144,15 @@ def err_last(func):
 
 def get_handle(msgid):
     assert isinstance(msgid, int)
-    return ffi.cast('grib_handle*', msgid)
+    h = ffi.cast('grib_handle*', msgid)
+    if h == ffi.NULL:
+        raise errors.InvalidGribError
+    return h
 
 
 def put_handle(handle):
+    if handle == ffi.NULL:
+        raise errors.InvalidGribError
     return int(ffi.cast('unsigned long', handle))
 
 
@@ -380,7 +385,6 @@ def codes_close_file(fileobj):
     # err = _internal.codes_c_close_file(fileobj.fileno(), fileobj.name)
     # Note: it is safe calling close() here as subsequent calls will have no effect
     fileobj.close()
-    GRIB_CHECK(err)
 
 
 @require(fileobj=file)
@@ -1176,7 +1180,8 @@ def grib_set_long_array(msgid, key, inarray):
     @param inarray     tuple,list,python array,numpy.ndarray
     @exception GribInternalError
     """
-    GRIB_CHECK(_internal.grib_set_long_ndarray(msgid, key, inarray))
+    h = get_handle(msgid)
+    GRIB_CHECK(lib.grib_set_double_array(h, key.encode(ENC), inarray, len(inarray)))
 
 
 @require(msgid=int, key=str)
@@ -1490,9 +1495,11 @@ def grib_get_message_size(msgid):
     @return          size in bytes of the message
     @exception GribInternalError
     """
-    err, value = _internal.grib_c_get_message_size(msgid)
+    h = get_handle(msgid)
+    size_p = ffi.new('size_t*')
+    err = lib.grib_get_message_size(h, size_p)
     GRIB_CHECK(err)
-    return value
+    return size_p[0]
 
 
 @require(msgid=int)
@@ -1622,7 +1629,13 @@ def grib_set_key_vals(gribid, key_vals):
     else:
         raise TypeError("Invalid argument type")
 
-    GRIB_CHECK(_internal.grib_c_set_key_vals(gribid, key_vals_str))
+    h = get_handle(gribid)
+    values = ffi.new('grib_values[]', 1024)
+    count_p = ffi.new('int*', 1000)
+    err = lib.parse_keyval_string(ffi.NULL, key_vals_str.encode(ENC), 1, lib.GRIB_TYPE_UNDEFINED, values, count_p)
+    GRIB_CHECK(err)
+    err = lib.grib_set_values(h, values, count_p[0])
+    GRIB_CHECK(err)
 
 
 @require(msgid=int, key=str)

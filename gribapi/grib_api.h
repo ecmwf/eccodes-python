@@ -15,6 +15,70 @@
 
 typedef enum ProductKind {PRODUCT_ANY, PRODUCT_GRIB, PRODUCT_BUFR, PRODUCT_METAR, PRODUCT_GTS, PRODUCT_TAF} ProductKind;
 
+/* Types */
+/*  undefined */
+#define GRIB_TYPE_UNDEFINED 0
+/*  long integer */
+#define GRIB_TYPE_LONG 1
+/*  double */
+#define GRIB_TYPE_DOUBLE 2
+/*  char*    */
+#define GRIB_TYPE_STRING 3
+/*  bytes */
+#define GRIB_TYPE_BYTES 4
+/*  section */
+#define GRIB_TYPE_SECTION 5
+/*  label */
+#define GRIB_TYPE_LABEL 6
+/*  missing */
+#define GRIB_TYPE_MISSING 7
+
+/*! read only keys are skipped by keys iterator.
+\ingroup keys_iterator
+\see grib_keys_iterator_new
+*/
+#define GRIB_KEYS_ITERATOR_SKIP_READ_ONLY          1
+
+/*! edition specific keys are skipped by keys iterator.
+\ingroup keys_iterator
+\see grib_keys_iterator_new */
+#define GRIB_KEYS_ITERATOR_SKIP_EDITION_SPECIFIC   4
+
+/*! coded keys are skipped by keys iterator.
+\ingroup keys_iterator
+\see grib_keys_iterator_new */
+#define GRIB_KEYS_ITERATOR_SKIP_CODED              8
+
+/*! computed keys are skipped by keys iterator.
+\ingroup keys_iterator
+\see grib_keys_iterator_new */
+#define GRIB_KEYS_ITERATOR_SKIP_COMPUTED           16
+
+/*! duplicates of a key are skipped by keys iterator.
+\ingroup keys_iterator
+\see grib_keys_iterator_new */
+#define GRIB_KEYS_ITERATOR_SKIP_DUPLICATES         32
+
+/*! function keys are skipped by keys iterator.
+\ingroup keys_iterator
+\see grib_keys_iterator_new */
+#define GRIB_KEYS_ITERATOR_SKIP_FUNCTION           64
+
+typedef struct grib_values grib_values;
+
+struct grib_values {
+  const char* name;
+  int         type;
+  long        long_value;
+  double      double_value;
+  const char* string_value;
+  int         error;
+  int         has_value;
+  int         equal;
+  grib_values* next;
+} ;
+
+
 /*! Grib handle,   structure giving access to parsed message values by keys
     \ingroup grib_handle
 */
@@ -464,6 +528,22 @@ int grib_set_string       (grib_handle* h, const char*  key , const char* mesg, 
 int grib_set_double_array (grib_handle* h, const char*  key , const double*        vals   , size_t length);
 
 /**
+*  Set the GRIBEX mode on.
+*  Grib files will be compatible with GRIBEX.
+*
+* @param c           : the context
+*/
+void grib_gribex_mode_on(grib_context* c);
+
+/**
+*  Set the GRIBEX mode off.
+*  GRIB files won't be always compatible with GRIBEX.
+*
+* @param c           : the context
+*/
+void grib_gribex_mode_off(grib_context* c);
+
+/**
 *  Turn on support for multiple fields in single grib messages
 *
 * @param c            : the context to be modified
@@ -522,6 +602,8 @@ char* codes_bufr_keys_iterator_get_name(bufr_keys_iterator* kiter);
 int grib_keys_iterator_delete(grib_keys_iterator* kiter);
 int codes_bufr_keys_iterator_delete(bufr_keys_iterator* kiter);
 
+int grib_keys_iterator_set_flags(grib_keys_iterator *kiter,unsigned long flags);
+
 /**
 * Convert an error code into a string
 * @param code       : the error code
@@ -534,8 +616,11 @@ int grib_get_native_type(grib_handle* h, const char* name,int* type);
 /* aa: changed off_t to long int */
 int grib_get_message_offset ( grib_handle* h,long int* offset);
 
+int grib_set_values(grib_handle* h,grib_values*  grib_values , size_t arg_count);
 int grib_is_missing(grib_handle* h, const char* key, int* err);
 int grib_set_missing(grib_handle* h, const char* key);
+
+int grib_get_message_size ( grib_handle* h,size_t* size);
 
 /*! \defgroup errors Error codes
 Error codes returned by the grib_api functions.
