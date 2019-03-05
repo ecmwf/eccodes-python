@@ -137,6 +137,7 @@ grib_index* grib_index_new_from_file(grib_context* c,
  * @param filename    : name of the file of messages to be indexed
  * @return            0 if OK, integer value on error
  */
+int grib_index_add_file(grib_index *index, const char *filename);
 int grib_index_write(grib_index *index, const char *filename);
 grib_index* grib_index_read(grib_context* c,const char* filename,int *err);
 
@@ -176,6 +177,29 @@ int grib_index_get_long(grib_index* index,const char* key,
  */
 int grib_index_get_string(grib_index* index,const char* key,
                           char** values,size_t *size);
+
+
+/**
+ *  Select the message subset with key==value. The value is a long. The key must have been created with long type or have long as native type if the type was not explicitly defined in the index creation.
+ *
+ * @param index       : an index created from a file.
+ *     The index must have been created with the key in argument.
+ * @param key         : key to be selected
+ * @param value       : value of the key to select
+ * @return            0 if OK, integer value on error
+ */
+int grib_index_select_long(grib_index* index,const char* key,long value);
+
+/**
+ *  Select the message subset with key==value. The value is a double. The key must have been created with double type or have double as native type if the type was not explicitly defined in the index creation.
+ *
+ * @param index       : an index created from a file.
+ *     The index must have been created with the key in argument.
+ * @param key         : key to be selected
+ * @param value       : value of the key to select
+ * @return            0 if OK, integer value on error
+ */
+int grib_index_select_double(grib_index* index,const char* key,double value);
 
 /**
  *  Select the message subset with key==value. The value is a string. The key must have been created with string type or have string as native type if the type was not explicitly defined in the index creation.
@@ -526,6 +550,29 @@ int grib_set_string       (grib_handle* h, const char*  key , const char* mesg, 
 * @return            0 if OK, integer value on error
 */
 int grib_set_double_array (grib_handle* h, const char*  key , const double*        vals   , size_t length);
+
+/**
+*  Get the static default context
+*
+* @return            the default context, NULL it the context is not available
+*/
+grib_context*    grib_context_get_default(void);
+
+/**
+*  Set the GTS header mode on.
+*  The GTS headers will be preserved.
+*
+* @param c           : the context
+*/
+void grib_gts_header_on(grib_context* c) ;
+
+/**
+*  Set the GTS header mode off.
+*  The GTS headers will be deleted.
+*
+* @param c           : the context
+*/
+void grib_gts_header_off(grib_context* c);
 
 /**
 *  Set the GRIBEX mode on.

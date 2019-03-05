@@ -1053,7 +1053,9 @@ def codes_bufr_copy_data(msgid_src, msgid_dst):
     @return id of new message
     @exception GribInternalError
     """
-    err, msgid_dst = _internal.grib_c_bufr_copy_data(msgid_src, msgid_dst)
+    h_src = get_handle(msgid_src)
+    h_dst = get_handle(msgid_dst)
+    err = lib.codes_bufr_copy_data(h_src, h_dst)
     GRIB_CHECK(err)
     return msgid_dst
 
@@ -1276,7 +1278,8 @@ def grib_index_add_file(indexid, filename):
     @param filename   path of the file to be added to index
     @exception GribInternalError
     """
-    err = _internal.grib_c_index_add_file(indexid, filename)
+    iid = get_index(indexid)
+    err = lib.grib_index_add_file(iid, filename.encode(ENC))
     GRIB_CHECK(err)
 
 
@@ -1419,7 +1422,8 @@ def grib_index_select_long(indexid, key, value):
     @param value     value of the key to select
     @exception GribInternalError
     """
-    GRIB_CHECK(_internal.grib_c_index_select_long(indexid, key, value))
+    iid = get_index(indexid)
+    GRIB_CHECK(lib.grib_index_select_long(iid, key.encode(ENC), value))
 
 
 @require(indexid=int, key=str, value=float)
@@ -1437,7 +1441,8 @@ def grib_index_select_double(indexid, key, value):
     @param value     value of the key to select
     @exception GribInternalError
     """
-    GRIB_CHECK(_internal.grib_c_index_select_real8(indexid, key, value))
+    iid = get_index(indexid)
+    GRIB_CHECK(lib.grib_index_select_double(iid, key.encode(ENC), value))
 
 
 @require(indexid=int, key=str, value=str)
@@ -2016,10 +2021,11 @@ def grib_gts_header(flag):
 
     @param flag True/False
     """
+    context = lib.grib_context_get_default()
     if flag:
-        _internal.grib_c_gts_header_on()
+        lib.grib_gts_header_on(context)
     else:
-        _internal.grib_c_gts_header_off()
+        lib.grib_gts_header_off(context)
 
 
 def grib_get_api_version():

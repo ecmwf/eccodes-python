@@ -44,3 +44,10 @@ grib_handle* codes_handle_new_from_file(grib_context* c, FILE* f, ProductKind pr
  */
 codes_handle* codes_bufr_handle_new_from_samples (codes_context* c, const char* sample_name);
 
+/* codes_bufr_copy_data copies all the values in the data section that are present in the same position in the data tree
+ * and with the same number of values to the output handle. Should not exit with error if the output handle has a different
+ * structure as the aim is to copy what is possible to be copied.
+ * This will allow the user to add something to a message by creating a new message with additions or changes to the
+ * unexpandedDescriptors and copying what is possible to copy from the original message. */
+int codes_bufr_copy_data(grib_handle* hin, grib_handle* hout);
+
