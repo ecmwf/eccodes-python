@@ -24,16 +24,13 @@ When this is enabed, then the system Python will be used to build the interface.
 """
 from .bindings import ENC, ffi, lib
 import functools
-import types
 import sys
 import os
 from functools import wraps
-# import inspect
 
 import numpy as np
 
 from . import errors
-from .errors import *  # noqa
 
 try:
    type(file)
