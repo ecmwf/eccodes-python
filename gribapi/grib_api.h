@@ -458,6 +458,29 @@ int          grib_get_long         (grib_handle* h, const char* key, long*   val
 int grib_get_double       (grib_handle* h, const char* key, double* value);
 
 /**
+*  Get as double the i-th element of the "key" array
+*
+* @param h           : the handle to get the data from
+* @param key         : the key to be searched
+* @param i           : zero-based index
+* @param value       : the address of a double where the data will be retrieved
+* @return            0 if OK, integer value on error
+*/
+int grib_get_double_element(grib_handle* h, const char* key, int i, double* value);
+
+/**
+*  Get as double array the elements of the "key" array whose indexes are listed in the input array i
+*
+* @param h           : the handle to get the data from
+* @param key         : the key to be searched
+* @param i           : zero-based array of indexes
+* @param size        : size of the i and value arrays
+* @param value       : the double array for the data values
+* @return            0 if OK, integer value on error
+*/
+int grib_get_double_elements(grib_handle* h, const char* key, int* i, long size, double* value);
+
+/**
 *  Get a string value from a key, if several keys of the same name are present, the last one is returned
 * @see  grib_set_string
 *
@@ -504,6 +527,19 @@ int grib_get_double_array (grib_handle* h, const char* key, double* vals, size_t
 * @return            0 if OK, integer value on error
 */
 int grib_get_long_array(grib_handle* h, const char* key, long* vals, size_t *length);
+
+
+/*   setting      data         */
+/**
+*  Copy the keys belonging to a given namespace from a source handle to a destination handle
+*
+*
+* @param dest      : destination handle
+* @param name      : namespace
+* @param src       : source handle
+* @return          0 if OK, integer value on error
+*/
+int grib_copy_namespace(grib_handle* dest, const char* name, grib_handle* src);
 
 /**
 *  Set a long value from a key. If several keys of the same name are present, the last one is set
@@ -564,6 +600,19 @@ int grib_set_double_array (grib_handle* h, const char*  key , const double*     
 int grib_set_long_array   (grib_handle* h, const char*  key , const long*          vals   , size_t length);
 
 /**
+*  Set a string array from a key. If several keys of the same name are present, the last one is set
+*  @see  grib_get_string_array
+*
+* @param h           : the handle to set the data to
+* @param key         : the key to be searched
+* @param vals        : the address of a string array where the data will be read
+* @param length      : a size_t that contains the length of the array on input
+* @return            0 if OK, integer value on error
+*/
+int copy(grib_handle* h, const char *key, const char **vals, size_t length);
+/*! @} */
+
+/**
 *  Get the static default context
 *
 * @return            the default context, NULL it the context is not available
@@ -601,6 +650,22 @@ void grib_gribex_mode_on(grib_context* c);
 * @param c           : the context
 */
 void grib_gribex_mode_off(grib_context* c);
+
+/**
+ * Sets the search path for definition files.
+ *
+ * @param c      : the context to be modified
+ * @param path   : the search path for definition files
+ */
+void grib_context_set_definitions_path(grib_context* c, const char* path);
+
+/**
+ * Sets the search path for sample files.
+ *
+ * @param c      : the context to be modified
+ * @param path   : the search path for sample files
+ */
+void grib_context_set_samples_path(grib_context* c, const char* path);
 
 /**
 *  Turn on support for multiple fields in single grib messages
@@ -661,6 +726,13 @@ char* codes_bufr_keys_iterator_get_name(bufr_keys_iterator* kiter);
 int grib_keys_iterator_delete(grib_keys_iterator* kiter);
 int codes_bufr_keys_iterator_delete(bufr_keys_iterator* kiter);
 
+/*! Rewind the iterator.
+*  @param kiter         : valid grib_keys_iterator
+*  @return              0 if OK, integer value on error
+*/
+int grib_keys_iterator_rewind(grib_keys_iterator* kiter);
+int codes_bufr_keys_iterator_rewind(bufr_keys_iterator* kiter);
+
 int grib_keys_iterator_set_flags(grib_keys_iterator *kiter,unsigned long flags);
 
 /**
@@ -677,6 +749,7 @@ int grib_get_message_offset ( grib_handle* h,long int* offset);
 
 int grib_set_values(grib_handle* h,grib_values*  grib_values , size_t arg_count);
 int grib_is_missing(grib_handle* h, const char* key, int* err);
+int grib_is_defined(grib_handle* h, const char* key);
 int grib_set_missing(grib_handle* h, const char* key);
 
 int grib_get_message_size ( grib_handle* h,size_t* size);

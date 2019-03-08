@@ -22,7 +22,6 @@ When this is enabed, then the system Python will be used to build the interface.
     - NumPy
 
 """
-# from gribapi import gribapi_swig as _internal
 from .bindings import ENC, ffi, lib
 import functools
 import types
@@ -814,7 +813,9 @@ def grib_keys_iterator_rewind(iterid):
     @param iterid      keys iterator id created with @ref grib_keys_iterator_new
     @exception GribInternalError
     """
-    GRIB_CHECK(_internal.grib_c_keys_iterator_rewind(iterid))
+    gki = get_grib_keys_iterator(iterid)
+    GRIB_CHECK(lib.grib_keys_iterator_rewind(gki))
+
 
 # BUFR keys iterator
 @require(msgid=int)
@@ -894,8 +895,8 @@ def codes_bufr_keys_iterator_rewind(iterid):
     @param iterid      keys iterator id created with @ref codes_bufr_keys_iterator_new
     @exception GribInternalError
     """
-    GRIB_CHECK(_internal.codes_c_bufr_keys_iterator_rewind(iterid))
-
+    bki = get_bufr_keys_iterator(iterid)
+    GRIB_CHECK(lib.codes_bufr_keys_iterator_rewind(bki))
 
 
 @require(msgid=int, key=str)
@@ -1166,7 +1167,8 @@ def grib_set_string_array(msgid, key, inarray):
     @param inarray tuple,list,array
     @exception GribInternalError
     """
-    GRIB_CHECK( _internal.grib_c_set_string_array(msgid, key, list(inarray)) )
+    h = get_handle(msgid)
+    GRIB_CHECK(lib.grib_set_string_array(h, key.encode(ENC), [s.encode(ENC) for s in inarray]))
 
 
 @require(msgid=int, key=str)
@@ -1252,7 +1254,9 @@ def grib_copy_namespace(gribid_src, namespace, gribid_dest):
     @param namespace      namespace to be copied
     @exception GribInternalError
     """
-    GRIB_CHECK(_internal.grib_c_copy_namespace(gribid_src, namespace, gribid_dest))
+    h_src = get_handle(gribid_src)
+    h_dest = get_handle(gribid_dest)
+    GRIB_CHECK(lib.grib_copy_namespace(h_src, namespace.encode(ENC), h_dest))
 
 
 @require(filename=str, keys=(tuple, list))
@@ -1542,9 +1546,11 @@ def grib_get_double_element(msgid, key, index):
     @exception GribInternalError
 
     """
-    err, value = _internal.grib_c_get_real8_element(msgid, key, index)
+    h = get_handle(msgid)
+    value_p = ffi.new('double *')
+    err = lib.grib_get_double_element(h, key.encode(ENC), index)
     GRIB_CHECK(err)
-    return value
+    return value_p[0]
 
 
 @require(msgid=int, key=str, indexes=(list, tuple))
@@ -1560,9 +1566,12 @@ def grib_get_double_elements(msgid, key, indexes):
 
     """
     nidx = len(indexes)
-    err, result = _internal.grib_get_double_ndelements(msgid, key, indexes, nidx)
+    h = get_handle(msgid)
+    i_p = ffi.new('int*', indexes)
+    value_p = ffi.new('double[]', nidx)
+    err = lib.grib_get_double_elements(h, key.encode(ENC), i_p, nidx, value_p)
     GRIB_CHECK(err)
-    return result
+    return [float(v) for v in value_p]
 
 
 @require(msgid=int, key=str)
@@ -1581,10 +1590,7 @@ def grib_get_elements(msgid, key, indexes):
     except TypeError:
         indexes = (indexes,)
 
-    nidx = len(indexes)
-    err, result = _internal.grib_get_double_ndelements(msgid, key, indexes, nidx)
-    GRIB_CHECK(err)
-    return result
+    return grib_get_double_elements(msgid, key, indexes)
 
 
 @require(msgid=int, key=str)
@@ -1680,9 +1686,8 @@ def grib_is_defined(msgid, key):
     @return           0->not defined, 1->defined
     @exception        GribInternalError
     """
-    err, value = _internal.grib_c_is_defined(msgid, key)
-    GRIB_CHECK(err)
-    return value
+    h = get_handle(msgid)
+    return lib.grib_is_defined(h, key.encode(ENC))
 
 
 @require(gribid=int, inlat=(int, float), inlon=(int, float))
@@ -2015,10 +2020,7 @@ def grib_no_fail_on_wrong_length(flag):
 
     @param flag True/False
     """
-    if flag:
-        _internal.no_fail_on_wrong_length(1)
-    else:
-        _internal.no_fail_on_wrong_length(0)
+    raise NotImplementedError("API not implemented in CFFI porting.")
 
 
 @require(flag=bool)
@@ -2104,7 +2106,8 @@ def grib_set_definitions_path(defs_path):
 
     @param defs_path   definitions path
     """
-    _internal.grib_c_set_definitions_path(defs_path)
+    context = lib.grib_context_get_default()
+    lib.grib_context_set_definitions_path(context, defs_path.encpde(ENC))
 
 
 @require(samples_path=str)
@@ -2114,4 +2117,5 @@ def grib_set_samples_path(samples_path):
 
     @param samples_path   samples path
     """
-    _internal.grib_c_set_samples_path(samples_path)
+    context = lib.grib_context_get_default()
+    lib.grib_context_set_samples_path(context, samples_path.encode(ENC))
