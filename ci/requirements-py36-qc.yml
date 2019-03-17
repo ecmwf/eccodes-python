@@ -6,6 +6,7 @@ dependencies:
   - cffi
   - coveralls
   - eccodes
+  - future
   - numpy
   - pytest
   - pytest-cov
@@ -13,3 +14,4 @@ dependencies:
   - pytest-mccabe
   - pytest-pep8
   - python=3.6
+  - typing
