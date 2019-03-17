@@ -33,11 +33,11 @@ import numpy as np
 from . import errors
 
 try:
-   type(file)
+    type(file)
 except NameError:
-   import io
-   file=io.IOBase
-   long=int
+    import io
+    file = io.IOBase
+    long = int
 
 KEYTYPES = {
     1: int,
@@ -95,6 +95,7 @@ def require(**_params_):
             return _func_(**kw)
         return modified
     return check_types
+
 
 # @cond
 class Bunch(dict):
@@ -199,6 +200,7 @@ def get_bufr_keys_iterator(iterid):
 def put_bufr_keys_iterator(iterh):
     return int(ffi.cast('unsigned long', iterh))
 
+
 # @cond
 @require(errid=int)
 def GRIB_CHECK(errid):
@@ -227,8 +229,6 @@ def gts_new_from_file(fileobj, headers_only=False):
     @return               id of the GTS loaded in memory
     @exception GribInternalError
     """
-    fd = fileobj.fileno()
-    fn = fileobj.name
     err, h = err_last(lib.gts_new_from_file)(ffi.NULL, fileobj)
     if h == ffi.NULL or err == lib.GRIB_END_OF_FILE:
         return None
@@ -251,8 +251,6 @@ def metar_new_from_file(fileobj, headers_only=False):
     @return               id of the METAR loaded in memory
     @exception GribInternalError
     """
-    fd = fileobj.fileno()
-    fn = fileobj.name
     err, h = err_last(lib.metar_new_from_file)(ffi.NULL, fileobj)
     if h == ffi.NULL or err == lib.GRIB_END_OF_FILE:
         return None
@@ -306,8 +304,6 @@ def any_new_from_file(fileobj, headers_only=False):
     @return               id of the message loaded in memory
     @exception GribInternalError
     """
-    fd = fileobj.fileno()
-    fn = fileobj.name
     err, h = err_last(lib.codes_handle_new_from_file)(ffi.NULL, fileobj, CODES_PRODUCT_ANY)
     if h == ffi.NULL or err == lib.GRIB_END_OF_FILE:
         return None
@@ -332,8 +328,6 @@ def bufr_new_from_file(fileobj, headers_only=False):
     @return               id of the BUFR loaded in memory
     @exception GribInternalError
     """
-    fd = fileobj.fileno()
-    fn = fileobj.name
     err, h = err_last(lib.codes_handle_new_from_file)(ffi.NULL, fileobj, CODES_PRODUCT_BUFR)
     if h == ffi.NULL or err == lib.GRIB_END_OF_FILE:
         return None
@@ -365,9 +359,6 @@ def grib_new_from_file(fileobj, headers_only=False):
     @return               id of the grib loaded in memory
     @exception GribInternalError
     """
-    fd = fileobj.fileno()
-    fn = fileobj.name
-    #print('Python gribapi.py  grib_new_from_file: ', fd,'  ', fn)
     err, h = err_last(lib.grib_new_from_file)(ffi.NULL, fileobj, headers_only)
     if h == ffi.NULL or err == lib.GRIB_END_OF_FILE:
         return None
@@ -1063,7 +1054,7 @@ def codes_bufr_copy_data(msgid_src, msgid_dst):
 
 @require(msgid_src=int)
 def grib_clone(msgid_src):
-    """
+    r"""
     @brief Create a copy of a message.
 
     Create a copy of a given message (\em msgid_src) resulting in a new
@@ -1751,7 +1742,7 @@ def grib_get_native_type(msgid, key):
 
 @require(msgid=int, key=str)
 def grib_get(msgid, key, ktype=None):
-    """
+    r"""
     @brief Get the value of a key in a message.
 
     The type of value returned depends on the native type of the requested key.
@@ -1876,7 +1867,7 @@ def grib_set(msgid, key, value):
         grib_set_double(msgid, key, value)
     elif isinstance(value, str):
         grib_set_string(msgid, key, value)
-    #elif hasattr(value, "__iter__"):
+    # elif hasattr(value, "__iter__"):
     #    # The value passed in is iterable; i.e. a list or array etc
     #    grib_set_array(msgid, key, value)
     else:
@@ -1917,7 +1908,7 @@ def grib_set_array(msgid, key, value):
     else:
         # Note: Cannot do isinstance(val0,int) for numpy.int64
         try:
-            n = int(val0)
+            int(val0)
         except (ValueError, TypeError):
             raise errors.GribInternalError("Invalid type of value when setting key '%s'." % key)
         grib_set_long_array(msgid, key, value)
@@ -2040,7 +2031,9 @@ def grib_get_api_version():
 
     Returns the version of the API as a string in the format "major.minor.revision".
     """
-    div = lambda v, d: (v / d, v % d)
+    def div(v, d):
+        return (v / d, v % d)
+
     v = lib.grib_get_api_version()
     v, revision = div(v, 100)
     v, minor = div(v, 100)

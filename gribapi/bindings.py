@@ -40,7 +40,7 @@ for libname in ['eccodes', 'libeccodes.so', 'libeccodes']:
         lib = ffi.dlopen(libname)
         LOG.info("ecCodes library found using name '%s'.", libname)
         break
-    except OSError as exc:
+    except OSError:
         # lazy exception
         lib = None
         LOG.info("ecCodes library not found using name '%s'.", libname)
