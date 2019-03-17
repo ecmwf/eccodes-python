@@ -10,8 +10,9 @@ attrs==19.1.0
 cffi==1.12.2
 coverage==4.5.3           # via pytest-cov
 execnet==1.5.0            # via pytest-cache
+future==0.17.1
 mccabe==0.6.1             # via pytest-mccabe
-more-itertools==6.0.0     # via pytest
+more-itertools==5.0.0     # via pytest
 numpy==1.16.2
 pep8==1.7.1               # via pytest-pep8
 pluggy==0.9.0             # via pytest
@@ -26,3 +27,4 @@ pytest-pep8==1.0.6
 pytest-runner==4.4
 pytest==4.3.1
 six==1.12.0               # via pytest
+typing==3.6.6

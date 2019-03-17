@@ -22,6 +22,10 @@ When this is enabed, then the system Python will be used to build the interface.
     - NumPy
 
 """
+from __future__ import absolute_import, division, print_function, unicode_literals
+from builtins import float, int, str
+
+
 from .bindings import ENC, ffi, lib
 import functools
 import sys
