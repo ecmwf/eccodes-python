@@ -37,11 +37,7 @@ import typing as T
 
 import attr
 
-# select external ecCodes bindings if available otherwise fall back to internal implementation.
-try:
-    import eccodes
-except ImportError:
-    from . import bindings as eccodes
+from . import eccodes
 
 eccodes_version = eccodes.codes_get_api_version()
 

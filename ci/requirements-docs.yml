@@ -5,6 +5,6 @@ dependencies:
   - attrs
   - cffi
   - eccodes
-  - nomkl
+  - numpy
   - python=3.6
   - sphinx
