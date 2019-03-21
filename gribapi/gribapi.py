@@ -1336,20 +1336,13 @@ def grib_index_get_long(indexid, key):
     @exception GribInternalError
     """
     nval = grib_index_get_size(indexid, key)
+    ih = get_index(indexid)
 
-    a = _internal.new_longArray(nval)
-    s = _internal.intp()
-    s.assign(nval)
-
-    GRIB_CHECK(_internal.grib_c_index_get_long(indexid, key, a, s))
-
-    result = []
-    for i in range(nval):
-        result.append(_internal.longArray_getitem(a, i))
-
-    _internal.delete_longArray(a)
-
-    return tuple(result)
+    values_p = ffi.new('long[]', nval)
+    size_p = ffi.new('size_t *', nval)
+    err = lib.grib_index_get_long(ih, key.encode(ENC), values_p, size_p)
+    GRIB_CHECK(err)
+    return tuple(int(values_p[i]) for i in range(size_p[0]))
 
 
 @require(indexid=int, key=str)
@@ -1371,11 +1364,11 @@ def grib_index_get_string(indexid, key):
     ih = get_index(indexid)
     max_val_size = 1024
     values_keepalive = [ffi.new('char[]', max_val_size) for _ in range(nval)]
-    values = ffi.new('const char *[]', values_keepalive)
+    values_p = ffi.new('const char *[]', values_keepalive)
     size_p = ffi.new('size_t *', max_val_size)
-    err = lib.grib_index_get_string(ih, key.encode(ENC), values, size_p)
+    err = lib.grib_index_get_string(ih, key.encode(ENC), values_p, size_p)
     GRIB_CHECK(err)
-    return tuple(ffi.string(values[i]).decode(ENC) for i in range(size_p[0]))
+    return tuple(ffi.string(values_p[i]).decode(ENC) for i in range(size_p[0]))
 
 
 @require(indexid=int, key=str)
@@ -1394,20 +1387,13 @@ def grib_index_get_double(indexid, key):
     @exception GribInternalError
     """
     nval = grib_index_get_size(indexid, key)
+    ih = get_index(indexid)
 
-    a = _internal.new_doubleArray(nval)
-    s = _internal.intp()
-    s.assign(nval)
-
-    GRIB_CHECK(_internal.grib_c_index_get_real8(indexid, key, a, s))
-
-    result = []
-    for i in range(nval):
-        result.append(_internal.doubleArray_getitem(a, i))
-
-    _internal.delete_doubleArray(a)
-
-    return tuple(result)
+    values_p = ffi.new('double[]', nval)
+    size_p = ffi.new('size_t *', nval)
+    err = lib.grib_index_get_doule(ih, key.encode(ENC), values_p, size_p)
+    GRIB_CHECK(err)
+    return tuple(int(values_p[i]) for i in range(size_p[0]))
 
 
 @require(indexid=int, key=str, value=int)
