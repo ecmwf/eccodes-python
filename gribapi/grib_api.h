@@ -289,7 +289,7 @@ grib_handle* grib_handle_new_from_samples (grib_context* c, const char* sample_n
 * @param h           : The handle to be cloned
 * @return            the new handle, NULL if the message is invalid or a problem is encountered
 */
-grib_handle* grib_handle_clone             (grib_handle* h)                 ;
+grib_handle* grib_handle_clone(grib_handle* h)                 ;
 
 /**
 *  Frees a handle, also frees the message if it is not a user message
@@ -297,7 +297,7 @@ grib_handle* grib_handle_clone             (grib_handle* h)                 ;
 * @param h           : The handle to be deleted
 * @return            0 if OK, integer value on error
 */
-int   grib_handle_delete   (grib_handle* h);
+int grib_handle_delete(grib_handle* h);
 
 /**
  *  Create an empty multi field handle.
@@ -365,7 +365,7 @@ int grib_get_message(grib_handle* h ,const void** message, size_t *message_lengt
 * \param error       : error code
 * \return            the new iterator, NULL if no iterator can be created
 */
-grib_iterator*      grib_iterator_new      (grib_handle*   h, unsigned long flags,int* error);
+grib_iterator* grib_iterator_new(grib_handle*   h, unsigned long flags,int* error);
 
 /**
 * Get the next value from an iterator.
@@ -376,7 +376,7 @@ grib_iterator*      grib_iterator_new      (grib_handle*   h, unsigned long flag
 * @param value       : on output value of the point
 * @return            positive value if successful, 0 if no more data are available
 */
-int                 grib_iterator_next     (grib_iterator *i, double* lat,double* lon,double* value);
+int grib_iterator_next(grib_iterator *i, double* lat,double* lon,double* value);
 
 /**
 *  Frees an iterator from memory
@@ -384,7 +384,7 @@ int                 grib_iterator_next     (grib_iterator *i, double* lat,double
 * @param i           : the iterator
 * @return            0 if OK, integer value on error
 */
-int                 grib_iterator_delete   (grib_iterator *i);
+int grib_iterator_delete(grib_iterator *i);
 
 /**
 * Find the nearest point of a set of points whose latitudes and longitudes
@@ -423,7 +423,7 @@ int grib_nearest_find_multiple(grib_handle* h,int is_lsm,
 * @param size        : the address of a size_t where the size will be set
 * @return            0 if OK, integer value on error
 */
-int         grib_get_size(grib_handle* h, const char* key,size_t *size);
+int grib_get_size(grib_handle* h, const char* key,size_t *size);
 
 /**
 *  Get the length of the string representation of the key, if several keys of the same name are present, the maximum length is returned
@@ -433,7 +433,7 @@ int         grib_get_size(grib_handle* h, const char* key,size_t *size);
 * @param length        : the address of a size_t where the length will be set
 * @return            0 if OK, integer value on error
 */
-int         grib_get_length(grib_handle* h, const char* key,size_t *length);
+int grib_get_length(grib_handle* h, const char* key,size_t *length);
 
 /**
 *  Get a long value from a key, if several keys of the same name are present, the last one is returned
@@ -444,7 +444,7 @@ int         grib_get_length(grib_handle* h, const char* key,size_t *length);
 * @param value       : the address of a long where the data will be retrieved
 * @return            0 if OK, integer value on error
 */
-int          grib_get_long         (grib_handle* h, const char* key, long*   value);
+int grib_get_long(grib_handle* h, const char* key, long* value);
 
 /**
 *  Get a double value from a key, if several keys of the same name are present, the last one is returned
@@ -455,7 +455,7 @@ int          grib_get_long         (grib_handle* h, const char* key, long*   val
 * @param value       : the address of a double where the data will be retrieved
 * @return            0 if OK, integer value on error
 */
-int grib_get_double       (grib_handle* h, const char* key, double* value);
+int grib_get_double(grib_handle* h, const char* key, double* value);
 
 /**
 *  Get as double the i-th element of the "key" array
@@ -514,7 +514,7 @@ int grib_get_string_array(grib_handle* h, const char* key, char** vals, size_t *
 * @param length      : the address of a size_t that contains allocated length of the double array on input, and that contains the actual length of the double array on output
 * @return            0 if OK, integer value on error
 */
-int grib_get_double_array (grib_handle* h, const char* key, double* vals, size_t *length);
+int grib_get_double_array(grib_handle* h, const char* key, double* vals, size_t *length);
 
 /**
 *  Get long array values from a key. If several keys of the same name are present, the last one is returned
@@ -550,7 +550,7 @@ int grib_copy_namespace(grib_handle* dest, const char* name, grib_handle* src);
 * @param val         : a long where the data will be read
 * @return            0 if OK, integer value on error
 */
-int grib_set_long         (grib_handle* h, const char*  key , long val);
+int grib_set_long(grib_handle* h, const char* key, long val);
 
 /**
 *  Set a double value from a key. If several keys of the same name are present, the last one is set
@@ -561,7 +561,7 @@ int grib_set_long         (grib_handle* h, const char*  key , long val);
 * @param val       : a double where the data will be read
 * @return            0 if OK, integer value on error
 */
-int grib_set_double       (grib_handle* h, const char*  key , double   val);
+int grib_set_double(grib_handle* h, const char* key, double val);
 
 /**
 *  Set a string value from a key. If several keys of the same name are present, the last one is set
@@ -573,7 +573,7 @@ int grib_set_double       (grib_handle* h, const char*  key , double   val);
 * @param length      : the address of a size_t that contains the length of the string on input, and that contains the actual packed length of the string on output
 * @return            0 if OK, integer value on error
 */
-int grib_set_string       (grib_handle* h, const char*  key , const char* mesg, size_t *length);
+int grib_set_string(grib_handle* h, const char* key, const char* mesg, size_t *length);
 
 /**
 *  Set a double array from a key. If several keys of the same name are present, the last one is set
@@ -585,7 +585,7 @@ int grib_set_string       (grib_handle* h, const char*  key , const char* mesg, 
 * @param length      : a size_t that contains the length of the byte array on input
 * @return            0 if OK, integer value on error
 */
-int grib_set_double_array (grib_handle* h, const char*  key , const double*        vals   , size_t length);
+int grib_set_double_array(grib_handle* h, const char*  key , const double*        vals   , size_t length);
 
 /**
 *  Set a long array from a key. If several keys of the same name are present, the last one is set
@@ -597,7 +597,7 @@ int grib_set_double_array (grib_handle* h, const char*  key , const double*     
 * @param length      : a size_t that contains the length of the long array on input
 * @return            0 if OK, integer value on error
 */
-int grib_set_long_array   (grib_handle* h, const char*  key , const long*          vals   , size_t length);
+int grib_set_long_array(grib_handle* h, const char*  key , const long* vals, size_t length);
 
 /**
 *  Set a string array from a key. If several keys of the same name are present, the last one is set
@@ -609,7 +609,7 @@ int grib_set_long_array   (grib_handle* h, const char*  key , const long*       
 * @param length      : a size_t that contains the length of the array on input
 * @return            0 if OK, integer value on error
 */
-int copy(grib_handle* h, const char *key, const char **vals, size_t length);
+int grib_set_string_array(grib_handle* h, const char *key, const char **vals, size_t length);
 /*! @} */
 
 /**
@@ -617,7 +617,7 @@ int copy(grib_handle* h, const char *key, const char **vals, size_t length);
 *
 * @return            the default context, NULL it the context is not available
 */
-grib_context*    grib_context_get_default(void);
+grib_context* grib_context_get_default(void);
 
 /**
 *  Set the GTS header mode on.
