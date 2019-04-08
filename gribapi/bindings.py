@@ -24,7 +24,7 @@ import pkgutil
 
 import cffi
 
-__version__ = '0.8.0'
+__version__ = '0.8.1.dev0'
 
 LOG = logging.getLogger(__name__)
 
