@@ -1,4 +1,5 @@
 from gribapi import __version__
+from gribapi import bindings_version
 
 from gribapi import GRIB_CHECK as CODES_CHECK
 

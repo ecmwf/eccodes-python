@@ -24,6 +24,8 @@ import pkgutil
 
 import cffi
 
+__version__ = '0.8.0.dev0'
+
 LOG = logging.getLogger(__name__)
 
 ffi = cffi.FFI()

@@ -30,7 +30,7 @@ def read(path):
 #   https://packaging.python.org/guides/single-sourcing-package-version/
 def parse_version_from(path):
     version_file = read(path)
-    version_match = re.search(r"^version = '(.*)'", version_file, re.M)
+    version_match = re.search(r"^__version__ = '(.*)'", version_file, re.M)
     if version_match is None or len(version_match.groups()) > 1:
         raise ValueError("couldn't parse version")
     return version_match.group(1)
@@ -38,9 +38,8 @@ def parse_version_from(path):
 
 setuptools.setup(
     name='eccodes-python',
-    version=parse_version_from('eccodes/__init__.py'),
-    description='Python interface to map GRIB files to the NetCDF Common Data Model '
-                'following the CF Convention using ecCodes.',
+    version=parse_version_from('gribapi/bindings.py'),
+    description='Python interface to the ecCodes BUFR and GRIB de/encoder.',
     long_description=read('README.rst') + read('CHANGELOG.rst'),
     author='European Centre for Medium-Range Weather Forecasts (ECMWF)',
     author_email='software.support@ecmwf.int',
