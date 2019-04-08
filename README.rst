@@ -23,7 +23,7 @@ Installation
 
 The package is installed from PyPI with::
 
-    $ pip install git+https://github.com/ecmwf/eccodes-python
+    $ pip install eccodes-python
 
 
 System dependencies
