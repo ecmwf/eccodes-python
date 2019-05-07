@@ -5,6 +5,7 @@ include Dockerfile
 include LICENSE
 include Makefile
 include tox.ini
+include *.py
 recursive-include ci *.in
 recursive-include ci *.txt
 recursive-include ci *.yml

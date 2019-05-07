@@ -2,7 +2,7 @@
 Changelog for eccodes-python
 ============================
 
-0.8.1 (unreleased)
+0.9.0 (2019-05-07)
 ------------------
 
 - Declare the project as **Beta**.
