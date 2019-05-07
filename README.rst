@@ -58,24 +58,32 @@ You may run a simple selfcheck command to ensure that your system is set up corr
 
 
 Usage
-=====
+-----
 
-First, you need a well-formed GRIB file, if you don't have one at hand you can download our
-`ERA5 on pressure levels sample <http://download.ecmwf.int/test-data/cfgrib/era5-levels-members.grib>`_::
-
-    $ wget http://download.ecmwf.int/test-data/cfgrib/era5-levels-members.grib
+Refer to the *ecCodes* `documentation pages <https://confluence.ecmwf.int/display/ECC/Documentation>`_
+for usage.
 
 
+Experimental features
+=====================
 
+Fast bindings
+-------------
 
-GRIB index file
----------------
+To test the much faster *CFFI* API level, out-of-line mode you need the *ecCodes*
+source tree available, because we need two include files ``grib_api_internal.h``
+and ``grib_api_prototypes.h`` that are not installed by default.
+Then you need to clone the repo in the same folder as your *eccodes* sourexe tree,
+make a ``pip`` development install and custom compile the binary bindings::
 
-By default *eccodes-python* saves the index of the GRIB file to disk appending ``.idx``
-to the GRIB file name.
-Index files are an **experimental** and completely optional feature, feel free to
-remove them and try again in case of problems. Index files saving can be disable passing
-adding ``indexpath=''`` to the keyword argument.
+    $ git clone https://github.com/ecmwf/eccodes-python
+    $ cd eccodes-python
+    $ pip install -e .
+    $ CPPFLAGS=-I../eccodes/src python builder.py
+
+To revert back to ABI level, in-line more just remove the compiled bindngs:
+
+    $ rm gribapi/_bindings.*
 
 
 Project resources
