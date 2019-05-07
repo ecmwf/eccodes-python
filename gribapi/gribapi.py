@@ -23,7 +23,8 @@ When this is enabed, then the system Python will be used to build the interface.
 
 """
 
-from .bindings import ENC, ffi, lib, __version__ as bindings_version
+from .bindings import ENC, ffi, lib
+from .bindings import __version__ as bindings_version  # noqa
 import functools
 import sys
 import os

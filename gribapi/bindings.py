@@ -38,7 +38,6 @@ except ModuleNotFoundError:
         pkgutil.get_data(__name__, 'eccodes.h').decode('utf-8')
     )
 
-
     for libname in ['eccodes', 'libeccodes.so', 'libeccodes']:
         try:
             lib = ffi.dlopen(libname)

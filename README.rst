@@ -50,8 +50,6 @@ As an alternative you may install the official source distribution
 by following the instructions at
 https://software.ecmwf.int/wiki/display/ECC/ecCodes+installation
 
-Note that *ecCodes* support for the Windows operating system is experimental.
-
 You may run a simple selfcheck command to ensure that your system is set up correctly::
 
     $ python -m eccodes selfcheck
@@ -68,12 +66,6 @@ First, you need a well-formed GRIB file, if you don't have one at hand you can d
     $ wget http://download.ecmwf.int/test-data/cfgrib/era5-levels-members.grib
 
 
-Lower level APIs
-----------------
-
-Lower level APIs are not stable and should not be considered public yet.
-In particular the internal Python 3 *ecCodes* bindings are not compatible with
-the standard *ecCodes* python module.
 
 
 GRIB index file
