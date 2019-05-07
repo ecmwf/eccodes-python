@@ -47,6 +47,9 @@ setuptools.setup(
     url='https://github.com/ecmwf/eccodes-python',
     packages=setuptools.find_packages(),
     include_package_data=True,
+    # Uncomment to enable CFFI API level, out-of-line mode
+    # setup_requires=["cffi>=1.0.0"],
+    # cffi_modules=["builder.py:ffibuilder"],
     install_requires=[
         'attrs',
         'cffi',
