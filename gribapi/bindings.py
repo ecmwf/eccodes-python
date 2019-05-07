@@ -34,7 +34,6 @@ except ModuleNotFoundError:
     ffi = cffi.FFI()
     ffi.cdef(
         pkgutil.get_data(__name__, 'grib_api.h').decode('utf-8') +
-        pkgutil.get_data(__name__, 'grib_api_internal.h').decode('utf-8') +
         pkgutil.get_data(__name__, 'grib_api_prototypes.h').decode('utf-8') +
         pkgutil.get_data(__name__, 'eccodes.h').decode('utf-8')
     )
