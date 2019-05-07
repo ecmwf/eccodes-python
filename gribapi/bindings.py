@@ -28,24 +28,27 @@ __version__ = '0.8.1.dev0'
 
 LOG = logging.getLogger(__name__)
 
-ffi = cffi.FFI()
-ffi.cdef(
-    pkgutil.get_data(__name__, 'grib_api.h').decode('utf-8') +
-    pkgutil.get_data(__name__, 'grib_api_internal.h').decode('utf-8') +
-    pkgutil.get_data(__name__, 'grib_api_prototypes.h').decode('utf-8') +
-    pkgutil.get_data(__name__, 'eccodes.h').decode('utf-8')
-)
+try:
+    from ._bindings import ffi, lib
+except ModuleNotFoundError:
+    ffi = cffi.FFI()
+    ffi.cdef(
+        pkgutil.get_data(__name__, 'grib_api.h').decode('utf-8') +
+        pkgutil.get_data(__name__, 'grib_api_internal.h').decode('utf-8') +
+        pkgutil.get_data(__name__, 'grib_api_prototypes.h').decode('utf-8') +
+        pkgutil.get_data(__name__, 'eccodes.h').decode('utf-8')
+    )
 
 
-for libname in ['eccodes', 'libeccodes.so', 'libeccodes']:
-    try:
-        lib = ffi.dlopen(libname)
-        LOG.info("ecCodes library found using name '%s'.", libname)
-        break
-    except OSError:
-        # lazy exception
-        lib = None
-        LOG.info("ecCodes library not found using name '%s'.", libname)
+    for libname in ['eccodes', 'libeccodes.so', 'libeccodes']:
+        try:
+            lib = ffi.dlopen(libname)
+            LOG.info("ecCodes library found using name '%s'.", libname)
+            break
+        except OSError:
+            # lazy exception
+            lib = None
+            LOG.info("ecCodes library not found using name '%s'.", libname)
 
 # default encoding for ecCodes strings
 ENC = 'ascii'
