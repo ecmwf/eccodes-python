@@ -81,7 +81,7 @@ make a ``pip`` development install and custom compile the binary bindings::
     $ pip install -e .
     $ CPPFLAGS=-I../eccodes/src python builder.py
 
-To revert back to ABI level, in-line more just remove the compiled bindngs:
+To revert back to ABI level, in-line more just remove the compiled bindngs::
 
     $ rm gribapi/_bindings.*
 
