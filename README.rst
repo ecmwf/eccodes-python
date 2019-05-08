@@ -73,7 +73,7 @@ Fast bindings
 To test the much faster *CFFI* API level, out-of-line mode you need the *ecCodes*
 source tree available, because we need two include files ``grib_api_internal.h``
 and ``grib_api_prototypes.h`` that are not installed by default.
-Then you need to clone the repo in the same folder as your *eccodes* sourexe tree,
+Then you need to clone the repo in the same folder as your *ecCodes* source tree,
 make a ``pip`` development install and custom compile the binary bindings::
 
     $ git clone https://github.com/ecmwf/eccodes-python
@@ -81,7 +81,7 @@ make a ``pip`` development install and custom compile the binary bindings::
     $ pip install -e .
     $ CPPFLAGS=-I../eccodes/src python builder.py
 
-To revert back to ABI level, in-line more just remove the compiled bindngs::
+To revert back to ABI level, in-line more just remove the compiled bindings::
 
     $ rm gribapi/_bindings.*
 
