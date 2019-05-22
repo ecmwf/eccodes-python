@@ -1543,7 +1543,7 @@ def grib_get_double_elements(msgid, key, indexes):
     """
     nidx = len(indexes)
     h = get_handle(msgid)
-    i_p = ffi.new('int*', indexes)
+    i_p = ffi.new('int[]', indexes)
     value_p = ffi.new('double[]', nidx)
     err = lib.grib_get_double_elements(h, key.encode(ENC), i_p, nidx, value_p)
     GRIB_CHECK(err)
