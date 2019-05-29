@@ -52,8 +52,8 @@ class Message(collections.MutableMapping):
     )
 
     @classmethod
-    def from_file(cls, file, offset=None, **kwargs):
-        # type: (T.IO[bytes], int, T.Any) -> Message
+    def from_file(cls, file, offset=None, product_kind=eccodes.CODES_PRODUCT_ANY, **kwargs):
+        # type: (T.IO[bytes], int, int, T.Any) -> Message
         field_in_message = 0
         if isinstance(offset, tuple):
             offset, field_in_message = offset
@@ -62,7 +62,7 @@ class Message(collections.MutableMapping):
         codes_id = None
         # iterate over multi-fields in the message
         for _ in range(field_in_message + 1):
-            codes_id = eccodes.codes_grib_new_from_file(file)
+            codes_id = eccodes.codes_new_from_file(file, product_kind=product_kind)
         if codes_id is None:
             raise EOFError("End of file: %r" % file)
         return cls(codes_id=codes_id, **kwargs)
@@ -196,18 +196,19 @@ class FileStream(collections.Iterable):
         default='warn',
         validator=attr.validators.in_(['ignore', 'warn', 'raise']),
     )
+    product_kind = attr.attrib(default=eccodes.CODES_PRODUCT_ANY)
 
     def __iter__(self):
         # type: () -> T.Generator[Message, None, None]
         with open(self.path, 'rb') as file:
-            valid_grib_message_found = False
+            valid_message_found = False
             while True:
                 try:
                     yield self.message_from_file(file, errors=self.errors)
-                    valid_grib_message_found = True
+                    valid_message_found = True
                 except EOFError:
-                    if not valid_grib_message_found:
-                        raise EOFError("No valid GRIB message found in file: %r" % self.path)
+                    if not valid_message_found:
+                        raise EOFError("No valid message found in file: %r" % self.path)
                     break
                 except Exception:
                     if self.errors == 'ignore':
@@ -218,7 +219,7 @@ class FileStream(collections.Iterable):
                         LOG.exception("skipping corrupted Message")
 
     def message_from_file(self, file, offset=None, **kwargs):
-        return self.message_class.from_file(file=file, offset=offset, **kwargs)
+        return self.message_class.from_file(file, offset, self.product_kind, **kwargs)
 
     def first(self):
         # type: () -> Message
