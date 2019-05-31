@@ -108,14 +108,14 @@ class Message(collections.abc.MutableMapping):
                 value = value
             eccodes.codes_set(self.codes_id, key, value)
 
-    def message_grib_iterkeys(self, namespace=None):
+    def message_grib_keys(self, namespace=None):
         # type: (str) -> T.Generator[str, None, None]
         iterator = eccodes.codes_keys_iterator_new(self.codes_id, namespace=namespace)
         while eccodes.codes_keys_iterator_next(iterator):
             yield eccodes.codes_keys_iterator_get_name(iterator)
         eccodes.codes_keys_iterator_delete(iterator)
 
-    def message_bufr_iterkeys(self):
+    def message_bufr_keys(self):
         # type: () -> T.Generator[str, None, None]
         iterator = eccodes.codes_bufr_keys_iterator_new(self.codes_id)
         while eccodes.codes_bufr_keys_iterator_next(iterator):
@@ -147,7 +147,7 @@ class Message(collections.abc.MutableMapping):
 
     def __iter__(self):
         # type: () -> T.Generator[str, None, None]
-        for key in self.message_grib_iterkeys():
+        for key in self.message_grib_keys():
             yield key
 
     def __len__(self):

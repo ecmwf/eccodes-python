@@ -17,7 +17,7 @@ def test_Message_read():
     assert res1.message_get('paramId') == 129
     assert res1['paramId'] == 129
     assert list(res1)[0] == 'globalDomain'
-    assert list(res1.message_iterkeys('time'))[0] == 'dataDate'
+    assert list(res1.message_grib_keys('time'))[0] == 'dataDate'
     assert 'paramId' in res1
     assert len(res1) > 100
 
