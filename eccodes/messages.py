@@ -83,9 +83,8 @@ class Message(collections.abc.MutableMapping):
     def message_get(self, item, key_type=None, default=_MARKER):
         # type: (str, type, T.Any) -> T.Any
         """Get value of a given key as its native or specified type."""
-        key = item
         try:
-            values = eccodes.codes_get_array(self.codes_id, key, key_type)
+            values = eccodes.codes_get_array(self.codes_id, item, key_type)
             if values is None:
                 values = ['unsupported_key_type']
         except eccodes.KeyValueNotFoundError:
@@ -99,14 +98,11 @@ class Message(collections.abc.MutableMapping):
 
     def message_set(self, item, value):
         # type: (str, T.Any) -> None
-        key = item
         set_array = isinstance(value, T.Sequence) and not isinstance(value, (str, bytes))
         if set_array:
-            eccodes.codes_set_array(self.codes_id, key, value)
+            eccodes.codes_set_array(self.codes_id, item, value)
         else:
-            if isinstance(value, str):
-                value = value
-            eccodes.codes_set(self.codes_id, key, value)
+            eccodes.codes_set(self.codes_id, item, value)
 
     def message_grib_keys(self, namespace=None):
         # type: (str) -> T.Generator[str, None, None]
