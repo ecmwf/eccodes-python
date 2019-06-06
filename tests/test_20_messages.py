@@ -1,6 +1,7 @@
 
 import os.path
 
+import numpy as np
 import pytest
 
 from eccodes import messages
@@ -27,7 +28,12 @@ def test_Message_read():
     assert res1.message_get('non-existent-key', default=1) == 1
 
     res2 = messages.Message.from_message(res1)
-    assert res2.items() == res1.items()
+    for (k2, v2), (k1, v1) in zip(res2.items(), res1.items()):
+        assert k2 == k1
+        if isinstance(v2, np.ndarray) or isinstance(v1, np.ndarray):
+            assert np.allclose(v2, v1)
+        else:
+            assert v2 == v1
 
     with open(TEST_DATA) as file:
         with pytest.raises(EOFError):
@@ -49,7 +55,7 @@ def test_Message_write(tmpdir):
     assert res['gridType'] == 'reduced_gg'
 
     res['pl'] = [2., 3.]
-    assert res['pl'] == [2., 3.]
+    assert np.allclose(res['pl'], [2., 3.])
 
     # warn on errors
     res['centreDescription'] = 'DUMMY'

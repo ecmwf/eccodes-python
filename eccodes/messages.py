@@ -27,6 +27,7 @@ import pickle
 import typing as T
 
 import attr
+import numpy as np
 
 from . import eccodes
 
@@ -38,7 +39,7 @@ _MARKER = object()
 #
 # No explicit support for MULTI-FIELD at Message level.
 #
-eccodes.codes_grib_multi_support_on()
+# eccodes.codes_grib_multi_support_on()
 
 
 @attr.attrs()
@@ -93,6 +94,8 @@ class Message(collections.abc.MutableMapping):
             else:
                 return default
         if len(values) == 1:
+            if isinstance(values, np.ndarray):
+                values = values.tolist()
             return values[0]
         return values
 
