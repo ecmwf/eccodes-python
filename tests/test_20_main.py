@@ -1,4 +1,3 @@
-
 import pytest
 
 from eccodes import __main__
