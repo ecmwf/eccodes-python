@@ -21,6 +21,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 import logging
 import pkgutil
+import os
 
 import cffi
 
@@ -38,7 +39,9 @@ except ModuleNotFoundError:
         pkgutil.get_data(__name__, 'eccodes.h').decode('utf-8')
     )
 
-    for libname in ['eccodes', 'libeccodes.so', 'libeccodes']:
+    fullpath = os.path.join(os.environ.get('ECCODES_DIR',''), "lib/libeccodes.so")
+
+    for libname in ['eccodes', 'libeccodes.so', 'libeccodes', fullpath]:
         try:
             lib = ffi.dlopen(libname)
             LOG.info("ecCodes library found using name '%s'.", libname)
