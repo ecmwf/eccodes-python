@@ -6,16 +6,6 @@ The Python 3 interface to ecCodes uses the <a href="http://numpy.scipy.org/"><b>
 as the container of choice for the possible arrays of values that can be encoded/decoded in and from a message.
 Numpy is a package used for scientific computing in Python and an efficient container for generic data.
 
-The Python 3 interface can be enabled/disabled from CMake by using the following flag:\n
-
-@code{.unparsed}
-    -DENABLE_PYTHON=ON
-or
-    -DENABLE_PYTHON=OFF
-@endcode
-
-When this is enabed, then the system Python will be used to build the interface.
-
 @em Requirements:
 
     - Python 3.5 or higher
@@ -231,7 +221,8 @@ def gts_new_from_file(fileobj, headers_only=False):
     @return               id of the GTS loaded in memory
     @exception GribInternalError
     """
-    err, h = err_last(lib.gts_new_from_file)(ffi.NULL, fileobj)
+    #err, h = err_last(lib.gts_new_from_file)(ffi.NULL, fileobj)
+    err, h = err_last(lib.codes_handle_new_from_file)(ffi.NULL, fileobj, CODES_PRODUCT_GTS)
     if err:
         if err == lib.GRIB_END_OF_FILE:
             return None
@@ -257,7 +248,8 @@ def metar_new_from_file(fileobj, headers_only=False):
     @return               id of the METAR loaded in memory
     @exception GribInternalError
     """
-    err, h = err_last(lib.metar_new_from_file)(ffi.NULL, fileobj)
+    #err, h = err_last(lib.metar_new_from_file)(ffi.NULL, fileobj)
+    err, h = err_last(lib.codes_handle_new_from_file)(ffi.NULL, fileobj, CODES_PRODUCT_METAR)
     if err:
         if err == lib.GRIB_END_OF_FILE:
             return None
@@ -377,7 +369,8 @@ def grib_new_from_file(fileobj, headers_only=False):
     @return               id of the grib loaded in memory
     @exception GribInternalError
     """
-    err, h = err_last(lib.grib_new_from_file)(ffi.NULL, fileobj, headers_only)
+    #err, h = err_last(lib.grib_new_from_file)(ffi.NULL, fileobj, headers_only)
+    err, h = err_last(lib.codes_handle_new_from_file)(ffi.NULL, fileobj, CODES_PRODUCT_GRIB)
     if err:
         if err == lib.GRIB_END_OF_FILE:
             return None
