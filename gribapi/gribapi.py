@@ -1159,7 +1159,10 @@ def grib_set_string_array(msgid, key, inarray):
     @exception GribInternalError
     """
     h = get_handle(msgid)
-    GRIB_CHECK(lib.grib_set_string_array(h, key.encode(ENC), [s.encode(ENC) for s in inarray]))
+    size = len(inarray)
+    values_keepalive = [ffi.new('char[]', s.encode(ENC)) for s in inarray]
+    values_p = ffi.new('const char *[]', values_keepalive)
+    GRIB_CHECK(lib.grib_set_string_array(h, key.encode(ENC), values_p, size))
 
 
 @require(msgid=int, key=str)
