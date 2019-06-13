@@ -1173,14 +1173,11 @@ def grib_set_string_array(msgid, key, inarray):
     @exception GribInternalError
     """
     h = get_handle(msgid)
-
+    size = len(inarray)
     # See https://cffi.readthedocs.io/en/release-1.3/using.html
-    inarray_keepalive = []
-    for i in inarray:
-        nf = ffi.new("char[]", i.encode(ENC))
-        inarray_keepalive.append( nf )
-    inarray2= ffi.new("char *[]", inarray_keepalive)
-    GRIB_CHECK( lib.grib_set_string_array(h, key.encode(ENC), inarray2, len(inarray)) )
+    values_keepalive = [ffi.new('char[]', s.encode(ENC)) for s in inarray]
+    values_p = ffi.new('const char *[]', values_keepalive)
+    GRIB_CHECK(lib.grib_set_string_array(h, key.encode(ENC), values_p, size))
 
 
 @require(msgid=int, key=str)
