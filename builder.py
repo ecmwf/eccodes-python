@@ -1,6 +1,7 @@
 import logging
 
 import cffi
+import sys
 
 ffibuilder = cffi.FFI()
 ffibuilder.set_source(
@@ -18,3 +19,4 @@ if __name__ == "__main__":
         ffibuilder.compile(verbose=True)
     except Exception:
         logging.exception("can't compile ecCodes bindings")
+        sys.exit(1)
