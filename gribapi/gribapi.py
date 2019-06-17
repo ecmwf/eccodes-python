@@ -6,16 +6,6 @@ The Python 3 interface to ecCodes uses the <a href="http://numpy.scipy.org/"><b>
 as the container of choice for the possible arrays of values that can be encoded/decoded in and from a message.
 Numpy is a package used for scientific computing in Python and an efficient container for generic data.
 
-The Python 3 interface can be enabled/disabled from CMake by using the following flag:\n
-
-@code{.unparsed}
-    -DENABLE_PYTHON=ON
-or
-    -DENABLE_PYTHON=OFF
-@endcode
-
-When this is enabed, then the system Python will be used to build the interface.
-
 @em Requirements:
 
     - Python 3.5 or higher
@@ -231,11 +221,16 @@ def gts_new_from_file(fileobj, headers_only=False):
     @return               id of the GTS loaded in memory
     @exception GribInternalError
     """
-    err, h = err_last(lib.gts_new_from_file)(ffi.NULL, fileobj)
-    if h == ffi.NULL or err == lib.GRIB_END_OF_FILE:
-        return None
+    #err, h = err_last(lib.gts_new_from_file)(ffi.NULL, fileobj)
+    err, h = err_last(lib.codes_handle_new_from_file)(ffi.NULL, fileobj, CODES_PRODUCT_GTS)
     if err:
-        GRIB_CHECK(err)
+        if err == lib.GRIB_END_OF_FILE:
+            return None
+        else:
+            GRIB_CHECK(err)
+            return None
+    if h == ffi.NULL:
+        return None
     else:
         return put_handle(h)
 
@@ -253,11 +248,16 @@ def metar_new_from_file(fileobj, headers_only=False):
     @return               id of the METAR loaded in memory
     @exception GribInternalError
     """
-    err, h = err_last(lib.metar_new_from_file)(ffi.NULL, fileobj)
-    if h == ffi.NULL or err == lib.GRIB_END_OF_FILE:
-        return None
+    #err, h = err_last(lib.metar_new_from_file)(ffi.NULL, fileobj)
+    err, h = err_last(lib.codes_handle_new_from_file)(ffi.NULL, fileobj, CODES_PRODUCT_METAR)
     if err:
-        GRIB_CHECK(err)
+        if err == lib.GRIB_END_OF_FILE:
+            return None
+        else:
+            GRIB_CHECK(err)
+            return None
+    if h == ffi.NULL:
+        return None
     else:
         return put_handle(h)
 
@@ -307,10 +307,14 @@ def any_new_from_file(fileobj, headers_only=False):
     @exception GribInternalError
     """
     err, h = err_last(lib.codes_handle_new_from_file)(ffi.NULL, fileobj, CODES_PRODUCT_ANY)
-    if h == ffi.NULL or err == lib.GRIB_END_OF_FILE:
-        return None
     if err:
-        GRIB_CHECK(err)
+        if err == lib.GRIB_END_OF_FILE:
+            return None
+        else:
+            GRIB_CHECK(err)
+            return None
+    if h == ffi.NULL:
+        return None
     else:
         return put_handle(h)
 
@@ -331,10 +335,14 @@ def bufr_new_from_file(fileobj, headers_only=False):
     @exception GribInternalError
     """
     err, h = err_last(lib.codes_handle_new_from_file)(ffi.NULL, fileobj, CODES_PRODUCT_BUFR)
-    if h == ffi.NULL or err == lib.GRIB_END_OF_FILE:
-        return None
     if err:
-        GRIB_CHECK(err)
+        if err == lib.GRIB_END_OF_FILE:
+            return None
+        else:
+            GRIB_CHECK(err)
+            return None
+    if h == ffi.NULL:
+        return None
     else:
         return put_handle(h)
 
@@ -361,11 +369,16 @@ def grib_new_from_file(fileobj, headers_only=False):
     @return               id of the grib loaded in memory
     @exception GribInternalError
     """
-    err, h = err_last(lib.grib_new_from_file)(ffi.NULL, fileobj, headers_only)
-    if h == ffi.NULL or err == lib.GRIB_END_OF_FILE:
-        return None
+    #err, h = err_last(lib.grib_new_from_file)(ffi.NULL, fileobj, headers_only)
+    err, h = err_last(lib.codes_handle_new_from_file)(ffi.NULL, fileobj, CODES_PRODUCT_GRIB)
     if err:
-        GRIB_CHECK(err)
+        if err == lib.GRIB_END_OF_FILE:
+            return None
+        else:
+            GRIB_CHECK(err)
+            return None
+    if h == ffi.NULL:
+        return None
     else:
         return put_handle(h)
 
@@ -713,6 +726,7 @@ def grib_iterator_next(iterid):
         return []
     elif err < 0:
         GRIB_CHECK(err)
+        return None
     else:
         return (lat_p[0], lon_p[0], value_p[0])
 
@@ -923,7 +937,7 @@ def grib_get_double(msgid, key):
     return value_p[0]
 
 
-@require(msgid=int, key=str, value=(int, long, float, str))
+@require(msgid=int, key=str, value=(int, float, str))
 def grib_set_long(msgid, key, value):
     """
     @brief Set the integer value for a key in a message.
@@ -948,7 +962,7 @@ def grib_set_long(msgid, key, value):
     GRIB_CHECK(lib.grib_set_long(h, key.encode(ENC), value))
 
 
-@require(msgid=int, key=str, value=(int, long, float, str))
+@require(msgid=int, key=str, value=(int, float, str))
 def grib_set_double(msgid, key, value):
     """
     @brief Set the double value for a key in a message.
@@ -1160,6 +1174,7 @@ def grib_set_string_array(msgid, key, inarray):
     """
     h = get_handle(msgid)
     size = len(inarray)
+    # See https://cffi.readthedocs.io/en/release-1.3/using.html
     values_keepalive = [ffi.new('char[]', s.encode(ENC)) for s in inarray]
     values_p = ffi.new('const char *[]', values_keepalive)
     GRIB_CHECK(lib.grib_set_string_array(h, key.encode(ENC), values_p, size))
@@ -1479,6 +1494,7 @@ def grib_new_from_index(indexid):
         return None
     elif err:
         GRIB_CHECK(err)
+        return None
     else:
         return put_handle(h)
 
@@ -1609,7 +1625,7 @@ def grib_set_key_vals(gribid, key_vals):
     if isinstance(key_vals, str):
         # Plain string. We need to do a DEEP copy so as not to change the original
         key_vals_str = ''.join(key_vals)
-    elif isinstance(key_vals, list) or isinstance(key_vals, tuple):
+    elif isinstance(key_vals, (list, tuple)):
         # A list of key=val strings
         for kv in key_vals:
             if not isinstance(kv, str):
@@ -1688,21 +1704,38 @@ def grib_find_nearest(gribid, inlat, inlon, is_lsm=False, npoints=1):
     @return (npoints*(outlat,outlon,value,dist,index))
     @exception GribInternalError
     """
-    # generalise from 1 or 4 npoints to any number
+
     h = get_handle(gribid)
     inlats_p = ffi.new('double*', inlat)
     inlons_p = ffi.new('double*', inlon)
-    outlats_p = ffi.new('double[]', npoints)
-    outlons_p = ffi.new('double[]', npoints)
-    values_p = ffi.new('double[]', npoints)
-    distances_p = ffi.new('double[]', npoints)
-    indexes_p = ffi.new('int[]', npoints)
 
-    err = lib.grib_nearest_find_multiple(
-        h, is_lsm, inlats_p, inlons_p, npoints,
-        outlats_p, outlons_p, values_p, distances_p, indexes_p,
-    )
-    GRIB_CHECK(err)
+    if npoints == 1:
+        outlats_p = ffi.new('double[]', 1)
+        outlons_p = ffi.new('double[]', 1)
+        values_p = ffi.new('double[]', 1)
+        distances_p = ffi.new('double[]', 1)
+        indexes_p = ffi.new('int[]', 1)
+        num_input_points = 1
+        # grib_nearest_find_multiple always returns ONE nearest neighbour
+        err = lib.grib_nearest_find_multiple(h, is_lsm, inlats_p, inlons_p, num_input_points,
+                                             outlats_p, outlons_p, values_p, distances_p, indexes_p)
+        GRIB_CHECK(err)
+    elif npoints == 4:
+        outlats_p = ffi.new('double[]', npoints)
+        outlons_p = ffi.new('double[]', npoints)
+        values_p = ffi.new('double[]', npoints)
+        distances_p = ffi.new('double[]', npoints)
+        indexes_p = ffi.new('int[]', npoints)
+        size = ffi.new('size_t *')
+        err, nid = err_last(lib.grib_nearest_new)(h)
+        GRIB_CHECK(err)
+        flags = 0
+        err = lib.grib_nearest_find(nid, h, inlat, inlon, flags,
+                                    outlats_p, outlons_p, values_p, distances_p, indexes_p, size)
+        GRIB_CHECK(err)
+        GRIB_CHECK(lib.grib_nearest_delete(nid))
+    else:
+        raise ValueError("Invalid value for npoints. Expecting 1 or 4.")
 
     result = []
     for i in range(npoints):
