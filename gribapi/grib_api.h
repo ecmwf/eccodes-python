@@ -797,6 +797,7 @@ int grib_is_defined(grib_handle* h, const char* key);
 int grib_set_missing(grib_handle* h, const char* key);
 
 int grib_get_message_size ( grib_handle* h,size_t* size);
+int parse_keyval_string(const char *grib_tool, char *arg, int values_required, int default_type, grib_values values[], int *count);
 
 /*! \defgroup errors Error codes
 Error codes returned by the grib_api functions.
