@@ -1,16 +1,16 @@
 import logging
 
 import cffi
+import sys
 
 ffibuilder = cffi.FFI()
 ffibuilder.set_source(
     "gribapi._bindings",
-    '#include "grib_api_internal.h"\n#include <eccodes.h>',
+    '#include <eccodes.h>',
     libraries=["eccodes"],
 )
 ffibuilder.cdef(
     open("gribapi/grib_api.h").read() +
-    open("gribapi/grib_api_prototypes.h").read() +
     open("gribapi/eccodes.h").read()
 )
 
@@ -19,3 +19,4 @@ if __name__ == "__main__":
         ffibuilder.compile(verbose=True)
     except Exception:
         logging.exception("can't compile ecCodes bindings")
+        sys.exit(1)

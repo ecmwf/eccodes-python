@@ -264,7 +264,7 @@ class FileIndex(collections.abc.Mapping):
                     value = message[key]
                 except:
                     value = 'undef'
-                if isinstance(value, list):
+                if isinstance(value, (list, np.ndarray)):
                     value = tuple(value)
                 header_values.append(value)
             offset = message.message_get('offset', int)
