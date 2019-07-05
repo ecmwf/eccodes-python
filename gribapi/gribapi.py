@@ -221,7 +221,7 @@ def gts_new_from_file(fileobj, headers_only=False):
     @return               id of the GTS loaded in memory or None
     @exception GribInternalError
     """
-    #err, h = err_last(lib.gts_new_from_file)(ffi.NULL, fileobj)
+    # err, h = err_last(lib.gts_new_from_file)(ffi.NULL, fileobj)
     err, h = err_last(lib.codes_handle_new_from_file)(ffi.NULL, fileobj, CODES_PRODUCT_GTS)
     if err:
         if err == lib.GRIB_END_OF_FILE:
@@ -248,7 +248,7 @@ def metar_new_from_file(fileobj, headers_only=False):
     @return               id of the METAR loaded in memory or None
     @exception GribInternalError
     """
-    #err, h = err_last(lib.metar_new_from_file)(ffi.NULL, fileobj)
+    # err, h = err_last(lib.metar_new_from_file)(ffi.NULL, fileobj)
     err, h = err_last(lib.codes_handle_new_from_file)(ffi.NULL, fileobj, CODES_PRODUCT_METAR)
     if err:
         if err == lib.GRIB_END_OF_FILE:
@@ -369,7 +369,7 @@ def grib_new_from_file(fileobj, headers_only=False):
     @return               id of the grib loaded in memory or None
     @exception GribInternalError
     """
-    #err, h = err_last(lib.grib_new_from_file)(ffi.NULL, fileobj, headers_only)
+    # err, h = err_last(lib.grib_new_from_file)(ffi.NULL, fileobj, headers_only)
     err, h = err_last(lib.codes_handle_new_from_file)(ffi.NULL, fileobj, CODES_PRODUCT_GRIB)
     if err:
         if err == lib.GRIB_END_OF_FILE:
