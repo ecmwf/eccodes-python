@@ -10,6 +10,5 @@ dependencies:
   - numpy
   - pytest
   - pytest-cov
-  - pytest-flakes
-  - python=2.7
+  - python=3.6
   - typing
