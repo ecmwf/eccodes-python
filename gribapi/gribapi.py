@@ -2061,7 +2061,7 @@ def grib_get_api_version():
         return (v / d, v % d)
 
     if not lib:
-        raise Exception("Could not load the ecCodes library!")
+        raise RuntimeError("Could not load the ecCodes library!")
 
     v = lib.grib_get_api_version()
     v, revision = div(v, 100)
