@@ -10,11 +10,11 @@ Features:
 - works on most *Linux* distributions and *MacOS*, the *ecCodes* C-library is the only system dependency,
 - PyPI package can be installed without compiling,
   at the cost of being twice as slow as the original *ecCodes* module,
-- an optional compile step makes the code as fast as the original module.
+- an optional compile step makes the code as fast as the original module
+  but it needs a recent version of *ecCodes* `>= 2.13.0`.
 
 Limitations:
 
-- needs a recent version of *ecCodes* `>= 2.13.0`,
 - Microsoft Windows support is untested.
 
 
