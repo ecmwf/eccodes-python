@@ -2,11 +2,13 @@
 Changelog for eccodes-python
 ============================
 
-0.9.2 (unreleased)
+0.9.2
 ------------------
 
-- Nothing changed yet.
-
+- All ecCodes tests now pass
+- Simplify the xx_new_from_file calls
+- Fix for grib_set_string_array
+- Use ECCODES_DIR to locate the library
 
 0.9.1 (2019-06-06)
 ------------------

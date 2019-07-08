@@ -214,14 +214,14 @@ def gts_new_from_file(fileobj, headers_only=False):
     @brief Load in memory a GTS message from a file.
 
     The message can be accessed through its id and will be available\n
-    until @ref grib_release is called.\n
+    until @ref codes_release is called.\n
 
     @param fileobj        python file object
     @param headers_only   whether or not to load the message with the headers only
-    @return               id of the GTS loaded in memory
+    @return               id of the GTS loaded in memory or None
     @exception GribInternalError
     """
-    #err, h = err_last(lib.gts_new_from_file)(ffi.NULL, fileobj)
+    # err, h = err_last(lib.gts_new_from_file)(ffi.NULL, fileobj)
     err, h = err_last(lib.codes_handle_new_from_file)(ffi.NULL, fileobj, CODES_PRODUCT_GTS)
     if err:
         if err == lib.GRIB_END_OF_FILE:
@@ -241,14 +241,14 @@ def metar_new_from_file(fileobj, headers_only=False):
     @brief Load in memory a METAR message from a file.
 
     The message can be accessed through its id and will be available\n
-    until @ref grib_release is called.\n
+    until @ref codes_release is called.\n
 
     @param fileobj        python file object
     @param headers_only   whether or not to load the message with the headers only
-    @return               id of the METAR loaded in memory
+    @return               id of the METAR loaded in memory or None
     @exception GribInternalError
     """
-    #err, h = err_last(lib.metar_new_from_file)(ffi.NULL, fileobj)
+    # err, h = err_last(lib.metar_new_from_file)(ffi.NULL, fileobj)
     err, h = err_last(lib.codes_handle_new_from_file)(ffi.NULL, fileobj, CODES_PRODUCT_METAR)
     if err:
         if err == lib.GRIB_END_OF_FILE:
@@ -268,14 +268,14 @@ def codes_new_from_file(fileobj, product_kind, headers_only=False):
     @brief Load in memory a message from a file for a given product.
 
     The message can be accessed through its id and will be available\n
-    until @ref grib_release is called.\n
+    until @ref codes_release is called.\n
 
     \b Examples: \ref get_product_kind.py "get_product_kind.py"
 
     @param fileobj        python file object
     @param product_kind   one of CODES_PRODUCT_GRIB, CODES_PRODUCT_BUFR, CODES_PRODUCT_METAR or CODES_PRODUCT_GTS
     @param headers_only   whether or not to load the message with the headers only
-    @return               id of the message loaded in memory
+    @return               id of the message loaded in memory or None
     @exception GribInternalError
     """
     if product_kind == CODES_PRODUCT_GRIB:
@@ -297,13 +297,13 @@ def any_new_from_file(fileobj, headers_only=False):
     @brief Load in memory a message from a file.
 
     The message can be accessed through its id and will be available\n
-    until @ref grib_release is called.\n
+    until @ref codes_release is called.\n
 
     \b Examples: \ref grib_get_keys.py "grib_get_keys.py"
 
     @param fileobj        python file object
     @param headers_only   whether or not to load the message with the headers only
-    @return               id of the message loaded in memory
+    @return               id of the message loaded in memory or None
     @exception GribInternalError
     """
     err, h = err_last(lib.codes_handle_new_from_file)(ffi.NULL, fileobj, CODES_PRODUCT_ANY)
@@ -325,13 +325,13 @@ def bufr_new_from_file(fileobj, headers_only=False):
     @brief Load in memory a BUFR message from a file.
 
     The message can be accessed through its id and will be available\n
-    until @ref grib_release is called.\n
+    until @ref codes_release is called.\n
 
     \b Examples: \ref bufr_get_keys.py "bufr_get_keys.py"
 
     @param fileobj        python file object
     @param headers_only   whether or not to load the message with the headers only
-    @return               id of the BUFR loaded in memory
+    @return               id of the BUFR loaded in memory or None
     @exception GribInternalError
     """
     err, h = err_last(lib.codes_handle_new_from_file)(ffi.NULL, fileobj, CODES_PRODUCT_BUFR)
@@ -353,7 +353,7 @@ def grib_new_from_file(fileobj, headers_only=False):
     @brief Load in memory a GRIB message from a file.
 
     The message can be accessed through its gribid and will be available\n
-    until @ref grib_release is called.\n
+    until @ref codes_release is called.\n
 
     The message can be loaded headers only by using the headers_only argument.
     Default is to have the headers only option set to off (False). If set to on (True),
@@ -366,10 +366,10 @@ def grib_new_from_file(fileobj, headers_only=False):
 
     @param fileobj        python file object
     @param headers_only   whether or not to load the message with the headers only
-    @return               id of the grib loaded in memory
+    @return               id of the grib loaded in memory or None
     @exception GribInternalError
     """
-    #err, h = err_last(lib.grib_new_from_file)(ffi.NULL, fileobj, headers_only)
+    # err, h = err_last(lib.grib_new_from_file)(ffi.NULL, fileobj, headers_only)
     err, h = err_last(lib.codes_handle_new_from_file)(ffi.NULL, fileobj, CODES_PRODUCT_GRIB)
     if err:
         if err == lib.GRIB_END_OF_FILE:
@@ -2059,6 +2059,9 @@ def grib_get_api_version():
     """
     def div(v, d):
         return (v / d, v % d)
+
+    if not lib:
+        raise RuntimeError("Could not load the ecCodes library!")
 
     v = lib.grib_get_api_version()
     v, revision = div(v, 100)

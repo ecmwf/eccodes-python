@@ -99,6 +99,8 @@ typedef struct grib_context   grib_context;
 */
 typedef struct grib_iterator  grib_iterator;
 
+typedef struct grib_nearest  grib_nearest;
+
 /*! Grib keys iterator. Iterator over keys.
     \ingroup keys_iterator
 */
@@ -385,6 +387,48 @@ int grib_iterator_next(grib_iterator *i, double* lat,double* lon,double* value);
 * @return            0 if OK, integer value on error
 */
 int grib_iterator_delete(grib_iterator *i);
+
+/*!
+* \brief Create a new nearest from a handle, using current geometry .
+*
+* \param h           : the handle from which the iterator will be created
+* \param error       : error code
+* \return            the new nearest, NULL if no nearest can be created
+*/
+grib_nearest* grib_nearest_new(grib_handle*   h, int* error);
+
+/**
+* Find the 4 nearest points of a latitude longitude point.
+* The flags are provided to speed up the process of searching. If you are
+* sure that the point you are asking for is not changing from a call
+* to another you can use GRIB_NEAREST_SAME_POINT. The same is valid for
+* the grid. Flags can be used together doing a bitwise OR.
+* The distances are given in kilometres.
+*
+* @param nearest     : nearest structure
+* @param h           : handle from which geography and data values are taken
+* @param inlat       : latitude of the point to search for
+* @param inlon       : longitude of the point to search for
+* @param flags       : GRIB_NEAREST_SAME_POINT, GRIB_NEAREST_SAME_GRID
+* @param outlats     : returned array of latitudes of the nearest points
+* @param outlons     : returned array of longitudes of the nearest points
+* @param values      : returned array of data values of the nearest points
+* @param distances   : returned array of distances from the nearest points
+* @param indexes     : returned array of indexes of the nearest points
+* @param len         : size of the arrays
+* @return            0 if OK, integer value on error
+*/
+int grib_nearest_find(grib_nearest *nearest,grib_handle* h,double inlat,double inlon,
+                      unsigned long flags,double* outlats,double* outlons,
+                      double* values,double* distances,int* indexes,size_t *len);
+
+/**
+*  Frees an nearest from memory
+*
+* @param nearest           : the nearest
+* @return            0 if OK, integer value on error
+*/
+int grib_nearest_delete(grib_nearest *nearest);
 
 /**
 * Find the nearest point of a set of points whose latitudes and longitudes
@@ -753,6 +797,7 @@ int grib_is_defined(grib_handle* h, const char* key);
 int grib_set_missing(grib_handle* h, const char* key);
 
 int grib_get_message_size ( grib_handle* h,size_t* size);
+int parse_keyval_string(const char *grib_tool, char *arg, int values_required, int default_type, grib_values values[], int *count);
 
 /*! \defgroup errors Error codes
 Error codes returned by the grib_api functions.
