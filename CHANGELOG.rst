@@ -2,7 +2,7 @@
 Changelog for eccodes-python
 ============================
 
-0.9.2
+0.9.2 (2019-07-09)
 ------------------
 
 - All ecCodes tests now pass
