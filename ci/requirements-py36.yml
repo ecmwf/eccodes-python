@@ -1,0 +1,14 @@
+name: test_env
+channels:
+  - conda-forge
+dependencies:
+  - attrs
+  - cffi
+  - coveralls
+  - eccodes
+  - future
+  - numpy
+  - pytest
+  - pytest-cov
+  - python=3.6
+  - typing

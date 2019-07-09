@@ -39,7 +39,7 @@ def parse_version_from(path):
 setuptools.setup(
     name='eccodes-python',
     version=parse_version_from('gribapi/bindings.py'),
-    description='Python interface to the ecCodes BUFR and GRIB de/encoder.',
+    description='Python interface to the ecCodes GRIB and BUFR decoder/encoder',
     long_description=read('README.rst') + read('CHANGELOG.rst'),
     author='European Centre for Medium-Range Weather Forecasts (ECMWF)',
     author_email='software.support@ecmwf.int',
@@ -47,9 +47,6 @@ setuptools.setup(
     url='https://github.com/ecmwf/eccodes-python',
     packages=setuptools.find_packages(),
     include_package_data=True,
-    # Uncomment to enable CFFI API level, out-of-line mode
-    # setup_requires=["cffi>=1.0.0"],
-    # cffi_modules=["builder.py:ffibuilder"],
     install_requires=[
         'attrs',
         'cffi',
@@ -62,7 +59,7 @@ setuptools.setup(
     ],
     test_suite='tests',
     zip_safe=True,
-    keywords='eccodes GRIB',
+    keywords='ecCodes GRIB BUFR',
     classifiers=[
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
