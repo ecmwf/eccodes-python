@@ -35,10 +35,25 @@ class CodesFile(io.FileIO):
 
     def __init__(self, filename, mode="rb"):
         """Open file and receive codes file handle."""
-        #: File handle for working with actual file on disc
-        #: The class holds the file it works with because ecCodes'
-        # typechecking does not allow using inherited classes.
-        self.file_handle = open(filename, mode)
+
+        if hasattr(filename, 'read'):
+            self.file_handle = filename
+        elif filename.startswith('https://') or filename.startswith('http://'):
+            try:
+                import requests
+                from io import BytesIO
+
+                self.file_handle = BytesIO(requests(filename).content)
+            except ModuleNotFoundError as e:
+                print("It seems you are trying to load a file from the internet. This package relies on the requests package, which are not automatically "
+                      "loaded for performance issues. Please, install requests package with `pip install requests`")
+                raise e
+        else:
+            #: File handle for working with actual file on disc
+            #: The class holds the file it works with because ecCodes'
+            # typechecking does not allow using inherited classes.
+            self.file_handle = open(filename, mode)
+
         #: Number of message in file currently being read
         self.message = 0
         #: Open messages
