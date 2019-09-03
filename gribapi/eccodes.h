@@ -51,3 +51,5 @@ codes_handle* codes_bufr_handle_new_from_samples (codes_context* c, const char* 
  * unexpandedDescriptors and copying what is possible to copy from the original message. */
 int codes_bufr_copy_data(grib_handle* hin, grib_handle* hout);
 
+void codes_bufr_multi_element_constant_arrays_on(codes_context* c);
+void codes_bufr_multi_element_constant_arrays_off(codes_context* c);

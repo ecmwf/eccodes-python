@@ -2138,3 +2138,27 @@ def grib_set_samples_path(samples_path):
     """
     context = lib.grib_context_get_default()
     lib.grib_context_set_samples_path(context, samples_path.encode(ENC))
+
+
+def codes_bufr_multi_element_constant_arrays_on():
+    """
+    @brief BUFR: Turn on the mode where you get multiple elements
+    in constant arrays
+
+    @exception GribInternalError
+    """
+    context = lib.grib_context_get_default()
+    lib.codes_bufr_multi_element_constant_arrays_on(context)
+
+
+def codes_bufr_multi_element_constant_arrays_off():
+    """
+    @brief BUFR: Turn off the mode where you get multiple elements
+    in constant arrays i.e. you get a single element
+
+    @exception GribInternalError
+    """
+    context = lib.grib_context_get_default()
+    lib.codes_bufr_multi_element_constant_arrays_off(context)
+
+
