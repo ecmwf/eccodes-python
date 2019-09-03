@@ -6,6 +6,7 @@ Changelog for eccodes-python
 ------------------
 
 - New exception added: FunctionalityNotEnabledError
+- BUFR decoding: support for multi-element constant arrays (ECC-428)
 
 
 0.9.2 (2019-07-09)
