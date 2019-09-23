@@ -1125,10 +1125,10 @@ def grib_get_double_array(msgid, key):
     """
     h = get_handle(msgid)
     nval = grib_get_size(msgid, key)
-    lenght_p = ffi.new('size_t*', nval)
+    length_p = ffi.new('size_t*', nval)
     arr = np.empty((nval,), dtype='float64')
     vals_p = ffi.cast('double *', arr.ctypes.data)
-    err = lib.grib_get_double_array(h, key.encode(ENC), vals_p, lenght_p)
+    err = lib.grib_get_double_array(h, key.encode(ENC), vals_p, length_p)
     GRIB_CHECK(err)
     return arr
 
@@ -1216,10 +1216,10 @@ def grib_get_long_array(msgid, key):
     """
     h = get_handle(msgid)
     nval = grib_get_size(msgid, key)
-    lenght_p = ffi.new('size_t*', nval)
+    length_p = ffi.new('size_t*', nval)
     arr = np.empty((nval,), dtype='int64')
     vals_p = ffi.cast('long *', arr.ctypes.data)
-    err = lib.grib_get_long_array(h, key.encode(ENC), vals_p, lenght_p)
+    err = lib.grib_get_long_array(h, key.encode(ENC), vals_p, length_p)
     GRIB_CHECK(err)
     return arr
 
