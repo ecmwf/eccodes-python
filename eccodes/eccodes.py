@@ -109,6 +109,7 @@ from gribapi import grib_set_samples_path as codes_set_samples_path
 
 from gribapi import codes_bufr_multi_element_constant_arrays_on
 from gribapi import codes_bufr_multi_element_constant_arrays_off
+from gribapi import codes_bufr_extract_headers
 
 from gribapi.errors import GribInternalError as CodesInternalError
 from gribapi.errors import *

@@ -799,6 +799,70 @@ int grib_set_missing(grib_handle* h, const char* key);
 int grib_get_message_size ( grib_handle* h,size_t* size);
 int parse_keyval_string(const char *grib_tool, char *arg, int values_required, int default_type, grib_values values[], int *count);
 
+typedef struct codes_bufr_header {
+    unsigned long message_offset;
+    unsigned long message_size;
+
+    /* Section 0 keys */
+    long edition;
+    unsigned long totalLength;
+
+    /* Section 1 keys */
+    long masterTableNumber;
+    long bufrHeaderSubCentre;
+    long bufrHeaderCentre;
+    long updateSequenceNumber;
+    long section1Flags;
+    long dataCategory;
+    long dataSubCategory;
+    long masterTablesVersionNumber;
+    long localTablesVersionNumber;
+    long typicalYearOfCentury;
+    long typicalMonth;
+    long typicalDay;
+    long typicalHour;
+    long typicalMinute;
+
+    /* Section 1 keys: BUFR4-specific */
+    long internationalDataSubCategory;
+    long typicalYear;
+    long typicalSecond;
+
+    long localSectionPresent;
+
+    /* ECMWF local section keys */
+    unsigned long section2Length;
+    long rdbType;
+    long oldSubtype;
+    char ident[9];
+    long localYear;
+    long localMonth;
+    long localDay;
+    long localHour;
+    long localMinute;
+    long localSecond;
+
+    long rdbtimeDay;
+    long rdbtimeHour;
+    long rdbtimeMinute;
+    long rdbtimeSecond;
+
+    long rectimeDay;
+    long rectimeHour;
+    long rectimeMinute;
+    long rectimeSecond;
+
+    long qualityControl;
+    long newSubtype;
+    long daLoop;
+
+    /* Section 3 keys */
+    unsigned long numberOfSubsets;
+    long observedData;
+    long compressedData;
+
+} codes_bufr_header;
+
 /*! \defgroup errors Error codes
 Error codes returned by the grib_api functions.
 */

@@ -2162,3 +2162,23 @@ def codes_bufr_multi_element_constant_arrays_off():
     lib.codes_bufr_multi_element_constant_arrays_off(context)
 
 
+def codes_bufr_extract_headers(filepath):
+    context = lib.grib_context_get_default()
+    headers_p = ffi.new("struct codes_bufr_header**")
+    num_message_p = ffi.new('int*')
+
+    err = lib.codes_bufr_extract_headers_malloc(context, filepath.encode(ENC), headers_p, num_message_p)
+    GRIB_CHECK(err)
+
+    num_messages = num_message_p[0]
+    headers = headers_p[0]
+    #idents = []
+    #for i in range(num_messages):
+    #    msgh = h[i]
+    #    ident = ''
+    #    for j in range(8):
+    #        ident += msgh.ident[j].decode(ENC)
+    #    idents.append(ident)
+
+    return [num_messages, headers]
+
