@@ -2162,6 +2162,7 @@ def codes_bufr_multi_element_constant_arrays_off():
     lib.codes_bufr_multi_element_constant_arrays_off(context)
 
 
+# Convert the C codes_bufr_header struct to a Python dictionary
 def _convert_struct_to_dict(s):
     result = {}
     for a in dir(s):
