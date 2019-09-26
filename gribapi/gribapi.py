@@ -2162,7 +2162,25 @@ def codes_bufr_multi_element_constant_arrays_off():
     lib.codes_bufr_multi_element_constant_arrays_off(context)
 
 
+def _convert_struct_to_dict(s):
+    result = {}
+    for a in dir(s):
+        if not a.startswith('__'):
+            value = getattr(s, a)
+            if a == 'ident':
+                value = ffi.string(value).decode(ENC).rstrip()
+            result[a] = value
+    return result
+
+
 def codes_bufr_extract_headers(filepath):
+    """
+    @brief BUFR header extraction
+
+    @param filepath       path of input BUFR file
+    @return               A list of dictionaries
+    @exception GribInternalError
+    """
     context = lib.grib_context_get_default()
     headers_p = ffi.new("struct codes_bufr_header**")
     num_message_p = ffi.new('int*')
@@ -2172,13 +2190,10 @@ def codes_bufr_extract_headers(filepath):
 
     num_messages = num_message_p[0]
     headers = headers_p[0]
-    #idents = []
-    #for i in range(num_messages):
-    #    msgh = h[i]
-    #    ident = ''
-    #    for j in range(8):
-    #        ident += msgh.ident[j].decode(ENC)
-    #    idents.append(ident)
 
-    return [num_messages, headers]
+    result = []
+    for i in range(num_messages):
+        d = _convert_struct_to_dict(headers[i])
+        result.append(d)
 
+    return result
