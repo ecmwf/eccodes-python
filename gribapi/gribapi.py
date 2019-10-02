@@ -1125,10 +1125,10 @@ def grib_get_double_array(msgid, key):
     """
     h = get_handle(msgid)
     nval = grib_get_size(msgid, key)
-    lenght_p = ffi.new('size_t*', nval)
-    arr = np.empty((nval), dtype='float64')
+    length_p = ffi.new('size_t*', nval)
+    arr = np.empty((nval,), dtype='float64')
     vals_p = ffi.cast('double *', arr.ctypes.data)
-    err = lib.grib_get_double_array(h, key.encode(ENC), vals_p, lenght_p)
+    err = lib.grib_get_double_array(h, key.encode(ENC), vals_p, length_p)
     GRIB_CHECK(err)
     return arr
 
@@ -1216,10 +1216,10 @@ def grib_get_long_array(msgid, key):
     """
     h = get_handle(msgid)
     nval = grib_get_size(msgid, key)
-    lenght_p = ffi.new('size_t*', nval)
+    length_p = ffi.new('size_t*', nval)
     arr = np.empty((nval,), dtype='int64')
     vals_p = ffi.cast('long *', arr.ctypes.data)
-    err = lib.grib_get_long_array(h, key.encode(ENC), vals_p, lenght_p)
+    err = lib.grib_get_long_array(h, key.encode(ENC), vals_p, length_p)
     GRIB_CHECK(err)
     return arr
 
@@ -2061,7 +2061,7 @@ def grib_get_api_version():
         return (v / d, v % d)
 
     if not lib:
-        raise Exception("Could not load the ecCodes library!")
+        raise RuntimeError("Could not load the ecCodes library!")
 
     v = lib.grib_get_api_version()
     v, revision = div(v, 100)
@@ -2138,3 +2138,27 @@ def grib_set_samples_path(samples_path):
     """
     context = lib.grib_context_get_default()
     lib.grib_context_set_samples_path(context, samples_path.encode(ENC))
+
+
+def codes_bufr_multi_element_constant_arrays_on():
+    """
+    @brief BUFR: Turn on the mode where you get multiple elements
+    in constant arrays
+
+    @exception GribInternalError
+    """
+    context = lib.grib_context_get_default()
+    lib.codes_bufr_multi_element_constant_arrays_on(context)
+
+
+def codes_bufr_multi_element_constant_arrays_off():
+    """
+    @brief BUFR: Turn off the mode where you get multiple elements
+    in constant arrays i.e. you get a single element
+
+    @exception GribInternalError
+    """
+    context = lib.grib_context_get_default()
+    lib.codes_bufr_multi_element_constant_arrays_off(context)
+
+

@@ -5,8 +5,7 @@ sudo: false # use container based build
 matrix:
   fast_finish: true
   include:
-  - env: ENV=py36-qc
-  - env: ENV=docs
+  - env: ENV=py36
   - env: ENV=py37
 
 before_install:
@@ -33,7 +32,7 @@ script:
     elif [[ "$ENV" == *"-qc" ]]; then
       pytest -v --flakes --doctest-glob="*.rst" --cov=eccodes --cov=gribapi --cov-report term-missing --pep8 --mccabe $EXTRA_FLAGS;
     else
-      pytest -v --flakes --cov=eccodes --cov=gribapi --cov-report term-missing $EXTRA_FLAGS;
+      pytest -v --cov=eccodes --cov=gribapi --cov-report term-missing $EXTRA_FLAGS;
     fi
 
 after_success:

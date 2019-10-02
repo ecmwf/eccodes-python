@@ -25,7 +25,7 @@ import os
 
 import cffi
 
-__version__ = '0.9.2'
+__version__ = '0.9.3'
 
 LOG = logging.getLogger(__name__)
 
@@ -35,7 +35,6 @@ except ModuleNotFoundError:
     ffi = cffi.FFI()
     ffi.cdef(
         pkgutil.get_data(__name__, 'grib_api.h').decode('utf-8') +
-        pkgutil.get_data(__name__, 'grib_api_prototypes.h').decode('utf-8') +
         pkgutil.get_data(__name__, 'eccodes.h').decode('utf-8')
     )
 

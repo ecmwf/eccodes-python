@@ -2,20 +2,19 @@
 Python 3 interface to encode and decode GRIB and BUFR files via the
 `ECMWF ecCodes library <https://software.ecmwf.int/wiki/display/ECC/>`_.
 
-Features with development status **Beta**:
+Features:
 
 - reads and writes GRIB 1 and 2 files,
 - reads and writes BUFR 3 and 4 files,
 - supports all modern versions of Python 3.7, 3.6, 3.5 and PyPy3,
 - works on most *Linux* distributions and *MacOS*, the *ecCodes* C-library is the only system dependency,
-- PyPI package with no install time build (binds with *CFFI* ABI level, in-line mode),
-- supports writing the index of a GRIB file to disk, to save a full-file scan on open.
+- PyPI package can be installed without compiling,
+  at the cost of being twice as slow as the original *ecCodes* module,
+- an optional compile step makes the code as fast as the original module
+  but it needs a recent version of *ecCodes* `>= 2.13.0`.
 
 Limitations:
 
-- *CFFI* ABI level, in-line mode is almost twice as slow as the original *ecCodes* bindings,
-- only experimental support for the much faster *CFFI* API level, out-of-line mode,
-- *PyPI* binary packages do not include *ecCodes*,
 - Microsoft Windows support is untested.
 
 
@@ -32,10 +31,6 @@ System dependencies
 
 The Python module depends on the ECMWF *ecCodes* library
 that must be installed on the system and accessible as a shared library.
-Some Linux distributions ship a binary version that may be installed with the standard package manager.
-On Ubuntu 18.04 use the command::
-
-    $ sudo apt-get install libeccodes0
 
 On a MacOS with HomeBrew use::
 
@@ -52,7 +47,7 @@ https://software.ecmwf.int/wiki/display/ECC/ecCodes+installation
 You may run a simple selfcheck command to ensure that your system is set up correctly::
 
     $ python -m eccodes selfcheck
-    Found: ecCodes v2.7.0.
+    Found: ecCodes v2.13.0.
     Your system is ready.
 
 
@@ -109,7 +104,11 @@ https://github.com/ecmwf/eccodes-python
 
 Please see the CONTRIBUTING.rst document for the best way to help.
 
-Lead developer:
+Maintainer:
+
+- `Shahram Najm <https://github.com/shahramn>`_ - `ECMWF <https://ecmwf.int>`_
+
+Contributors:
 
 - `Alessandro Amici <https://github.com/alexamici>`_ - `B-Open <https://bopen.eu>`_
 
