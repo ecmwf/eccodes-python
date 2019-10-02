@@ -2,7 +2,7 @@
 Changelog for eccodes-python
 ============================
 
-0.9.3 (unreleased)
+0.9.3 (2019-10-02)
 ------------------
 
 - New exception added: FunctionalityNotEnabledError
