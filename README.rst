@@ -104,7 +104,11 @@ https://github.com/ecmwf/eccodes-python
 
 Please see the CONTRIBUTING.rst document for the best way to help.
 
-Lead developer:
+Maintainer:
+
+- `Shahram Najm <https://github.com/shahramn>`_ - `ECMWF <https://ecmwf.int>`_
+
+Contributors:
 
 - `Alessandro Amici <https://github.com/alexamici>`_ - `B-Open <https://bopen.eu>`_
 
