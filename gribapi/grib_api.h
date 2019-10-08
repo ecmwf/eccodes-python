@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -8,60 +8,22 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/*! \file grib_api.h
-  \brief grib_api C header file
-
-*/
-
 typedef enum ProductKind {PRODUCT_ANY, PRODUCT_GRIB, PRODUCT_BUFR, PRODUCT_METAR, PRODUCT_GTS, PRODUCT_TAF} ProductKind;
 
-/* Types */
-/*  undefined */
 #define GRIB_TYPE_UNDEFINED 0
-/*  long integer */
 #define GRIB_TYPE_LONG 1
-/*  double */
 #define GRIB_TYPE_DOUBLE 2
-/*  char*    */
 #define GRIB_TYPE_STRING 3
-/*  bytes */
 #define GRIB_TYPE_BYTES 4
-/*  section */
 #define GRIB_TYPE_SECTION 5
-/*  label */
 #define GRIB_TYPE_LABEL 6
-/*  missing */
 #define GRIB_TYPE_MISSING 7
 
-/*! read only keys are skipped by keys iterator.
-\ingroup keys_iterator
-\see grib_keys_iterator_new
-*/
 #define GRIB_KEYS_ITERATOR_SKIP_READ_ONLY          1
-
-/*! edition specific keys are skipped by keys iterator.
-\ingroup keys_iterator
-\see grib_keys_iterator_new */
 #define GRIB_KEYS_ITERATOR_SKIP_EDITION_SPECIFIC   4
-
-/*! coded keys are skipped by keys iterator.
-\ingroup keys_iterator
-\see grib_keys_iterator_new */
 #define GRIB_KEYS_ITERATOR_SKIP_CODED              8
-
-/*! computed keys are skipped by keys iterator.
-\ingroup keys_iterator
-\see grib_keys_iterator_new */
 #define GRIB_KEYS_ITERATOR_SKIP_COMPUTED           16
-
-/*! duplicates of a key are skipped by keys iterator.
-\ingroup keys_iterator
-\see grib_keys_iterator_new */
 #define GRIB_KEYS_ITERATOR_SKIP_DUPLICATES         32
-
-/*! function keys are skipped by keys iterator.
-\ingroup keys_iterator
-\see grib_keys_iterator_new */
 #define GRIB_KEYS_ITERATOR_SKIP_FUNCTION           64
 
 typedef struct grib_values grib_values;
@@ -78,725 +40,124 @@ struct grib_values {
   grib_values* next;
 } ;
 
-
-/*! Grib handle,   structure giving access to parsed message values by keys
-    \ingroup grib_handle
-*/
 typedef struct grib_handle    grib_handle;
-
-/*! Grib multi field handle,   structure used to build multi field GRIB messages.
-    \ingroup grib_handle
- */
 typedef struct grib_multi_handle    grib_multi_handle;
-
-/*! Grib context,  structure containing the memory methods, the parsers and the formats.
-    \ingroup grib_context
-*/
 typedef struct grib_context   grib_context;
-
-/*! Grib iterator, structure supporting a geographic iteration of values on a GRIB message.
-    \ingroup grib_iterator
-*/
 typedef struct grib_iterator  grib_iterator;
-
 typedef struct grib_nearest  grib_nearest;
-
-/*! Grib keys iterator. Iterator over keys.
-    \ingroup keys_iterator
-*/
 typedef struct grib_keys_iterator    grib_keys_iterator;
 typedef struct bufr_keys_iterator    bufr_keys_iterator;
-
-/*! \defgroup grib_index The grib_index
-The grib_index is the structure giving indexed access to messages in a file.
- */
-/*! @{*/
-
-/*! index structure to access messages in a file.
-*/
 typedef struct grib_index grib_index;
 
-/**
- *  Create a new index form a file. The file is indexed with the keys in argument.
- *
- * @param c           : context  (NULL for default context)
- * @param filename    : name of the file of messages to be indexed
- * @param keys        : comma separated list of keys for the index.
- *    The type of the key can be explicitly declared appending :l for long,
- *    (or alternatively :i)
- *    :d for double, :s for string to the key name. If the type is not
- *    declared explicitly, the native type is assumed.
- * @param err         :  0 if OK, integer value on error
- * @return            the newly created index
- */
 grib_index* grib_index_new_from_file(grib_context* c,
                             char* filename,const char* keys,int *err);
 
-/**
- *  Indexes the file given in argument in the index given in argument.
- *
- * @param index       : index
- * @param filename    : name of the file of messages to be indexed
- * @return            0 if OK, integer value on error
- */
 int grib_index_add_file(grib_index *index, const char *filename);
 int grib_index_write(grib_index *index, const char *filename);
 grib_index* grib_index_read(grib_context* c,const char* filename,int *err);
 
-/**
- *  Get the number of distinct values of the key in argument contained in the index. The key must belong to the index.
- *
- * @param index       : an index created from a file.
- *     The index must have been created with the key in argument.
- * @param key         : key for which the number of values is computed
- * @param size        : number of distinct values of the key in the index
- * @return            0 if OK, integer value on error
- */
-int grib_index_get_size(grib_index* index,const char* key,size_t* size);
-
-/**
- *  Get the distinct values of the key in argument contained in the index. The key must belong to the index. This function is used when the type of the key was explicitly defined as long or when the native type of the key is long.
- *
- * @param index       : an index created from a file.
- *     The index must have been created with the key in argument.
- * @param key         : key for which the values are returned
- * @param values      : array of values. The array must be allocated before entering this function and its size must be enough to contain all the values.
- * @param size        : size of the values array
- * @return            0 if OK, integer value on error
- */
-int grib_index_get_long(grib_index* index,const char* key,
+int grib_index_get_size(const grib_index* index,const char* key,size_t* size);
+int grib_index_get_long(const grib_index* index,const char* key,
                         long* values,size_t *size);
-
-/**
- *  Get the distinct values of the key in argument contained in the index. The key must belong to the index. This function is used when the type of the key was explicitly defined as string or when the native type of the key is string.
- *
- * @param index       : an index created from a file.
- *     The index must have been created with the key in argument.
- * @param key         : key for which the values are returned
- * @param values      : array of values. The array must be allocated before entering this function and its size must be enough to contain all the values.
- * @param size        : size of the values array
- * @return            0 if OK, integer value on error
- */
-int grib_index_get_string(grib_index* index,const char* key,
+int grib_index_get_string(const grib_index* index,const char* key,
                           char** values,size_t *size);
-
-
-/**
- *  Select the message subset with key==value. The value is a long. The key must have been created with long type or have long as native type if the type was not explicitly defined in the index creation.
- *
- * @param index       : an index created from a file.
- *     The index must have been created with the key in argument.
- * @param key         : key to be selected
- * @param value       : value of the key to select
- * @return            0 if OK, integer value on error
- */
 int grib_index_select_long(grib_index* index,const char* key,long value);
-
-/**
- *  Select the message subset with key==value. The value is a double. The key must have been created with double type or have double as native type if the type was not explicitly defined in the index creation.
- *
- * @param index       : an index created from a file.
- *     The index must have been created with the key in argument.
- * @param key         : key to be selected
- * @param value       : value of the key to select
- * @return            0 if OK, integer value on error
- */
 int grib_index_select_double(grib_index* index,const char* key,double value);
-
-/**
- *  Select the message subset with key==value. The value is a string. The key must have been created with string type or have string as native type if the type was not explicitly defined in the index creation.
- *
- * @param index       : an index created from a file.
- *     The index must have been created with the key in argument.
- * @param key         : key to be selected
- * @param value       : value of the key to select
- * @return            0 if OK, integer value on error
- */
 int grib_index_select_string(grib_index* index,const char* key,char* value);
-
-/**
- *  Create a new handle from an index after having selected the key values.
- *  All the keys belonging to the index must be selected before calling this function. Successive calls to this function will return all the handles compatible with the constraints defined selecting the values of the index keys.
- * When no more handles are available from the index a NULL pointer is returned and the err variable is set to GRIB_END_OF_INDEX.
- *
- * @param index       : an index created from a file.
- * @param err         :  0 if OK, integer value on error. GRIB_END_OF_INDEX when no more handles are contained in the index.
- * @return            grib handle.
- */
 grib_handle* grib_handle_new_from_index(grib_index* index,int *err);
 
-/**
- *  Delete the index.
- *
- * @param index       : index to be deleted.
- */
 void grib_index_delete(grib_index* index);
 
-/*! @} */
-
-/*! \defgroup grib_handle The grib_handle
-The grib_handle is the structure giving access to parsed grib values by keys.
-*/
-/*! @{*/
-/**
-*  Counts the messages contained in a file resource.
-*
-* @param c           : the context from which the handle will be created (NULL for default context)
-* @param f           : the file resource
-* @param n           : the number of messages in the file
-* @return            0 if OK, integer value on error
-*/
 int grib_count_in_file(grib_context* c, FILE* f,int* n);
-
-/**
-*  Create a handle from a file resource.
-*  The file is read until a message is found. The message is then copied.
-*  Remember always to delete the handle when it is not needed anymore to avoid
-*  memory leaks.
-*
-* @param c           : the context from which the handle will be created (NULL for default context)
-* @param f           : the file resource
-* @param error       : error code set if the returned handle is NULL and the end of file is not reached
-* @return            the new handle, NULL if the resource is invalid or a problem is encountered
-*/
 grib_handle* grib_handle_new_from_file(grib_context* c, FILE* f, int* error);
-
-/**
-*  Create a handle from a user message. The message is copied and will be freed with the handle
-*
-* @param c           : the context from which the handle will be created (NULL for default context)
-* @param data        : the actual message
-* @param data_len    : the length of the message in number of bytes
-* @return            the new handle, NULL if the message is invalid or a problem is encountered
-*/
 grib_handle* grib_handle_new_from_message_copy(grib_context* c, const void* data, size_t data_len);
-
-
-/**
- *  Create a handle from a GRIB message contained in the samples directory.
- *  The message is copied at the creation of the handle
- *
- * @param c           : the context from which the handle will be created (NULL for default context)
- * @param sample_name : the name of the sample file (without the .tmpl extension)
- * @return            the new handle, NULL if the resource is invalid or a problem is encountered
- */
 grib_handle* grib_handle_new_from_samples (grib_context* c, const char* sample_name);
-
-
-
-/**
-*  Clone an existing handle using the context of the original handle,
-*  The message is copied and reparsed
-*
-* @param h           : The handle to be cloned
-* @return            the new handle, NULL if the message is invalid or a problem is encountered
-*/
-grib_handle* grib_handle_clone(grib_handle* h)                 ;
-
-/**
-*  Frees a handle, also frees the message if it is not a user message
-*  @see  grib_handle_new_from_message
-* @param h           : The handle to be deleted
-* @return            0 if OK, integer value on error
-*/
+grib_handle* grib_handle_clone(const grib_handle* h)                 ;
 int grib_handle_delete(grib_handle* h);
-
-/**
- *  Create an empty multi field handle.
- *  Remember always to delete the multi handle when it is not needed anymore to avoid
- *  memory leaks.
- *
- * @param c           : the context from which the handle will be created (NULL for default context)
- */
-grib_multi_handle* grib_multi_handle_new     (grib_context* c);
-
-/**
- *  Append the sections starting with start_section of the message pointed by h at
- *  the end of the multi field handle mh.
- *  Remember always to delete the multi handle when it is not needed anymore to avoid
- *  memory leaks.
- *
- * @param h           : The handle from which the sections are copied.
- * @param start_section : section number. Starting from this section all the sections to the end of the message will be copied.
- * @param mh           : The multi field handle on which the sections are appended.
- * @return            0 if OK, integer value on error
- */
+grib_multi_handle* grib_multi_handle_new(grib_context* c);
 int grib_multi_handle_append(grib_handle* h,int start_section,grib_multi_handle* mh);
-
-/**
- * Delete multi field handle.
- *
- * @param mh           : The multi field handle to be deleted.
- * @return            0 if OK, integer value on error
- */
 int grib_multi_handle_delete(grib_multi_handle* mh);
-
-/**
- *  Write a multi field handle in a file.
- *  Remember always to delete the multi handle when it is not needed anymore to avoid
- *  memory leaks.
- *
- * @param mh           : The multi field handle to be written.
- * @param f            : File on which the file handle is written.
- * @return            0 if OK, integer value on error
- */
 int grib_multi_handle_write(grib_multi_handle* mh,FILE* f);
 
-/*! @} */
+int grib_get_message(const grib_handle* h ,const void** message, size_t *message_length);
 
-/*! \defgroup handling_coded_messages Handling coded messages */
-/*! @{ */
-/**
-* getting the message attached to a handle
-*
-* @param h              : the handle to which the buffer should be gathered
-* @param message        : the pointer to be set to the handle's data
-* @param message_length : On exit, the message size in number of bytes
-* @return            0 if OK, integer value on error
-*/
-int grib_get_message(grib_handle* h ,const void** message, size_t *message_length);
-
-/*! \defgroup iterators Iterating on latitude/longitude/values */
-/*! @{ */
-
-/*!
-* \brief Create a new iterator from a handle, using current geometry and values.
-*
-* \param h           : the handle from which the iterator will be created
-* \param flags       : flags for future use.
-* \param error       : error code
-* \return            the new iterator, NULL if no iterator can be created
-*/
-grib_iterator* grib_iterator_new(grib_handle*   h, unsigned long flags,int* error);
-
-/**
-* Get the next value from an iterator.
-*
-* @param i           : the iterator
-* @param lat         : on output latitude in degree
-* @param lon         : on output longitude in degree
-* @param value       : on output value of the point
-* @return            positive value if successful, 0 if no more data are available
-*/
+grib_iterator* grib_iterator_new(const grib_handle* h, unsigned long flags, int* error);
 int grib_iterator_next(grib_iterator *i, double* lat,double* lon,double* value);
-
-/**
-*  Frees an iterator from memory
-*
-* @param i           : the iterator
-* @return            0 if OK, integer value on error
-*/
 int grib_iterator_delete(grib_iterator *i);
+grib_nearest* grib_nearest_new(const grib_handle* h, int* error);
 
-/*!
-* \brief Create a new nearest from a handle, using current geometry .
-*
-* \param h           : the handle from which the iterator will be created
-* \param error       : error code
-* \return            the new nearest, NULL if no nearest can be created
-*/
-grib_nearest* grib_nearest_new(grib_handle*   h, int* error);
-
-/**
-* Find the 4 nearest points of a latitude longitude point.
-* The flags are provided to speed up the process of searching. If you are
-* sure that the point you are asking for is not changing from a call
-* to another you can use GRIB_NEAREST_SAME_POINT. The same is valid for
-* the grid. Flags can be used together doing a bitwise OR.
-* The distances are given in kilometres.
-*
-* @param nearest     : nearest structure
-* @param h           : handle from which geography and data values are taken
-* @param inlat       : latitude of the point to search for
-* @param inlon       : longitude of the point to search for
-* @param flags       : GRIB_NEAREST_SAME_POINT, GRIB_NEAREST_SAME_GRID
-* @param outlats     : returned array of latitudes of the nearest points
-* @param outlons     : returned array of longitudes of the nearest points
-* @param values      : returned array of data values of the nearest points
-* @param distances   : returned array of distances from the nearest points
-* @param indexes     : returned array of indexes of the nearest points
-* @param len         : size of the arrays
-* @return            0 if OK, integer value on error
-*/
-int grib_nearest_find(grib_nearest *nearest,grib_handle* h,double inlat,double inlon,
+int grib_nearest_find(grib_nearest *nearest, const grib_handle* h, double inlat, double inlon,
                       unsigned long flags,double* outlats,double* outlons,
                       double* values,double* distances,int* indexes,size_t *len);
 
-/**
-*  Frees an nearest from memory
-*
-* @param nearest           : the nearest
-* @return            0 if OK, integer value on error
-*/
 int grib_nearest_delete(grib_nearest *nearest);
 
-/**
-* Find the nearest point of a set of points whose latitudes and longitudes
-* are given in the inlats, inlons arrays respectively.
-* If the flag is_lsm is 1 the nearest land point is returned and the
-* GRIB passed as handle (h) is considered a land sea mask.
-* The land nearest point is the nearest point with land sea mask value>=0.5.
-* If no nearest land points are found the nearest value is returned.
-* If the flag is_lsm is 0 the nearest point is returned.
-* values, distances, indexes (in the "values" array) for the nearest points (ilons,ilats)
-* are returned.
-* The distances are given in kilometres.
-*
-* @param h           : handle from which geography and data values are taken
-* @param is_lsm      : lsm flag (1-> nearest land, 0-> nearest)
-* @param inlats      : latitudes of the points to search for
-* @param inlons      : longitudes of the points to search for
-* @param npoints     : number of points (size of the inlats,inlons,outlats,outlons,values,distances,indexes arrays)
-* @param outlats     : returned array of latitudes of the nearest points
-* @param outlons     : returned array of longitudes of the nearest points
-* @param values      : returned array of data values of the nearest points
-* @param distances   : returned array of distances from the nearest points
-* @param indexes     : returned array of indexes of the nearest points
-* @return            0 if OK, integer value on error
-*/
-int grib_nearest_find_multiple(grib_handle* h,int is_lsm,
+int grib_nearest_find_multiple(const grib_handle* h, int is_lsm,
     double* inlats,double* inlons,long npoints,
     double* outlats,double* outlons,
     double* values,double* distances, int* indexes);
 
-/**
-*  Get the number of coded value from a key, if several keys of the same name are present, the total sum is returned
-*
-* @param h           : the handle to get the offset from
-* @param key         : the key to be searched
-* @param size        : the address of a size_t where the size will be set
-* @return            0 if OK, integer value on error
-*/
-int grib_get_size(grib_handle* h, const char* key,size_t *size);
+int grib_get_size(const grib_handle* h, const char* key,size_t *size);
 
-/**
-*  Get the length of the string representation of the key, if several keys of the same name are present, the maximum length is returned
-*
-* @param h           : the handle to get the offset from
-* @param key         : the key to be searched
-* @param length        : the address of a size_t where the length will be set
-* @return            0 if OK, integer value on error
-*/
-int grib_get_length(grib_handle* h, const char* key,size_t *length);
+int grib_get_length(const grib_handle* h, const char* key,size_t *length);
+int grib_get_long(const grib_handle* h, const char* key, long* value);
+int grib_get_double(const grib_handle* h, const char* key, double* value);
+int grib_get_double_element(const grib_handle* h, const char* key, int i, double* value);
+int grib_get_double_elements(const grib_handle* h, const char* key, int* i, long size, double* value);
+int grib_get_string(const grib_handle* h, const char* key, char* mesg, size_t *length);
+int grib_get_string_array(const grib_handle* h, const char* key, char** vals, size_t *length);
+int grib_get_double_array(const grib_handle* h, const char* key, double* vals, size_t *length);
+int grib_get_long_array(const grib_handle* h, const char* key, long* vals, size_t *length);
 
-/**
-*  Get a long value from a key, if several keys of the same name are present, the last one is returned
-*  @see  grib_set_long
-*
-* @param h           : the handle to get the data from
-* @param key         : the key to be searched
-* @param value       : the address of a long where the data will be retrieved
-* @return            0 if OK, integer value on error
-*/
-int grib_get_long(grib_handle* h, const char* key, long* value);
-
-/**
-*  Get a double value from a key, if several keys of the same name are present, the last one is returned
-*  @see  grib_set_double
-*
-* @param h           : the handle to get the data from
-* @param key         : the key to be searched
-* @param value       : the address of a double where the data will be retrieved
-* @return            0 if OK, integer value on error
-*/
-int grib_get_double(grib_handle* h, const char* key, double* value);
-
-/**
-*  Get as double the i-th element of the "key" array
-*
-* @param h           : the handle to get the data from
-* @param key         : the key to be searched
-* @param i           : zero-based index
-* @param value       : the address of a double where the data will be retrieved
-* @return            0 if OK, integer value on error
-*/
-int grib_get_double_element(grib_handle* h, const char* key, int i, double* value);
-
-/**
-*  Get as double array the elements of the "key" array whose indexes are listed in the input array i
-*
-* @param h           : the handle to get the data from
-* @param key         : the key to be searched
-* @param i           : zero-based array of indexes
-* @param size        : size of the i and value arrays
-* @param value       : the double array for the data values
-* @return            0 if OK, integer value on error
-*/
-int grib_get_double_elements(grib_handle* h, const char* key, int* i, long size, double* value);
-
-/**
-*  Get a string value from a key, if several keys of the same name are present, the last one is returned
-* @see  grib_set_string
-*
-* @param h           : the handle to get the data from
-* @param key         : the key to be searched
-* @param mesg       : the address of a string where the data will be retrieved
-* @param length      : the address of a size_t that contains allocated length of the string on input, and that contains the actual length of the string on output
-* @return            0 if OK, integer value on error
-*/
-int grib_get_string(grib_handle* h, const char* key, char* mesg, size_t *length);
-
-/**
-*  Get string array values from a key. If several keys of the same name are present, the last one is returned
-* @see  grib_set_string_array
-*
-* @param h       : the handle to get the data from
-* @param key     : the key to be searched
-* @param vals    : the address of a string array where the data will be retrieved
-* @param length  : the address of a size_t that contains allocated length of the array on input, and that contains the actual length of the array on output
-* @return        0 if OK, integer value on error
-*/
-int grib_get_string_array(grib_handle* h, const char* key, char** vals, size_t *length);
-
-/**
-*  Get double array values from a key. If several keys of the same name are present, the last one is returned
-* @see  grib_set_double_array
-*
-* @param h           : the handle to get the data from
-* @param key         : the key to be searched
-* @param vals       : the address of a double array where the data will be retrieved
-* @param length      : the address of a size_t that contains allocated length of the double array on input, and that contains the actual length of the double array on output
-* @return            0 if OK, integer value on error
-*/
-int grib_get_double_array(grib_handle* h, const char* key, double* vals, size_t *length);
-
-/**
-*  Get long array values from a key. If several keys of the same name are present, the last one is returned
-* @see  grib_set_long_array
-*
-* @param h           : the handle to get the data from
-* @param key         : the key to be searched
-* @param vals       : the address of a long array where the data will be retrieved
-* @param length      : the address of a size_t that contains allocated length of the long array on input, and that contains the actual length of the long array on output
-* @return            0 if OK, integer value on error
-*/
-int grib_get_long_array(grib_handle* h, const char* key, long* vals, size_t *length);
-
-
-/*   setting      data         */
-/**
-*  Copy the keys belonging to a given namespace from a source handle to a destination handle
-*
-*
-* @param dest      : destination handle
-* @param name      : namespace
-* @param src       : source handle
-* @return          0 if OK, integer value on error
-*/
 int grib_copy_namespace(grib_handle* dest, const char* name, grib_handle* src);
-
-/**
-*  Set a long value from a key. If several keys of the same name are present, the last one is set
-*  @see  grib_get_long
-*
-* @param h           : the handle to set the data to
-* @param key         : the key to be searched
-* @param val         : a long where the data will be read
-* @return            0 if OK, integer value on error
-*/
 int grib_set_long(grib_handle* h, const char* key, long val);
-
-/**
-*  Set a double value from a key. If several keys of the same name are present, the last one is set
-*  @see  grib_get_double
-*
-* @param h           : the handle to set the data to
-* @param key         : the key to be searched
-* @param val       : a double where the data will be read
-* @return            0 if OK, integer value on error
-*/
 int grib_set_double(grib_handle* h, const char* key, double val);
-
-/**
-*  Set a string value from a key. If several keys of the same name are present, the last one is set
-*  @see  grib_get_string
-*
-* @param h           : the handle to set the data to
-* @param key         : the key to be searched
-* @param mesg       : the address of a string where the data will be read
-* @param length      : the address of a size_t that contains the length of the string on input, and that contains the actual packed length of the string on output
-* @return            0 if OK, integer value on error
-*/
 int grib_set_string(grib_handle* h, const char* key, const char* mesg, size_t *length);
-
-/**
-*  Set a double array from a key. If several keys of the same name are present, the last one is set
-*   @see  grib_get_double_array
-*
-* @param h           : the handle to set the data to
-* @param key         : the key to be searched
-* @param vals        : the address of a double array where the data will be read
-* @param length      : a size_t that contains the length of the byte array on input
-* @return            0 if OK, integer value on error
-*/
 int grib_set_double_array(grib_handle* h, const char*  key , const double*        vals   , size_t length);
-
-/**
-*  Set a long array from a key. If several keys of the same name are present, the last one is set
-*  @see  grib_get_long_array
-*
-* @param h           : the handle to set the data to
-* @param key         : the key to be searched
-* @param vals        : the address of a long array where the data will be read
-* @param length      : a size_t that contains the length of the long array on input
-* @return            0 if OK, integer value on error
-*/
 int grib_set_long_array(grib_handle* h, const char*  key , const long* vals, size_t length);
 
-/**
-*  Set a string array from a key. If several keys of the same name are present, the last one is set
-*  @see  grib_get_string_array
-*
-* @param h           : the handle to set the data to
-* @param key         : the key to be searched
-* @param vals        : the address of a string array where the data will be read
-* @param length      : a size_t that contains the length of the array on input
-* @return            0 if OK, integer value on error
-*/
 int grib_set_string_array(grib_handle* h, const char *key, const char **vals, size_t length);
-/*! @} */
 
-/**
-*  Get the static default context
-*
-* @return            the default context, NULL it the context is not available
-*/
 grib_context* grib_context_get_default(void);
-
-/**
-*  Set the GTS header mode on.
-*  The GTS headers will be preserved.
-*
-* @param c           : the context
-*/
 void grib_gts_header_on(grib_context* c) ;
-
-/**
-*  Set the GTS header mode off.
-*  The GTS headers will be deleted.
-*
-* @param c           : the context
-*/
 void grib_gts_header_off(grib_context* c);
-
-/**
-*  Set the GRIBEX mode on.
-*  Grib files will be compatible with GRIBEX.
-*
-* @param c           : the context
-*/
 void grib_gribex_mode_on(grib_context* c);
-
-/**
-*  Set the GRIBEX mode off.
-*  GRIB files won't be always compatible with GRIBEX.
-*
-* @param c           : the context
-*/
 void grib_gribex_mode_off(grib_context* c);
-
-/**
- * Sets the search path for definition files.
- *
- * @param c      : the context to be modified
- * @param path   : the search path for definition files
- */
 void grib_context_set_definitions_path(grib_context* c, const char* path);
-
-/**
- * Sets the search path for sample files.
- *
- * @param c      : the context to be modified
- * @param path   : the search path for sample files
- */
 void grib_context_set_samples_path(grib_context* c, const char* path);
-
-/**
-*  Turn on support for multiple fields in single grib messages
-*
-* @param c            : the context to be modified
-*/
 void grib_multi_support_on(grib_context* c);
-
-/**
-*  Turn off support for multiple fields in single GRIB messages
-*
-* @param c            : the context to be modified
-*/
 void grib_multi_support_off(grib_context* c);
-
-/**
-*  Get the API version
-*
-*  @return        API version
-*/
 long grib_get_api_version(void);
 
-/*! \defgroup keys_iterator Iterating on keys names
-The keys iterator is designed to get the key names defined in a message.
-Key names on which the iteration is carried out can be filtered through their
-attributes or by the namespace they belong to.
-*/
-/*! @{ */
-/*! Create a new iterator from a valid and initialised handle.
-*  @param h             : the handle whose keys you want to iterate
-*  @param filter_flags  : flags to filter out some of the keys through their attributes
-*  @param name_space    : if not null the iteration is carried out only on
-*                         keys belonging to the namespace passed. (NULL for all the keys)
-*  @return              keys iterator ready to iterate through keys according to filter_flags
-*                       and namespace
-*/
 grib_keys_iterator* grib_keys_iterator_new(grib_handle* h,unsigned long filter_flags, const char* name_space);
 bufr_keys_iterator* codes_bufr_keys_iterator_new(grib_handle* h, unsigned long filter_flags);
 
-/*! Step to the next iterator.
-*  @param kiter         : valid grib_keys_iterator
-*  @return              1 if next iterator exists, 0 if no more elements to iterate on
-*/
 int grib_keys_iterator_next(grib_keys_iterator* kiter);
 int codes_bufr_keys_iterator_next(bufr_keys_iterator* kiter);
 
-/*! get the key name from the iterator
-*  @param kiter         : valid grib_keys_iterator
-*  @return              key name
-*/
-const char* grib_keys_iterator_get_name(grib_keys_iterator *kiter);
-char* codes_bufr_keys_iterator_get_name(bufr_keys_iterator* kiter);
+const char* grib_keys_iterator_get_name(const grib_keys_iterator *kiter);
+char* codes_bufr_keys_iterator_get_name(const bufr_keys_iterator* kiter);
 
-/*! Delete the iterator.
-*  @param kiter         : valid grib_keys_iterator
-*  @return              0 if OK, integer value on error
-*/
 int grib_keys_iterator_delete(grib_keys_iterator* kiter);
 int codes_bufr_keys_iterator_delete(bufr_keys_iterator* kiter);
 
-/*! Rewind the iterator.
-*  @param kiter         : valid grib_keys_iterator
-*  @return              0 if OK, integer value on error
-*/
 int grib_keys_iterator_rewind(grib_keys_iterator* kiter);
 int codes_bufr_keys_iterator_rewind(bufr_keys_iterator* kiter);
 
 int grib_keys_iterator_set_flags(grib_keys_iterator *kiter,unsigned long flags);
-
-/**
-* Convert an error code into a string
-* @param code       : the error code
-* @return           the error message
-*/
 const char* grib_get_error_message(int code);
 
-int grib_get_native_type(grib_handle* h, const char* name,int* type);
+int grib_get_native_type(const grib_handle* h, const char* name,int* type);
 
 /* aa: changed off_t to long int */
-int grib_get_message_offset ( grib_handle* h,long int* offset);
+int grib_get_message_offset(const grib_handle* h,long int* offset);
 
 int grib_set_values(grib_handle* h,grib_values*  grib_values , size_t arg_count);
-int grib_is_missing(grib_handle* h, const char* key, int* err);
-int grib_is_defined(grib_handle* h, const char* key);
+int grib_is_missing(const grib_handle* h, const char* key, int* err);
+int grib_is_defined(const grib_handle* h, const char* key);
 int grib_set_missing(grib_handle* h, const char* key);
 
-int grib_get_message_size ( grib_handle* h,size_t* size);
+int grib_get_message_size(const grib_handle* h,size_t* size);
 int parse_keyval_string(const char *grib_tool, char *arg, int values_required, int default_type, grib_values values[], int *count);
 
 typedef struct codes_bufr_header {
@@ -870,10 +231,6 @@ typedef struct codes_bufr_header {
 
 } codes_bufr_header;
 
-/*! \defgroup errors Error codes
-Error codes returned by the grib_api functions.
-*/
-/*! @{*/
 /** No error */
 #define GRIB_SUCCESS		0
 /** End of resource reached */
@@ -1010,4 +367,3 @@ Error codes returned by the grib_api functions.
 #define GRIB_WRONG_BITMAP_SIZE		-66
 /** Functionality not enabled */
 #define GRIB_FUNCTIONALITY_NOT_ENABLED		-67
-/*! @}*/
