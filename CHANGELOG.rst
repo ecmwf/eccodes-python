@@ -5,6 +5,7 @@ Changelog for eccodes-python
 0.9.4 (not released)
 ------------------
 
+- ECC-1007: Python3 interface for eccodes cannot write large arrays
 
 
 0.9.3 (2019-10-04)
