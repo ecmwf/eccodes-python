@@ -1108,9 +1108,12 @@ def grib_set_double_array(msgid, key, inarray):
     @exception GribInternalError
     """
     h = get_handle(msgid)
+    length = len(inarray)
     if isinstance(inarray, np.ndarray):
-        inarray = inarray.tolist()
-    GRIB_CHECK(lib.grib_set_double_array(h, key.encode(ENC), inarray, len(inarray)))
+        a = ffi.cast('double*', inarray.ctypes.data)
+    else:
+        a = inarray
+    GRIB_CHECK(lib.grib_set_double_array(h, key.encode(ENC), a, length))
 
 
 @require(msgid=int, key=str)
