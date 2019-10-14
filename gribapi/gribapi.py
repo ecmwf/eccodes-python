@@ -1096,10 +1096,6 @@ def grib_set_double_array(msgid, key, inarray):
 
     The input array can be a numpy.ndarray or a python sequence like tuple, list, array, ...
 
-    The wrapper will internally try to convert the input to a NumPy array
-    before extracting its data and length. This is possible as NumPy
-    allows the construction of arrays from arbitrary python sequences.
-
     The elements of the input sequence need to be convertible to a double.
 
     @param msgid    id of the message loaded in memory
@@ -1109,10 +1105,13 @@ def grib_set_double_array(msgid, key, inarray):
     """
     h = get_handle(msgid)
     length = len(inarray)
+    a = inarray
     if isinstance(inarray, np.ndarray):
-        a = ffi.cast('double*', inarray.ctypes.data)
-    else:
-        a = inarray
+        # ECC-1007: Could also call numpy.ascontiguousarray
+        if not inarray.flags['C_CONTIGUOUS']:
+            a = a.copy(order='C')
+        a = ffi.cast('double*', a.ctypes.data)
+
     GRIB_CHECK(lib.grib_set_double_array(h, key.encode(ENC), a, length))
 
 
