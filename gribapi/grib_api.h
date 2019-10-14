@@ -93,9 +93,9 @@ int grib_nearest_find(grib_nearest *nearest, const grib_handle* h, double inlat,
 int grib_nearest_delete(grib_nearest *nearest);
 
 int grib_nearest_find_multiple(const grib_handle* h, int is_lsm,
-    double* inlats,double* inlons,long npoints,
-    double* outlats,double* outlons,
-    double* values,double* distances, int* indexes);
+    const double* inlats, const double* inlons, long npoints,
+    double* outlats, double* outlons,
+    double* values, double* distances, int* indexes);
 
 int grib_get_size(const grib_handle* h, const char* key,size_t *size);
 
