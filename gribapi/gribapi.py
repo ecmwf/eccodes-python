@@ -1163,11 +1163,7 @@ def grib_set_string_array(msgid, key, inarray):
 
     The input array can be a python sequence like tuple, list, array, ...
 
-    The wrapper will internally try to convert the input to a NumPy array
-    before extracting its data and length. This is possible as NumPy
-    allows the construction of arrays from arbitrary python sequences.
-
-    The elements of the input sequence need to be convertible to a double.
+    The elements of the input sequence need to be convertible to a string.
 
     @param msgid   id of the message loaded in memory
     @param key     key name
@@ -1188,10 +1184,6 @@ def grib_set_long_array(msgid, key, inarray):
     @brief Set the value of the key to an integer array.
 
     The input array can be a numpy.ndarray or a python sequence like tuple, list, array, ...
-
-    The wrapper will internally try to convert the input to a NumPy array
-    before extracting its data and length. This is possible as NumPy
-    allows the construction of arrays from arbitrary python sequences.
 
     The elements of the input sequence need to be convertible to an int.
 
@@ -1859,10 +1851,6 @@ def grib_set_values(gribid, values):
 
     The input array can be a numpy.ndarray or a python sequence like tuple, list, array, ...
 
-    The wrapper will internally try to convert the input to a NumPy array
-    before extracting its data and length. This is possible as NumPy
-    allows the construction of arrays from arbitrary python sequences.
-
     The elements of the input sequence need to be convertible to a double.
 
     \b Examples: \ref grib_clone.py "grib_clone.py", \ref grib_samples.py "grib_samples.py"
@@ -1913,10 +1901,6 @@ def grib_set_array(msgid, key, value):
     "pv" - list of vertical levels
 
     The input array can be a numpy.ndarray or a python sequence like tuple, list, array, ...
-
-    The wrapper will internally try to convert the input to a NumPy array
-    before extracting its data and length. This is possible as NumPy
-    allows the construction of arrays from arbitrary python sequences.
 
     @param msgid       id of the message loaded in memory
     @param key         key name
