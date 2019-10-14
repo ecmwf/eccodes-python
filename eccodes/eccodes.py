@@ -88,6 +88,7 @@ from gribapi import grib_set_key_vals as codes_set_key_vals
 from gribapi import grib_is_missing as codes_is_missing
 from gribapi import grib_is_defined as codes_is_defined
 from gribapi import grib_find_nearest as codes_grib_find_nearest
+from gribapi import grib_find_nearest_multiple as codes_grib_find_nearest_multiple
 from gribapi import grib_get_native_type as codes_get_native_type
 from gribapi import grib_get as codes_get
 from gribapi import grib_get_array as codes_get_array

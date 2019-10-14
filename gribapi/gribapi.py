@@ -1690,36 +1690,35 @@ def grib_find_nearest(gribid, inlat, inlon, is_lsm=False, npoints=1):
 
     \b Examples: \ref grib_nearest.py "grib_nearest.py"
 
-    @param gribid     id of the grib loaded in memory
+    @param gribid     id of the GRIB message loaded in memory
     @param inlat      latitude of the point
     @param inlon      longitude of the point
     @param is_lsm     True if the nearest land point is required otherwise False.
     @param npoints    1 or 4 nearest grid points
-    @return (npoints*(outlat,outlon,value,dist,index))
+    @return           (npoints*(outlat,outlon,value,dist,index))
     @exception GribInternalError
     """
-
     h = get_handle(gribid)
     inlats_p = ffi.new('double*', inlat)
     inlons_p = ffi.new('double*', inlon)
 
     if npoints == 1:
-        outlats_p = ffi.new('double[]', 1)
-        outlons_p = ffi.new('double[]', 1)
-        values_p = ffi.new('double[]', 1)
+        outlats_p   = ffi.new('double[]', 1)
+        outlons_p   = ffi.new('double[]', 1)
+        values_p    = ffi.new('double[]', 1)
         distances_p = ffi.new('double[]', 1)
-        indexes_p = ffi.new('int[]', 1)
+        indexes_p   = ffi.new('int[]', 1)
         num_input_points = 1
         # grib_nearest_find_multiple always returns ONE nearest neighbour
         err = lib.grib_nearest_find_multiple(h, is_lsm, inlats_p, inlons_p, num_input_points,
                                              outlats_p, outlons_p, values_p, distances_p, indexes_p)
         GRIB_CHECK(err)
     elif npoints == 4:
-        outlats_p = ffi.new('double[]', npoints)
-        outlons_p = ffi.new('double[]', npoints)
-        values_p = ffi.new('double[]', npoints)
+        outlats_p   = ffi.new('double[]', npoints)
+        outlons_p   = ffi.new('double[]', npoints)
+        values_p    = ffi.new('double[]', npoints)
         distances_p = ffi.new('double[]', npoints)
-        indexes_p = ffi.new('int[]', npoints)
+        indexes_p   = ffi.new('int[]', npoints)
         size = ffi.new('size_t *')
         err, nid = err_last(lib.grib_nearest_new)(h)
         GRIB_CHECK(err)
@@ -1731,6 +1730,43 @@ def grib_find_nearest(gribid, inlat, inlon, is_lsm=False, npoints=1):
     else:
         raise ValueError("Invalid value for npoints. Expecting 1 or 4.")
 
+    result = []
+    for i in range(npoints):
+        result.append(Bunch(lat=outlats_p[i], lon=outlons_p[i], value=values_p[i], distance=distances_p[i], index=indexes_p[i]))
+
+    return tuple(result)
+
+
+@require(gribid=int, is_lsm=bool)
+def grib_find_nearest_multiple(gribid, is_lsm, inlats, inlons):
+    """
+    @brief Find the nearest point of a set of points whose latitudes and longitudes are given in the inlats, inlons arrays respectively
+
+    @param gribid     id of the GRIB message loaded in memory
+    @param is_lsm     True if the nearest land point is required otherwise False.
+    @param inlats     latitudes of the points to search for
+    @param inlons     longitudes of the points to search for
+    @return           (npoints*(outlat,outlon,value,dist,index))
+    @exception GribInternalError
+    """
+    h = get_handle(gribid)
+    npoints = len(inlats)
+    if len(inlons) != npoints:
+        raise ValueError('grib_find_nearest_multiple: input arrays inlats and inlons must have the same length')
+
+    inlats_p = ffi.new('double[]', inlats)
+    inlons_p = ffi.new('double[]', inlons)
+
+    outlats_p   = ffi.new('double[]', npoints)
+    outlons_p   = ffi.new('double[]', npoints)
+    values_p    = ffi.new('double[]', npoints)
+    distances_p = ffi.new('double[]', npoints)
+    indexes_p   = ffi.new('int[]', npoints)
+
+    # Note: grib_nearest_find_multiple always returns ONE nearest neighbour
+    err = lib.grib_nearest_find_multiple(h, is_lsm, inlats_p, inlons_p, npoints,
+                                         outlats_p, outlons_p, values_p, distances_p, indexes_p)
+    GRIB_CHECK(err)
     result = []
     for i in range(npoints):
         result.append(Bunch(lat=outlats_p[i], lon=outlons_p[i], value=values_p[i], distance=distances_p[i], index=indexes_p[i]))
@@ -2055,6 +2091,7 @@ def grib_get_api_version():
     major = v
 
     return "%d.%d.%d" % (major, minor, revision)
+
 
 __version__ = grib_get_api_version()
 
