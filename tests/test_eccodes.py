@@ -13,7 +13,16 @@ def test_grib_read():
     gid = codes_grib_new_from_samples('regular_ll_sfc_grib1')
     assert codes_get(gid, 'Ni') == 16
     assert codes_get(gid, 'Nj') == 31
+    assert codes_get(gid, 'const') == 1
     assert codes_get(gid, 'centre', str) == 'ecmf'
+    assert codes_get(gid, 'packingType', str) == 'grid_simple'
+    assert codes_get(gid, 'gridType', str) == 'regular_ll'
+    codes_release(gid)
+    gid = codes_grib_new_from_samples('sh_ml_grib2')
+    assert codes_get(gid, 'const') == 0
+    assert codes_get(gid, 'gridType', str) == 'sh'
+    assert codes_get(gid, 'typeOfLevel', str) == 'hybrid'
+    assert codes_get_long(gid, 'avg') == 185
     codes_release(gid)
 
 
@@ -23,6 +32,19 @@ def test_grib_write(tmpdir):
     output = tmpdir.join('test_grib_write.grib')
     with open(str(output), 'wb') as fout:
         codes_write(gid, fout)
+    codes_release(gid)
+
+
+def test_grib_keys_iterator():
+    gid = codes_grib_new_from_samples('reduced_gg_pl_1280_grib1')
+    iterid = codes_keys_iterator_new(gid, 'ls')
+    count = 0
+    while codes_keys_iterator_next(iterid):
+        keyname = codes_keys_iterator_get_name(iterid)
+        keyval = codes_get_string(gid, keyname)
+        count += 1
+    assert count == 10
+    codes_keys_iterator_delete(iterid)
     codes_release(gid)
 
 
@@ -38,4 +60,27 @@ def test_bufr_read_write(tmpdir):
     with open(str(output), 'wb') as fout:
         codes_write(bid, fout)
     assert codes_get(bid, 'totalSunshine') == 13
+    codes_release(bid)
+
+
+def test_bufr_keys_iterator():
+    bid = codes_bufr_new_from_samples('BUFR3_local_satellite')
+    # Header keys only
+    iterid = codes_bufr_keys_iterator_new(bid)
+    count = 0
+    while codes_bufr_keys_iterator_next(iterid):
+        keyname = codes_bufr_keys_iterator_get_name(iterid)
+        assert '#' not in keyname
+        count += 1
+    assert count == 53
+
+    codes_set(bid, 'unpack', 1)
+    codes_bufr_keys_iterator_rewind(iterid)
+    count = 0
+    while codes_bufr_keys_iterator_next(iterid):
+        keyname = codes_bufr_keys_iterator_get_name(iterid)
+        count += 1
+    assert count == 156
+
+    codes_bufr_keys_iterator_delete(iterid)
     codes_release(bid)
