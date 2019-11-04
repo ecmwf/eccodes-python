@@ -103,6 +103,7 @@ from gribapi import grib_index_read as codes_index_read
 from gribapi import grib_no_fail_on_wrong_length as codes_no_fail_on_wrong_length
 from gribapi import grib_gts_header as codes_gts_header
 from gribapi import grib_get_api_version as codes_get_api_version
+from gribapi import codes_get_version_info
 from gribapi import grib_get_message as codes_get_message
 from gribapi import grib_new_from_message as codes_new_from_message
 from gribapi import grib_set_definitions_path as codes_set_definitions_path

@@ -2096,6 +2096,18 @@ def grib_get_api_version():
 __version__ = grib_get_api_version()
 
 
+def codes_get_version_info():
+    """
+    @brief Get version information.
+
+    Returns a dictionary containing the versions of the ecCodes API and the Python bindings
+    """
+    vinfo = dict()
+    vinfo['eccodes'] = grib_get_api_version()
+    vinfo['bindings'] = bindings_version
+    return vinfo
+
+
 @require(msgid=int)
 def grib_get_message(msgid):
     """
