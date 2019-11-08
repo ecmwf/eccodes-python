@@ -2214,7 +2214,7 @@ def codes_bufr_extract_headers(filepath):
     @brief BUFR header extraction
 
     @param filepath       path of input BUFR file
-    @return               A list of dictionaries
+    @return               a list of dictionaries
     @exception GribInternalError
     """
     context = lib.grib_context_get_default()
