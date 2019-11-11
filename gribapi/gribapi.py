@@ -2200,12 +2200,13 @@ def codes_bufr_multi_element_constant_arrays_off():
 # Convert the C codes_bufr_header struct to a Python dictionary
 def _convert_struct_to_dict(s):
     result = {}
+    ident_found = False
     for a in dir(s):
-        if not a.startswith('__'):
-            value = getattr(s, a)
-            if a == 'ident':
-                value = ffi.string(value).decode(ENC).rstrip()
-            result[a] = value
+        value = getattr(s, a)
+        if not ident_found and a == 'ident':
+            value = ffi.string(value).decode(ENC)
+            ident_found = True
+        result[a] = value
     return result
 
 
