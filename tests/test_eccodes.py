@@ -48,6 +48,22 @@ def test_grib_keys_iterator():
     codes_release(gid)
 
 
+def test_grib_nearest():
+    gid = codes_grib_new_from_samples('reduced_gg_ml_grib2')
+    lat,lon = 30,-20
+    nearest = codes_grib_find_nearest(gid, lat, lon)[0]
+    assert nearest.index == 1770
+    lat,lon = 10,0
+    nearest = codes_grib_find_nearest(gid, lat, lon)[0]
+    assert nearest.index == 2545
+    lat,lon = 10,20
+    nearest = codes_grib_find_nearest(gid, lat, lon, False, 4)
+    expected_indexes = (2553, 2552, 2425, 2424)
+    returned_indexes = (nearest[0].index, nearest[1].index, nearest[2].index, nearest[3].index)
+    assert sorted(expected_indexes) == sorted(returned_indexes)
+    codes_release(gid)
+
+
 # BUFR
 def test_bufr_read_write(tmpdir):
     bid = codes_bufr_new_from_samples('BUFR4')
