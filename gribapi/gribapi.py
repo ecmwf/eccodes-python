@@ -2210,11 +2210,12 @@ def _convert_struct_to_dict(s):
     return result
 
 
-def codes_bufr_extract_headers(filepath):
+def codes_bufr_extract_headers(filepath, is_strict=True):
     """
     @brief BUFR header extraction (EXPERIMENTAL FEATURE)
 
     @param filepath       path of input BUFR file
+    @param is_strict      fail as soon as any invalid BUFR message is encountered
     @return               a list of dictionaries
     @exception GribInternalError
     """
@@ -2222,7 +2223,7 @@ def codes_bufr_extract_headers(filepath):
     headers_p = ffi.new("struct codes_bufr_header**")
     num_message_p = ffi.new('int*')
 
-    err = lib.codes_bufr_extract_headers_malloc(context, filepath.encode(ENC), headers_p, num_message_p)
+    err = lib.codes_bufr_extract_headers_malloc(context, filepath.encode(ENC), headers_p, num_message_p, is_strict)
     GRIB_CHECK(err)
 
     num_messages = num_message_p[0]

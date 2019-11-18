@@ -19,4 +19,4 @@ int codes_bufr_copy_data(grib_handle* hin, grib_handle* hout);
 
 void codes_bufr_multi_element_constant_arrays_on(codes_context* c);
 void codes_bufr_multi_element_constant_arrays_off(codes_context* c);
-int codes_bufr_extract_headers_malloc(grib_context* c, const char* filename, codes_bufr_header** result, int* num_messages);
+int codes_bufr_extract_headers_malloc(grib_context* c, const char* filename, codes_bufr_header** result, int* num_messages, int strict_mode);
