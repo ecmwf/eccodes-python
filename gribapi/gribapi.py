@@ -2212,7 +2212,7 @@ def _convert_struct_to_dict(s):
 
 def codes_bufr_extract_headers(filepath):
     """
-    @brief BUFR header extraction
+    @brief BUFR header extraction (EXPERIMENTAL FEATURE)
 
     @param filepath       path of input BUFR file
     @return               a list of dictionaries
