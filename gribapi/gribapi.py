@@ -13,15 +13,13 @@ Numpy is a package used for scientific computing in Python and an efficient cont
 
 """
 
-from .bindings import ENC, ffi, lib
-from .bindings import __version__ as bindings_version  # noqa
-import functools
+from functools import wraps
 import sys
 import os
-from functools import wraps
-
 import numpy as np
 
+from .bindings import ENC, ffi, lib
+from .bindings import __version__ as bindings_version  # noqa
 from . import errors
 
 try:
@@ -124,7 +122,7 @@ class Bunch(dict):
 
 def err_last(func):
 
-    @functools.wraps(func)
+    @wraps(func)
     def wrapper(*args):
         err = ffi.new('int *')
         args += (err,)
@@ -1703,22 +1701,22 @@ def grib_find_nearest(gribid, inlat, inlon, is_lsm=False, npoints=1):
     inlons_p = ffi.new('double*', inlon)
 
     if npoints == 1:
-        outlats_p   = ffi.new('double[]', 1)
-        outlons_p   = ffi.new('double[]', 1)
-        values_p    = ffi.new('double[]', 1)
+        outlats_p = ffi.new('double[]', 1)
+        outlons_p = ffi.new('double[]', 1)
+        values_p = ffi.new('double[]', 1)
         distances_p = ffi.new('double[]', 1)
-        indexes_p   = ffi.new('int[]', 1)
+        indexes_p = ffi.new('int[]', 1)
         num_input_points = 1
         # grib_nearest_find_multiple always returns ONE nearest neighbour
         err = lib.grib_nearest_find_multiple(h, is_lsm, inlats_p, inlons_p, num_input_points,
                                              outlats_p, outlons_p, values_p, distances_p, indexes_p)
         GRIB_CHECK(err)
     elif npoints == 4:
-        outlats_p   = ffi.new('double[]', npoints)
-        outlons_p   = ffi.new('double[]', npoints)
-        values_p    = ffi.new('double[]', npoints)
+        outlats_p = ffi.new('double[]', npoints)
+        outlons_p = ffi.new('double[]', npoints)
+        values_p = ffi.new('double[]', npoints)
         distances_p = ffi.new('double[]', npoints)
-        indexes_p   = ffi.new('int[]', npoints)
+        indexes_p = ffi.new('int[]', npoints)
         size = ffi.new('size_t *')
         err, nid = err_last(lib.grib_nearest_new)(h)
         GRIB_CHECK(err)
@@ -1757,11 +1755,11 @@ def grib_find_nearest_multiple(gribid, is_lsm, inlats, inlons):
     inlats_p = ffi.new('double[]', inlats)
     inlons_p = ffi.new('double[]', inlons)
 
-    outlats_p   = ffi.new('double[]', npoints)
-    outlons_p   = ffi.new('double[]', npoints)
-    values_p    = ffi.new('double[]', npoints)
+    outlats_p = ffi.new('double[]', npoints)
+    outlons_p = ffi.new('double[]', npoints)
+    values_p = ffi.new('double[]', npoints)
     distances_p = ffi.new('double[]', npoints)
-    indexes_p   = ffi.new('int[]', npoints)
+    indexes_p = ffi.new('int[]', npoints)
 
     # Note: grib_nearest_find_multiple always returns ONE nearest neighbour
     err = lib.grib_nearest_find_multiple(h, is_lsm, inlats_p, inlons_p, npoints,
@@ -2216,7 +2214,7 @@ def codes_bufr_extract_headers(filepath, is_strict=True):
 
     @param filepath       path of input BUFR file
     @param is_strict      fail as soon as any invalid BUFR message is encountered
-    @return               a list of dictionaries
+    @return               a generator that yields items (each item is a dictionary)
     @exception GribInternalError
     """
     context = lib.grib_context_get_default()
@@ -2229,9 +2227,13 @@ def codes_bufr_extract_headers(filepath, is_strict=True):
     num_messages = num_message_p[0]
     headers = headers_p[0]
 
-    result = []
-    for i in range(num_messages):
-        d = _convert_struct_to_dict(headers[i])
-        result.append(d)
+    # result = []
+    # for i in range(num_messages):
+    #    d = _convert_struct_to_dict(headers[i])
+    #    result.append(d)
+    # return result
 
-    return result
+    i = 0
+    while i < num_messages:
+        yield _convert_struct_to_dict(headers[i])
+        i += 1
