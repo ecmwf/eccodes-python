@@ -2,6 +2,10 @@
 Changelog for eccodes-python
 ============================
 
+0.9.5 (not released)
+------------------
+
+
 0.9.4 (not released)
 ------------------
 
