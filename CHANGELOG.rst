@@ -2,7 +2,7 @@
 Changelog for eccodes-python
 ============================
 
-0.9.4 (not released)
+0.9.4 (2019-11-XX)
 ------------------
 
 - Added new function: codes_get_version_info
