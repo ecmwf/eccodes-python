@@ -55,7 +55,7 @@ GRIB_MISSING_LONG = 2147483647
 
 # ECC-1029: Disable function-arguments type-checking unless
 # environment variable is defined and equal to 1
-no_type_checks = (os.environ.get('ECCODES_PYTHON_ENABLE_TYPE_CHECKS') != '1')
+enable_type_checks = (os.environ.get('ECCODES_PYTHON_ENABLE_TYPE_CHECKS') == '1')
 
 
 # Function-arguments type-checking decorator
@@ -67,7 +67,7 @@ def require(**_params_):
     The actual decorator. Receives the target function in _func_
     """
     def check_types(_func_, _params_=_params_):
-        if no_type_checks:
+        if not enable_type_checks:
             return _func_
 
         @wraps(_func_)
