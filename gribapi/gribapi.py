@@ -53,9 +53,9 @@ GRIB_MISSING_DOUBLE = -1e+100
 GRIB_MISSING_LONG = 2147483647
 
 
-# GRIB-51 Skip function arguments type checking if the
-# environment variable is defined
-no_type_checks = os.environ.get('ECCODES_PYTHON_NO_TYPE_CHECKS') is not None
+# ECC-1029: Disable function-arguments type-checking unless
+# environment variable is defined and equal to 1
+no_type_checks = (os.environ.get('ECCODES_PYTHON_ENABLE_TYPE_CHECKS') != '1')
 
 
 # Function-arguments type-checking decorator
