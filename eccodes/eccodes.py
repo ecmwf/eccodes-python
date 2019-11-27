@@ -88,6 +88,7 @@ from gribapi import grib_set_key_vals as codes_set_key_vals
 from gribapi import grib_is_missing as codes_is_missing
 from gribapi import grib_is_defined as codes_is_defined
 from gribapi import grib_find_nearest as codes_grib_find_nearest
+from gribapi import grib_find_nearest_multiple as codes_grib_find_nearest_multiple
 from gribapi import grib_get_native_type as codes_get_native_type
 from gribapi import grib_get as codes_get
 from gribapi import grib_get_array as codes_get_array
@@ -102,6 +103,7 @@ from gribapi import grib_index_read as codes_index_read
 from gribapi import grib_no_fail_on_wrong_length as codes_no_fail_on_wrong_length
 from gribapi import grib_gts_header as codes_gts_header
 from gribapi import grib_get_api_version as codes_get_api_version
+from gribapi import codes_get_version_info
 from gribapi import grib_get_message as codes_get_message
 from gribapi import grib_new_from_message as codes_new_from_message
 from gribapi import grib_set_definitions_path as codes_set_definitions_path
@@ -109,6 +111,7 @@ from gribapi import grib_set_samples_path as codes_set_samples_path
 
 from gribapi import codes_bufr_multi_element_constant_arrays_on
 from gribapi import codes_bufr_multi_element_constant_arrays_off
+from gribapi import codes_bufr_extract_headers
 
 from gribapi.errors import GribInternalError as CodesInternalError
 from gribapi.errors import *

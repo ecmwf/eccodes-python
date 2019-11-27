@@ -2,7 +2,15 @@
 Changelog for eccodes-python
 ============================
 
-0.9.3 (2019-10-02)
+0.9.4 (2019-11-27)
+------------------
+
+- Added new function: codes_get_version_info
+- ECC-753: Expose the codes_grib_nearest_find_multiple function in Python
+- ECC-1007: Python3 interface for eccodes cannot write large arrays
+
+
+0.9.3 (2019-10-04)
 ------------------
 
 - New exception added: FunctionalityNotEnabledError

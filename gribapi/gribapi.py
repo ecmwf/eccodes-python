@@ -13,15 +13,13 @@ Numpy is a package used for scientific computing in Python and an efficient cont
 
 """
 
-from .bindings import ENC, ffi, lib
-from .bindings import __version__ as bindings_version  # noqa
-import functools
+from functools import wraps
 import sys
 import os
-from functools import wraps
-
 import numpy as np
 
+from .bindings import ENC, ffi, lib
+from .bindings import __version__ as bindings_version  # noqa
 from . import errors
 
 try:
@@ -124,7 +122,7 @@ class Bunch(dict):
 
 def err_last(func):
 
-    @functools.wraps(func)
+    @wraps(func)
     def wrapper(*args):
         err = ffi.new('int *')
         args += (err,)
@@ -1096,10 +1094,6 @@ def grib_set_double_array(msgid, key, inarray):
 
     The input array can be a numpy.ndarray or a python sequence like tuple, list, array, ...
 
-    The wrapper will internally try to convert the input to a NumPy array
-    before extracting its data and length. This is possible as NumPy
-    allows the construction of arrays from arbitrary python sequences.
-
     The elements of the input sequence need to be convertible to a double.
 
     @param msgid    id of the message loaded in memory
@@ -1108,9 +1102,15 @@ def grib_set_double_array(msgid, key, inarray):
     @exception GribInternalError
     """
     h = get_handle(msgid)
+    length = len(inarray)
+    a = inarray
     if isinstance(inarray, np.ndarray):
-        inarray = inarray.tolist()
-    GRIB_CHECK(lib.grib_set_double_array(h, key.encode(ENC), inarray, len(inarray)))
+        # ECC-1007: Could also call numpy.ascontiguousarray
+        if not inarray.flags['C_CONTIGUOUS']:
+            a = a.copy(order='C')
+        a = ffi.cast('double*', a.ctypes.data)
+
+    GRIB_CHECK(lib.grib_set_double_array(h, key.encode(ENC), a, length))
 
 
 @require(msgid=int, key=str)
@@ -1161,11 +1161,7 @@ def grib_set_string_array(msgid, key, inarray):
 
     The input array can be a python sequence like tuple, list, array, ...
 
-    The wrapper will internally try to convert the input to a NumPy array
-    before extracting its data and length. This is possible as NumPy
-    allows the construction of arrays from arbitrary python sequences.
-
-    The elements of the input sequence need to be convertible to a double.
+    The elements of the input sequence need to be convertible to a string.
 
     @param msgid   id of the message loaded in memory
     @param key     key name
@@ -1186,10 +1182,6 @@ def grib_set_long_array(msgid, key, inarray):
     @brief Set the value of the key to an integer array.
 
     The input array can be a numpy.ndarray or a python sequence like tuple, list, array, ...
-
-    The wrapper will internally try to convert the input to a NumPy array
-    before extracting its data and length. This is possible as NumPy
-    allows the construction of arrays from arbitrary python sequences.
 
     The elements of the input sequence need to be convertible to an int.
 
@@ -1696,15 +1688,14 @@ def grib_find_nearest(gribid, inlat, inlon, is_lsm=False, npoints=1):
 
     \b Examples: \ref grib_nearest.py "grib_nearest.py"
 
-    @param gribid     id of the grib loaded in memory
+    @param gribid     id of the GRIB message loaded in memory
     @param inlat      latitude of the point
     @param inlon      longitude of the point
     @param is_lsm     True if the nearest land point is required otherwise False.
     @param npoints    1 or 4 nearest grid points
-    @return (npoints*(outlat,outlon,value,dist,index))
+    @return           (npoints*(outlat,outlon,value,dist,index))
     @exception GribInternalError
     """
-
     h = get_handle(gribid)
     inlats_p = ffi.new('double*', inlat)
     inlons_p = ffi.new('double*', inlon)
@@ -1737,6 +1728,43 @@ def grib_find_nearest(gribid, inlat, inlon, is_lsm=False, npoints=1):
     else:
         raise ValueError("Invalid value for npoints. Expecting 1 or 4.")
 
+    result = []
+    for i in range(npoints):
+        result.append(Bunch(lat=outlats_p[i], lon=outlons_p[i], value=values_p[i], distance=distances_p[i], index=indexes_p[i]))
+
+    return tuple(result)
+
+
+@require(gribid=int, is_lsm=bool)
+def grib_find_nearest_multiple(gribid, is_lsm, inlats, inlons):
+    """
+    @brief Find the nearest point of a set of points whose latitudes and longitudes are given in the inlats, inlons arrays respectively
+
+    @param gribid     id of the GRIB message loaded in memory
+    @param is_lsm     True if the nearest land point is required otherwise False.
+    @param inlats     latitudes of the points to search for
+    @param inlons     longitudes of the points to search for
+    @return           (npoints*(outlat,outlon,value,dist,index))
+    @exception GribInternalError
+    """
+    h = get_handle(gribid)
+    npoints = len(inlats)
+    if len(inlons) != npoints:
+        raise ValueError('grib_find_nearest_multiple: input arrays inlats and inlons must have the same length')
+
+    inlats_p = ffi.new('double[]', inlats)
+    inlons_p = ffi.new('double[]', inlons)
+
+    outlats_p = ffi.new('double[]', npoints)
+    outlons_p = ffi.new('double[]', npoints)
+    values_p = ffi.new('double[]', npoints)
+    distances_p = ffi.new('double[]', npoints)
+    indexes_p = ffi.new('int[]', npoints)
+
+    # Note: grib_nearest_find_multiple always returns ONE nearest neighbour
+    err = lib.grib_nearest_find_multiple(h, is_lsm, inlats_p, inlons_p, npoints,
+                                         outlats_p, outlons_p, values_p, distances_p, indexes_p)
+    GRIB_CHECK(err)
     result = []
     for i in range(npoints):
         result.append(Bunch(lat=outlats_p[i], lon=outlons_p[i], value=values_p[i], distance=distances_p[i], index=indexes_p[i]))
@@ -1857,10 +1885,6 @@ def grib_set_values(gribid, values):
 
     The input array can be a numpy.ndarray or a python sequence like tuple, list, array, ...
 
-    The wrapper will internally try to convert the input to a NumPy array
-    before extracting its data and length. This is possible as NumPy
-    allows the construction of arrays from arbitrary python sequences.
-
     The elements of the input sequence need to be convertible to a double.
 
     \b Examples: \ref grib_clone.py "grib_clone.py", \ref grib_samples.py "grib_samples.py"
@@ -1911,10 +1935,6 @@ def grib_set_array(msgid, key, value):
     "pv" - list of vertical levels
 
     The input array can be a numpy.ndarray or a python sequence like tuple, list, array, ...
-
-    The wrapper will internally try to convert the input to a NumPy array
-    before extracting its data and length. This is possible as NumPy
-    allows the construction of arrays from arbitrary python sequences.
 
     @param msgid       id of the message loaded in memory
     @param key         key name
@@ -2070,7 +2090,20 @@ def grib_get_api_version():
 
     return "%d.%d.%d" % (major, minor, revision)
 
+
 __version__ = grib_get_api_version()
+
+
+def codes_get_version_info():
+    """
+    @brief Get version information.
+
+    Returns a dictionary containing the versions of the ecCodes API and the Python bindings
+    """
+    vinfo = dict()
+    vinfo['eccodes'] = grib_get_api_version()
+    vinfo['bindings'] = bindings_version
+    return vinfo
 
 
 @require(msgid=int)
@@ -2162,3 +2195,45 @@ def codes_bufr_multi_element_constant_arrays_off():
     lib.codes_bufr_multi_element_constant_arrays_off(context)
 
 
+# Convert the C codes_bufr_header struct to a Python dictionary
+def _convert_struct_to_dict(s):
+    result = {}
+    ident_found = False
+    for a in dir(s):
+        value = getattr(s, a)
+        if not ident_found and a == 'ident':
+            value = ffi.string(value).decode(ENC)
+            ident_found = True
+        result[a] = value
+    return result
+
+
+def codes_bufr_extract_headers(filepath, is_strict=True):
+    """
+    @brief BUFR header extraction (EXPERIMENTAL FEATURE)
+
+    @param filepath       path of input BUFR file
+    @param is_strict      fail as soon as any invalid BUFR message is encountered
+    @return               a generator that yields items (each item is a dictionary)
+    @exception GribInternalError
+    """
+    context = lib.grib_context_get_default()
+    headers_p = ffi.new("struct codes_bufr_header**")
+    num_message_p = ffi.new('int*')
+
+    err = lib.codes_bufr_extract_headers_malloc(context, filepath.encode(ENC), headers_p, num_message_p, is_strict)
+    GRIB_CHECK(err)
+
+    num_messages = num_message_p[0]
+    headers = headers_p[0]
+
+    # result = []
+    # for i in range(num_messages):
+    #    d = _convert_struct_to_dict(headers[i])
+    #    result.append(d)
+    # return result
+
+    i = 0
+    while i < num_messages:
+        yield _convert_struct_to_dict(headers[i])
+        i += 1
