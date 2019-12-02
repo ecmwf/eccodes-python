@@ -129,6 +129,9 @@ void grib_multi_support_on(grib_context* c);
 void grib_multi_support_off(grib_context* c);
 long grib_get_api_version(void);
 
+char* grib_samples_path(const grib_context *c);
+char* grib_definition_path(const grib_context *c);
+
 grib_keys_iterator* grib_keys_iterator_new(grib_handle* h,unsigned long filter_flags, const char* name_space);
 bufr_keys_iterator* codes_bufr_keys_iterator_new(grib_handle* h, unsigned long filter_flags);
 

@@ -2151,6 +2151,24 @@ def grib_new_from_message(message):
     return put_handle(h)
 
 
+def codes_definition_path():
+    """
+    @brief Get the definition path
+    """
+    context = lib.grib_context_get_default()
+    dpath = lib.codes_definition_path(context)
+    return ffi.string(dpath).decode(ENC)
+
+
+def codes_samples_path():
+    """
+    @brief Get the samples path
+    """
+    context = lib.grib_context_get_default()
+    spath = lib.codes_samples_path(context)
+    return ffi.string(spath).decode(ENC)
+
+
 @require(defs_path=str)
 def grib_set_definitions_path(defs_path):
     """

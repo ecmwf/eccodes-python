@@ -5,8 +5,9 @@ Changelog for eccodes-python
 0.9.5 (not yet released)
 ------------------------
 - ECC-1029: Function-argument type-checking should be disabled by default.
-  To enable these checks, export ECCODES_PYTHON_ENABLE_TYPE_CHECKS=1
--
+            To enable these checks, export ECCODES_PYTHON_ENABLE_TYPE_CHECKS=1
+- Added codes_samples_path() and codes_definition_path()
+
 
 0.9.4 (2019-11-27)
 ------------------
