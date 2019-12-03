@@ -44,8 +44,7 @@ class GribIndex(object):
         """Possibility to manually close index."""
         self.__exit__(None, None, None)
 
-    def __init__(self, filename=None, keys=None, file_index=None,
-                 grib_index=None):
+    def __init__(self, filename=None, keys=None, file_index=None, grib_index=None):
         """
         Create new GRIB index over ``keys`` from ``filename``.
 
@@ -68,8 +67,9 @@ class GribIndex(object):
         elif grib_index:
             self.iid = eccodes.codes_new_from_index(grib_index.iid)
         else:
-            raise RuntimeError("No source was supplied "
-                               "(possibilities: grib_file, clone, sample).")
+            raise RuntimeError(
+                "No source was supplied " "(possibilities: grib_file, clone, sample)."
+            )
         #: Indexed keys. Only available if GRIB is initialized from file.
         self.keys = keys
         #: Open GRIB messages

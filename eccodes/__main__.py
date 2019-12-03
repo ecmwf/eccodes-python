@@ -29,13 +29,15 @@ def selfcheck():
 
 def main(argv=None):
     parser = argparse.ArgumentParser()
-    parser.add_argument('command')
+    parser.add_argument("command")
     args = parser.parse_args(args=argv)
-    if args.command == 'selfcheck':
+    if args.command == "selfcheck":
         selfcheck()
     else:
-        raise RuntimeError("Command not recognised %r. See usage with --help." % args.command)
+        raise RuntimeError(
+            "Command not recognised %r. See usage with --help." % args.command
+        )
 
 
-if __name__ == '__main__':  # pragma: no cover
+if __name__ == "__main__":  # pragma: no cover
     main()

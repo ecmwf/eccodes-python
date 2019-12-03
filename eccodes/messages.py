@@ -47,13 +47,15 @@ class Message(collections.abc.MutableMapping):
     """Dictionary-line interface to access Message headers."""
 
     codes_id = attr.attrib()
-    encoding = attr.attrib(default='ascii', type=str)
+    encoding = attr.attrib(default="ascii", type=str)
     errors = attr.attrib(
-        default='warn', validator=attr.validators.in_(['ignore', 'warn', 'raise'])
+        default="warn", validator=attr.validators.in_(["ignore", "warn", "raise"])
     )
 
     @classmethod
-    def from_file(cls, file, offset=None, product_kind=eccodes.CODES_PRODUCT_ANY, **kwargs):
+    def from_file(
+        cls, file, offset=None, product_kind=eccodes.CODES_PRODUCT_ANY, **kwargs
+    ):
         # type: (T.IO[bytes], int, int, T.Any) -> Message
         field_in_message = 0
         if isinstance(offset, tuple):
@@ -69,7 +71,9 @@ class Message(collections.abc.MutableMapping):
         return cls(codes_id=codes_id, **kwargs)
 
     @classmethod
-    def from_sample_name(cls, sample_name, product_kind=eccodes.CODES_PRODUCT_GRIB, **kwargs):
+    def from_sample_name(
+        cls, sample_name, product_kind=eccodes.CODES_PRODUCT_GRIB, **kwargs
+    ):
         codes_id = eccodes.codes_new_from_samples(sample_name, product_kind)
         return cls(codes_id=codes_id, **kwargs)
 
@@ -87,7 +91,7 @@ class Message(collections.abc.MutableMapping):
         try:
             values = eccodes.codes_get_array(self.codes_id, item, key_type)
             if values is None:
-                values = ['unsupported_key_type']
+                values = ["unsupported_key_type"]
         except eccodes.KeyValueNotFoundError:
             if default is _MARKER:
                 raise KeyError(item)
@@ -101,7 +105,9 @@ class Message(collections.abc.MutableMapping):
 
     def message_set(self, item, value):
         # type: (str, T.Any) -> None
-        set_array = isinstance(value, T.Sequence) and not isinstance(value, (str, bytes))
+        set_array = isinstance(value, T.Sequence) and not isinstance(
+            value, (str, bytes)
+        )
         if set_array:
             eccodes.codes_set_array(self.codes_id, item, value)
         else:
@@ -130,9 +136,9 @@ class Message(collections.abc.MutableMapping):
         try:
             return self.message_set(item, value)
         except eccodes.GribInternalError as ex:
-            if self.errors == 'ignore':
+            if self.errors == "ignore":
                 pass
-            elif self.errors == 'raise':
+            elif self.errors == "raise":
                 raise KeyError("failed to set key %r to %r" % (item, value))
             else:
                 if isinstance(ex, eccodes.ReadOnlyError):
@@ -163,7 +169,9 @@ class ComputedKeysMessage(Message):
 
     computed_keys = attr.attrib(
         default={},
-        type=T.Dict[str, T.Tuple[T.Callable[[Message], T.Any], T.Callable[[Message], T.Any]]],
+        type=T.Dict[
+            str, T.Tuple[T.Callable[[Message], T.Any], T.Callable[[Message], T.Any]]
+        ],
     )
 
     def __getitem__(self, item):
@@ -197,13 +205,13 @@ class FileStream(collections.abc.Iterable):
     path = attr.attrib(type=str)
     message_class = attr.attrib(default=Message, type=Message, repr=False)
     errors = attr.attrib(
-        default='warn', validator=attr.validators.in_(['ignore', 'warn', 'raise'])
+        default="warn", validator=attr.validators.in_(["ignore", "warn", "raise"])
     )
     product_kind = attr.attrib(default=eccodes.CODES_PRODUCT_ANY)
 
     def __iter__(self):
         # type: () -> T.Generator[Message, None, None]
-        with open(self.path, 'rb') as file:
+        with open(self.path, "rb") as file:
             valid_message_found = False
             while True:
                 try:
@@ -214,9 +222,9 @@ class FileStream(collections.abc.Iterable):
                         raise EOFError("No valid message found in file: %r" % self.path)
                     break
                 except Exception:
-                    if self.errors == 'ignore':
+                    if self.errors == "ignore":
                         pass
-                    elif self.errors == 'raise':
+                    elif self.errors == "raise":
                         raise
                     else:
                         LOG.exception("skipping corrupted Message")
@@ -228,7 +236,7 @@ class FileStream(collections.abc.Iterable):
         # type: () -> Message
         return next(iter(self))
 
-    def index(self, index_keys, indexpath='{path}.{short_hash}.idx'):
+    def index(self, index_keys, indexpath="{path}.{short_hash}.idx"):
         # type: (T.List[str], str) -> FileIndex
         return FileIndex.from_indexpath_or_filestream(self, index_keys, indexpath)
 
@@ -236,7 +244,7 @@ class FileStream(collections.abc.Iterable):
 @contextlib.contextmanager
 def compat_create_exclusive(path, *args, **kwargs):
     fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL)
-    with io.open(fd, mode='wb', *args, **kwargs) as file:
+    with io.open(fd, mode="wb", *args, **kwargs) as file:
         try:
             yield file
         except Exception:
@@ -247,10 +255,12 @@ def compat_create_exclusive(path, *args, **kwargs):
 
 @attr.attrs()
 class FileIndex(collections.abc.Mapping):
-    allowed_protocol_version = '1'
+    allowed_protocol_version = "1"
     filestream = attr.attrib(type=FileStream)
     index_keys = attr.attrib(type=T.List[str])
-    offsets = attr.attrib(repr=False, type=T.List[T.Tuple[T.Tuple[T.Any, ...], T.List[int]]])
+    offsets = attr.attrib(
+        repr=False, type=T.List[T.Tuple[T.Tuple[T.Any, ...], T.List[int]]]
+    )
     filter_by_keys = attr.attrib(default={}, type=T.Dict[str, T.Any])
 
     @classmethod
@@ -263,11 +273,11 @@ class FileIndex(collections.abc.Mapping):
                 try:
                     value = message[key]
                 except:
-                    value = 'undef'
+                    value = "undef"
                 if isinstance(value, (list, np.ndarray)):
                     value = tuple(value)
                 header_values.append(value)
-            offset = message.message_get('offset', int)
+            offset = message.message_get("offset", int)
             if offset in count_offsets:
                 count_offsets[offset] += 1
                 offset_field = (offset, count_offsets[offset])
@@ -275,19 +285,21 @@ class FileIndex(collections.abc.Mapping):
                 count_offsets[offset] = 0
                 offset_field = offset
             offsets.setdefault(tuple(header_values), []).append(offset_field)
-        self = cls(filestream=filestream, index_keys=index_keys, offsets=list(offsets.items()))
+        self = cls(
+            filestream=filestream, index_keys=index_keys, offsets=list(offsets.items())
+        )
         # record the index protocol version in the instance so it is dumped with pickle
         self.index_protocol_version = cls.allowed_protocol_version
         return self
 
     @classmethod
     def from_indexpath(cls, indexpath):
-        with io.open(indexpath, 'rb') as file:
+        with io.open(indexpath, "rb") as file:
             return pickle.load(file)
 
     @classmethod
     def from_indexpath_or_filestream(
-        cls, filestream, index_keys, indexpath='{path}.{short_hash}.idx', log=LOG
+        cls, filestream, index_keys, indexpath="{path}.{short_hash}.idx", log=LOG
     ):
         # type: (FileStream, T.List[str], str, logging.Logger) -> FileIndex
 
@@ -295,8 +307,10 @@ class FileIndex(collections.abc.Mapping):
         if not indexpath:
             return cls.from_filestream(filestream, index_keys)
 
-        hash = hashlib.md5(repr(index_keys).encode('utf-8')).hexdigest()
-        indexpath = indexpath.format(path=filestream.path, hash=hash, short_hash=hash[:5])
+        hash = hashlib.md5(repr(index_keys).encode("utf-8")).hexdigest()
+        indexpath = indexpath.format(
+            path=filestream.path, hash=hash, short_hash=hash[:5]
+        )
         try:
             with compat_create_exclusive(indexpath) as new_index_file:
                 self = cls.from_filestream(filestream, index_keys)
@@ -314,13 +328,16 @@ class FileIndex(collections.abc.Mapping):
                 self = cls.from_indexpath(indexpath)
                 allowed_protocol_version = self.allowed_protocol_version
                 if (
-                    getattr(self, 'index_keys', None) == index_keys
-                    and getattr(self, 'filestream', None) == filestream
-                    and getattr(self, 'index_protocol_version', None) == allowed_protocol_version
+                    getattr(self, "index_keys", None) == index_keys
+                    and getattr(self, "filestream", None) == filestream
+                    and getattr(self, "index_protocol_version", None)
+                    == allowed_protocol_version
                 ):
                     return self
                 else:
-                    log.warning("Ignoring index file %r incompatible with GRIB file", indexpath)
+                    log.warning(
+                        "Ignoring index file %r incompatible with GRIB file", indexpath
+                    )
             else:
                 log.warning("Ignoring index file %r older than GRIB file", indexpath)
         except Exception:
@@ -336,7 +353,7 @@ class FileIndex(collections.abc.Mapping):
 
     @property
     def header_values(self):
-        if not hasattr(self, '_header_values'):
+        if not hasattr(self, "_header_values"):
             self._header_values = {}
             for header_values, _ in self.offsets:
                 for i, value in enumerate(header_values):

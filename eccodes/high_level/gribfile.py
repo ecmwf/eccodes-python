@@ -12,6 +12,7 @@ from .gribmessage import GribMessage
 class GribFile(CodesFile):
 
     __doc__ = "\n".join(CodesFile.__doc__.splitlines()[4:]).format(
-        prod_type="GRIB", classname="GribFile", alias="grib")
+        prod_type="GRIB", classname="GribFile", alias="grib"
+    )
 
     MessageClass = GribMessage
