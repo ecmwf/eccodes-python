@@ -11,3 +11,4 @@ tox
 tox-pyenv
 wheel
 zest.releaser
+black
