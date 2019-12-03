@@ -25,7 +25,7 @@ import os
 
 import cffi
 
-__version__ = '0.9.5.dev0'
+__version__ = "0.9.5.dev0"
 
 LOG = logging.getLogger(__name__)
 
@@ -34,14 +34,14 @@ try:
 except ModuleNotFoundError:
     ffi = cffi.FFI()
     ffi.cdef(
-        pkgutil.get_data(__name__, 'grib_api.h').decode('utf-8') +
-        pkgutil.get_data(__name__, 'eccodes.h').decode('utf-8')
+        pkgutil.get_data(__name__, "grib_api.h").decode("utf-8")
+        + pkgutil.get_data(__name__, "eccodes.h").decode("utf-8")
     )
 
-    LIBNAMES = ['eccodes', 'libeccodes.so', 'libeccodes']
+    LIBNAMES = ["eccodes", "libeccodes.so", "libeccodes"]
 
-    if os.environ.get('ECCODES_DIR'):
-        LIBNAMES.insert(0, os.path.join(os.environ['ECCODES_DIR'], 'lib/libeccodes.so'))
+    if os.environ.get("ECCODES_DIR"):
+        LIBNAMES.insert(0, os.path.join(os.environ["ECCODES_DIR"], "lib/libeccodes.so"))
 
     for libname in LIBNAMES:
         try:
@@ -54,4 +54,4 @@ except ModuleNotFoundError:
             LOG.info("ecCodes library not found using name '%s'.", libname)
 
 # default encoding for ecCodes strings
-ENC = 'ascii'
+ENC = "ascii"
