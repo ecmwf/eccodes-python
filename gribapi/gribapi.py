@@ -26,6 +26,7 @@ try:
     type(file)
 except NameError:
     import io
+
     file = io.IOBase
     long = int
 
@@ -49,13 +50,13 @@ CODES_PRODUCT_TAF = 5
 """ TAF product kind """
 
 # Constants for 'missing'
-GRIB_MISSING_DOUBLE = -1e+100
+GRIB_MISSING_DOUBLE = -1e100
 GRIB_MISSING_LONG = 2147483647
 
 
 # ECC-1029: Disable function-arguments type-checking unless
 # environment variable is defined and equal to 1
-enable_type_checks = (os.environ.get('ECCODES_PYTHON_ENABLE_TYPE_CHECKS') == '1')
+enable_type_checks = os.environ.get("ECCODES_PYTHON_ENABLE_TYPE_CHECKS") == "1"
 
 
 # Function-arguments type-checking decorator
@@ -66,6 +67,7 @@ def require(**_params_):
     """
     The actual decorator. Receives the target function in _func_
     """
+
     def check_types(_func_, _params_=_params_):
         if not enable_type_checks:
             return _func_
@@ -80,10 +82,14 @@ def require(**_params_):
                 param = kw[name]
                 if isinstance(allowed_types, type):
                     allowed_types = (allowed_types,)
-                assert any([isinstance(param, type1) for type1 in allowed_types]), \
-                    "Parameter '%s' should be of type %s" % (name, " or ".join([t.__name__ for t in allowed_types]))
+                assert any([isinstance(param, type1) for type1 in allowed_types]), (
+                    "Parameter '%s' should be of type %s"
+                    % (name, " or ".join([t.__name__ for t in allowed_types]))
+                )
             return _func_(**kw)
+
         return modified
+
     return check_types
 
 
@@ -92,6 +98,7 @@ class Bunch(dict):
     """
     The collector of a bunch of named stuff :).
     """
+
     def __init__(self, **kw):
         dict.__init__(self, kw)
         self.__dict__.update(kw)
@@ -113,18 +120,19 @@ class Bunch(dict):
         del self.__dict__[key]
 
     def __str__(self):
-        state = ["%s=%r" % (attribute, value)
-                 for (attribute, value)
-                 in self.__dict__.items()]
-        return '\n'.join(state)
+        state = [
+            "%s=%r" % (attribute, value) for (attribute, value) in self.__dict__.items()
+        ]
+        return "\n".join(state)
+
+
 # @endcond
 
 
 def err_last(func):
-
     @wraps(func)
     def wrapper(*args):
-        err = ffi.new('int *')
+        err = ffi.new("int *")
         args += (err,)
         retval = func(*args)
         return err[0], retval
@@ -134,7 +142,7 @@ def err_last(func):
 
 def get_handle(msgid):
     assert isinstance(msgid, int)
-    h = ffi.cast('grib_handle*', msgid)
+    h = ffi.cast("grib_handle*", msgid)
     if h == ffi.NULL:
         raise errors.InvalidGribError
     return h
@@ -143,52 +151,52 @@ def get_handle(msgid):
 def put_handle(handle):
     if handle == ffi.NULL:
         raise errors.InvalidGribError
-    return int(ffi.cast('unsigned long', handle))
+    return int(ffi.cast("unsigned long", handle))
 
 
 def get_multi_handle(msgid):
     assert isinstance(msgid, int)
-    return ffi.cast('grib_multi_handle*', msgid)
+    return ffi.cast("grib_multi_handle*", msgid)
 
 
 def put_multi_handle(handle):
-    return int(ffi.cast('unsigned long', handle))
+    return int(ffi.cast("unsigned long", handle))
 
 
 def get_index(indexid):
     assert isinstance(indexid, int)
-    return ffi.cast('grib_index*', indexid)
+    return ffi.cast("grib_index*", indexid)
 
 
 def put_index(indexh):
-    return int(ffi.cast('unsigned long', indexh))
+    return int(ffi.cast("unsigned long", indexh))
 
 
 def get_iterator(iterid):
     assert isinstance(iterid, int)
-    return ffi.cast('grib_iterator*', iterid)
+    return ffi.cast("grib_iterator*", iterid)
 
 
 def put_iterator(iterh):
-    return int(ffi.cast('unsigned long', iterh))
+    return int(ffi.cast("unsigned long", iterh))
 
 
 def get_grib_keys_iterator(iterid):
     assert isinstance(iterid, int)
-    return ffi.cast('grib_keys_iterator*', iterid)
+    return ffi.cast("grib_keys_iterator*", iterid)
 
 
 def put_grib_keys_iterator(iterh):
-    return int(ffi.cast('unsigned long', iterh))
+    return int(ffi.cast("unsigned long", iterh))
 
 
 def get_bufr_keys_iterator(iterid):
     assert isinstance(iterid, int)
-    return ffi.cast('bufr_keys_iterator*', iterid)
+    return ffi.cast("bufr_keys_iterator*", iterid)
 
 
 def put_bufr_keys_iterator(iterh):
-    return int(ffi.cast('unsigned long', iterh))
+    return int(ffi.cast("unsigned long", iterh))
 
 
 # @cond
@@ -203,6 +211,8 @@ def GRIB_CHECK(errid):
     """
     if errid:
         errors.raise_grib_error(errid)
+
+
 # @endcond
 
 
@@ -220,7 +230,9 @@ def gts_new_from_file(fileobj, headers_only=False):
     @exception GribInternalError
     """
     # err, h = err_last(lib.gts_new_from_file)(ffi.NULL, fileobj)
-    err, h = err_last(lib.codes_handle_new_from_file)(ffi.NULL, fileobj, CODES_PRODUCT_GTS)
+    err, h = err_last(lib.codes_handle_new_from_file)(
+        ffi.NULL, fileobj, CODES_PRODUCT_GTS
+    )
     if err:
         if err == lib.GRIB_END_OF_FILE:
             return None
@@ -247,7 +259,9 @@ def metar_new_from_file(fileobj, headers_only=False):
     @exception GribInternalError
     """
     # err, h = err_last(lib.metar_new_from_file)(ffi.NULL, fileobj)
-    err, h = err_last(lib.codes_handle_new_from_file)(ffi.NULL, fileobj, CODES_PRODUCT_METAR)
+    err, h = err_last(lib.codes_handle_new_from_file)(
+        ffi.NULL, fileobj, CODES_PRODUCT_METAR
+    )
     if err:
         if err == lib.GRIB_END_OF_FILE:
             return None
@@ -304,7 +318,9 @@ def any_new_from_file(fileobj, headers_only=False):
     @return               id of the message loaded in memory or None
     @exception GribInternalError
     """
-    err, h = err_last(lib.codes_handle_new_from_file)(ffi.NULL, fileobj, CODES_PRODUCT_ANY)
+    err, h = err_last(lib.codes_handle_new_from_file)(
+        ffi.NULL, fileobj, CODES_PRODUCT_ANY
+    )
     if err:
         if err == lib.GRIB_END_OF_FILE:
             return None
@@ -332,7 +348,9 @@ def bufr_new_from_file(fileobj, headers_only=False):
     @return               id of the BUFR loaded in memory or None
     @exception GribInternalError
     """
-    err, h = err_last(lib.codes_handle_new_from_file)(ffi.NULL, fileobj, CODES_PRODUCT_BUFR)
+    err, h = err_last(lib.codes_handle_new_from_file)(
+        ffi.NULL, fileobj, CODES_PRODUCT_BUFR
+    )
     if err:
         if err == lib.GRIB_END_OF_FILE:
             return None
@@ -368,7 +386,9 @@ def grib_new_from_file(fileobj, headers_only=False):
     @exception GribInternalError
     """
     # err, h = err_last(lib.grib_new_from_file)(ffi.NULL, fileobj, headers_only)
-    err, h = err_last(lib.codes_handle_new_from_file)(ffi.NULL, fileobj, CODES_PRODUCT_GRIB)
+    err, h = err_last(lib.codes_handle_new_from_file)(
+        ffi.NULL, fileobj, CODES_PRODUCT_GRIB
+    )
     if err:
         if err == lib.GRIB_END_OF_FILE:
             return None
@@ -401,7 +421,7 @@ def grib_count_in_file(fileobj):
     @return         number of messages in the file
     @exception GribInternalError
     """
-    num_p = ffi.new('int*')
+    num_p = ffi.new("int*")
     err = lib.grib_count_in_file(ffi.NULL, fileobj, num_p)
     GRIB_CHECK(err)
     return num_p[0]
@@ -452,8 +472,8 @@ def grib_get_string(msgid, key):
     length = grib_get_string_length(msgid, key)
 
     h = get_handle(msgid)
-    values = ffi.new('char[]', length)
-    length_p = ffi.new('size_t *', length)
+    values = ffi.new("char[]", length)
+    length_p = ffi.new("size_t *", length)
     err = lib.grib_get_string(h, key.encode(ENC), values, length_p)
     GRIB_CHECK(err)
     return ffi.string(values, length_p[0]).decode(ENC)
@@ -471,7 +491,7 @@ def grib_set_string(msgid, key, value):
     """
     h = get_handle(msgid)
     bvalue = value.encode(ENC)
-    length_p = ffi.new('size_t *', len(bvalue))
+    length_p = ffi.new("size_t *", len(bvalue))
     GRIB_CHECK(lib.grib_set_string(h, key.encode(ENC), bvalue, length_p))
 
 
@@ -557,7 +577,7 @@ def grib_get_size(msgid, key):
     @exception GribInternalError
     """
     h = get_handle(msgid)
-    size_p = ffi.new('size_t*')
+    size_p = ffi.new("size_t*")
     err = lib.grib_get_size(h, key.encode(ENC), size_p)
     GRIB_CHECK(err)
     return size_p[0]
@@ -573,7 +593,7 @@ def grib_get_string_length(msgid, key):
     @exception GribInternalError
     """
     h = get_handle(msgid)
-    size = ffi.new('size_t *')
+    size = ffi.new("size_t *")
     err = lib.grib_get_length(h, key.encode(ENC), size)
     GRIB_CHECK(err)
     return size[0]
@@ -716,9 +736,9 @@ def grib_iterator_next(iterid):
     @exception GribInternalError
     """
     iterh = get_iterator(iterid)
-    lat_p = ffi.new('double*')
-    lon_p = ffi.new('double*')
-    value_p = ffi.new('double*')
+    lat_p = ffi.new("double*")
+    lon_p = ffi.new("double*")
+    value_p = ffi.new("double*")
     err = lib.grib_iterator_next(iterh, lat_p, lon_p, value_p)
     if err == 0:
         return []
@@ -912,7 +932,7 @@ def grib_get_long(msgid, key):
     @exception GribInternalError
     """
     h = get_handle(msgid)
-    value_p = ffi.new('long*')
+    value_p = ffi.new("long*")
     err = lib.grib_get_long(h, key.encode(ENC), value_p)
     GRIB_CHECK(err)
     return value_p[0]
@@ -929,7 +949,7 @@ def grib_get_double(msgid, key):
     @exception GribInternalError
     """
     h = get_handle(msgid)
-    value_p = ffi.new('double*')
+    value_p = ffi.new("double*")
     err = lib.grib_get_double(h, key.encode(ENC), value_p)
     GRIB_CHECK(err)
     return value_p[0]
@@ -1106,9 +1126,9 @@ def grib_set_double_array(msgid, key, inarray):
     a = inarray
     if isinstance(inarray, np.ndarray):
         # ECC-1007: Could also call numpy.ascontiguousarray
-        if not inarray.flags['C_CONTIGUOUS']:
-            a = a.copy(order='C')
-        a = ffi.cast('double*', a.ctypes.data)
+        if not inarray.flags["C_CONTIGUOUS"]:
+            a = a.copy(order="C")
+        a = ffi.cast("double*", a.ctypes.data)
 
     GRIB_CHECK(lib.grib_set_double_array(h, key.encode(ENC), a, length))
 
@@ -1125,9 +1145,9 @@ def grib_get_double_array(msgid, key):
     """
     h = get_handle(msgid)
     nval = grib_get_size(msgid, key)
-    length_p = ffi.new('size_t*', nval)
-    arr = np.empty((nval,), dtype='float64')
-    vals_p = ffi.cast('double *', arr.ctypes.data)
+    length_p = ffi.new("size_t*", nval)
+    arr = np.empty((nval,), dtype="float64")
+    vals_p = ffi.cast("double *", arr.ctypes.data)
     err = lib.grib_get_double_array(h, key.encode(ENC), vals_p, length_p)
     GRIB_CHECK(err)
     return arr
@@ -1146,9 +1166,9 @@ def grib_get_string_array(msgid, key):
     length = grib_get_string_length(msgid, key)
     size = grib_get_size(msgid, key)
     h = get_handle(msgid)
-    values_keepalive = [ffi.new('char[]', length) for _ in range(size)]
-    values = ffi.new('char*[]', values_keepalive)
-    size_p = ffi.new('size_t *', size)
+    values_keepalive = [ffi.new("char[]", length) for _ in range(size)]
+    values = ffi.new("char*[]", values_keepalive)
+    size_p = ffi.new("size_t *", size)
     err = lib.grib_get_string_array(h, key.encode(ENC), values, size_p)
     GRIB_CHECK(err)
     return [ffi.string(values[i]).decode(ENC) for i in range(size_p[0])]
@@ -1171,8 +1191,8 @@ def grib_set_string_array(msgid, key, inarray):
     h = get_handle(msgid)
     size = len(inarray)
     # See https://cffi.readthedocs.io/en/release-1.3/using.html
-    values_keepalive = [ffi.new('char[]', s.encode(ENC)) for s in inarray]
-    values_p = ffi.new('const char *[]', values_keepalive)
+    values_keepalive = [ffi.new("char[]", s.encode(ENC)) for s in inarray]
+    values_p = ffi.new("const char *[]", values_keepalive)
     GRIB_CHECK(lib.grib_set_string_array(h, key.encode(ENC), values_p, size))
 
 
@@ -1208,9 +1228,9 @@ def grib_get_long_array(msgid, key):
     """
     h = get_handle(msgid)
     nval = grib_get_size(msgid, key)
-    length_p = ffi.new('size_t*', nval)
-    arr = np.empty((nval,), dtype='int64')
-    vals_p = ffi.cast('long *', arr.ctypes.data)
+    length_p = ffi.new("size_t*", nval)
+    arr = np.empty((nval,), dtype="int64")
+    vals_p = ffi.cast("long *", arr.ctypes.data)
     err = lib.grib_get_long_array(h, key.encode(ENC), vals_p, length_p)
     GRIB_CHECK(err)
     return arr
@@ -1275,7 +1295,9 @@ def grib_index_new_from_file(filename, keys):
     @exception GribInternalError
     """
     ckeys = ",".join(keys)
-    err, iid = err_last(lib.grib_index_new_from_file)(ffi.NULL, filename.encode(ENC), ckeys.encode(ENC))
+    err, iid = err_last(lib.grib_index_new_from_file)(
+        ffi.NULL, filename.encode(ENC), ckeys.encode(ENC)
+    )
     GRIB_CHECK(err)
     return put_index(iid)
 
@@ -1324,7 +1346,7 @@ def grib_index_get_size(indexid, key):
     @exception GribInternalError
     """
     ih = get_index(indexid)
-    size_p = ffi.new('size_t*')
+    size_p = ffi.new("size_t*")
     err = lib.grib_index_get_size(ih, key.encode(ENC), size_p)
     GRIB_CHECK(err)
     return size_p[0]
@@ -1348,8 +1370,8 @@ def grib_index_get_long(indexid, key):
     nval = grib_index_get_size(indexid, key)
     ih = get_index(indexid)
 
-    values_p = ffi.new('long[]', nval)
-    size_p = ffi.new('size_t *', nval)
+    values_p = ffi.new("long[]", nval)
+    size_p = ffi.new("size_t *", nval)
     err = lib.grib_index_get_long(ih, key.encode(ENC), values_p, size_p)
     GRIB_CHECK(err)
     return tuple(int(values_p[i]) for i in range(size_p[0]))
@@ -1373,9 +1395,9 @@ def grib_index_get_string(indexid, key):
     nval = grib_index_get_size(indexid, key)
     ih = get_index(indexid)
     max_val_size = 1024
-    values_keepalive = [ffi.new('char[]', max_val_size) for _ in range(nval)]
-    values_p = ffi.new('const char *[]', values_keepalive)
-    size_p = ffi.new('size_t *', max_val_size)
+    values_keepalive = [ffi.new("char[]", max_val_size) for _ in range(nval)]
+    values_p = ffi.new("const char *[]", values_keepalive)
+    size_p = ffi.new("size_t *", max_val_size)
     err = lib.grib_index_get_string(ih, key.encode(ENC), values_p, size_p)
     GRIB_CHECK(err)
     return tuple(ffi.string(values_p[i]).decode(ENC) for i in range(size_p[0]))
@@ -1399,8 +1421,8 @@ def grib_index_get_double(indexid, key):
     nval = grib_index_get_size(indexid, key)
     ih = get_index(indexid)
 
-    values_p = ffi.new('double[]', nval)
-    size_p = ffi.new('size_t *', nval)
+    values_p = ffi.new("double[]", nval)
+    size_p = ffi.new("size_t *", nval)
     err = lib.grib_index_get_doule(ih, key.encode(ENC), values_p, size_p)
     GRIB_CHECK(err)
     return tuple(int(values_p[i]) for i in range(size_p[0]))
@@ -1501,7 +1523,7 @@ def grib_get_message_size(msgid):
     @exception GribInternalError
     """
     h = get_handle(msgid)
-    size_p = ffi.new('size_t*')
+    size_p = ffi.new("size_t*")
     err = lib.grib_get_message_size(h, size_p)
     GRIB_CHECK(err)
     return size_p[0]
@@ -1517,7 +1539,7 @@ def grib_get_message_offset(msgid):
     @exception GribInternalError
     """
     h = get_handle(msgid)
-    offset_p = ffi.new('long int*')
+    offset_p = ffi.new("long int*")
     err = lib.grib_get_message_offset(h, offset_p)
     GRIB_CHECK(err)
     return offset_p[0]
@@ -1536,7 +1558,7 @@ def grib_get_double_element(msgid, key, index):
 
     """
     h = get_handle(msgid)
-    value_p = ffi.new('double *')
+    value_p = ffi.new("double *")
     err = lib.grib_get_double_element(h, key.encode(ENC), index)
     GRIB_CHECK(err)
     return value_p[0]
@@ -1556,8 +1578,8 @@ def grib_get_double_elements(msgid, key, indexes):
     """
     nidx = len(indexes)
     h = get_handle(msgid)
-    i_p = ffi.new('int[]', indexes)
-    value_p = ffi.new('double[]', nidx)
+    i_p = ffi.new("int[]", indexes)
+    value_p = ffi.new("double[]", nidx)
     err = lib.grib_get_double_elements(h, key.encode(ENC), i_p, nidx, value_p)
     GRIB_CHECK(err)
     return [float(v) for v in value_p]
@@ -1616,30 +1638,34 @@ def grib_set_key_vals(gribid, key_vals):
     key_vals_str = ""
     if isinstance(key_vals, str):
         # Plain string. We need to do a DEEP copy so as not to change the original
-        key_vals_str = ''.join(key_vals)
+        key_vals_str = "".join(key_vals)
     elif isinstance(key_vals, (list, tuple)):
         # A list of key=val strings
         for kv in key_vals:
             if not isinstance(kv, str):
                 raise TypeError("Invalid list/tuple element type '%s'" % kv)
-            if '=' not in str(kv):
-                raise errors.GribInternalError("Invalid list/tuple element format '%s'" % kv)
+            if "=" not in str(kv):
+                raise errors.GribInternalError(
+                    "Invalid list/tuple element format '%s'" % kv
+                )
             if len(key_vals_str) > 0:
-                key_vals_str += ','
+                key_vals_str += ","
             key_vals_str += kv
     elif isinstance(key_vals, dict):
         # A dictionary mapping keys to values
         for key in key_vals.keys():
             if len(key_vals_str) > 0:
-                key_vals_str += ','
-            key_vals_str += key + '=' + str(key_vals[key])
+                key_vals_str += ","
+            key_vals_str += key + "=" + str(key_vals[key])
     else:
         raise TypeError("Invalid argument type")
 
     h = get_handle(gribid)
-    values = ffi.new('grib_values[]', 1024)
-    count_p = ffi.new('int*', 1000)
-    err = lib.parse_keyval_string(ffi.NULL, key_vals_str.encode(ENC), 1, lib.GRIB_TYPE_UNDEFINED, values, count_p)
+    values = ffi.new("grib_values[]", 1024)
+    count_p = ffi.new("int*", 1000)
+    err = lib.parse_keyval_string(
+        ffi.NULL, key_vals_str.encode(ENC), 1, lib.GRIB_TYPE_UNDEFINED, values, count_p
+    )
     GRIB_CHECK(err)
     err = lib.grib_set_values(h, values, count_p[0])
     GRIB_CHECK(err)
@@ -1697,32 +1723,53 @@ def grib_find_nearest(gribid, inlat, inlon, is_lsm=False, npoints=1):
     @exception GribInternalError
     """
     h = get_handle(gribid)
-    inlats_p = ffi.new('double*', inlat)
-    inlons_p = ffi.new('double*', inlon)
+    inlats_p = ffi.new("double*", inlat)
+    inlons_p = ffi.new("double*", inlon)
 
     if npoints == 1:
-        outlats_p = ffi.new('double[]', 1)
-        outlons_p = ffi.new('double[]', 1)
-        values_p = ffi.new('double[]', 1)
-        distances_p = ffi.new('double[]', 1)
-        indexes_p = ffi.new('int[]', 1)
+        outlats_p = ffi.new("double[]", 1)
+        outlons_p = ffi.new("double[]", 1)
+        values_p = ffi.new("double[]", 1)
+        distances_p = ffi.new("double[]", 1)
+        indexes_p = ffi.new("int[]", 1)
         num_input_points = 1
         # grib_nearest_find_multiple always returns ONE nearest neighbour
-        err = lib.grib_nearest_find_multiple(h, is_lsm, inlats_p, inlons_p, num_input_points,
-                                             outlats_p, outlons_p, values_p, distances_p, indexes_p)
+        err = lib.grib_nearest_find_multiple(
+            h,
+            is_lsm,
+            inlats_p,
+            inlons_p,
+            num_input_points,
+            outlats_p,
+            outlons_p,
+            values_p,
+            distances_p,
+            indexes_p,
+        )
         GRIB_CHECK(err)
     elif npoints == 4:
-        outlats_p = ffi.new('double[]', npoints)
-        outlons_p = ffi.new('double[]', npoints)
-        values_p = ffi.new('double[]', npoints)
-        distances_p = ffi.new('double[]', npoints)
-        indexes_p = ffi.new('int[]', npoints)
-        size = ffi.new('size_t *')
+        outlats_p = ffi.new("double[]", npoints)
+        outlons_p = ffi.new("double[]", npoints)
+        values_p = ffi.new("double[]", npoints)
+        distances_p = ffi.new("double[]", npoints)
+        indexes_p = ffi.new("int[]", npoints)
+        size = ffi.new("size_t *")
         err, nid = err_last(lib.grib_nearest_new)(h)
         GRIB_CHECK(err)
         flags = 0
-        err = lib.grib_nearest_find(nid, h, inlat, inlon, flags,
-                                    outlats_p, outlons_p, values_p, distances_p, indexes_p, size)
+        err = lib.grib_nearest_find(
+            nid,
+            h,
+            inlat,
+            inlon,
+            flags,
+            outlats_p,
+            outlons_p,
+            values_p,
+            distances_p,
+            indexes_p,
+            size,
+        )
         GRIB_CHECK(err)
         GRIB_CHECK(lib.grib_nearest_delete(nid))
     else:
@@ -1730,7 +1777,15 @@ def grib_find_nearest(gribid, inlat, inlon, is_lsm=False, npoints=1):
 
     result = []
     for i in range(npoints):
-        result.append(Bunch(lat=outlats_p[i], lon=outlons_p[i], value=values_p[i], distance=distances_p[i], index=indexes_p[i]))
+        result.append(
+            Bunch(
+                lat=outlats_p[i],
+                lon=outlons_p[i],
+                value=values_p[i],
+                distance=distances_p[i],
+                index=indexes_p[i],
+            )
+        )
 
     return tuple(result)
 
@@ -1750,24 +1805,44 @@ def grib_find_nearest_multiple(gribid, is_lsm, inlats, inlons):
     h = get_handle(gribid)
     npoints = len(inlats)
     if len(inlons) != npoints:
-        raise ValueError('grib_find_nearest_multiple: input arrays inlats and inlons must have the same length')
+        raise ValueError(
+            "grib_find_nearest_multiple: input arrays inlats and inlons must have the same length"
+        )
 
-    inlats_p = ffi.new('double[]', inlats)
-    inlons_p = ffi.new('double[]', inlons)
+    inlats_p = ffi.new("double[]", inlats)
+    inlons_p = ffi.new("double[]", inlons)
 
-    outlats_p = ffi.new('double[]', npoints)
-    outlons_p = ffi.new('double[]', npoints)
-    values_p = ffi.new('double[]', npoints)
-    distances_p = ffi.new('double[]', npoints)
-    indexes_p = ffi.new('int[]', npoints)
+    outlats_p = ffi.new("double[]", npoints)
+    outlons_p = ffi.new("double[]", npoints)
+    values_p = ffi.new("double[]", npoints)
+    distances_p = ffi.new("double[]", npoints)
+    indexes_p = ffi.new("int[]", npoints)
 
     # Note: grib_nearest_find_multiple always returns ONE nearest neighbour
-    err = lib.grib_nearest_find_multiple(h, is_lsm, inlats_p, inlons_p, npoints,
-                                         outlats_p, outlons_p, values_p, distances_p, indexes_p)
+    err = lib.grib_nearest_find_multiple(
+        h,
+        is_lsm,
+        inlats_p,
+        inlons_p,
+        npoints,
+        outlats_p,
+        outlons_p,
+        values_p,
+        distances_p,
+        indexes_p,
+    )
     GRIB_CHECK(err)
     result = []
     for i in range(npoints):
-        result.append(Bunch(lat=outlats_p[i], lon=outlons_p[i], value=values_p[i], distance=distances_p[i], index=indexes_p[i]))
+        result.append(
+            Bunch(
+                lat=outlats_p[i],
+                lon=outlons_p[i],
+                value=values_p[i],
+                distance=distances_p[i],
+                index=indexes_p[i],
+            )
+        )
 
     return tuple(result)
 
@@ -1785,7 +1860,7 @@ def grib_get_native_type(msgid, key):
     @exception GribInternalError
     """
     h = get_handle(msgid)
-    itype_p = ffi.new('int*')
+    itype_p = ffi.new("int*")
     err = lib.grib_get_native_type(h, key.encode(ENC), itype_p)
     GRIB_CHECK(err)
     if itype_p[0] in KEYTYPES:
@@ -1921,7 +1996,9 @@ def grib_set(msgid, key, value):
     #    # The value passed in is iterable; i.e. a list or array etc
     #    grib_set_array(msgid, key, value)
     else:
-        raise errors.GribInternalError("Invalid type of value when setting key '%s'." % key)
+        raise errors.GribInternalError(
+            "Invalid type of value when setting key '%s'." % key
+        )
 
 
 @require(msgid=int, key=str)
@@ -1956,7 +2033,9 @@ def grib_set_array(msgid, key, value):
         try:
             int(val0)
         except (ValueError, TypeError):
-            raise errors.GribInternalError("Invalid type of value when setting key '%s'." % key)
+            raise errors.GribInternalError(
+                "Invalid type of value when setting key '%s'." % key
+            )
         grib_set_long_array(msgid, key, value)
 
 
@@ -2011,7 +2090,9 @@ def grib_index_select(indexid, key, value):
     elif isinstance(value, str):
         grib_index_select_string(indexid, key, value)
     else:
-        raise errors.GribInternalError("Invalid type of value when setting key '%s'." % key)
+        raise errors.GribInternalError(
+            "Invalid type of value when setting key '%s'." % key
+        )
 
 
 @require(indexid=int, filename=str)
@@ -2077,6 +2158,7 @@ def grib_get_api_version():
 
     Returns the version of the API as a string in the format "major.minor.revision".
     """
+
     def div(v, d):
         return (v / d, v % d)
 
@@ -2101,8 +2183,8 @@ def codes_get_version_info():
     Returns a dictionary containing the versions of the ecCodes API and the Python bindings
     """
     vinfo = dict()
-    vinfo['eccodes'] = grib_get_api_version()
-    vinfo['bindings'] = bindings_version
+    vinfo["eccodes"] = grib_get_api_version()
+    vinfo["bindings"] = bindings_version
     return vinfo
 
 
@@ -2120,12 +2202,14 @@ def grib_get_message(msgid):
     @exception GribInternalError
     """
     h = get_handle(msgid)
-    message_p = ffi.new('const void**')
-    message_length_p = ffi.new('size_t*')
+    message_p = ffi.new("const void**")
+    message_length_p = ffi.new("size_t*")
     err = lib.grib_get_message(h, message_p, message_length_p)
     GRIB_CHECK(err)
     # NOTE: ffi.string would stop on the first nul-character.
-    fixed_length_buffer = ffi.buffer(ffi.cast('char*', message_p[0]), message_length_p[0])
+    fixed_length_buffer = ffi.buffer(
+        ffi.cast("char*", message_p[0]), message_length_p[0]
+    )
     # Convert to bytes
     return fixed_length_buffer[:]
 
@@ -2219,7 +2303,7 @@ def _convert_struct_to_dict(s):
     ident_found = False
     for a in dir(s):
         value = getattr(s, a)
-        if not ident_found and a == 'ident':
+        if not ident_found and a == "ident":
             value = ffi.string(value).decode(ENC)
             ident_found = True
         result[a] = value
@@ -2237,9 +2321,11 @@ def codes_bufr_extract_headers(filepath, is_strict=True):
     """
     context = lib.grib_context_get_default()
     headers_p = ffi.new("struct codes_bufr_header**")
-    num_message_p = ffi.new('int*')
+    num_message_p = ffi.new("int*")
 
-    err = lib.codes_bufr_extract_headers_malloc(context, filepath.encode(ENC), headers_p, num_message_p, is_strict)
+    err = lib.codes_bufr_extract_headers_malloc(
+        context, filepath.encode(ENC), headers_p, num_message_p, is_strict
+    )
     GRIB_CHECK(err)
 
     num_messages = num_message_p[0]

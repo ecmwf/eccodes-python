@@ -16,33 +16,31 @@ from .codesfile import CodesFile
 class BufrMessage(CodesMessage):
 
     __doc__ = "\n".join(CodesMessage.__doc__.splitlines()[4:]).format(
-        prod_type="BUFR", classname="BufrMessage", parent="BufrFile",
-        alias="bufr")
+        prod_type="BUFR", classname="BufrMessage", parent="BufrFile", alias="bufr"
+    )
 
     product_kind = eccodes.CODES_PRODUCT_BUFR
 
     # Arguments included explicitly to support introspection
     # TODO: Can we get this to work with an index?
-    def __init__(self, codes_file=None, clone=None, sample=None,
-                 headers_only=False):
+    def __init__(self, codes_file=None, clone=None, sample=None, headers_only=False):
         """
         Open a message and inform the GRIB file that it's been incremented.
 
         The message is taken from ``codes_file``, cloned from ``clone`` or
         ``sample``, or taken from ``index``, in that order of precedence.
         """
-        super(self.__class__, self).__init__(codes_file, clone, sample,
-                                             headers_only)
-        #self._unpacked = False
+        super(self.__class__, self).__init__(codes_file, clone, sample, headers_only)
+        # self._unpacked = False
 
-    #def get(self, key, ktype=None):
+    # def get(self, key, ktype=None):
     #    """Return requested value, unpacking data values if necessary."""
     #    # TODO: Only do this if accessing arrays that need unpacking
     #    if not self._unpacked:
     #        self.unpacked = True
     #    return super(self.__class__, self).get(key, ktype)
 
-    #def missing(self, key):
+    # def missing(self, key):
     #    """
     #    Report if key is missing.#
     #
@@ -52,15 +50,15 @@ class BufrMessage(CodesMessage):
 
     def unpack(self):
         """Decode data section"""
-        eccodes.codes_set(self.codes_id, 'unpack', 1)
+        eccodes.codes_set(self.codes_id, "unpack", 1)
 
     def pack(self):
         """Encode data section"""
-        eccodes.codes_set(self.codes_id, 'pack', 1)
+        eccodes.codes_set(self.codes_id, "pack", 1)
 
     def keys(self, namespace=None):
-        #self.unpack()
-        #return super(self.__class__, self).keys(namespace)
+        # self.unpack()
+        # return super(self.__class__, self).keys(namespace)
         iterator = eccodes.codes_bufr_keys_iterator_new(self.codes_id)
         keys = []
         while eccodes.codes_bufr_keys_iterator_next(iterator):
@@ -69,16 +67,16 @@ class BufrMessage(CodesMessage):
         eccodes.codes_bufr_keys_iterator_delete(iterator)
         return keys
 
-    #@property
-    #def unpacked(self):
+    # @property
+    # def unpacked(self):
     #    return self._unpacked
 
-    #@unpacked.setter
-    #def unpacked(self, val):
+    # @unpacked.setter
+    # def unpacked(self, val):
     #    eccodes.codes_set(self.codes_id, "unpack", val)
     #    self._unpacked = val
 
-    #def __setitem__(self, key, value):
+    # def __setitem__(self, key, value):
     #    """Set item and pack BUFR."""
     #    if not self._unpacked:
     #        self.unpacked = True
@@ -89,9 +87,11 @@ class BufrMessage(CodesMessage):
         """Copy data values from this message to another message"""
         return eccodes.codes_bufr_copy_data(self.codes_id, destMsg.codes_id)
 
+
 class BufrFile(CodesFile):
 
     __doc__ = "\n".join(CodesFile.__doc__.splitlines()[4:]).format(
-        prod_type="BUFR", classname="BufrFile", alias="bufr")
+        prod_type="BUFR", classname="BufrFile", alias="bufr"
+    )
 
     MessageClass = BufrMessage
