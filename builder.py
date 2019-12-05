@@ -5,14 +5,9 @@ import sys
 
 ffibuilder = cffi.FFI()
 ffibuilder.set_source(
-    "gribapi._bindings",
-    '#include <eccodes.h>',
-    libraries=["eccodes"],
+    "gribapi._bindings", "#include <eccodes.h>", libraries=["eccodes"],
 )
-ffibuilder.cdef(
-    open("gribapi/grib_api.h").read() +
-    open("gribapi/eccodes.h").read()
-)
+ffibuilder.cdef(open("gribapi/grib_api.h").read() + open("gribapi/eccodes.h").read())
 
 if __name__ == "__main__":
     try:

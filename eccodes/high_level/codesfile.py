@@ -8,6 +8,7 @@ Author: Daniel Lee, DWD, 2016
 from .. import eccodes
 import io
 
+
 class CodesFile(io.FileIO):
 
     """
@@ -50,7 +51,7 @@ class CodesFile(io.FileIO):
         while self.open_messages:
             self.open_messages.pop().close()
         eccodes.codes_close_file(self.file_handle)
-        #self.file_handle.close()
+        # self.file_handle.close()
 
     def __len__(self):
         """Return total number of messages in file."""

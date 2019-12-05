@@ -17,14 +17,20 @@ class IndexNotSelectedError(Exception):
 class GribMessage(CodesMessage):
 
     __doc__ = "\n".join(CodesMessage.__doc__.splitlines()[4:]).format(
-        prod_type="GRIB", classname="GribMessage", parent="GribFile",
-        alias="grib")
+        prod_type="GRIB", classname="GribMessage", parent="GribFile", alias="grib"
+    )
 
     product_kind = eccodes.CODES_PRODUCT_GRIB
 
     # Arguments included explicitly to support introspection
-    def __init__(self, codes_file=None, clone=None, sample=None,
-                 headers_only=False, gribindex=None):
+    def __init__(
+        self,
+        codes_file=None,
+        clone=None,
+        sample=None,
+        headers_only=False,
+        gribindex=None,
+    ):
         """
         Open a message and inform the GRIB file that it's been incremented.
 
@@ -34,16 +40,19 @@ class GribMessage(CodesMessage):
         grib_args_present = True
         if gribindex is None:
             grib_args_present = False
-        super(self.__class__, self).__init__(codes_file, clone, sample,
-                                             headers_only, grib_args_present)
+        super(self.__class__, self).__init__(
+            codes_file, clone, sample, headers_only, grib_args_present
+        )
         #: GribIndex referencing message
         self.grib_index = None
         if gribindex is not None:
             self.codes_id = eccodes.codes_new_from_index(gribindex.iid)
             if not self.codes_id:
-                raise IndexNotSelectedError("All keys must have selected "
-                                            "values before receiving message "
-                                            "from index.")
+                raise IndexNotSelectedError(
+                    "All keys must have selected "
+                    "values before receiving message "
+                    "from index."
+                )
             self.grib_index = gribindex
             gribindex.open_messages.append(self)
 
