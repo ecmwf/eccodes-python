@@ -163,6 +163,9 @@ int grib_set_missing(grib_handle* h, const char* key);
 int grib_get_message_size(const grib_handle* h,size_t* size);
 int parse_keyval_string(const char *grib_tool, char *arg, int values_required, int default_type, grib_values values[], int *count);
 
+int grib_get_data(const grib_handle *h, double *lats, double *lons, double *values);
+
+
 /* EXPERIMENTAL */
 typedef struct codes_bufr_header {
     unsigned long message_offset;

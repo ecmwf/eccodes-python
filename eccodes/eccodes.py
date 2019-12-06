@@ -93,6 +93,7 @@ from gribapi import grib_get_native_type as codes_get_native_type
 from gribapi import grib_get as codes_get
 from gribapi import grib_get_array as codes_get_array
 from gribapi import grib_get_values as codes_get_values
+from gribapi import grib_get_data as codes_grib_get_data
 from gribapi import grib_set_values as codes_set_values
 from gribapi import grib_set as codes_set
 from gribapi import grib_set_array as codes_set_array

@@ -1954,6 +1954,34 @@ def grib_get_values(gribid):
 
 
 @require(gribid=int)
+def grib_get_data(gribid):
+    """
+    @brief Get array containing latitude/longitude and data values.
+
+    @param gribid   id of the GRIB loaded in memory
+    @return         lat/lon/values list
+    """
+    npoints = grib_get(gribid, "numberOfDataPoints")
+    outlats_p = ffi.new("double[]", npoints)
+    outlons_p = ffi.new("double[]", npoints)
+    values_p = ffi.new("double[]", npoints)
+    h = get_handle(gribid)
+    err = lib.grib_get_data(h, outlats_p, outlons_p, values_p)
+    GRIB_CHECK(err)
+    result = []
+    for i in range(npoints):
+        result.append(
+            Bunch(
+                lat=outlats_p[i],
+                lon=outlons_p[i],
+                value=values_p[i]
+            )
+        )
+
+    return tuple(result)
+
+
+@require(gribid=int)
 def grib_set_values(gribid, values):
     """
     @brief Set the contents of the 'values' key for a GRIB message.
