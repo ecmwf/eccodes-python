@@ -48,6 +48,17 @@ def test_grib_keys_iterator():
     codes_release(gid)
 
 
+def test_grib_get_data():
+    gid = codes_grib_new_from_samples("GRIB1")
+    ggd = eccodes.codes_grib_get_data(gid)
+    assert len(ggd) == 65160
+    codes_release(gid)
+    gid = codes_grib_new_from_samples("reduced_gg_pl_32_grib2")
+    ggd = eccodes.codes_grib_get_data(gid)
+    assert len(ggd) == 6114
+    codes_release(gid)
+
+
 def test_grib_nearest():
     gid = codes_grib_new_from_samples("reduced_gg_ml_grib2")
     lat, lon = 30, -20
