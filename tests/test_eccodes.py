@@ -1,4 +1,5 @@
 import os.path
+import math
 import numpy as np
 import pytest
 
@@ -116,3 +117,18 @@ def test_bufr_keys_iterator():
 
     codes_bufr_keys_iterator_delete(iterid)
     codes_release(bid)
+
+
+def test_bufr_extract_headers():
+    samples_path = codes_samples_path()
+    fpath = os.path.join(samples_path, "BUFR4_local.tmpl")
+    headers = list(codes_bufr_extract_headers(fpath))
+    # Sample file contains just one message
+    assert len(headers) == 1
+    header = headers[0]
+    assert header['edition'] == 4
+    assert header['internationalDataSubCategory'] == 255
+    assert header['masterTablesVersionNumber'] == 24
+    assert header['ident'] == "91334   "
+    assert header['rdbtimeSecond'] == 19
+    assert math.isclose(header['localLongitude'], 151.83)
