@@ -120,7 +120,7 @@ def test_bufr_keys_iterator():
 
 
 # Experimental feature
-def _test_bufr_extract_headers():
+def test_bufr_extract_headers():
     samples_path = codes_samples_path()
     fpath = os.path.join(samples_path, "BUFR4_local.tmpl")
     headers = list(codes_bufr_extract_headers(fpath))
