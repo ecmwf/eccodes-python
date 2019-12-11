@@ -1970,13 +1970,7 @@ def grib_get_data(gribid):
     GRIB_CHECK(err)
     result = []
     for i in range(npoints):
-        result.append(
-            Bunch(
-                lat=outlats_p[i],
-                lon=outlons_p[i],
-                value=values_p[i]
-            )
-        )
+        result.append(Bunch(lat=outlats_p[i], lon=outlons_p[i], value=values_p[i]))
 
     return tuple(result)
 
