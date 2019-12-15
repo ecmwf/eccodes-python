@@ -72,3 +72,6 @@ class CodesFile(io.FileIO):
             return self.MessageClass(self)
         except IOError:
             raise StopIteration()
+
+    def __next__(self):
+        return self.next()
