@@ -8,6 +8,34 @@ from eccodes import *
 SAMPLE_DATA_FOLDER = os.path.join(os.path.dirname(__file__), "sample-data")
 TEST_DATA = os.path.join(SAMPLE_DATA_FOLDER, "era5-levels-members.grib")
 
+# ANY
+def test_any_read():
+    samples_path = codes_samples_path()
+    if not os.path.isdir(samples_path):
+        return
+    fpath = os.path.join(samples_path, "GRIB1.tmpl")
+    with open(fpath, "rb") as f:
+        msgid = codes_any_new_from_file(f)
+        assert codes_get(msgid, "edition") == 1
+        assert codes_get(msgid, "identifier") == "GRIB"
+        codes_release(msgid)
+
+    fpath = os.path.join(samples_path, "BUFR3.tmpl")
+    with open(fpath, "rb") as f:
+        msgid = codes_any_new_from_file(f)
+        assert codes_get(msgid, "edition") == 3
+        assert codes_get(msgid, "identifier") == "BUFR"
+        codes_release(msgid)
+
+
+def test_count_in_file():
+    samples_path = codes_samples_path()
+    if not os.path.isdir(samples_path):
+        return
+    fpath = os.path.join(samples_path, "GRIB1.tmpl")
+    with open(fpath, "rb") as f:
+        assert codes_count_in_file(f) == 1
+
 
 # GRIB
 def test_grib_read():
@@ -122,6 +150,9 @@ def test_bufr_keys_iterator():
 # Experimental feature
 def test_bufr_extract_headers():
     samples_path = codes_samples_path()
+    if not os.path.isdir(samples_path):
+        return
+    print("Samples path = ", samples_path)
     fpath = os.path.join(samples_path, "BUFR4_local.tmpl")
     headers = list(codes_bufr_extract_headers(fpath))
     # Sample file contains just one message
