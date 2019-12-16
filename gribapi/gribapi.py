@@ -840,8 +840,8 @@ def grib_keys_iterator_rewind(iterid):
 
 
 # BUFR keys iterator
-@require(msgid=int)
-def codes_bufr_keys_iterator_new(msgid):
+@require(bufrid=int)
+def codes_bufr_keys_iterator_new(bufrid):
     """
     @brief Create a new iterator on the BUFR keys.
 
@@ -851,11 +851,11 @@ def codes_bufr_keys_iterator_new(msgid):
 
     \b Examples: \ref bufr_keys_iterator.py "bufr_keys_iterator.py"
 
-    @param msgid      id of the BUFR message loaded in memory
-    @return keys iterator id to be used in the keys iterator functions
+    @param bufrid   id of the BUFR message loaded in memory
+    @return         keys iterator id to be used in the bufr keys iterator functions
     @exception GribInternalError
     """
-    h = get_handle(msgid)
+    h = get_handle(bufrid)
     bki = lib.codes_bufr_keys_iterator_new(h, 0)
     if bki == ffi.NULL:
         raise errors.InvalidKeysIteratorError
