@@ -7,6 +7,7 @@ Changelog for eccodes-python
 - ECC-1029: Function-argument type-checking should be disabled by default.
             To enable these checks, export ECCODES_PYTHON_ENABLE_TYPE_CHECKS=1
 - Added codes_samples_path() and codes_definition_path()
+- ECC-1042: Python3 interface writes integer arrays incorrectly
 - ECC-794: Expose the grib_get_data function in Python
 
 
