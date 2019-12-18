@@ -1125,6 +1125,10 @@ def grib_set_double_array(msgid, key, inarray):
     length = len(inarray)
     a = inarray
     if isinstance(inarray, np.ndarray):
+        if length > 0:
+            if not isinstance(a[0], float):
+                # ECC-1042: input array of integers
+                a = a.astype(float)
         # ECC-1007: Could also call numpy.ascontiguousarray
         if not inarray.flags["C_CONTIGUOUS"]:
             a = a.copy(order="C")
