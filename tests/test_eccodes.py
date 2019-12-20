@@ -124,6 +124,34 @@ def test_bufr_read_write(tmpdir):
     codes_release(bid)
 
 
+def test_bufr_encode(tmpdir):
+    ibufr = codes_bufr_new_from_samples("BUFR3_local_satellite")
+    codes_set_array(ibufr, "inputDelayedDescriptorReplicationFactor", (4,))
+    codes_set(ibufr, "masterTableNumber", 0)
+    codes_set(ibufr, "bufrHeaderSubCentre", 0)
+    codes_set(ibufr, "bufrHeaderCentre", 98)
+    codes_set(ibufr, "updateSequenceNumber", 0)
+    codes_set(ibufr, "dataCategory", 12)
+    codes_set(ibufr, "dataSubCategory", 139)
+    codes_set(ibufr, "masterTablesVersionNumber", 13)
+    codes_set(ibufr, "localTablesVersionNumber", 1)
+    codes_set(ibufr, "numberOfSubsets", 492)
+    codes_set(ibufr, "localNumberOfObservations", 492)
+    codes_set(ibufr, "satelliteID", 4)
+    codes_set(ibufr, "observedData", 1)
+    codes_set(ibufr, "compressedData", 1)
+    codes_set(ibufr, "unexpandedDescriptors", 312061)
+    codes_set(ibufr, "pixelSizeOnHorizontal1", 1.25e04)
+    codes_set(ibufr, "orbitNumber", 31330)
+    codes_set(ibufr, "#1#beamIdentifier", 1)
+    codes_set(ibufr, "#4#likelihoodComputedForSolution", CODES_MISSING_DOUBLE)
+    codes_set(ibufr, "pack", 1)
+    output = tmpdir.join("test_bufr_encode.bufr")
+    with open(str(output), "wb") as fout:
+        codes_write(ibufr, fout)
+    codes_release(ibufr)
+
+
 def test_bufr_keys_iterator():
     bid = codes_bufr_new_from_samples("BUFR3_local_satellite")
     # Header keys only
