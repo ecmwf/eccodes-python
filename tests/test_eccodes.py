@@ -37,6 +37,17 @@ def test_count_in_file():
         assert codes_count_in_file(f) == 1
 
 
+def test_new_from_message():
+    gid = codes_grib_new_from_samples("sh_sfc_grib1")
+    message = codes_get_message(gid)
+    codes_release(gid)
+    assert len(message) == 9358
+    newgid = codes_new_from_message(message)
+    assert codes_get(newgid, "packingType") == "spectral_complex"
+    assert codes_get(newgid, "gridType") == "sh"
+    codes_release(newgid)
+
+
 # GRIB
 def test_grib_read():
     gid = codes_grib_new_from_samples("regular_ll_sfc_grib1")
