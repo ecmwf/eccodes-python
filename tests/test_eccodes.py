@@ -90,11 +90,11 @@ def test_grib_keys_iterator():
 
 def test_grib_get_data():
     gid = codes_grib_new_from_samples("GRIB1")
-    ggd = eccodes.codes_grib_get_data(gid)
+    ggd = codes_grib_get_data(gid)
     assert len(ggd) == 65160
     codes_release(gid)
     gid = codes_grib_new_from_samples("reduced_gg_pl_32_grib2")
-    ggd = eccodes.codes_grib_get_data(gid)
+    ggd = codes_grib_get_data(gid)
     assert len(ggd) == 6114
     codes_release(gid)
 
@@ -117,6 +117,28 @@ def test_grib_nearest():
         nearest[3].index,
     )
     assert sorted(expected_indexes) == sorted(returned_indexes)
+    codes_release(gid)
+
+
+def test_grib_ecc_1042():
+    # Issue ECC-1042: Python3 interface writes integer arrays incorrectly
+    gid = codes_grib_new_from_samples("regular_ll_sfc_grib2")
+
+    # Trying write with inferred dtype
+    write_vals = np.array([1, 2, 3])
+    codes_set_values(gid, write_vals)
+    read_vals = codes_get_values(gid)
+    length = len(read_vals)
+    assert read_vals[0] == 1
+    assert read_vals[length - 1] == 3
+
+    # Trying write with explicit dtype
+    write_vals = np.array([1, 2, 3,], dtype=np.float,)
+    codes_set_values(gid, write_vals)
+    read_vals = codes_get_values(gid)
+    assert read_vals[0] == 1
+    assert read_vals[length - 1] == 3
+
     codes_release(gid)
 
 
