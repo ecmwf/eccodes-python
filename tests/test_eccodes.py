@@ -142,6 +142,20 @@ def test_grib_ecc_1042():
     codes_release(gid)
 
 
+def test_grib_ecc_1007():
+    # Issue ECC-1007: Python3 interface cannot write large arrays
+    gid = codes_grib_new_from_samples("regular_ll_sfc_grib2")
+    numvals = 1501 * 1501
+    values = np.zeros((numvals,))
+    values[0] = 12  # Make sure it's not a constant field
+    codes_set_values(gid, values)
+    maxv = eccodes.codes_get(gid, "max")
+    minv = eccodes.codes_get(gid, "min")
+    assert minv == 0
+    assert maxv == 12
+    codes_release(gid)
+
+
 # BUFR
 def test_bufr_read_write(tmpdir):
     bid = codes_bufr_new_from_samples("BUFR4")
