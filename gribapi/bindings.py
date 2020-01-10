@@ -25,7 +25,7 @@ import os
 
 import cffi
 
-__version__ = "0.9.5.dev0"
+__version__ = "0.9.5"
 
 LOG = logging.getLogger(__name__)
 
