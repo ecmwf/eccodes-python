@@ -11,7 +11,7 @@ Features:
 - PyPI package can be installed without compiling,
   at the cost of being twice as slow as the original *ecCodes* module,
 - an optional compile step makes the code as fast as the original module
-  but it needs a recent version of *ecCodes* `>= 2.16.0`.
+  but it needs a recent version of *ecCodes* `>= 2.17.0`.
 
 Limitations:
 
@@ -47,7 +47,7 @@ https://software.ecmwf.int/wiki/display/ECC/ecCodes+installation
 You may run a simple selfcheck command to ensure that your system is set up correctly::
 
     $ python -m eccodes selfcheck
-    Found: ecCodes v2.16.0.
+    Found: ecCodes v2.17.0.
     Your system is ready.
 
 
