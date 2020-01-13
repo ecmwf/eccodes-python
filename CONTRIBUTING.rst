@@ -8,7 +8,7 @@ Contributing
 Contributions are welcome, and they are greatly appreciated! Every
 little bit helps, and credit will always be given.
 
-Please note, that we have hooked a CLA assiatant to this GitHub Repo. Please accept the contributors license agreement to allow us to keep a legal track of contributions and keep this package open source for the future.  
+Please note, that we have hooked a CLA assiatant to this GitHub Repo. Please accept the contributors license agreement to allow us to keep a legal track of contributions and keep this package open source for the future.
 
 You can contribute in many ways:
 
@@ -82,13 +82,17 @@ you already have `virtualenv` and `Git` installed and ready to go.
 
 8. If your contribution is a bug fix or new feature, you should add a test to the existing test suite.
 
-9. Commit your changes and push your branch to GitHub::
+9. Format your Python code with the Black auto-formatter, to ensure the code is uses the library's style. We use the default Black configuration (88 lines per character and `"` instead of `'` for string encapsulation)::
+
+    $ black .
+
+10. Commit your changes and push your branch to GitHub::
 
     $ git add .
     $ git commit -m "Your detailed description of your changes."
     $ git push origin name-of-your-bugfix-or-feature
 
-10. Submit a pull request through the GitHub website.
+11. Submit a pull request through the GitHub website.
 
 Pull Request Guidelines
 -----------------------

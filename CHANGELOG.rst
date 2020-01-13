@@ -2,6 +2,15 @@
 Changelog for eccodes-python
 ============================
 
+0.9.5 (2020-01-15)
+-------------------
+- ECC-1029: Function-argument type-checking should be disabled by default.
+            To enable these checks, export ECCODES_PYTHON_ENABLE_TYPE_CHECKS=1
+- ECC-1032: Added codes_samples_path() and codes_definition_path()
+- ECC-1042: Python3 interface writes integer arrays incorrectly
+- ECC-794: Python3 interface: Expose the grib_get_data function
+
+
 0.9.4 (2019-11-27)
 ------------------
 

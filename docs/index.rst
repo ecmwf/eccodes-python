@@ -20,7 +20,7 @@ Features:
 - PyPI package can be installed without compiling,
   at the cost of being twice as slow as the original *ecCodes* module,
 - an optional compile step makes the code as fast as the original module
-  but it needs a recent version of *ecCodes* `>= 2.15.0`.
+  but it needs a recent version of *ecCodes* `>= 2.16.0`.
 
 Limitations:
 

@@ -129,6 +129,9 @@ void grib_multi_support_on(grib_context* c);
 void grib_multi_support_off(grib_context* c);
 long grib_get_api_version(void);
 
+char* grib_samples_path(const grib_context *c);
+char* grib_definition_path(const grib_context *c);
+
 grib_keys_iterator* grib_keys_iterator_new(grib_handle* h,unsigned long filter_flags, const char* name_space);
 bufr_keys_iterator* codes_bufr_keys_iterator_new(grib_handle* h, unsigned long filter_flags);
 
@@ -159,6 +162,9 @@ int grib_set_missing(grib_handle* h, const char* key);
 
 int grib_get_message_size(const grib_handle* h,size_t* size);
 int parse_keyval_string(const char *grib_tool, char *arg, int values_required, int default_type, grib_values values[], int *count);
+
+int grib_get_data(const grib_handle *h, double *lats, double *lons, double *values);
+
 
 /* EXPERIMENTAL */
 typedef struct codes_bufr_header {
