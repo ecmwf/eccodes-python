@@ -23,7 +23,7 @@ Installation
 
 The package is installed from PyPI with::
 
-    $ pip install eccodes-python
+    $ pip install eccodes
 
 
 System dependencies
@@ -84,7 +84,7 @@ Project resources
 
 ============= =========================================================
 Development   https://github.com/ecmwf/eccodes-python
-Download      https://pypi.org/project/eccodes-python
+Download      https://pypi.org/project/eccodes
 Code quality  .. image:: https://api.travis-ci.org/ecmwf/eccodes-python.svg?branch=master
                 :target: https://travis-ci.org/ecmwf/eccodes-python/branches
                 :alt: Build Status on Travis CI
