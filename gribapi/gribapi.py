@@ -83,8 +83,8 @@ def require(**_params_):
                 if isinstance(allowed_types, type):
                     allowed_types = (allowed_types,)
                 assert any([isinstance(param, type1) for type1 in allowed_types]), (
-                    "Parameter '%s' should be of type %s"
-                    % (name, " or ".join([t.__name__ for t in allowed_types]))
+                    "Parameter '%s' should be of type %s (instead of %s)"
+                    % (name, " or ".join([t.__name__ for t in allowed_types]), type(param).__name__)
                 )
             return _func_(**kw)
 
