@@ -505,7 +505,7 @@ def grib_gribex_mode_on():
 
     @exception CodesInternalError
     """
-    lib.grib_c_gribex_mode_on(ffi.NULL)
+    lib.grib_gribex_mode_on(ffi.NULL)
 
 
 def grib_gribex_mode_off():
@@ -514,7 +514,7 @@ def grib_gribex_mode_off():
 
     @exception CodesInternalError
     """
-    lib.grib_c_gribex_mode_off(ffi.NULL)
+    lib.grib_gribex_mode_off(ffi.NULL)
 
 
 @require(msgid=int, fileobj=file)
