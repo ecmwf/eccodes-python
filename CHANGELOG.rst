@@ -6,7 +6,7 @@ Changelog for eccodes-python
 -------------------
 
 - Function-argument type checks: Improve error message
-
+- Fix C function calls for codes_gribex_mode_on/codes_gribex_mode_off
 
 
 0.9.5 (2020-01-15)
