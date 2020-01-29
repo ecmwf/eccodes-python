@@ -8,7 +8,7 @@ Contributing
 Contributions are welcome, and they are greatly appreciated! Every
 little bit helps, and credit will always be given.
 
-Please note, that we have hooked a CLA assiatant to this GitHub Repo. Please accept the contributors license agreement to allow us to keep a legal track of contributions and keep this package open source for the future.
+Please note, that we have hooked a CLA assistant to this GitHub Repo. Please accept the contributors license agreement to allow us to keep a legal track of contributions and keep this package open source for the future.
 
 You can contribute in many ways:
 
@@ -71,7 +71,7 @@ you already have `virtualenv` and `Git` installed and ready to go.
 
    Now you can make your changes locally.
 
-6. The next step would be to run the test cases. `eccodes-python` uses py.test, you can run PyTest. Before you run pytest you should ensure all dependancies are installed::
+6. The next step would be to run the test cases. `eccodes-python` uses py.test, you can run PyTest. Before you run pytest you should ensure all dependencies are installed::
 
     $ pip install -r ci/requirements-dev.txt
     $ pytest -v --flakes

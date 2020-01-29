@@ -5,6 +5,7 @@ Changelog for eccodes-python
 0.9.6 (2020-MM-DD)
 -------------------
 
+- Update Copyright notices
 - Function-argument type checks: Improve error message
 - Fix C function calls for codes_gribex_mode_on/codes_gribex_mode_off
 
