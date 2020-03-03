@@ -2,7 +2,7 @@
 Changelog for eccodes-python
 ============================
 
-0.9.6 (2020-MM-DD)
+0.9.6 (2020-03-DD)
 -------------------
 
 - Update Copyright notices
