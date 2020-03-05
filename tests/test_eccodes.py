@@ -1,3 +1,14 @@
+#
+# (C) Copyright 2017- ECMWF.
+#
+# This software is licensed under the terms of the Apache Licence Version 2.0
+# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+#
+# In applying this licence, ECMWF does not waive the privileges and immunities
+# granted to it by virtue of its status as an intergovernmental organisation nor
+# does it submit to any jurisdiction.
+#
+
 import os.path
 import math
 import numpy as np
@@ -9,6 +20,29 @@ SAMPLE_DATA_FOLDER = os.path.join(os.path.dirname(__file__), "sample-data")
 TEST_DATA = os.path.join(SAMPLE_DATA_FOLDER, "era5-levels-members.grib")
 
 # ANY
+def test_version_info():
+    vinfo = codes_get_version_info()
+    assert len(vinfo) == 2
+
+
+def test_new_from_file():
+    samples_path = codes_samples_path()
+    if not os.path.isdir(samples_path):
+        return
+    fpath = os.path.join(samples_path, "GRIB2.tmpl")
+    with open(fpath, "rb") as f:
+        msgid = codes_new_from_file(f, CODES_PRODUCT_GRIB)
+        assert msgid
+    fpath = os.path.join(samples_path, "BUFR4.tmpl")
+    with open(fpath, "rb") as f:
+        msgid = codes_new_from_file(f, CODES_PRODUCT_BUFR)
+        assert msgid
+    fpath = os.path.join(samples_path, "clusters_grib1.tmpl")
+    with open(fpath, "rb") as f:
+        msgid = codes_new_from_file(f, CODES_PRODUCT_ANY)
+        assert msgid
+
+
 def test_any_read():
     samples_path = codes_samples_path()
     if not os.path.isdir(samples_path):
@@ -84,6 +118,27 @@ def test_grib_keys_iterator():
         keyval = codes_get_string(gid, keyname)
         count += 1
     assert count == 10
+    codes_keys_iterator_rewind(iterid)
+    codes_keys_iterator_delete(iterid)
+    codes_release(gid)
+
+
+def test_grib_keys_iterator_skip():
+    gid = codes_grib_new_from_samples("reduced_gg_pl_1280_grib1")
+    iterid = codes_keys_iterator_new(gid, "ls")
+    count = 0
+    codes_skip_computed(iterid)
+    # codes_skip_coded(iterid)
+    codes_skip_edition_specific(iterid)
+    codes_skip_duplicates(iterid)
+    codes_skip_read_only(iterid)
+    codes_skip_function(iterid)
+    while codes_keys_iterator_next(iterid):
+        keyname = codes_keys_iterator_get_name(iterid)
+        keyval = codes_get_string(gid, keyname)
+        count += 1
+    # centre, level and dataType
+    assert count == 3
     codes_keys_iterator_delete(iterid)
     codes_release(gid)
 
@@ -96,6 +151,21 @@ def test_grib_get_data():
     gid = codes_grib_new_from_samples("reduced_gg_pl_32_grib2")
     ggd = codes_grib_get_data(gid)
     assert len(ggd) == 6114
+    codes_release(gid)
+
+
+def test_grib_geoiterator():
+    gid = codes_grib_new_from_samples("reduced_gg_pl_256_grib2")
+    iterid = codes_grib_iterator_new(gid, 0)
+    i = 0
+    while 1:
+        result = codes_grib_iterator_next(iterid)
+        if not result:
+            break
+        [lat, lon, value] = result
+        i += 1
+    assert i == 348528
+    codes_grib_iterator_delete(iterid)
     codes_release(gid)
 
 
@@ -154,6 +224,11 @@ def test_grib_ecc_1007():
     assert minv == 0
     assert maxv == 12
     codes_release(gid)
+
+
+def test_gribex_mode():
+    codes_gribex_mode_on()
+    codes_gribex_mode_off()
 
 
 # BUFR
@@ -217,7 +292,7 @@ def test_bufr_keys_iterator():
         keyname = codes_bufr_keys_iterator_get_name(iterid)
         count += 1
     assert count == 156
-
+    codes_bufr_keys_iterator_rewind(iterid)
     codes_bufr_keys_iterator_delete(iterid)
     codes_release(bid)
 

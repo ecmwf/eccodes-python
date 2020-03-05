@@ -1,3 +1,14 @@
+#
+# (C) Copyright 2017- ECMWF.
+#
+# This software is licensed under the terms of the Apache Licence Version 2.0
+# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+#
+# In applying this licence, ECMWF does not waive the privileges and immunities
+# granted to it by virtue of its status as an intergovernmental organisation nor
+# does it submit to any jurisdiction.
+#
+
 """
 @package gribapi
 @brief This package is the \b Python 3 interface to ecCodes. It offers almost one to one bindings to the C API functions.
@@ -83,8 +94,12 @@ def require(**_params_):
                 if isinstance(allowed_types, type):
                     allowed_types = (allowed_types,)
                 assert any([isinstance(param, type1) for type1 in allowed_types]), (
-                    "Parameter '%s' should be of type %s"
-                    % (name, " or ".join([t.__name__ for t in allowed_types]))
+                    "Parameter '%s' should be of type %s (instead of %s)"
+                    % (
+                        name,
+                        " or ".join([t.__name__ for t in allowed_types]),
+                        type(param).__name__,
+                    )
                 )
             return _func_(**kw)
 
@@ -207,7 +222,7 @@ def GRIB_CHECK(errid):
     an error if that was set.
 
     @param errid  the C interface error id to check
-    @exception GribInternalError
+    @exception CodesInternalError
     """
     if errid:
         errors.raise_grib_error(errid)
@@ -227,7 +242,7 @@ def gts_new_from_file(fileobj, headers_only=False):
     @param fileobj        python file object
     @param headers_only   whether or not to load the message with the headers only
     @return               id of the GTS loaded in memory or None
-    @exception GribInternalError
+    @exception CodesInternalError
     """
     # err, h = err_last(lib.gts_new_from_file)(ffi.NULL, fileobj)
     err, h = err_last(lib.codes_handle_new_from_file)(
@@ -256,7 +271,7 @@ def metar_new_from_file(fileobj, headers_only=False):
     @param fileobj        python file object
     @param headers_only   whether or not to load the message with the headers only
     @return               id of the METAR loaded in memory or None
-    @exception GribInternalError
+    @exception CodesInternalError
     """
     # err, h = err_last(lib.metar_new_from_file)(ffi.NULL, fileobj)
     err, h = err_last(lib.codes_handle_new_from_file)(
@@ -288,7 +303,7 @@ def codes_new_from_file(fileobj, product_kind, headers_only=False):
     @param product_kind   one of CODES_PRODUCT_GRIB, CODES_PRODUCT_BUFR, CODES_PRODUCT_METAR or CODES_PRODUCT_GTS
     @param headers_only   whether or not to load the message with the headers only
     @return               id of the message loaded in memory or None
-    @exception GribInternalError
+    @exception CodesInternalError
     """
     if product_kind == CODES_PRODUCT_GRIB:
         return grib_new_from_file(fileobj, headers_only)
@@ -316,7 +331,7 @@ def any_new_from_file(fileobj, headers_only=False):
     @param fileobj        python file object
     @param headers_only   whether or not to load the message with the headers only
     @return               id of the message loaded in memory or None
-    @exception GribInternalError
+    @exception CodesInternalError
     """
     err, h = err_last(lib.codes_handle_new_from_file)(
         ffi.NULL, fileobj, CODES_PRODUCT_ANY
@@ -346,7 +361,7 @@ def bufr_new_from_file(fileobj, headers_only=False):
     @param fileobj        python file object
     @param headers_only   whether or not to load the message with the headers only
     @return               id of the BUFR loaded in memory or None
-    @exception GribInternalError
+    @exception CodesInternalError
     """
     err, h = err_last(lib.codes_handle_new_from_file)(
         ffi.NULL, fileobj, CODES_PRODUCT_BUFR
@@ -383,7 +398,7 @@ def grib_new_from_file(fileobj, headers_only=False):
     @param fileobj        python file object
     @param headers_only   whether or not to load the message with the headers only
     @return               id of the grib loaded in memory or None
-    @exception GribInternalError
+    @exception CodesInternalError
     """
     # err, h = err_last(lib.grib_new_from_file)(ffi.NULL, fileobj, headers_only)
     err, h = err_last(lib.codes_handle_new_from_file)(
@@ -419,7 +434,7 @@ def grib_count_in_file(fileobj):
 
     @param fileobj  python file object
     @return         number of messages in the file
-    @exception GribInternalError
+    @exception CodesInternalError
     """
     num_p = ffi.new("int*")
     err = lib.grib_count_in_file(ffi.NULL, fileobj, num_p)
@@ -431,7 +446,7 @@ def grib_multi_support_on():
     """
     @brief Turn on the support for multiple fields in a single GRIB message.
 
-    @exception GribInternalError
+    @exception CodesInternalError
     """
     lib.grib_multi_support_on(ffi.NULL)
 
@@ -440,7 +455,7 @@ def grib_multi_support_off():
     """
     @brief Turn off the support for multiple fields in a single GRIB message.
 
-    @exception GribInternalError
+    @exception CodesInternalError
     """
     lib.grib_multi_support_off(ffi.NULL)
 
@@ -453,7 +468,7 @@ def grib_release(msgid):
     \b Examples: \ref grib_get_keys.py "grib_get_keys.py"
 
     @param msgid      id of the message loaded in memory
-    @exception GribInternalError
+    @exception CodesInternalError
     """
     h = get_handle(msgid)
     GRIB_CHECK(lib.grib_handle_delete(h))
@@ -467,7 +482,7 @@ def grib_get_string(msgid, key):
     @param msgid       id of the message loaded in memory
     @param key         key name
     @return            string value of key
-    @exception GribInternalError
+    @exception CodesInternalError
     """
     length = grib_get_string_length(msgid, key)
 
@@ -487,7 +502,7 @@ def grib_set_string(msgid, key, value):
     @param msgid      id of the message loaded in memory
     @param key        key name
     @param value      string value
-    @exception GribInternalError
+    @exception CodesInternalError
     """
     h = get_handle(msgid)
     bvalue = value.encode(ENC)
@@ -499,18 +514,18 @@ def grib_gribex_mode_on():
     """
     @brief Turn on the compatibility mode with GRIBEX.
 
-    @exception GribInternalError
+    @exception CodesInternalError
     """
-    lib.grib_c_gribex_mode_on(ffi.NULL)
+    lib.grib_gribex_mode_on(ffi.NULL)
 
 
 def grib_gribex_mode_off():
     """
     @brief Turn off the compatibility mode with GRIBEX.
 
-    @exception GribInternalError
+    @exception CodesInternalError
     """
-    lib.grib_c_gribex_mode_off(ffi.NULL)
+    lib.grib_gribex_mode_off(ffi.NULL)
 
 
 @require(msgid=int, fileobj=file)
@@ -522,7 +537,7 @@ def grib_write(msgid, fileobj):
 
     @param msgid      id of the message loaded in memory
     @param fileobj    python file object
-    @exception GribInternalError
+    @exception CodesInternalError
     """
     msg_bytes = grib_get_message(msgid)
     fileobj.write(msg_bytes)
@@ -538,7 +553,7 @@ def grib_multi_write(multigribid, fileobj):
 
     @param multigribid      id of the multi-field grib loaded in memory
     @param fileobj          python file object
-    @exception GribInternalError
+    @exception CodesInternalError
     """
     mh = get_multi_handle(multigribid)
     GRIB_CHECK(lib.grib_multi_handle_write(mh, fileobj))
@@ -558,7 +573,7 @@ def grib_multi_append(ingribid, startsection, multigribid):
     @param startsection  starting from startsection (included) all the sections are copied
                          from the input single grib to the output multi-field grib
     @param multigribid   id of the output multi-field GRIB
-    @exception GribInternalError
+    @exception CodesInternalError
     """
     h = get_handle(ingribid)
     mh = get_multi_handle(multigribid)
@@ -574,7 +589,7 @@ def grib_get_size(msgid, key):
 
     @param msgid      id of the message loaded in memory
     @param key        name of the key
-    @exception GribInternalError
+    @exception CodesInternalError
     """
     h = get_handle(msgid)
     size_p = ffi.new("size_t*")
@@ -590,7 +605,7 @@ def grib_get_string_length(msgid, key):
 
     @param msgid      id of the message loaded in memory
     @param key        name of the key
-    @exception GribInternalError
+    @exception CodesInternalError
     """
     h = get_handle(msgid)
     size = ffi.new("size_t *")
@@ -610,7 +625,7 @@ def grib_skip_computed(iterid):
     @see grib_keys_iterator_new,grib_keys_iterator_next,grib_keys_iterator_delete
 
     @param iterid      keys iterator id
-    @exception GribInternalError
+    @exception CodesInternalError
     """
     gki = get_grib_keys_iterator(iterid)
     lib.grib_keys_iterator_set_flags(gki, lib.GRIB_KEYS_ITERATOR_SKIP_COMPUTED)
@@ -626,7 +641,7 @@ def grib_skip_coded(iterid):
     @see grib_keys_iterator_new,grib_keys_iterator_next,grib_keys_iterator_delete
 
     @param iterid      keys iterator id
-    @exception GribInternalError
+    @exception CodesInternalError
     """
     gki = get_grib_keys_iterator(iterid)
     lib.grib_keys_iterator_set_flags(gki, lib.GRIB_KEYS_ITERATOR_SKIP_CODED)
@@ -640,7 +655,7 @@ def grib_skip_edition_specific(iterid):
     @see grib_keys_iterator_new,grib_keys_iterator_next,grib_keys_iterator_delete
 
     @param iterid      keys iterator id
-    @exception GribInternalError
+    @exception CodesInternalError
     """
     gki = get_grib_keys_iterator(iterid)
     lib.grib_keys_iterator_set_flags(gki, lib.GRIB_KEYS_ITERATOR_SKIP_EDITION_SPECIFIC)
@@ -654,7 +669,7 @@ def grib_skip_duplicates(iterid):
     @see grib_keys_iterator_new,grib_keys_iterator_next,grib_keys_iterator_delete
 
     @param iterid      keys iterator id
-    @exception GribInternalError
+    @exception CodesInternalError
     """
     gki = get_grib_keys_iterator(iterid)
     lib.grib_keys_iterator_set_flags(gki, lib.GRIB_KEYS_ITERATOR_SKIP_DUPLICATES)
@@ -670,7 +685,7 @@ def grib_skip_read_only(iterid):
     @see grib_keys_iterator_new,grib_keys_iterator_next,grib_keys_iterator_delete
 
     @param iterid      keys iterator id
-    @exception GribInternalError
+    @exception CodesInternalError
     """
     gki = get_grib_keys_iterator(iterid)
     lib.grib_keys_iterator_set_flags(gki, lib.GRIB_KEYS_ITERATOR_SKIP_READ_ONLY)
@@ -684,7 +699,7 @@ def grib_skip_function(iterid):
     @see grib_keys_iterator_new,grib_keys_iterator_next,grib_keys_iterator_delete
 
     @param iterid      keys iterator id
-    @exception GribInternalError
+    @exception CodesInternalError
     """
     gki = get_grib_keys_iterator(iterid)
     lib.grib_keys_iterator_set_flags(gki, lib.GRIB_KEYS_ITERATOR_SKIP_FUNCTION)
@@ -718,7 +733,7 @@ def grib_iterator_delete(iterid):
     \b Examples: \ref grib_iterator.py "grib_iterator.py"
 
     @param iterid  geoiterator id
-    @exception GribInternalError
+    @exception CodesInternalError
     """
     ih = get_iterator(iterid)
     GRIB_CHECK(lib.grib_iterator_delete(ih))
@@ -733,7 +748,7 @@ def grib_iterator_next(iterid):
 
     @param    iterid geoiterator id
     @return   tuple with the latitude, longitude and value
-    @exception GribInternalError
+    @exception CodesInternalError
     """
     iterh = get_iterator(iterid)
     lat_p = ffi.new("double*")
@@ -767,10 +782,10 @@ def grib_keys_iterator_new(msgid, namespace=None):
 
     \b Examples: \ref grib_iterator.py "grib_iterator.py"
 
-    @param msgid      id of the message loaded in memory
+    @param msgid       id of the message loaded in memory
     @param namespace   the namespace of the keys to search for (all the keys if None)
-    @return keys iterator id to be used in the keys iterator functions
-    @exception GribInternalError
+    @return            keys iterator id to be used in the keys iterator functions
+    @exception CodesInternalError
     """
     h = get_handle(msgid)
     bnamespace = ffi.NULL if namespace is None else namespace.encode(ENC)
@@ -786,7 +801,7 @@ def grib_keys_iterator_next(iterid):
     \b Examples: \ref grib_keys_iterator.py "grib_keys_iterator.py"
 
     @param iterid      keys iterator id created with @ref grib_keys_iterator_new
-    @exception GribInternalError
+    @exception CodesInternalError
     """
     kih = get_grib_keys_iterator(iterid)
     res = lib.grib_keys_iterator_next(kih)
@@ -803,7 +818,7 @@ def grib_keys_iterator_delete(iterid):
     \b Examples: \ref grib_keys_iterator.py "grib_keys_iterator.py"
 
     @param iterid      keys iterator id created with @ref grib_keys_iterator_new
-    @exception GribInternalError
+    @exception CodesInternalError
     """
     # aa: THIS LEAKS MEMORY as it doesn't free all the connected iterators
     kih = get_grib_keys_iterator(iterid)
@@ -817,9 +832,9 @@ def grib_keys_iterator_get_name(iterid):
 
     \b Examples: \ref grib_keys_iterator.py "grib_keys_iterator.py"
 
-    @param iterid      keys iterator id created with @ref grib_keys_iterator_new
-    @return key name to be retrieved
-    @exception GribInternalError
+    @param iterid    keys iterator id created with @ref grib_keys_iterator_new
+    @return          key name to be retrieved
+    @exception CodesInternalError
     """
     # aa: missing call to grib_keys_iterator_get_accessor
     kih = get_grib_keys_iterator(iterid)
@@ -833,7 +848,7 @@ def grib_keys_iterator_rewind(iterid):
     @brief Rewind a keys iterator.
 
     @param iterid      keys iterator id created with @ref grib_keys_iterator_new
-    @exception GribInternalError
+    @exception CodesInternalError
     """
     gki = get_grib_keys_iterator(iterid)
     GRIB_CHECK(lib.grib_keys_iterator_rewind(gki))
@@ -853,7 +868,7 @@ def codes_bufr_keys_iterator_new(bufrid):
 
     @param bufrid   id of the BUFR message loaded in memory
     @return         keys iterator id to be used in the bufr keys iterator functions
-    @exception GribInternalError
+    @exception CodesInternalError
     """
     h = get_handle(bufrid)
     bki = lib.codes_bufr_keys_iterator_new(h, 0)
@@ -870,7 +885,7 @@ def codes_bufr_keys_iterator_next(iterid):
     \b Examples: \ref bufr_keys_iterator.py "bufr_keys_iterator.py"
 
     @param iterid      keys iterator id created with @ref codes_bufr_keys_iterator_new
-    @exception GribInternalError
+    @exception CodesInternalError
     """
     bki = get_bufr_keys_iterator(iterid)
     res = lib.codes_bufr_keys_iterator_next(bki)
@@ -887,7 +902,7 @@ def codes_bufr_keys_iterator_delete(iterid):
     \b Examples: \ref bufr_keys_iterator.py "bufr_keys_iterator.py"
 
     @param iterid      keys iterator id created with @ref codes_bufr_keys_iterator_new
-    @exception GribInternalError
+    @exception CodesInternalError
     """
     bki = get_bufr_keys_iterator(iterid)
     GRIB_CHECK(lib.codes_bufr_keys_iterator_delete(bki))
@@ -900,9 +915,9 @@ def codes_bufr_keys_iterator_get_name(iterid):
 
     \b Examples: \ref bufr_keys_iterator.py "bufr_keys_iterator.py"
 
-    @param iterid      keys iterator id created with @ref codes_bufr_keys_iterator_new
-    @return key name to be retrieved
-    @exception GribInternalError
+    @param iterid   keys iterator id created with @ref codes_bufr_keys_iterator_new
+    @return         key name to be retrieved
+    @exception CodesInternalError
     """
     bki = get_bufr_keys_iterator(iterid)
     name = lib.codes_bufr_keys_iterator_get_name(bki)
@@ -915,7 +930,7 @@ def codes_bufr_keys_iterator_rewind(iterid):
     @brief Rewind a BUFR keys iterator.
 
     @param iterid      keys iterator id created with @ref codes_bufr_keys_iterator_new
-    @exception GribInternalError
+    @exception CodesInternalError
     """
     bki = get_bufr_keys_iterator(iterid)
     GRIB_CHECK(lib.codes_bufr_keys_iterator_rewind(bki))
@@ -929,7 +944,7 @@ def grib_get_long(msgid, key):
     @param msgid       id of the message loaded in memory
     @param key         key name
     @return            value of key as int
-    @exception GribInternalError
+    @exception CodesInternalError
     """
     h = get_handle(msgid)
     value_p = ffi.new("long*")
@@ -946,7 +961,7 @@ def grib_get_double(msgid, key):
     @param msgid      id of the message loaded in memory
     @param key        key name
     @return           value of key as float
-    @exception GribInternalError
+    @exception CodesInternalError
     """
     h = get_handle(msgid)
     value_p = ffi.new("double*")
@@ -966,7 +981,7 @@ def grib_set_long(msgid, key, value):
     @param msgid      id of the message loaded in memory
     @param key        key name
     @param value      value to set
-    @exception GribInternalError,TypeError
+    @exception CodesInternalError,TypeError
     """
     try:
         value = int(value)
@@ -991,7 +1006,7 @@ def grib_set_double(msgid, key, value):
     @param msgid       id of the message loaded in memory
     @param key         key name
     @param value       float value to set
-    @exception GribInternalError,TypeError
+    @exception CodesInternalError,TypeError
     """
     try:
         value = float(value)
@@ -1015,7 +1030,7 @@ def codes_new_from_samples(samplename, product_kind):
     @param samplename     name of the sample to be used
     @param product_kind   CODES_PRODUCT_GRIB or CODES_PRODUCT_BUFR
     @return               id of the message loaded in memory
-    @exception GribInternalError
+    @exception CodesInternalError
     """
     if product_kind == CODES_PRODUCT_GRIB:
         return grib_new_from_samples(samplename)
@@ -1037,7 +1052,7 @@ def grib_new_from_samples(samplename):
 
     @param samplename   name of the sample to be used
     @return             id of the message loaded in memory
-    @exception GribInternalError
+    @exception CodesInternalError
     """
     h = lib.grib_handle_new_from_samples(ffi.NULL, samplename.encode(ENC))
     if h == ffi.NULL:
@@ -1058,7 +1073,7 @@ def codes_bufr_new_from_samples(samplename):
 
     @param samplename   name of the BUFR sample to be used
     @return             id of the message loaded in memory
-    @exception GribInternalError
+    @exception CodesInternalError
     """
     h = lib.codes_bufr_handle_new_from_samples(ffi.NULL, samplename.encode(ENC))
     if h == ffi.NULL:
@@ -1074,10 +1089,10 @@ def codes_bufr_copy_data(msgid_src, msgid_dst):
     Copies all the values in the data section that are present in the same position
     in the data tree and with the same number of values to the output handle.
 
-    @param msgid_src     id of the message from which the data are copied
-    @param msgid_dst     id of the message to which the data are copied
-    @return id of new message
-    @exception GribInternalError
+    @param msgid_src   id of the message from which the data are copied
+    @param msgid_dst   id of the message to which the data are copied
+    @return            id of new message
+    @exception CodesInternalError
     """
     h_src = get_handle(msgid_src)
     h_dst = get_handle(msgid_dst)
@@ -1098,7 +1113,7 @@ def grib_clone(msgid_src):
 
     @param msgid_src   id of message to be cloned
     @return            id of clone
-    @exception GribInternalError
+    @exception CodesInternalError
     """
     h_src = get_handle(msgid_src)
     h_dest = lib.grib_handle_clone(h_src)
@@ -1119,7 +1134,7 @@ def grib_set_double_array(msgid, key, inarray):
     @param msgid    id of the message loaded in memory
     @param key      key name
     @param inarray  tuple,list,array,numpy.ndarray
-    @exception GribInternalError
+    @exception CodesInternalError
     """
     h = get_handle(msgid)
     length = len(inarray)
@@ -1145,7 +1160,7 @@ def grib_get_double_array(msgid, key):
     @param msgid   id of the message loaded in memory
     @param key     key name
     @return        numpy.ndarray
-    @exception GribInternalError
+    @exception CodesInternalError
     """
     h = get_handle(msgid)
     nval = grib_get_size(msgid, key)
@@ -1165,7 +1180,7 @@ def grib_get_string_array(msgid, key):
     @param msgid   id of the message loaded in memory
     @param key     key name
     @return        list
-    @exception GribInternalError
+    @exception CodesInternalError
     """
     length = grib_get_string_length(msgid, key)
     size = grib_get_size(msgid, key)
@@ -1190,7 +1205,7 @@ def grib_set_string_array(msgid, key, inarray):
     @param msgid   id of the message loaded in memory
     @param key     key name
     @param inarray tuple,list,array
-    @exception GribInternalError
+    @exception CodesInternalError
     """
     h = get_handle(msgid)
     size = len(inarray)
@@ -1212,7 +1227,7 @@ def grib_set_long_array(msgid, key, inarray):
     @param msgid       id of the message loaded in memory
     @param key         key name
     @param inarray     tuple,list,python array,numpy.ndarray
-    @exception GribInternalError
+    @exception CodesInternalError
     """
     h = get_handle(msgid)
     if isinstance(inarray, np.ndarray):
@@ -1228,7 +1243,7 @@ def grib_get_long_array(msgid, key):
     @param msgid      id of the message loaded in memory
     @param key        key name
     @return           numpy.ndarray
-    @exception GribInternalError
+    @exception CodesInternalError
     """
     h = get_handle(msgid)
     nval = grib_get_size(msgid, key)
@@ -1246,8 +1261,8 @@ def grib_multi_new():
 
     \b Examples: \ref grib_multi_write.py "grib_multi_write.py"
 
-    @return id of the multi-field message
-    @exception GribInternalError
+    @return  id of the multi-field message
+    @exception CodesInternalError
     """
     mgid = lib.grib_multi_handle_new(ffi.NULL)
     if mgid == ffi.NULL:
@@ -1263,7 +1278,7 @@ def grib_multi_release(gribid):
     \b Examples: \ref grib_multi_write.py "grib_multi_write.py"
 
     @param gribid    id of the multi-field we want to release the memory for
-    @exception GribInternalError
+    @exception CodesInternalError
     """
     mh = get_multi_handle(gribid)
     GRIB_CHECK(lib.grib_multi_handle_delete(mh))
@@ -1278,7 +1293,7 @@ def grib_copy_namespace(gribid_src, namespace, gribid_dest):
     @param gribid_src     id of source message
     @param gribid_dest    id of destination message
     @param namespace      namespace to be copied
-    @exception GribInternalError
+    @exception CodesInternalError
     """
     h_src = get_handle(gribid_src)
     h_dest = get_handle(gribid_dest)
@@ -1295,8 +1310,8 @@ def grib_index_new_from_file(filename, keys):
     @param filename   path of the file to index on
     @param keys       sequence of keys to index on.
                       The type of the key can be explicitly declared appending :l for long (or alternatively :i), :d for double, :s for string to the key name.
-    @return index id
-    @exception GribInternalError
+    @return           index id
+    @exception CodesInternalError
     """
     ckeys = ",".join(keys)
     err, iid = err_last(lib.grib_index_new_from_file)(
@@ -1315,7 +1330,7 @@ def grib_index_add_file(indexid, filename):
 
     @param indexid    id of the index to add the file to
     @param filename   path of the file to be added to index
-    @exception GribInternalError
+    @exception CodesInternalError
     """
     iid = get_index(indexid)
     err = lib.grib_index_add_file(iid, filename.encode(ENC))
@@ -1330,7 +1345,7 @@ def grib_index_release(indexid):
     \b Examples: \ref grib_index.py "grib_index.py"
 
     @param indexid   id of an index created from a file.
-    @exception GribInternalError
+    @exception CodesInternalError
     """
     ih = get_index(indexid)
     lib.grib_index_delete(ih)
@@ -1347,7 +1362,7 @@ def grib_index_get_size(indexid, key):
     @param indexid    id of an index created from a file. The index must have been created on the given key.
     @param key        key for which the number of values is computed
     @return           number of distinct values for key in index
-    @exception GribInternalError
+    @exception CodesInternalError
     """
     ih = get_index(indexid)
     size_p = ffi.new("size_t*")
@@ -1369,7 +1384,7 @@ def grib_index_get_long(indexid, key):
     @param indexid   id of an index created from a file. The index must have been created with the key in argument.
     @param key       key for wich the values are returned
     @return          tuple with values of key in index
-    @exception GribInternalError
+    @exception CodesInternalError
     """
     nval = grib_index_get_size(indexid, key)
     ih = get_index(indexid)
@@ -1394,7 +1409,7 @@ def grib_index_get_string(indexid, key):
     @param indexid   id of an index created from a file. The index must have been created with the key in argument.
     @param key       key for wich the values are returned
     @return          tuple with values of key in index
-    @exception GribInternalError
+    @exception CodesInternalError
     """
     nval = grib_index_get_size(indexid, key)
     ih = get_index(indexid)
@@ -1420,7 +1435,7 @@ def grib_index_get_double(indexid, key):
     @param indexid  id of an index created from a file. The index must have been created with the key in argument.
     @param key      key for wich the values are returned
     @return         tuple with values of key in index
-    @exception GribInternalError
+    @exception CodesInternalError
     """
     nval = grib_index_get_size(indexid, key)
     ih = get_index(indexid)
@@ -1445,7 +1460,7 @@ def grib_index_select_long(indexid, key, value):
     @param indexid   id of an index created from a file. The index must have been created with the key in argument.
     @param key       key to be selected
     @param value     value of the key to select
-    @exception GribInternalError
+    @exception CodesInternalError
     """
     iid = get_index(indexid)
     GRIB_CHECK(lib.grib_index_select_long(iid, key.encode(ENC), value))
@@ -1464,7 +1479,7 @@ def grib_index_select_double(indexid, key, value):
     @param indexid   id of an index created from a file. The index must have been created with the key in argument.
     @param key       key to be selected
     @param value     value of the key to select
-    @exception GribInternalError
+    @exception CodesInternalError
     """
     iid = get_index(indexid)
     GRIB_CHECK(lib.grib_index_select_double(iid, key.encode(ENC), value))
@@ -1483,7 +1498,7 @@ def grib_index_select_string(indexid, key, value):
     @param indexid   id of an index created from a file. The index must have been created with the key in argument.
     @param key       key to be selected
     @param value     value of the key to select
-    @exception GribInternalError
+    @exception CodesInternalError
     """
     ih = get_index(indexid)
     GRIB_CHECK(lib.grib_index_select_string(ih, key.encode(ENC), value.encode(ENC)))
@@ -1503,7 +1518,7 @@ def grib_new_from_index(indexid):
 
     @param indexid   id of an index created from a file.
     @return          id of the message loaded in memory or None if end of index
-    @exception GribInternalError
+    @exception CodesInternalError
     """
     ih = get_index(indexid)
     err, h = err_last(lib.grib_handle_new_from_index)(ih)
@@ -1524,7 +1539,7 @@ def grib_get_message_size(msgid):
 
     @param msgid     id of the message loaded in memory
     @return          size in bytes of the message
-    @exception GribInternalError
+    @exception CodesInternalError
     """
     h = get_handle(msgid)
     size_p = ffi.new("size_t*")
@@ -1540,7 +1555,7 @@ def grib_get_message_offset(msgid):
 
     @param msgid    id of the message loaded in memory
     @return         offset in bytes of the message
-    @exception GribInternalError
+    @exception CodesInternalError
     """
     h = get_handle(msgid)
     offset_p = ffi.new("long int*")
@@ -1558,7 +1573,7 @@ def grib_get_double_element(msgid, key, index):
     @param key         the key to be searched
     @param index       zero based index of value to retrieve
     @return            value
-    @exception GribInternalError
+    @exception CodesInternalError
 
     """
     h = get_handle(msgid)
@@ -1577,7 +1592,7 @@ def grib_get_double_elements(msgid, key, indexes):
     @param key         the key to be searched
     @param indexes     list or tuple of indexes
     @return            numpy.ndarray
-    @exception GribInternalError
+    @exception CodesInternalError
 
     """
     nidx = len(indexes)
@@ -1598,7 +1613,7 @@ def grib_get_elements(msgid, key, indexes):
     @param key        the key to be searched
     @param indexes    single index or a list of indexes
     @return           numpy.ndarray containing the values of key for the given indexes
-    @exception GribInternalError
+    @exception CodesInternalError
     """
     try:
         iter(indexes)
@@ -1620,7 +1635,7 @@ def grib_set_missing(msgid, key):
 
     @param  msgid     id of the message loaded in memory
     @param  key       key name
-    @exception GribInternalError
+    @exception CodesInternalError
     """
     h = get_handle(msgid)
     GRIB_CHECK(lib.grib_set_missing(h, key.encode(ENC)))
@@ -1688,7 +1703,7 @@ def grib_is_missing(msgid, key):
     @param msgid      id of the message loaded in memory
     @param key        key name
     @return           0->not missing, 1->missing
-    @exception GribInternalError
+    @exception CodesInternalError
     """
     h = get_handle(msgid)
     err, value = err_last(lib.grib_is_missing)(h, key.encode(ENC))
@@ -1724,7 +1739,7 @@ def grib_find_nearest(gribid, inlat, inlon, is_lsm=False, npoints=1):
     @param is_lsm     True if the nearest land point is required otherwise False.
     @param npoints    1 or 4 nearest grid points
     @return           (npoints*(outlat,outlon,value,dist,index))
-    @exception GribInternalError
+    @exception CodesInternalError
     """
     h = get_handle(gribid)
     inlats_p = ffi.new("double*", inlat)
@@ -1804,7 +1819,7 @@ def grib_find_nearest_multiple(gribid, is_lsm, inlats, inlons):
     @param inlats     latitudes of the points to search for
     @param inlons     longitudes of the points to search for
     @return           (npoints*(outlat,outlon,value,dist,index))
-    @exception GribInternalError
+    @exception CodesInternalError
     """
     h = get_handle(gribid)
     npoints = len(inlats)
@@ -1861,7 +1876,7 @@ def grib_get_native_type(msgid, key):
     @param msgid   id of the message loaded in memory
     @param key     key we want to find out the type for
     @return        type of key given as input or None if not determined
-    @exception GribInternalError
+    @exception CodesInternalError
     """
     h = get_handle(msgid)
     itype_p = ffi.new("int*")
@@ -1891,8 +1906,8 @@ def grib_get(msgid, key, ktype=None):
     @param msgid      id of the message loaded in memory
     @param key        key name
     @param ktype      the type we want the output in (int, float or str), native type if not specified
-    @return scalar value of key as int, float or str
-    @exception GribInternalError
+    @return           scalar value of key as int, float or str
+    @exception CodesInternalError
     """
     if not key:
         raise ValueError("Invalid key name")
@@ -1925,7 +1940,7 @@ def grib_get_array(msgid, key, ktype=None):
     @param key        the key to get the value for
     @param ktype      the type we want the output in (can be int, float or string), native type if not specified
     @return           numpy.ndarray
-    @exception GribInternalError
+    @exception CodesInternalError
     """
     if ktype is None:
         ktype = grib_get_native_type(msgid, key)
@@ -1952,7 +1967,7 @@ def grib_get_values(gribid):
 
     @param gribid   id of the GRIB loaded in memory
     @return         numpy.ndarray
-    @exception GribInternalError
+    @exception CodesInternalError
     """
     return grib_get_double_array(gribid, "values")
 
@@ -2010,7 +2025,7 @@ def grib_set(msgid, key, value):
     @param msgid      id of the message loaded in memory
     @param key        key name
     @param value      scalar value to set for key
-    @exception GribInternalError
+    @exception CodesInternalError
     """
     if isinstance(value, int):
         grib_set_long(msgid, key, value)
@@ -2042,7 +2057,7 @@ def grib_set_array(msgid, key, value):
     @param msgid       id of the message loaded in memory
     @param key         key name
     @param value       array to set for key
-    @exception GribInternalError
+    @exception CodesInternalError
     """
     val0 = None
     try:
@@ -2076,8 +2091,8 @@ def grib_index_get(indexid, key, ktype=str):
     @param indexid   id of an index created from a file. The index must have been created on the given key.
     @param key       key for which the values are returned
     @param ktype     the type we want the output in (int, float or str), str if not specified
-    @return array of values
-    @exception GribInternalError
+    @return          array of values
+    @exception CodesInternalError
     """
     # Cannot get the native type of a key from an index
     # so right now the default is str. The user can overwrite
@@ -2107,7 +2122,7 @@ def grib_index_select(indexid, key, value):
     @param indexid   id of an index created from a file. The index must have been created with the key in argument.
     @param key       key to be selected
     @param value     value of the key to select
-    @exception GribInternalError
+    @exception CodesInternalError
     """
     if isinstance(value, int):
         grib_index_select_long(indexid, key, value)
@@ -2132,7 +2147,7 @@ def grib_index_write(indexid, filename):
 
     @param indexid    id of the index
     @param filename   path of file to save the index to
-    @exception GribInternalError
+    @exception CodesInternalError
     """
     ih = get_index(indexid)
     GRIB_CHECK(lib.grib_index_write(ih, filename.encode(ENC)))
@@ -2146,8 +2161,8 @@ def grib_index_read(filename):
     \b Examples: \ref grib_index.py "grib_index.py"
 
     @param filename    path of file to load the index from
-    @return id of the loaded index
-    @exception GribInternalError
+    @return            id of the loaded index
+    @exception CodesInternalError
     """
     err, ih = err_last(lib.grib_index_read)(ffi.NULL, filename.encode(ENC))
     GRIB_CHECK(err)
@@ -2225,7 +2240,7 @@ def grib_get_message(msgid):
 
     @param msgid      id of the message loaded in memory
     @return           binary string message associated with msgid
-    @exception GribInternalError
+    @exception CodesInternalError
     """
     h = get_handle(msgid)
     message_p = ffi.new("const void**")
@@ -2251,7 +2266,7 @@ def grib_new_from_message(message):
 
     @param         message binary string message
     @return        msgid of the newly created message
-    @exception GribInternalError
+    @exception CodesInternalError
     """
     if isinstance(message, str):
         message = message.encode(ENC)
@@ -2306,7 +2321,7 @@ def codes_bufr_multi_element_constant_arrays_on():
     @brief BUFR: Turn on the mode where you get multiple elements
     in constant arrays
 
-    @exception GribInternalError
+    @exception CodesInternalError
     """
     context = lib.grib_context_get_default()
     lib.codes_bufr_multi_element_constant_arrays_on(context)
@@ -2317,7 +2332,7 @@ def codes_bufr_multi_element_constant_arrays_off():
     @brief BUFR: Turn off the mode where you get multiple elements
     in constant arrays i.e. you get a single element
 
-    @exception GribInternalError
+    @exception CodesInternalError
     """
     context = lib.grib_context_get_default()
     lib.codes_bufr_multi_element_constant_arrays_off(context)
@@ -2343,7 +2358,7 @@ def codes_bufr_extract_headers(filepath, is_strict=True):
     @param filepath       path of input BUFR file
     @param is_strict      fail as soon as any invalid BUFR message is encountered
     @return               a generator that yields items (each item is a dictionary)
-    @exception GribInternalError
+    @exception CodesInternalError
     """
     context = lib.grib_context_get_default()
     headers_p = ffi.new("struct codes_bufr_header**")

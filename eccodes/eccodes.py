@@ -1,3 +1,14 @@
+#
+# (C) Copyright 2017- ECMWF.
+#
+# This software is licensed under the terms of the Apache Licence Version 2.0
+# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+#
+# In applying this licence, ECMWF does not waive the privileges and immunities
+# granted to it by virtue of its status as an intergovernmental organisation nor
+# does it submit to any jurisdiction.
+#
+#
 from gribapi import __version__
 from gribapi import bindings_version
 
@@ -5,6 +16,7 @@ from gribapi import GRIB_CHECK as CODES_CHECK
 
 from gribapi import CODES_PRODUCT_GRIB
 from gribapi import CODES_PRODUCT_BUFR
+from gribapi import CODES_PRODUCT_GTS
 from gribapi import CODES_PRODUCT_ANY
 from gribapi import GRIB_MISSING_DOUBLE as CODES_MISSING_DOUBLE
 from gribapi import GRIB_MISSING_LONG as CODES_MISSING_LONG

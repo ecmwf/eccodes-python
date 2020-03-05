@@ -1,5 +1,5 @@
 
-Python 3 interface to encode and decode GRIB and BUFR files via the
+Python 3 interface to decode and encode GRIB and BUFR files via the
 `ECMWF ecCodes library <https://software.ecmwf.int/wiki/display/ECC/>`_.
 
 Features:
@@ -11,7 +11,7 @@ Features:
 - PyPI package can be installed without compiling,
   at the cost of being twice as slow as the original *ecCodes* module,
 - an optional compile step makes the code as fast as the original module
-  but it needs a recent version of *ecCodes* `>= 2.16.0`.
+  but it needs a recent version of *ecCodes* `>= 2.17.0`.
 
 Limitations:
 
@@ -47,7 +47,7 @@ https://software.ecmwf.int/wiki/display/ECC/ecCodes+installation
 You may run a simple selfcheck command to ensure that your system is set up correctly::
 
     $ python -m eccodes selfcheck
-    Found: ecCodes v2.16.0.
+    Found: ecCodes v2.17.0.
     Your system is ready.
 
 
@@ -119,13 +119,12 @@ who participated in this project.
 License
 =======
 
-Copyright 2017-2019 European Centre for Medium-Range Weather Forecasts (ECMWF).
+ (C) Copyright 2017- ECMWF.
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at: http://www.apache.org/licenses/LICENSE-2.0.
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
+ This software is licensed under the terms of the Apache Licence Version 2.0
+ which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+
+ In applying this licence, ECMWF does not waive the privileges and immunities
+ granted to it by virtue of its status as an intergovernmental organisation nor
+ does it submit to any jurisdiction.
+
