@@ -231,6 +231,16 @@ def test_gribex_mode():
     codes_gribex_mode_off()
 
 
+def test_error_grib_new_from_file(tmp_path):
+    with pytest.raises(TypeError):
+        codes_grib_new_from_file(None)
+    p = tmp_path / "afile.txt"
+    p.write_text("GRIBxxxx")
+    with open(p, "rb") as f:
+        with pytest.raises(UnsupportedEditionError):
+            msg = codes_grib_new_from_file(f)
+
+
 # BUFR
 def test_bufr_read_write(tmpdir):
     bid = codes_bufr_new_from_samples("BUFR4")
