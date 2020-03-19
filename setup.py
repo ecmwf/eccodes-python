@@ -45,6 +45,8 @@ setuptools.setup(
     license="Apache License Version 2.0",
     url="https://github.com/ecmwf/eccodes-python",
     packages=setuptools.find_packages(),
+    setup_requires=["cffi"],
+    cffi_modules=["builder.py:ffibuilder"],
     include_package_data=True,
     install_requires=["attrs", "cffi", "numpy",],
     tests_require=["pytest", "pytest-cov", "pytest-flakes",],
