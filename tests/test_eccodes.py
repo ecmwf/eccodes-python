@@ -195,6 +195,17 @@ def test_grib_nearest():
     codes_release(gid)
 
 
+def test_grib_nearest_multiple():
+    gid = codes_grib_new_from_samples("reduced_gg_ml_grib2")
+    inlats = (30, 13)
+    inlons = (-20, 234)
+    is_lsm = False
+    nearest = codes_grib_find_nearest_multiple(gid, is_lsm, inlats, inlons)
+    codes_release(gid)
+    assert nearest[0].index == 1770
+    assert nearest[1].index == 2500
+
+
 def test_grib_ecc_1042():
     # Issue ECC-1042: Python3 interface writes integer arrays incorrectly
     gid = codes_grib_new_from_samples("regular_ll_sfc_grib2")
