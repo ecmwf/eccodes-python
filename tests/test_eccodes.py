@@ -20,6 +20,11 @@ SAMPLE_DATA_FOLDER = os.path.join(os.path.dirname(__file__), "sample-data")
 TEST_DATA = os.path.join(SAMPLE_DATA_FOLDER, "era5-levels-members.grib")
 
 # ANY
+def test_codes_definition_path():
+    df = codes_definition_path()
+    assert df is not None
+
+
 def test_version_info():
     vinfo = codes_get_version_info()
     assert len(vinfo) == 2
@@ -304,6 +309,21 @@ def test_bufr_keys_iterator():
     assert count == 156
     codes_bufr_keys_iterator_rewind(iterid)
     codes_bufr_keys_iterator_delete(iterid)
+    codes_release(bid)
+
+
+def test_bufr_multi_element_constant_arrays():
+    codes_bufr_multi_element_constant_arrays_off()
+    bid = codes_bufr_new_from_samples("BUFR3_local_satellite")
+    codes_set(bid, "unpack", 1)
+    assert codes_get_size(bid, "satelliteIdentifier") == 1
+    codes_release(bid)
+
+    codes_bufr_multi_element_constant_arrays_on()
+    bid = codes_bufr_new_from_samples("BUFR3_local_satellite")
+    codes_set(bid, "unpack", 1)
+    numSubsets = codes_get(bid, "numberOfSubsets")
+    assert codes_get_size(bid, "satelliteIdentifier") == numSubsets
     codes_release(bid)
 
 
