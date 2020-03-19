@@ -13,7 +13,6 @@ recursive-include ci *.ps1
 recursive-include docs *.gitkeep
 recursive-include docs *.py
 recursive-include docs *.rst
-recursive-include gribapi *.h
 recursive-include tests *.grib
 recursive-include tests *.ipynb
 recursive-include tests *.py
