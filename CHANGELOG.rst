@@ -5,6 +5,8 @@ Changelog for eccodes-python
 0.9.8 (2020-MM-DD)
 -------------------
 
+- Added more tests to increase coverage
+
 
 0.9.6 (2020-03-10)
 -------------------
