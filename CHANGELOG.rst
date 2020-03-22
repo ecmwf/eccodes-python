@@ -5,6 +5,7 @@ Changelog for eccodes-python
 0.9.8 (2020-MM-DD)
 -------------------
 
+- Removed obsolete function codes_close_file()
 - Added more tests to increase coverage
 
 

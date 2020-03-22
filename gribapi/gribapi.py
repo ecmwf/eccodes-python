@@ -417,15 +417,6 @@ def grib_new_from_file(fileobj, headers_only=False):
 
 
 @require(fileobj=file)
-def codes_close_file(fileobj):
-    # The client must call this BEFORE calling close() on the file object
-    # so we can remove the entry in our cache
-    # err = _internal.codes_c_close_file(fileobj.fileno(), fileobj.name)
-    # Note: it is safe calling close() here as subsequent calls will have no effect
-    fileobj.close()
-
-
-@require(fileobj=file)
 def grib_count_in_file(fileobj):
     """
     @brief Count the messages in a file.
