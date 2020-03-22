@@ -46,6 +46,12 @@ def test_new_from_file():
     with open(fpath, "rb") as f:
         msgid = codes_new_from_file(f, CODES_PRODUCT_ANY)
         assert msgid
+    with open(fpath, "rb") as f:
+        msgid = codes_new_from_file(f, CODES_PRODUCT_GTS)
+        assert msgid is None
+    with open(fpath, "rb") as f:
+        msgid = codes_new_from_file(f, CODES_PRODUCT_METAR)
+        assert msgid is None
 
 
 def test_any_read():
@@ -112,6 +118,17 @@ def test_grib_write(tmpdir):
     with open(str(output), "wb") as fout:
         codes_write(gid, fout)
     codes_release(gid)
+
+
+def test_grib_clone():
+    gid = codes_grib_new_from_samples("GRIB2")
+    clone = codes_clone(gid)
+    assert gid
+    assert clone
+    assert codes_get(clone, "identifier") == "GRIB"
+    assert codes_get(clone, "totalLength") == 179
+    codes_release(gid)
+    codes_release(clone)
 
 
 def test_grib_keys_iterator():
@@ -255,6 +272,23 @@ def test_error_grib_new_from_file(tmp_path):
     with open(p, "rb") as f:
         with pytest.raises(UnsupportedEditionError):
             msg = codes_grib_new_from_file(f)
+
+
+def test_grib_index_new_from_file(tmpdir):
+    samples_path = codes_samples_path()
+    if not os.path.isdir(samples_path):
+        return
+    fpath = os.path.join(samples_path, "GRIB1.tmpl")
+    index_keys = ["shortName", "level", "number", "step"]
+    iid = codes_index_new_from_file(fpath, index_keys)
+    index_file = str(tmpdir.join("temp.grib.index"))
+    codes_index_write(iid, index_file)
+
+    key = "level"
+    assert codes_index_get_size(iid, key) == 1
+    assert codes_index_get(iid, key) == ("500",)
+
+    codes_index_release(iid)
 
 
 # BUFR
