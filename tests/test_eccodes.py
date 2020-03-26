@@ -30,6 +30,11 @@ def test_version_info():
     assert len(vinfo) == 2
 
 
+def test_codes_is_defined():
+    gid = codes_grib_new_from_samples("sh_sfc_grib1")
+    assert codes_is_defined(gid, "JS")
+
+
 def test_new_from_file():
     samples_path = codes_samples_path()
     if not os.path.isdir(samples_path):
@@ -128,6 +133,14 @@ def test_grib_write(tmpdir):
     codes_release(gid)
 
 
+def test_grib_codes_set_missing():
+    gid = codes_grib_new_from_samples("reduced_rotated_gg_ml_grib2")
+    codes_set(gid, "typeOfFirstFixedSurface", "sfc")
+    codes_set_missing(gid, "scaleFactorOfFirstFixedSurface")
+    codes_set_missing(gid, "scaledValueOfFirstFixedSurface")
+    assert codes_is_missing(gid, "scaleFactorOfFirstFixedSurface")
+
+
 def test_grib_get_message_size():
     gid = codes_grib_new_from_samples("GRIB2")
     assert codes_get_message_size(gid) == 179
@@ -194,6 +207,25 @@ def test_grib_get_data():
     codes_release(gid)
 
 
+def test_grib_get_double_element():
+    gid = codes_grib_new_from_samples("gg_sfc_grib2")
+    elem = codes_get_double_element(gid, "values", 1)
+    assert math.isclose(elem, 259.9865, abs_tol=0.001)
+
+
+def test_grib_get_double_elements():
+    gid = codes_grib_new_from_samples("gg_sfc_grib1")
+    values = codes_get_values(gid)
+    num_vals = len(values)
+    indexes = [0, int(num_vals / 2), num_vals - 1]
+    elems = codes_get_double_elements(gid, "values", indexes)
+    assert math.isclose(elems[0], 259.6935, abs_tol=0.001)
+    assert math.isclose(elems[1], 299.9064, abs_tol=0.001)
+    assert math.isclose(elems[2], 218.8146, abs_tol=0.001)
+    elems2 = codes_get_elements(gid, "values", indexes)
+    assert elems == elems2
+
+
 def test_grib_geoiterator():
     gid = codes_grib_new_from_samples("reduced_gg_pl_256_grib2")
     iterid = codes_grib_iterator_new(gid, 0)
@@ -227,6 +259,9 @@ def test_grib_nearest():
         nearest[3].index,
     )
     assert sorted(expected_indexes) == sorted(returned_indexes)
+    # Cannot do more than 4 nearest neighbours
+    with pytest.raises(ValueError):
+        codes_grib_find_nearest(gid, lat, lon, False, 5)
     codes_release(gid)
 
 
