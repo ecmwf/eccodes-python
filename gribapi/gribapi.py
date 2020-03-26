@@ -1568,8 +1568,8 @@ def grib_get_double_element(msgid, key, index):
 
     """
     h = get_handle(msgid)
-    value_p = ffi.new("double *")
-    err = lib.grib_get_double_element(h, key.encode(ENC), index)
+    value_p = ffi.new("double*")
+    err = lib.grib_get_double_element(h, key.encode(ENC), index, value_p)#TODO
     GRIB_CHECK(err)
     return value_p[0]
 

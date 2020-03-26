@@ -6,6 +6,7 @@ Changelog for eccodes-python
 -------------------
 
 - Provide missing argument to exceptions
+- Fix grib_get_double_element(). Missing last argument
 - Removed obsolete function codes_close_file()
 - Added more tests to increase coverage
 
