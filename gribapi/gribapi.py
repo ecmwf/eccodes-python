@@ -159,13 +159,13 @@ def get_handle(msgid):
     assert isinstance(msgid, int)
     h = ffi.cast("grib_handle*", msgid)
     if h == ffi.NULL:
-        raise errors.InvalidGribError
+        raise errors.InvalidGribError(f"get_handle: Bad message ID {msgid}")
     return h
 
 
 def put_handle(handle):
     if handle == ffi.NULL:
-        raise errors.InvalidGribError
+        raise errors.InvalidGribError(f"put_handle: Bad message ID {handle}")
     return int(ffi.cast("unsigned long", handle))
 
 
@@ -864,7 +864,7 @@ def codes_bufr_keys_iterator_new(bufrid):
     h = get_handle(bufrid)
     bki = lib.codes_bufr_keys_iterator_new(h, 0)
     if bki == ffi.NULL:
-        raise errors.InvalidKeysIteratorError
+        raise errors.InvalidKeysIteratorError(f"BUFR keys iterator failed bufrid={bufrid}")
     return put_bufr_keys_iterator(bki)
 
 
@@ -1047,7 +1047,7 @@ def grib_new_from_samples(samplename):
     """
     h = lib.grib_handle_new_from_samples(ffi.NULL, samplename.encode(ENC))
     if h == ffi.NULL:
-        raise errors.FileNotFoundError(f"GRIB sample {samplename}")
+        raise errors.FileNotFoundError(f"grib_new_from_samples failed: {samplename}")
     return put_handle(h)
 
 
@@ -1068,7 +1068,7 @@ def codes_bufr_new_from_samples(samplename):
     """
     h = lib.codes_bufr_handle_new_from_samples(ffi.NULL, samplename.encode(ENC))
     if h == ffi.NULL:
-        raise errors.FileNotFoundError(f"BUFR sample {samplename}")
+        raise errors.FileNotFoundError(f"bufr_new_from_samples failed: {samplename}")
     return put_handle(h)
 
 
@@ -1109,7 +1109,7 @@ def grib_clone(msgid_src):
     h_src = get_handle(msgid_src)
     h_dest = lib.grib_handle_clone(h_src)
     if h_dest == ffi.NULL:
-        raise errors.InvalidGribError
+        raise errors.InvalidGribError("clone failed")
     return put_handle(h_dest)
 
 
@@ -1257,7 +1257,7 @@ def grib_multi_new():
     """
     mgid = lib.grib_multi_handle_new(ffi.NULL)
     if mgid == ffi.NULL:
-        raise errors.InvalidGribError
+        raise errors.InvalidGribError("GRIB multi new failed")
     return put_multi_handle(mgid)
 
 
@@ -2263,7 +2263,7 @@ def grib_new_from_message(message):
         message = message.encode(ENC)
     h = lib.grib_handle_new_from_message_copy(ffi.NULL, message, len(message))
     if h == ffi.NULL:
-        raise errors.InvalidGribError
+        raise errors.InvalidGribError("new_from_message failed")
     return put_handle(h)
 
 
