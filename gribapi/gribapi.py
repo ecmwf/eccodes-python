@@ -1047,7 +1047,7 @@ def grib_new_from_samples(samplename):
     """
     h = lib.grib_handle_new_from_samples(ffi.NULL, samplename.encode(ENC))
     if h == ffi.NULL:
-        errors.raise_grib_error(errors.FileNotFoundError)
+        raise errors.FileNotFoundError(f"GRIB sample {samplename}")
     return put_handle(h)
 
 
@@ -1068,7 +1068,7 @@ def codes_bufr_new_from_samples(samplename):
     """
     h = lib.codes_bufr_handle_new_from_samples(ffi.NULL, samplename.encode(ENC))
     if h == ffi.NULL:
-        errors.raise_grib_error(errors.FileNotFoundError)
+        raise errors.FileNotFoundError(f"BUFR sample {samplename}")
     return put_handle(h)
 
 
