@@ -111,6 +111,14 @@ def test_grib_read():
     codes_release(gid)
 
 
+def test_grib_set_error():
+    gid = codes_grib_new_from_samples("regular_ll_sfc_grib1")
+    with pytest.raises(TypeError):
+        codes_set_long(gid, "centre", "kwbc")
+    with pytest.raises(TypeError):
+        codes_set_double(gid, "centre", "kwbc")
+
+
 def test_grib_write(tmpdir):
     gid = codes_grib_new_from_samples("GRIB2")
     codes_set(gid, "backgroundProcess", 44)
@@ -118,6 +126,16 @@ def test_grib_write(tmpdir):
     with open(str(output), "wb") as fout:
         codes_write(gid, fout)
     codes_release(gid)
+
+
+def test_grib_get_message_size():
+    gid = codes_grib_new_from_samples("GRIB2")
+    assert codes_get_message_size(gid) == 179
+
+
+def test_grib_get_message_offset():
+    gid = codes_grib_new_from_samples("GRIB2")
+    assert codes_get_message_offset(gid) == 0
 
 
 def test_grib_clone():
@@ -213,7 +231,7 @@ def test_grib_nearest():
 
 
 def test_grib_nearest_multiple():
-    gid = codes_grib_new_from_samples("reduced_gg_ml_grib2")
+    gid = codes_new_from_samples("reduced_gg_ml_grib2", CODES_PRODUCT_GRIB)
     inlats = (30, 13)
     inlons = (-20, 234)
     is_lsm = False
@@ -264,7 +282,12 @@ def test_gribex_mode():
     codes_gribex_mode_off()
 
 
-def test_error_grib_new_from_file(tmp_path):
+def test_grib_new_from_samples_error():
+    with pytest.raises(FileNotFoundError):
+        gid = codes_new_from_samples("poopoo", CODES_PRODUCT_GRIB)
+
+
+def test_grib_new_from_file_error(tmp_path):
     with pytest.raises(TypeError):
         codes_grib_new_from_file(None)
     p = tmp_path / "afile.txt"
@@ -293,7 +316,7 @@ def test_grib_index_new_from_file(tmpdir):
 
 # BUFR
 def test_bufr_read_write(tmpdir):
-    bid = codes_bufr_new_from_samples("BUFR4")
+    bid = codes_new_from_samples("BUFR4", CODES_PRODUCT_BUFR)
     codes_set(bid, "unpack", 1)
     assert codes_get(bid, "typicalYear") == 2012
     assert codes_get(bid, "centre", str) == "ecmf"
@@ -370,6 +393,21 @@ def test_bufr_multi_element_constant_arrays():
     numSubsets = codes_get(bid, "numberOfSubsets")
     assert codes_get_size(bid, "satelliteIdentifier") == numSubsets
     codes_release(bid)
+
+
+def test_bufr_new_from_samples_error():
+    with pytest.raises(FileNotFoundError):
+        gid = codes_new_from_samples("poopoo", CODES_PRODUCT_BUFR)
+
+
+def test_bufr_get_message_size():
+    gid = codes_bufr_new_from_samples("BUFR3_local")
+    assert codes_get_message_size(gid) == 279
+
+
+def test_bufr_get_message_offset():
+    gid = codes_bufr_new_from_samples("BUFR3_local")
+    assert codes_get_message_offset(gid) == 0
 
 
 # Experimental feature
