@@ -864,7 +864,9 @@ def codes_bufr_keys_iterator_new(bufrid):
     h = get_handle(bufrid)
     bki = lib.codes_bufr_keys_iterator_new(h, 0)
     if bki == ffi.NULL:
-        raise errors.InvalidKeysIteratorError(f"BUFR keys iterator failed bufrid={bufrid}")
+        raise errors.InvalidKeysIteratorError(
+            f"BUFR keys iterator failed bufrid={bufrid}"
+        )
     return put_bufr_keys_iterator(bki)
 
 
@@ -1569,7 +1571,7 @@ def grib_get_double_element(msgid, key, index):
     """
     h = get_handle(msgid)
     value_p = ffi.new("double*")
-    err = lib.grib_get_double_element(h, key.encode(ENC), index, value_p)#TODO
+    err = lib.grib_get_double_element(h, key.encode(ENC), index, value_p)  # TODO
     GRIB_CHECK(err)
     return value_p[0]
 
