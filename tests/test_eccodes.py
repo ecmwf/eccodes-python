@@ -204,6 +204,10 @@ def test_grib_get_data():
     gid = codes_grib_new_from_samples("reduced_gg_pl_32_grib2")
     ggd = codes_grib_get_data(gid)
     assert len(ggd) == 6114
+    elem1 = ggd[0]  # This is a 'Bunch' derived off dict
+    assert "lat" in elem1.keys()
+    assert "lon" in elem1.keys()
+    assert "value" in elem1.keys()
     codes_release(gid)
 
 

@@ -1971,7 +1971,7 @@ def grib_get_data(gribid):
     @brief Get array containing latitude/longitude and data values.
 
     @param gribid   id of the GRIB loaded in memory
-    @return         lat/lon/values list
+    @return         lat/lon/value list. Each list element is a dict
     """
     npoints = grib_get(gribid, "numberOfDataPoints")
     outlats_p = ffi.new("double[]", npoints)
