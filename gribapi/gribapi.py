@@ -166,7 +166,7 @@ def get_handle(msgid):
 def put_handle(handle):
     if handle == ffi.NULL:
         raise errors.InvalidGribError(f"put_handle: Bad message ID {handle}")
-    return int(ffi.cast("unsigned long", handle))
+    return int(ffi.cast("size_t", handle))
 
 
 def get_multi_handle(msgid):
@@ -175,7 +175,7 @@ def get_multi_handle(msgid):
 
 
 def put_multi_handle(handle):
-    return int(ffi.cast("unsigned long", handle))
+    return int(ffi.cast("size_t", handle))
 
 
 def get_index(indexid):
@@ -184,7 +184,7 @@ def get_index(indexid):
 
 
 def put_index(indexh):
-    return int(ffi.cast("unsigned long", indexh))
+    return int(ffi.cast("size_t", indexh))
 
 
 def get_iterator(iterid):
@@ -193,7 +193,7 @@ def get_iterator(iterid):
 
 
 def put_iterator(iterh):
-    return int(ffi.cast("unsigned long", iterh))
+    return int(ffi.cast("size_t", iterh))
 
 
 def get_grib_keys_iterator(iterid):
@@ -202,7 +202,7 @@ def get_grib_keys_iterator(iterid):
 
 
 def put_grib_keys_iterator(iterh):
-    return int(ffi.cast("unsigned long", iterh))
+    return int(ffi.cast("size_t", iterh))
 
 
 def get_bufr_keys_iterator(iterid):
@@ -211,7 +211,7 @@ def get_bufr_keys_iterator(iterid):
 
 
 def put_bufr_keys_iterator(iterh):
-    return int(ffi.cast("unsigned long", iterh))
+    return int(ffi.cast("size_t", iterh))
 
 
 # @cond
