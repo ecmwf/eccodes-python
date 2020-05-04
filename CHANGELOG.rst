@@ -5,7 +5,7 @@ Changelog for eccodes-python
 0.9.8 (2020-MM-DD)
 -------------------
 
-- ECC-1108: Python3 bindings under Windows: use of GRIB/BUFR handle causes crash
+- ECC-1108: Python3 bindings under Windows: use of handle causes crash
 - Provide missing argument to exceptions
 - Fix grib_get_double_element(). Missing last argument
 - Removed obsolete function codes_close_file()
