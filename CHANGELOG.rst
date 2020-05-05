@@ -10,6 +10,7 @@ Changelog for eccodes-python
 - Fix grib_get_double_element(). Missing last argument
 - Removed obsolete function codes_close_file()
 - Add more tests to increase coverage
+- Add .__next__() method to eccodes.CodesFile class (pull request #15)
 
 
 0.9.6 (2020-03-10)
