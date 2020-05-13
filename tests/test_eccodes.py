@@ -396,6 +396,21 @@ def test_bufr_encode(tmpdir):
     codes_release(ibufr)
 
 
+def test_bufr_set_string_array(tmpdir):
+    ibufr = codes_bufr_new_from_samples("BUFR3_local_satellite")
+    codes_set(ibufr, "numberOfSubsets", 3)
+    codes_set(ibufr, "unexpandedDescriptors", 307022)
+    inputVals = ("ARD2-LPTR", "EPFL-LPTR", "BOU2-LPTR")
+    codes_set_array(ibufr, "stationOrSiteName", inputVals)
+    codes_set(ibufr, "pack", 1)
+    outputVals = codes_get_string_array(ibufr, "stationOrSiteName")
+    assert len(outputVals) == 3
+    assert outputVals[0] == "ARD2-LPTR"
+    assert outputVals[1] == "EPFL-LPTR"
+    assert outputVals[2] == "BOU2-LPTR"
+    codes_release(ibufr)
+
+
 def test_bufr_keys_iterator():
     bid = codes_bufr_new_from_samples("BUFR3_local_satellite")
     # Header keys only
