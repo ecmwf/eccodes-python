@@ -1238,10 +1238,17 @@ def grib_get_long_array(msgid, key):
     @return           numpy.ndarray
     @exception CodesInternalError
     """
+
+    # See ECC-1113
+    sizeof_long = ffi.sizeof("long")
+    dataType = "int64"
+    if sizeof_long == 4:
+        dataType = "int32"
+
     h = get_handle(msgid)
     nval = grib_get_size(msgid, key)
     length_p = ffi.new("size_t*", nval)
-    arr = np.empty((nval,), dtype="int64")
+    arr = np.empty((nval,), dtype=dataType)
     vals_p = ffi.cast("long *", arr.ctypes.data)
     err = lib.grib_get_long_array(h, key.encode(ENC), vals_p, length_p)
     GRIB_CHECK(err)

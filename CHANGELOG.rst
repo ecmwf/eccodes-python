@@ -5,6 +5,7 @@ Changelog for eccodes-python
 0.9.8 (2020-MM-DD)
 -------------------
 
+- ECC-1113: Python3 bindings under Windows: codes_get_long_array returns incorrect values
 - ECC-1108: Python3 bindings under Windows: use of handle causes crash
 - ECC-1110: Removed obsolete function codes_close_file()
 - Provide missing argument to exceptions
