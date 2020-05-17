@@ -105,6 +105,11 @@ def test_new_from_message():
     codes_release(newgid)
 
 
+def test_gts_header():
+    codes_gts_header(True)
+    codes_gts_header(False)
+
+
 # GRIB
 def test_grib_read():
     gid = codes_grib_new_from_samples("regular_ll_sfc_grib1")
