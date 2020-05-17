@@ -97,6 +97,13 @@ def test_new_from_message():
     assert codes_get(newgid, "gridType") == "sh"
     codes_release(newgid)
 
+    # This time read from a string rather than a file
+    metar_str = "METAR LQMO 022350Z 09003KT 6000 FEW010 SCT035 BKN060 08/08 Q1003="
+    newgid = codes_new_from_message(metar_str)
+    cccc = codes_get(newgid, "CCCC")
+    assert cccc == "LQMO"
+    codes_release(newgid)
+
 
 # GRIB
 def test_grib_read():
