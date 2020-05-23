@@ -2302,7 +2302,7 @@ def grib_set_definitions_path(defs_path):
     @param defs_path   definitions path
     """
     context = lib.grib_context_get_default()
-    lib.grib_context_set_definitions_path(context, defs_path.encpde(ENC))
+    lib.grib_context_set_definitions_path(context, defs_path.encode(ENC))
 
 
 @require(samples_path=str)

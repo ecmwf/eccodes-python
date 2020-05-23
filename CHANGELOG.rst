@@ -9,6 +9,7 @@ Changelog for eccodes-python
 - ECC-1108: Python3 bindings under Windows: use of handle causes crash
 - ECC-1110: Removed obsolete function codes_close_file()
 - Provide missing argument to exceptions
+- Fix codes_set_definitions_path() typo
 - Fix grib_get_double_element(). Missing last argument
 - Add more tests to increase coverage
 - Add .__next__() method to eccodes.CodesFile class (pull request #15)
