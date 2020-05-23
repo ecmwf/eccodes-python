@@ -375,9 +375,20 @@ def test_grib_index_new_from_file(tmpdir):
     assert codes_index_get_size(iid, key) == 1
     assert codes_index_get(iid, key) == ("500",)
 
+    codes_index_select(iid, "level", 500)
+    codes_index_select(iid, "shortName", "z")
+    codes_index_select(iid, "number", 0)
+    codes_index_select(iid, "step", 0)
+    gid = codes_new_from_index(iid)
+    assert codes_get(gid, "edition") == 1
+    assert codes_get(gid, "totalLength") == 107
+    codes_release(gid)
+
     codes_index_release(iid)
+
     iid2 = codes_index_read(index_file)
-    assert codes_index_get(iid2, "shortName") == ('z',)
+    assert codes_index_get(iid2, "shortName") == ("z",)
+    codes_index_release(iid2)
 
 
 # BUFR
