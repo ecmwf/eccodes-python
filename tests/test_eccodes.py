@@ -376,6 +376,8 @@ def test_grib_index_new_from_file(tmpdir):
     assert codes_index_get(iid, key) == ("500",)
 
     codes_index_release(iid)
+    iid2 = codes_index_read(index_file)
+    assert codes_index_get(iid2, "shortName") == ('z',)
 
 
 # BUFR
