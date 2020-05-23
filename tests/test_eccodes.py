@@ -25,6 +25,19 @@ def test_codes_definition_path():
     assert df is not None
 
 
+def test_codes_samples_path():
+    sp = codes_samples_path()
+    assert sp is not None
+
+
+def test_codes_set_definitions_path():
+    codes_set_definitions_path(codes_definition_path())
+
+
+def test_codes_set_samples_path():
+    codes_set_samples_path(codes_samples_path())
+
+
 def test_version_info():
     vinfo = codes_get_version_info()
     assert len(vinfo) == 2
