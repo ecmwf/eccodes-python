@@ -166,6 +166,23 @@ def test_grib_codes_set_missing():
     assert codes_is_missing(gid, "scaleFactorOfFirstFixedSurface")
 
 
+def test_grib_set_key_vals():
+    gid = codes_grib_new_from_samples("GRIB2")
+    # String
+    codes_set_key_vals(gid, "shortName=z,dataDate=20201112")
+    assert codes_get(gid, "shortName", str) == "z"
+    assert codes_get(gid, "date", int) == 20201112
+    # List
+    codes_set_key_vals(gid, ["shortName=2t", "dataDate=20191010"])
+    assert codes_get(gid, "shortName", str) == "2t"
+    assert codes_get(gid, "date", int) == 20191010
+    # Dictionary
+    codes_set_key_vals(gid, {"shortName": "msl", "dataDate": 20181010})
+    assert codes_get(gid, "shortName", str) == "msl"
+    assert codes_get(gid, "date", int) == 20181010
+    codes_release(gid)
+
+
 def test_grib_get_message_size():
     gid = codes_grib_new_from_samples("GRIB2")
     assert codes_get_message_size(gid) == 179
