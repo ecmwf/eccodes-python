@@ -408,6 +408,18 @@ def test_grib_index_new_from_file(tmpdir):
     codes_index_release(iid2)
 
 
+def test_grib_multi_support_reset_file():
+    # TODO: read an actual multi-field GRIB here
+    samples_path = codes_samples_path()
+    if not os.path.isdir(samples_path):
+        return
+    fpath = os.path.join(samples_path, "GRIB2.tmpl")
+    codes_grib_multi_support_on()
+    with open(fpath, "rb") as f:
+        codes_grib_multi_support_reset_file(f)
+    codes_grib_multi_support_off()
+
+
 # BUFR
 def test_bufr_read_write(tmpdir):
     bid = codes_new_from_samples("BUFR4", CODES_PRODUCT_BUFR)
