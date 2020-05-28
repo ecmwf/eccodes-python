@@ -451,6 +451,15 @@ def grib_multi_support_off():
     lib.grib_multi_support_off(ffi.NULL)
 
 
+@require(fileobj=file)
+def grib_multi_support_reset_file(fileobj):
+    """
+    @brief Reset file handle in multiple field support mode
+    """
+    context = lib.grib_context_get_default()
+    GRIB_CHECK(lib.grib_multi_support_reset_file(context, fileobj))
+
+
 @require(msgid=int)
 def grib_release(msgid):
     """

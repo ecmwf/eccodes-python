@@ -32,6 +32,7 @@ from gribapi import grib_new_from_file as codes_grib_new_from_file
 from gribapi import grib_count_in_file as codes_count_in_file
 from gribapi import grib_multi_support_on as codes_grib_multi_support_on
 from gribapi import grib_multi_support_off as codes_grib_multi_support_off
+from gribapi import grib_multi_support_reset_file as codes_grib_multi_support_reset_file
 from gribapi import grib_release as codes_release
 from gribapi import grib_get_string as codes_get_string
 from gribapi import grib_set_string as codes_set_string

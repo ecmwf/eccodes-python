@@ -127,6 +127,7 @@ void grib_context_set_definitions_path(grib_context* c, const char* path);
 void grib_context_set_samples_path(grib_context* c, const char* path);
 void grib_multi_support_on(grib_context* c);
 void grib_multi_support_off(grib_context* c);
+void grib_multi_support_reset_file(grib_context* c, FILE* f);
 long grib_get_api_version(void);
 
 char* grib_samples_path(const grib_context *c);
