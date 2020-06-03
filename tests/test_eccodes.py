@@ -81,6 +81,7 @@ def test_any_read():
         msgid = codes_any_new_from_file(f)
         assert codes_get(msgid, "edition") == 1
         assert codes_get(msgid, "identifier") == "GRIB"
+        assert codes_get(msgid, "identifier", str) == "GRIB"
         codes_release(msgid)
 
     fpath = os.path.join(samples_path, "BUFR3.tmpl")
@@ -141,12 +142,20 @@ def test_grib_read():
     codes_release(gid)
 
 
+def test_grib_set_string():
+    gid = codes_grib_new_from_samples("regular_gg_sfc_grib2")
+    codes_set(gid, "gridType", "reduced_gg")
+    codes_release(gid)
+
+
 def test_grib_set_error():
     gid = codes_grib_new_from_samples("regular_ll_sfc_grib1")
     with pytest.raises(TypeError):
         codes_set_long(gid, "centre", "kwbc")
     with pytest.raises(TypeError):
         codes_set_double(gid, "centre", "kwbc")
+    with pytest.raises(CodesInternalError):
+        codes_set(gid, "centre", [])
 
 
 def test_grib_write(tmpdir):
@@ -180,6 +189,20 @@ def test_grib_set_key_vals():
     codes_set_key_vals(gid, {"shortName": "msl", "dataDate": 20181010})
     assert codes_get(gid, "shortName", str) == "msl"
     assert codes_get(gid, "date", int) == 20181010
+    codes_release(gid)
+
+
+def test_grib_get_error():
+    gid = codes_grib_new_from_samples("regular_ll_sfc_grib2")
+    with pytest.raises(ValueError):
+        codes_get(gid, None)
+
+
+def test_grib_get_array():
+    gid = codes_grib_new_from_samples("reduced_gg_pl_160_grib1")
+    pl = codes_get_array(gid, "pl")
+    assert pl[0] == 18
+    pl = codes_get_array(gid, "pl", int)
     codes_release(gid)
 
 
