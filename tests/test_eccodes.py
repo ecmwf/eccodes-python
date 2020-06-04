@@ -48,6 +48,14 @@ def test_codes_is_defined():
     assert codes_is_defined(gid, "JS")
 
 
+def test_codes_get_native_type():
+    gid = codes_grib_new_from_samples("GRIB2")
+    assert codes_get_native_type(gid, "date") is int
+    assert codes_get_native_type(gid, "referenceValue") is float
+    assert codes_get_native_type(gid, "stepType") is str
+    assert codes_get_native_type(gid, "section_1") is None
+
+
 def test_new_from_file():
     samples_path = codes_samples_path()
     if not os.path.isdir(samples_path):
