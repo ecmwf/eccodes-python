@@ -202,7 +202,10 @@ def test_grib_get_array():
     gid = codes_grib_new_from_samples("reduced_gg_pl_160_grib1")
     pl = codes_get_array(gid, "pl")
     assert pl[0] == 18
-    pl = codes_get_array(gid, "pl", int)
+    pli = codes_get_array(gid, "pl", int)
+    assert np.array_equal(pl, pli)
+    pls = codes_get_array(gid, "centre", str)
+    assert pls == ["ecmf"]
     codes_release(gid)
 
 
