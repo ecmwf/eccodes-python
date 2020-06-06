@@ -1,4 +1,6 @@
 """
+Note: The high-level Python interface is currently experimental and may change in a future release.
+
 ``CodesFile`` class that implements a file that is readable by ecCodes and
 closes itself and its messages when it is no longer needed.
 

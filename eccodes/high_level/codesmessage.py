@@ -1,4 +1,6 @@
 """
+Note: The high-level Python interface is currently experimental and may change in a future release.
+
 ``CodesMessage`` class that implements a message readable by ecCodes that
 allows access to the message's key-value pairs in a dictionary-like manner
 and closes the message when it is no longer needed, coordinating this with
