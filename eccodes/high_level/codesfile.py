@@ -51,6 +51,7 @@ class CodesFile(io.FileIO):
     def __exit__(self, exception_type, exception_value, traceback):
         """Close all open messages, release file handle and close file."""
         while self.open_messages:
+            # Note: if the message was manually closed, this has no effect
             self.open_messages.pop().close()
         self.file_handle.close()
 

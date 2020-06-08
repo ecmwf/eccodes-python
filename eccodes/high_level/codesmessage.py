@@ -164,7 +164,9 @@ class CodesMessage(object):
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         """Release message handle and inform host file of release."""
-        eccodes.codes_release(self.codes_id)
+        if self.codes_id != -1:
+            eccodes.codes_release(self.codes_id)
+            self.codes_id = -1
 
     def __enter__(self):
         return self

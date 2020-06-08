@@ -13,6 +13,7 @@ Changelog for eccodes-python
 - Add .__next__() method to eccodes.CodesFile class (pull request #15)
 - ECC-1113: Python3 bindings under Windows: codes_get_long_array returns incorrect values
 - ECC-1108: Python3 bindings under Windows: use of handle causes crash
+- ECC-1121: Segfault when closing GribFile if messages are closed manually
 
 
 0.9.6 (2020-03-10)
