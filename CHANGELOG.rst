@@ -2,7 +2,7 @@
 Changelog for eccodes-python
 ============================
 
-0.9.8 (2020-MM-DD)
+0.9.8 (2020-06-26)
 -------------------
 
 - ECC-1110: Removed obsolete function codes_close_file()
