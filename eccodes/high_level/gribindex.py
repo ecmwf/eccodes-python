@@ -1,4 +1,6 @@
 """
+Note: The high-level Python interface is currently experimental and may change in a future release.
+
 ``GribIndex`` class that implements a GRIB index that allows access to
 ecCodes's index functionality.
 

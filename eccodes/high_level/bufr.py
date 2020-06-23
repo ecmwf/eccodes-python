@@ -1,4 +1,7 @@
 """
+
+Note: The high-level Python interface is currently experimental and may change in a future release.
+
 Classes for handling BUFR with a high level interface.
 
 ``BufrFiles`` can be treated mostly as regular files and used as context

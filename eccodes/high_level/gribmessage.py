@@ -1,4 +1,7 @@
 """
+
+Note: The high-level Python interface is currently experimental and may change in a future release.
+
 ``GribMessage`` class that implements a GRIB message that allows access to
 the message's key-value pairs in a dictionary-like manner and closes the
 message when it is no longer needed, coordinating this with its host file.

@@ -159,14 +159,14 @@ def get_handle(msgid):
     assert isinstance(msgid, int)
     h = ffi.cast("grib_handle*", msgid)
     if h == ffi.NULL:
-        raise errors.InvalidGribError
+        raise errors.InvalidGribError(f"get_handle: Bad message ID {msgid}")
     return h
 
 
 def put_handle(handle):
     if handle == ffi.NULL:
-        raise errors.InvalidGribError
-    return int(ffi.cast("unsigned long", handle))
+        raise errors.InvalidGribError(f"put_handle: Bad message ID {handle}")
+    return int(ffi.cast("size_t", handle))
 
 
 def get_multi_handle(msgid):
@@ -175,7 +175,7 @@ def get_multi_handle(msgid):
 
 
 def put_multi_handle(handle):
-    return int(ffi.cast("unsigned long", handle))
+    return int(ffi.cast("size_t", handle))
 
 
 def get_index(indexid):
@@ -184,7 +184,7 @@ def get_index(indexid):
 
 
 def put_index(indexh):
-    return int(ffi.cast("unsigned long", indexh))
+    return int(ffi.cast("size_t", indexh))
 
 
 def get_iterator(iterid):
@@ -193,7 +193,7 @@ def get_iterator(iterid):
 
 
 def put_iterator(iterh):
-    return int(ffi.cast("unsigned long", iterh))
+    return int(ffi.cast("size_t", iterh))
 
 
 def get_grib_keys_iterator(iterid):
@@ -202,7 +202,7 @@ def get_grib_keys_iterator(iterid):
 
 
 def put_grib_keys_iterator(iterh):
-    return int(ffi.cast("unsigned long", iterh))
+    return int(ffi.cast("size_t", iterh))
 
 
 def get_bufr_keys_iterator(iterid):
@@ -211,7 +211,7 @@ def get_bufr_keys_iterator(iterid):
 
 
 def put_bufr_keys_iterator(iterh):
-    return int(ffi.cast("unsigned long", iterh))
+    return int(ffi.cast("size_t", iterh))
 
 
 # @cond
@@ -417,15 +417,6 @@ def grib_new_from_file(fileobj, headers_only=False):
 
 
 @require(fileobj=file)
-def codes_close_file(fileobj):
-    # The client must call this BEFORE calling close() on the file object
-    # so we can remove the entry in our cache
-    # err = _internal.codes_c_close_file(fileobj.fileno(), fileobj.name)
-    # Note: it is safe calling close() here as subsequent calls will have no effect
-    fileobj.close()
-
-
-@require(fileobj=file)
 def grib_count_in_file(fileobj):
     """
     @brief Count the messages in a file.
@@ -458,6 +449,15 @@ def grib_multi_support_off():
     @exception CodesInternalError
     """
     lib.grib_multi_support_off(ffi.NULL)
+
+
+@require(fileobj=file)
+def grib_multi_support_reset_file(fileobj):
+    """
+    @brief Reset file handle in multiple field support mode
+    """
+    context = lib.grib_context_get_default()
+    GRIB_CHECK(lib.grib_multi_support_reset_file(context, fileobj))
 
 
 @require(msgid=int)
@@ -873,7 +873,9 @@ def codes_bufr_keys_iterator_new(bufrid):
     h = get_handle(bufrid)
     bki = lib.codes_bufr_keys_iterator_new(h, 0)
     if bki == ffi.NULL:
-        raise errors.InvalidKeysIteratorError
+        raise errors.InvalidKeysIteratorError(
+            f"BUFR keys iterator failed bufrid={bufrid}"
+        )
     return put_bufr_keys_iterator(bki)
 
 
@@ -1056,7 +1058,7 @@ def grib_new_from_samples(samplename):
     """
     h = lib.grib_handle_new_from_samples(ffi.NULL, samplename.encode(ENC))
     if h == ffi.NULL:
-        errors.raise_grib_error(errors.FileNotFoundError)
+        raise errors.FileNotFoundError(f"grib_new_from_samples failed: {samplename}")
     return put_handle(h)
 
 
@@ -1077,7 +1079,7 @@ def codes_bufr_new_from_samples(samplename):
     """
     h = lib.codes_bufr_handle_new_from_samples(ffi.NULL, samplename.encode(ENC))
     if h == ffi.NULL:
-        errors.raise_grib_error(errors.FileNotFoundError)
+        raise errors.FileNotFoundError(f"bufr_new_from_samples failed: {samplename}")
     return put_handle(h)
 
 
@@ -1118,7 +1120,7 @@ def grib_clone(msgid_src):
     h_src = get_handle(msgid_src)
     h_dest = lib.grib_handle_clone(h_src)
     if h_dest == ffi.NULL:
-        raise errors.InvalidGribError
+        raise errors.InvalidGribError("clone failed")
     return put_handle(h_dest)
 
 
@@ -1245,10 +1247,17 @@ def grib_get_long_array(msgid, key):
     @return           numpy.ndarray
     @exception CodesInternalError
     """
+
+    # See ECC-1113
+    sizeof_long = ffi.sizeof("long")
+    dataType = "int64"
+    if sizeof_long == 4:
+        dataType = "int32"
+
     h = get_handle(msgid)
     nval = grib_get_size(msgid, key)
     length_p = ffi.new("size_t*", nval)
-    arr = np.empty((nval,), dtype="int64")
+    arr = np.empty((nval,), dtype=dataType)
     vals_p = ffi.cast("long *", arr.ctypes.data)
     err = lib.grib_get_long_array(h, key.encode(ENC), vals_p, length_p)
     GRIB_CHECK(err)
@@ -1266,7 +1275,7 @@ def grib_multi_new():
     """
     mgid = lib.grib_multi_handle_new(ffi.NULL)
     if mgid == ffi.NULL:
-        raise errors.InvalidGribError
+        raise errors.InvalidGribError("GRIB multi new failed")
     return put_multi_handle(mgid)
 
 
@@ -1577,8 +1586,8 @@ def grib_get_double_element(msgid, key, index):
 
     """
     h = get_handle(msgid)
-    value_p = ffi.new("double *")
-    err = lib.grib_get_double_element(h, key.encode(ENC), index)
+    value_p = ffi.new("double*")
+    err = lib.grib_get_double_element(h, key.encode(ENC), index, value_p)  # TODO
     GRIB_CHECK(err)
     return value_p[0]
 
@@ -1978,7 +1987,7 @@ def grib_get_data(gribid):
     @brief Get array containing latitude/longitude and data values.
 
     @param gribid   id of the GRIB loaded in memory
-    @return         lat/lon/values list
+    @return         lat/lon/value list. Each list element is a dict
     """
     npoints = grib_get(gribid, "numberOfDataPoints")
     outlats_p = ffi.new("double[]", npoints)
@@ -2272,7 +2281,7 @@ def grib_new_from_message(message):
         message = message.encode(ENC)
     h = lib.grib_handle_new_from_message_copy(ffi.NULL, message, len(message))
     if h == ffi.NULL:
-        raise errors.InvalidGribError
+        raise errors.InvalidGribError("new_from_message failed")
     return put_handle(h)
 
 
@@ -2302,7 +2311,7 @@ def grib_set_definitions_path(defs_path):
     @param defs_path   definitions path
     """
     context = lib.grib_context_get_default()
-    lib.grib_context_set_definitions_path(context, defs_path.encpde(ENC))
+    lib.grib_context_set_definitions_path(context, defs_path.encode(ENC))
 
 
 @require(samples_path=str)

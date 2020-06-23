@@ -11,7 +11,7 @@ Features:
 - PyPI package can be installed without compiling,
   at the cost of being twice as slow as the original *ecCodes* module,
 - an optional compile step makes the code as fast as the original module
-  but it needs a recent version of *ecCodes* `>= 2.17.0`.
+  but it needs the recommended (the most up-to-date) version of *ecCodes*.
 
 Limitations:
 
@@ -23,7 +23,7 @@ Installation
 
 The package is installed from PyPI with::
 
-    $ pip install eccodes-python
+    $ pip install eccodes
 
 
 System dependencies
@@ -47,7 +47,7 @@ https://software.ecmwf.int/wiki/display/ECC/ecCodes+installation
 You may run a simple selfcheck command to ensure that your system is set up correctly::
 
     $ python -m eccodes selfcheck
-    Found: ecCodes v2.17.0.
+    Found: ecCodes v2.18.0.
     Your system is ready.
 
 
@@ -84,7 +84,7 @@ Project resources
 
 ============= =========================================================
 Development   https://github.com/ecmwf/eccodes-python
-Download      https://pypi.org/project/eccodes-python
+Download      https://pypi.org/project/eccodes
 Code quality  .. image:: https://api.travis-ci.org/ecmwf/eccodes-python.svg?branch=master
                 :target: https://travis-ci.org/ecmwf/eccodes-python/branches
                 :alt: Build Status on Travis CI

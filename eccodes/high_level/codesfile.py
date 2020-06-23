@@ -1,4 +1,6 @@
 """
+Note: The high-level Python interface is currently experimental and may change in a future release.
+
 ``CodesFile`` class that implements a file that is readable by ecCodes and
 closes itself and its messages when it is no longer needed.
 
@@ -49,9 +51,9 @@ class CodesFile(io.FileIO):
     def __exit__(self, exception_type, exception_value, traceback):
         """Close all open messages, release file handle and close file."""
         while self.open_messages:
+            # Note: if the message was manually closed, this has no effect
             self.open_messages.pop().close()
-        eccodes.codes_close_file(self.file_handle)
-        # self.file_handle.close()
+        self.file_handle.close()
 
     def __len__(self):
         """Return total number of messages in file."""
@@ -72,3 +74,6 @@ class CodesFile(io.FileIO):
             return self.MessageClass(self)
         except IOError:
             raise StopIteration()
+
+    def __next__(self):
+        return self.next()

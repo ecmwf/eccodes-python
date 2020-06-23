@@ -1,4 +1,6 @@
 """
+Note: The high-level Python interface is currently experimental and may change in a future release.
+
 ``CodesMessage`` class that implements a message readable by ecCodes that
 allows access to the message's key-value pairs in a dictionary-like manner
 and closes the message when it is no longer needed, coordinating this with
@@ -162,7 +164,9 @@ class CodesMessage(object):
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         """Release message handle and inform host file of release."""
-        eccodes.codes_release(self.codes_id)
+        if self.codes_id != -1:
+            eccodes.codes_release(self.codes_id)
+            self.codes_id = -1
 
     def __enter__(self):
         return self

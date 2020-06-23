@@ -17,6 +17,7 @@ from gribapi import GRIB_CHECK as CODES_CHECK
 from gribapi import CODES_PRODUCT_GRIB
 from gribapi import CODES_PRODUCT_BUFR
 from gribapi import CODES_PRODUCT_GTS
+from gribapi import CODES_PRODUCT_METAR
 from gribapi import CODES_PRODUCT_ANY
 from gribapi import GRIB_MISSING_DOUBLE as CODES_MISSING_DOUBLE
 from gribapi import GRIB_MISSING_LONG as CODES_MISSING_LONG
@@ -27,11 +28,11 @@ from gribapi import codes_new_from_file
 from gribapi import any_new_from_file as codes_any_new_from_file
 from gribapi import bufr_new_from_file as codes_bufr_new_from_file
 from gribapi import grib_new_from_file as codes_grib_new_from_file
-from gribapi import codes_close_file
 
 from gribapi import grib_count_in_file as codes_count_in_file
 from gribapi import grib_multi_support_on as codes_grib_multi_support_on
 from gribapi import grib_multi_support_off as codes_grib_multi_support_off
+from gribapi import grib_multi_support_reset_file as codes_grib_multi_support_reset_file
 from gribapi import grib_release as codes_release
 from gribapi import grib_get_string as codes_get_string
 from gribapi import grib_set_string as codes_set_string

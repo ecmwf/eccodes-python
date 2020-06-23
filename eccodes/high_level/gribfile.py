@@ -1,4 +1,6 @@
 """
+Note: The high-level Python interface is currently experimental and may change in a future release.
+
 ``GribFile`` class that implements a GRIB file that closes itself and its
 messages when it is no longer needed.
 

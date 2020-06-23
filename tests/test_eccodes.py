@@ -20,9 +20,40 @@ SAMPLE_DATA_FOLDER = os.path.join(os.path.dirname(__file__), "sample-data")
 TEST_DATA = os.path.join(SAMPLE_DATA_FOLDER, "era5-levels-members.grib")
 
 # ANY
+def test_codes_definition_path():
+    df = codes_definition_path()
+    assert df is not None
+
+
+def test_codes_samples_path():
+    sp = codes_samples_path()
+    assert sp is not None
+
+
+def test_codes_set_definitions_path():
+    codes_set_definitions_path(codes_definition_path())
+
+
+def test_codes_set_samples_path():
+    codes_set_samples_path(codes_samples_path())
+
+
 def test_version_info():
     vinfo = codes_get_version_info()
     assert len(vinfo) == 2
+
+
+def test_codes_is_defined():
+    gid = codes_grib_new_from_samples("sh_sfc_grib1")
+    assert codes_is_defined(gid, "JS")
+
+
+def test_codes_get_native_type():
+    gid = codes_grib_new_from_samples("GRIB2")
+    assert codes_get_native_type(gid, "date") is int
+    assert codes_get_native_type(gid, "referenceValue") is float
+    assert codes_get_native_type(gid, "stepType") is str
+    assert codes_get_native_type(gid, "section_1") is None
 
 
 def test_new_from_file():
@@ -41,6 +72,12 @@ def test_new_from_file():
     with open(fpath, "rb") as f:
         msgid = codes_new_from_file(f, CODES_PRODUCT_ANY)
         assert msgid
+    with open(fpath, "rb") as f:
+        msgid = codes_new_from_file(f, CODES_PRODUCT_GTS)
+        assert msgid is None
+    with open(fpath, "rb") as f:
+        msgid = codes_new_from_file(f, CODES_PRODUCT_METAR)
+        assert msgid is None
 
 
 def test_any_read():
@@ -52,6 +89,7 @@ def test_any_read():
         msgid = codes_any_new_from_file(f)
         assert codes_get(msgid, "edition") == 1
         assert codes_get(msgid, "identifier") == "GRIB"
+        assert codes_get(msgid, "identifier", str) == "GRIB"
         codes_release(msgid)
 
     fpath = os.path.join(samples_path, "BUFR3.tmpl")
@@ -81,6 +119,18 @@ def test_new_from_message():
     assert codes_get(newgid, "gridType") == "sh"
     codes_release(newgid)
 
+    # This time read from a string rather than a file
+    metar_str = "METAR LQMO 022350Z 09003KT 6000 FEW010 SCT035 BKN060 08/08 Q1003="
+    newgid = codes_new_from_message(metar_str)
+    cccc = codes_get(newgid, "CCCC")
+    assert cccc == "LQMO"
+    codes_release(newgid)
+
+
+def test_gts_header():
+    codes_gts_header(True)
+    codes_gts_header(False)
+
 
 # GRIB
 def test_grib_read():
@@ -100,6 +150,22 @@ def test_grib_read():
     codes_release(gid)
 
 
+def test_grib_set_string():
+    gid = codes_grib_new_from_samples("regular_gg_sfc_grib2")
+    codes_set(gid, "gridType", "reduced_gg")
+    codes_release(gid)
+
+
+def test_grib_set_error():
+    gid = codes_grib_new_from_samples("regular_ll_sfc_grib1")
+    with pytest.raises(TypeError):
+        codes_set_long(gid, "centre", "kwbc")
+    with pytest.raises(TypeError):
+        codes_set_double(gid, "centre", "kwbc")
+    with pytest.raises(CodesInternalError):
+        codes_set(gid, "centre", [])
+
+
 def test_grib_write(tmpdir):
     gid = codes_grib_new_from_samples("GRIB2")
     codes_set(gid, "backgroundProcess", 44)
@@ -107,6 +173,69 @@ def test_grib_write(tmpdir):
     with open(str(output), "wb") as fout:
         codes_write(gid, fout)
     codes_release(gid)
+
+
+def test_grib_codes_set_missing():
+    gid = codes_grib_new_from_samples("reduced_rotated_gg_ml_grib2")
+    codes_set(gid, "typeOfFirstFixedSurface", "sfc")
+    codes_set_missing(gid, "scaleFactorOfFirstFixedSurface")
+    codes_set_missing(gid, "scaledValueOfFirstFixedSurface")
+    assert codes_is_missing(gid, "scaleFactorOfFirstFixedSurface")
+
+
+def test_grib_set_key_vals():
+    gid = codes_grib_new_from_samples("GRIB2")
+    # String
+    codes_set_key_vals(gid, "shortName=z,dataDate=20201112")
+    assert codes_get(gid, "shortName", str) == "z"
+    assert codes_get(gid, "date", int) == 20201112
+    # List
+    codes_set_key_vals(gid, ["shortName=2t", "dataDate=20191010"])
+    assert codes_get(gid, "shortName", str) == "2t"
+    assert codes_get(gid, "date", int) == 20191010
+    # Dictionary
+    codes_set_key_vals(gid, {"shortName": "msl", "dataDate": 20181010})
+    assert codes_get(gid, "shortName", str) == "msl"
+    assert codes_get(gid, "date", int) == 20181010
+    codes_release(gid)
+
+
+def test_grib_get_error():
+    gid = codes_grib_new_from_samples("regular_ll_sfc_grib2")
+    with pytest.raises(ValueError):
+        codes_get(gid, None)
+
+
+def test_grib_get_array():
+    gid = codes_grib_new_from_samples("reduced_gg_pl_160_grib1")
+    pl = codes_get_array(gid, "pl")
+    assert pl[0] == 18
+    pli = codes_get_array(gid, "pl", int)
+    assert np.array_equal(pl, pli)
+    pls = codes_get_array(gid, "centre", str)
+    assert pls == ["ecmf"]
+    codes_release(gid)
+
+
+def test_grib_get_message_size():
+    gid = codes_grib_new_from_samples("GRIB2")
+    assert codes_get_message_size(gid) == 179
+
+
+def test_grib_get_message_offset():
+    gid = codes_grib_new_from_samples("GRIB2")
+    assert codes_get_message_offset(gid) == 0
+
+
+def test_grib_clone():
+    gid = codes_grib_new_from_samples("GRIB2")
+    clone = codes_clone(gid)
+    assert gid
+    assert clone
+    assert codes_get(clone, "identifier") == "GRIB"
+    assert codes_get(clone, "totalLength") == 179
+    codes_release(gid)
+    codes_release(clone)
 
 
 def test_grib_keys_iterator():
@@ -151,7 +280,30 @@ def test_grib_get_data():
     gid = codes_grib_new_from_samples("reduced_gg_pl_32_grib2")
     ggd = codes_grib_get_data(gid)
     assert len(ggd) == 6114
+    elem1 = ggd[0]  # This is a 'Bunch' derived off dict
+    assert "lat" in elem1.keys()
+    assert "lon" in elem1.keys()
+    assert "value" in elem1.keys()
     codes_release(gid)
+
+
+def test_grib_get_double_element():
+    gid = codes_grib_new_from_samples("gg_sfc_grib2")
+    elem = codes_get_double_element(gid, "values", 1)
+    assert math.isclose(elem, 259.9865, abs_tol=0.001)
+
+
+def test_grib_get_double_elements():
+    gid = codes_grib_new_from_samples("gg_sfc_grib1")
+    values = codes_get_values(gid)
+    num_vals = len(values)
+    indexes = [0, int(num_vals / 2), num_vals - 1]
+    elems = codes_get_double_elements(gid, "values", indexes)
+    assert math.isclose(elems[0], 259.6935, abs_tol=0.001)
+    assert math.isclose(elems[1], 299.9064, abs_tol=0.001)
+    assert math.isclose(elems[2], 218.8146, abs_tol=0.001)
+    elems2 = codes_get_elements(gid, "values", indexes)
+    assert elems == elems2
 
 
 def test_grib_geoiterator():
@@ -187,7 +339,21 @@ def test_grib_nearest():
         nearest[3].index,
     )
     assert sorted(expected_indexes) == sorted(returned_indexes)
+    # Cannot do more than 4 nearest neighbours
+    with pytest.raises(ValueError):
+        codes_grib_find_nearest(gid, lat, lon, False, 5)
     codes_release(gid)
+
+
+def test_grib_nearest_multiple():
+    gid = codes_new_from_samples("reduced_gg_ml_grib2", CODES_PRODUCT_GRIB)
+    inlats = (30, 13)
+    inlons = (-20, 234)
+    is_lsm = False
+    nearest = codes_grib_find_nearest_multiple(gid, is_lsm, inlats, inlons)
+    codes_release(gid)
+    assert nearest[0].index == 1770
+    assert nearest[1].index == 2500
 
 
 def test_grib_ecc_1042():
@@ -231,9 +397,66 @@ def test_gribex_mode():
     codes_gribex_mode_off()
 
 
+def test_grib_new_from_samples_error():
+    with pytest.raises(FileNotFoundError):
+        gid = codes_new_from_samples("poopoo", CODES_PRODUCT_GRIB)
+
+
+def test_grib_new_from_file_error(tmp_path):
+    with pytest.raises(TypeError):
+        codes_grib_new_from_file(None)
+    p = tmp_path / "afile.txt"
+    p.write_text("GRIBxxxx")
+    with open(p, "rb") as f:
+        with pytest.raises(UnsupportedEditionError):
+            msg = codes_grib_new_from_file(f)
+
+
+def test_grib_index_new_from_file(tmpdir):
+    samples_path = codes_samples_path()
+    if not os.path.isdir(samples_path):
+        return
+    fpath = os.path.join(samples_path, "GRIB1.tmpl")
+    index_keys = ["shortName", "level", "number", "step"]
+    iid = codes_index_new_from_file(fpath, index_keys)
+    index_file = str(tmpdir.join("temp.grib.index"))
+    codes_index_write(iid, index_file)
+
+    key = "level"
+    assert codes_index_get_size(iid, key) == 1
+    assert codes_index_get(iid, key) == ("500",)
+
+    codes_index_select(iid, "level", 500)
+    codes_index_select(iid, "shortName", "z")
+    codes_index_select(iid, "number", 0)
+    codes_index_select(iid, "step", 0)
+    gid = codes_new_from_index(iid)
+    assert codes_get(gid, "edition") == 1
+    assert codes_get(gid, "totalLength") == 107
+    codes_release(gid)
+
+    codes_index_release(iid)
+
+    iid2 = codes_index_read(index_file)
+    assert codes_index_get(iid2, "shortName") == ("z",)
+    codes_index_release(iid2)
+
+
+def test_grib_multi_support_reset_file():
+    # TODO: read an actual multi-field GRIB here
+    samples_path = codes_samples_path()
+    if not os.path.isdir(samples_path):
+        return
+    fpath = os.path.join(samples_path, "GRIB2.tmpl")
+    codes_grib_multi_support_on()
+    with open(fpath, "rb") as f:
+        codes_grib_multi_support_reset_file(f)
+    codes_grib_multi_support_off()
+
+
 # BUFR
 def test_bufr_read_write(tmpdir):
-    bid = codes_bufr_new_from_samples("BUFR4")
+    bid = codes_new_from_samples("BUFR4", CODES_PRODUCT_BUFR)
     codes_set(bid, "unpack", 1)
     assert codes_get(bid, "typicalYear") == 2012
     assert codes_get(bid, "centre", str) == "ecmf"
@@ -274,6 +497,21 @@ def test_bufr_encode(tmpdir):
     codes_release(ibufr)
 
 
+def test_bufr_set_string_array(tmpdir):
+    ibufr = codes_bufr_new_from_samples("BUFR3_local_satellite")
+    codes_set(ibufr, "numberOfSubsets", 3)
+    codes_set(ibufr, "unexpandedDescriptors", 307022)
+    inputVals = ("ARD2-LPTR", "EPFL-LPTR", "BOU2-LPTR")
+    codes_set_array(ibufr, "stationOrSiteName", inputVals)
+    codes_set(ibufr, "pack", 1)
+    outputVals = codes_get_string_array(ibufr, "stationOrSiteName")
+    assert len(outputVals) == 3
+    assert outputVals[0] == "ARD2-LPTR"
+    assert outputVals[1] == "EPFL-LPTR"
+    assert outputVals[2] == "BOU2-LPTR"
+    codes_release(ibufr)
+
+
 def test_bufr_keys_iterator():
     bid = codes_bufr_new_from_samples("BUFR3_local_satellite")
     # Header keys only
@@ -295,6 +533,36 @@ def test_bufr_keys_iterator():
     codes_bufr_keys_iterator_rewind(iterid)
     codes_bufr_keys_iterator_delete(iterid)
     codes_release(bid)
+
+
+def test_bufr_multi_element_constant_arrays():
+    codes_bufr_multi_element_constant_arrays_off()
+    bid = codes_bufr_new_from_samples("BUFR3_local_satellite")
+    codes_set(bid, "unpack", 1)
+    assert codes_get_size(bid, "satelliteIdentifier") == 1
+    codes_release(bid)
+
+    codes_bufr_multi_element_constant_arrays_on()
+    bid = codes_bufr_new_from_samples("BUFR3_local_satellite")
+    codes_set(bid, "unpack", 1)
+    numSubsets = codes_get(bid, "numberOfSubsets")
+    assert codes_get_size(bid, "satelliteIdentifier") == numSubsets
+    codes_release(bid)
+
+
+def test_bufr_new_from_samples_error():
+    with pytest.raises(FileNotFoundError):
+        gid = codes_new_from_samples("poopoo", CODES_PRODUCT_BUFR)
+
+
+def test_bufr_get_message_size():
+    gid = codes_bufr_new_from_samples("BUFR3_local")
+    assert codes_get_message_size(gid) == 279
+
+
+def test_bufr_get_message_offset():
+    gid = codes_bufr_new_from_samples("BUFR3_local")
+    assert codes_get_message_offset(gid) == 0
 
 
 # Experimental feature
