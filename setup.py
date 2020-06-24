@@ -36,7 +36,7 @@ def parse_version_from(path):
 
 
 setuptools.setup(
-    name="eccodes-python",
+    name="eccodes",
     version=parse_version_from("gribapi/bindings.py"),
     description="Python interface to the ecCodes GRIB and BUFR decoder/encoder",
     long_description=read("README.rst") + read("CHANGELOG.rst"),
