@@ -579,6 +579,6 @@ def test_bufr_extract_headers():
     assert header["edition"] == 4
     assert header["internationalDataSubCategory"] == 255
     assert header["masterTablesVersionNumber"] == 24
-    assert header["ident"] == "91334   "
+    assert header["ident"] == "91334"
     assert header["rdbtimeSecond"] == 19
     assert math.isclose(header["localLongitude"], 151.83)
