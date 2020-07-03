@@ -269,6 +269,14 @@ def test_grib_keys_iterator_skip():
     # centre, level and dataType
     assert count == 3
     codes_keys_iterator_delete(iterid)
+
+    iterid = codes_keys_iterator_new(gid)
+    count = 0
+    codes_skip_coded(iterid)
+    while codes_keys_iterator_next(iterid):
+        count += 1
+    assert count == 141
+    codes_keys_iterator_delete(iterid)
     codes_release(gid)
 
 
