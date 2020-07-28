@@ -5,6 +5,7 @@ Changelog for eccodes-python
 0.9.9 (2020-MM-DD)
 -------------------
 
+- ECC-1140: Segfault from invalid pointer reference in grib_set_double_array()
 - ECC-1133: C API: Propagate const char* for codes_index_new_from_file and codes_index_select_string
 
 
