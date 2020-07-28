@@ -400,6 +400,14 @@ def test_grib_ecc_1007():
     codes_release(gid)
 
 
+def test_grib_float_array():
+    gid = codes_grib_new_from_samples("regular_ll_sfc_grib2")
+    values = np.ones((100000,), np.float32)
+    codes_set_values(gid, values)
+    getvals = codes_get_values(gid)
+    assert (getvals == 1.0).all()
+
+
 def test_gribex_mode():
     codes_gribex_mode_on()
     codes_gribex_mode_off()
