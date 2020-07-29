@@ -38,10 +38,11 @@ except ModuleNotFoundError:
 
     try:
         import ecmwflibs
+
         LIBNAMES.insert(0, ecmwflibs.find("eccodes"))
     except Exception:
         pass
-    
+
     if os.environ.get("ECCODES_DIR"):
         LIBNAMES.insert(0, os.path.join(os.environ["ECCODES_DIR"], "lib/libeccodes.so"))
 
