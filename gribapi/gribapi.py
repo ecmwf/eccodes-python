@@ -1140,16 +1140,18 @@ def grib_set_double_array(msgid, key, inarray):
     """
     h = get_handle(msgid)
     length = len(inarray)
-    a = inarray
     if isinstance(inarray, np.ndarray):
+        nd = inarray
         if length > 0:
-            if not isinstance(a[0], float):
+            if not isinstance(nd[0], float):
                 # ECC-1042: input array of integers
-                a = a.astype(float)
+                nd = nd.astype(float)
         # ECC-1007: Could also call numpy.ascontiguousarray
         if not inarray.flags["C_CONTIGUOUS"]:
-            a = a.copy(order="C")
-        a = ffi.cast("double*", a.ctypes.data)
+            nd = nd.copy(order="C")
+        a = ffi.cast("double*", nd.ctypes.data)
+    else:
+        a = inarray
 
     GRIB_CHECK(lib.grib_set_double_array(h, key.encode(ENC), a, length))
 

@@ -269,6 +269,14 @@ def test_grib_keys_iterator_skip():
     # centre, level and dataType
     assert count == 3
     codes_keys_iterator_delete(iterid)
+
+    iterid = codes_keys_iterator_new(gid)
+    count = 0
+    codes_skip_coded(iterid)
+    while codes_keys_iterator_next(iterid):
+        count += 1
+    assert count == 141
+    codes_keys_iterator_delete(iterid)
     codes_release(gid)
 
 
@@ -390,6 +398,14 @@ def test_grib_ecc_1007():
     assert minv == 0
     assert maxv == 12
     codes_release(gid)
+
+
+def test_grib_float_array():
+    gid = codes_grib_new_from_samples("regular_ll_sfc_grib2")
+    values = np.ones((100000,), np.float32)
+    codes_set_values(gid, values)
+    getvals = codes_get_values(gid)
+    assert (getvals == 1.0).all()
 
 
 def test_gribex_mode():
@@ -579,6 +595,6 @@ def test_bufr_extract_headers():
     assert header["edition"] == 4
     assert header["internationalDataSubCategory"] == 255
     assert header["masterTablesVersionNumber"] == 24
-    assert header["ident"] == "91334   "
+    assert header["ident"].strip() == "91334"
     assert header["rdbtimeSecond"] == 19
     assert math.isclose(header["localLongitude"], 151.83)

@@ -21,7 +21,7 @@ import os
 
 import cffi
 
-__version__ = "0.9.8"
+__version__ = "0.9.9"
 
 LOG = logging.getLogger(__name__)
 
@@ -35,6 +35,13 @@ except ModuleNotFoundError:
     )
 
     LIBNAMES = ["eccodes", "libeccodes.so", "libeccodes"]
+
+    try:
+        import ecmwflibs
+
+        LIBNAMES.insert(0, ecmwflibs.find("eccodes"))
+    except Exception:
+        pass
 
     if os.environ.get("ECCODES_DIR"):
         LIBNAMES.insert(0, os.path.join(os.environ["ECCODES_DIR"], "lib/libeccodes.so"))
