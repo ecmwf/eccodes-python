@@ -28,8 +28,7 @@ typedef enum ProductKind {PRODUCT_ANY, PRODUCT_GRIB, PRODUCT_BUFR, PRODUCT_METAR
 
 typedef struct grib_values grib_values;
 
-struct grib_values
-{
+struct grib_values {
   const char* name;
   int         type;
   long        long_value;
@@ -51,7 +50,7 @@ typedef struct bufr_keys_iterator    bufr_keys_iterator;
 typedef struct grib_index grib_index;
 
 grib_index* grib_index_new_from_file(grib_context* c,
-                            const char* filename,const char* keys,int *err);
+                            char* filename,const char* keys,int *err);
 
 int grib_index_add_file(grib_index *index, const char *filename);
 int grib_index_write(grib_index *index, const char *filename);
@@ -64,7 +63,7 @@ int grib_index_get_string(const grib_index* index,const char* key,
                           char** values,size_t *size);
 int grib_index_select_long(grib_index* index,const char* key,long value);
 int grib_index_select_double(grib_index* index,const char* key,double value);
-int grib_index_select_string(grib_index* index,const char* key,const char* value);
+int grib_index_select_string(grib_index* index,const char* key,char* value);
 grib_handle* grib_handle_new_from_index(grib_index* index,int *err);
 
 void grib_index_delete(grib_index* index);
@@ -83,7 +82,6 @@ int grib_multi_handle_write(grib_multi_handle* mh,FILE* f);
 int grib_get_message(const grib_handle* h ,const void** message, size_t *message_length);
 
 grib_iterator* grib_iterator_new(const grib_handle* h, unsigned long flags, int* error);
-int grib_get_data(const grib_handle *h, double *lats, double *lons, double *values);
 int grib_iterator_next(grib_iterator *i, double* lat,double* lon,double* value);
 int grib_iterator_delete(grib_iterator *i);
 grib_nearest* grib_nearest_new(const grib_handle* h, int* error);
@@ -130,10 +128,10 @@ void grib_context_set_samples_path(grib_context* c, const char* path);
 void grib_multi_support_on(grib_context* c);
 void grib_multi_support_off(grib_context* c);
 void grib_multi_support_reset_file(grib_context* c, FILE* f);
+long grib_get_api_version(void);
 
 char* grib_samples_path(const grib_context *c);
 char* grib_definition_path(const grib_context *c);
-long grib_get_api_version(void);
 
 grib_keys_iterator* grib_keys_iterator_new(grib_handle* h,unsigned long filter_flags, const char* name_space);
 bufr_keys_iterator* codes_bufr_keys_iterator_new(grib_handle* h, unsigned long filter_flags);
@@ -155,20 +153,22 @@ const char* grib_get_error_message(int code);
 
 int grib_get_native_type(const grib_handle* h, const char* name,int* type);
 
+/* aa: changed off_t to long int */
+int grib_get_message_offset(const grib_handle* h,long int* offset);
+
 int grib_set_values(grib_handle* h,grib_values*  grib_values , size_t arg_count);
 int grib_is_missing(const grib_handle* h, const char* key, int* err);
 int grib_is_defined(const grib_handle* h, const char* key);
 int grib_set_missing(grib_handle* h, const char* key);
 
-/* aa: changed off_t to long int */
-int grib_get_message_offset(const grib_handle* h, long int* offset);
-int grib_get_message_size(const grib_handle* h, size_t* size);
-int parse_keyval_string(const char* grib_tool, char* arg, int values_required, int default_type, grib_values values[], int* count);
+int grib_get_message_size(const grib_handle* h,size_t* size);
+int parse_keyval_string(const char *grib_tool, char *arg, int values_required, int default_type, grib_values values[], int *count);
+
+int grib_get_data(const grib_handle *h, double *lats, double *lons, double *values);
 
 
 /* EXPERIMENTAL */
-typedef struct codes_bufr_header
-{
+typedef struct codes_bufr_header {
     unsigned long message_offset;
     unsigned long message_size;
 
