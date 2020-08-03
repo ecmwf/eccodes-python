@@ -2,7 +2,7 @@
 Changelog for eccodes-python
 ============================
 
-0.9.10 (2020-MM-DD)
+1.0.0 (2020-MM-DD)
 --------------------
 
 - ECC-1133: C API: Propagate const char* for codes_index_new_from_file and codes_index_select_string

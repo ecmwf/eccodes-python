@@ -15,8 +15,8 @@ from .gribapi import __version__
 from .gribapi import bindings_version
 
 # The minimum required version for the ecCodes package
-min_reqd_version_str = "2.18.0"
-min_reqd_version_int = 21800
+min_reqd_version_str = "2.19.0"
+min_reqd_version_int = 21900
 
 if lib.grib_get_api_version() < min_reqd_version_int:
     print(
