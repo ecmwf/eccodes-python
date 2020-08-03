@@ -2,7 +2,7 @@
 Changelog for eccodes-python
 ============================
 
-0.9.9 (2020-MM-DD)
+0.9.9 (2020-08-04)
 -------------------
 
 - Support for ecmwflibs. An additional way to find ECMWF libraries (if available)

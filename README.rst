@@ -47,7 +47,7 @@ https://software.ecmwf.int/wiki/display/ECC/ecCodes+installation
 You may run a simple selfcheck command to ensure that your system is set up correctly::
 
     $ python -m eccodes selfcheck
-    Found: ecCodes v2.19.0.
+    Found: ecCodes v2.18.0.
     Your system is ready.
 
 
