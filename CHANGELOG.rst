@@ -5,6 +5,7 @@ Changelog for eccodes-python
 1.0.0 (2020-MM-DD)
 --------------------
 
+- ECC-1143: CMake: Migration to ecbuild v3.4
 - ECC-1133: C API: Propagate const char* for codes_index_new_from_file and codes_index_select_string
 
 
