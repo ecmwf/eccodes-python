@@ -57,6 +57,7 @@ except ModuleNotFoundError:
             # lazy exception
             lib = None
             LOG.info("ecCodes library not found using name '%s'.", libname)
+            raise RuntimeError(f"ecCodes library not found using {LIBNAMES}")
 
 # default encoding for ecCodes strings
 ENC = "ascii"
