@@ -537,7 +537,7 @@ def test_bufr_keys_iterator():
         keyname = codes_bufr_keys_iterator_get_name(iterid)
         assert "#" not in keyname
         count += 1
-    assert count == 53
+    assert count == 54
 
     codes_set(bid, "unpack", 1)
     codes_bufr_keys_iterator_rewind(iterid)
@@ -545,7 +545,7 @@ def test_bufr_keys_iterator():
     while codes_bufr_keys_iterator_next(iterid):
         keyname = codes_bufr_keys_iterator_get_name(iterid)
         count += 1
-    assert count == 156
+    assert count == 157
     codes_bufr_keys_iterator_rewind(iterid)
     codes_bufr_keys_iterator_delete(iterid)
     codes_release(bid)
