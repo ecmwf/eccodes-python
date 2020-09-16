@@ -46,8 +46,16 @@ setuptools.setup(
     url="https://github.com/ecmwf/eccodes-python",
     packages=setuptools.find_packages(),
     include_package_data=True,
-    install_requires=["attrs", "cffi", "numpy",],
-    tests_require=["pytest", "pytest-cov", "pytest-flakes",],
+    install_requires=[
+        "attrs",
+        "cffi",
+        "numpy",
+    ],
+    tests_require=[
+        "pytest",
+        "pytest-cov",
+        "pytest-flakes",
+    ],
     test_suite="tests",
     zip_safe=True,
     keywords="ecCodes GRIB BUFR",
