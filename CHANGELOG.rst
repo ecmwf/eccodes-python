@@ -2,7 +2,7 @@
 Changelog for eccodes-python
 ============================
 
-1.0.0 (2020-MM-DD)
+1.0.0 (2020-10-14)
 --------------------
 
 - ECC-1143: CMake: Migration to ecbuild v3.4
