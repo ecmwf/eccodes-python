@@ -5,6 +5,8 @@ Changelog for eccodes-python
 1.0.1 (202Y-MM-DD)
 --------------------
 
+- ECC-1161: Python3 bindings: Do not raise exception on first failed attempt
+
 1.0.0 (2020-10-14)
 --------------------
 
