@@ -46,18 +46,19 @@ except ModuleNotFoundError:
     if os.environ.get("ECCODES_DIR"):
         eccdir = os.environ["ECCODES_DIR"]
         LIBNAMES.insert(0, os.path.join(eccdir, "lib/libeccodes.so"))
-        LIBNAMES.insert(0, os.path.join(eccdir, "lib64/libeccodes.so"))
+        LIBNAMES.insert(1, os.path.join(eccdir, "lib64/libeccodes.so"))
 
+    lib = None
     for libname in LIBNAMES:
         try:
             lib = ffi.dlopen(libname)
             LOG.info("ecCodes library found using name '%s'.", libname)
             break
         except OSError:
-            # lazy exception
-            lib = None
             LOG.info("ecCodes library not found using name '%s'.", libname)
-            raise RuntimeError(f"ecCodes library not found using {LIBNAMES}")
+            pass
+    if lib is None:
+        raise RuntimeError(f"ecCodes library not found using {LIBNAMES}")
 
 # default encoding for ecCodes strings
 ENC = "ascii"
