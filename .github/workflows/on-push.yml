@@ -22,7 +22,8 @@ jobs:
       with:
         python-version: ${{ matrix.python }}
         activate-environment: ${{ matrix.os }}-${{ matrix.python }}
-        environment-file: tests/environment-${{ matrix.os }}-${{ matrix.python }}.yml
+#        environment-file: tests/environment-${{ matrix.os }}-${{ matrix.python }}.yml
+        environment-file: tests/environment.yml
     - name: Test with pytest
       shell: bash -l {0}
       run: |
