@@ -2,10 +2,11 @@
 Changelog for eccodes-python
 ============================
 
-1.0.1 (202Y-MM-DD)
+1.0.1 (2020-MM-DD)
 --------------------
 
 - Remove the apparent support for Python 2
+- Fix CFFI crash on windows (pull request #44)
 - ECC-1161: Python3 bindings: Do not raise exception on first failed attempt
 
 1.0.0 (2020-10-14)
