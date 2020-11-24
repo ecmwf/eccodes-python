@@ -29,10 +29,9 @@ try:
     from ._bindings import ffi, lib
 except ModuleNotFoundError:
     ffi = cffi.FFI()
-    ffi.cdef(
-        pkgutil.get_data(__name__, "grib_api.h").decode("utf-8")
-        + pkgutil.get_data(__name__, "eccodes.h").decode("utf-8")
-    )
+    CDEF = pkgutil.get_data(__name__, "grib_api.h")
+    CDEF += pkgutil.get_data(__name__, "eccodes.h")
+    ffi.cdef(CDEF.decode("utf-8").replace("\r", "\n"))
 
     LIBNAMES = ["eccodes", "libeccodes.so", "libeccodes"]
 
