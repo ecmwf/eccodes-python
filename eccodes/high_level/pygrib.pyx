@@ -1188,17 +1188,13 @@ cdef class gribmessage(object):
         cdef char strdata[1024]
         bytestr = _strencode(key)
         name = bytestr
-        usenceplib = key == 'values' and self.packingType.startswith('grid_complex')
-        # this workaround only needed for grib_api < 1.9.16.
-        if usenceplib:
-            size = self.numberOfValues 
-        else:
-            err = grib_get_size(self._gh, name, &size)
-            if err:
-                if tolerate_badgrib:
-                    return None
-                else:
-                    raise RuntimeError(grib_get_error_message(err))
+        usenceplib = key == 'values' and self.packingType.startswith('grid_complex_spatial')
+        err = grib_get_size(self._gh, name, &size)
+        if err:
+            if tolerate_badgrib:
+                return None
+            else:
+                raise RuntimeError(grib_get_error_message(err))
         # this workaround only needed for grib_api < 1.9.16.
         if usenceplib:
             typ = 2
