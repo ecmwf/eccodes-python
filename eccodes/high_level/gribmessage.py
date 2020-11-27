@@ -12,6 +12,7 @@ Author: Daniel Lee, DWD, 2014
 from .codesmessage import CodesMessage
 from .. import eccodes
 import cftime
+import numpy as np
 
 def julian_to_datetime(jd):
     """
