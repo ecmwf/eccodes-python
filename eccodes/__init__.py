@@ -22,3 +22,4 @@ if sys.version_info >= (2, 6):
     from .high_level.gribmessage import GribMessage
     from .high_level.gribindex import GribIndex
     from .high_level.bufr import BufrFile, BufrMessage
+    from .high_level import pygrib
