@@ -1188,19 +1188,13 @@ cdef class gribmessage(object):
         cdef char strdata[1024]
         bytestr = _strencode(key)
         name = bytestr
-        usenceplib = key == 'values' and self.packingType.startswith('grid_complex_spatial')
         err = grib_get_size(self._gh, name, &size)
         if err:
             if tolerate_badgrib:
                 return None
             else:
                 raise RuntimeError(grib_get_error_message(err))
-        # this workaround only needed for grib_api < 1.9.16.
-        if usenceplib:
-            typ = 2
-            err = 0
-        else:
-            err = grib_get_native_type(self._gh, name, &typ)
+        err = grib_get_native_type(self._gh, name, &typ)
         # force 'paramId' to be size 1 (it returns a size of 7,
         # which is a relic from earlier versions of grib_api in which
         # paramId was a string and not an integer)
@@ -1239,22 +1233,14 @@ cdef class gribmessage(object):
                     storageorder='F'
                 else:
                     storageorder='C'
-                if usenceplib: 
-                    # use ncep lib to decode data (workaround for grib_api
-                    # bug with second-order complex packing).
-                    msg='message packing in this grib message not supported by eccodes'
-                    raise ValueError(msg)
-                    #grb = Grib2Decode(self.tostring(), gribmsg=True)
-                    #return grb.data()
+                datarr = np.zeros(size, np.double, order=storageorder)
+                err = grib_get_double_array(self._gh, name, <double *>datarr.data, &size)
+                if err:
+                    raise RuntimeError(grib_get_error_message(err))
+                if key == 'values':
+                    return self._reshape_mask(datarr)
                 else:
-                    datarr = np.zeros(size, np.double, order=storageorder)
-                    err = grib_get_double_array(self._gh, name, <double *>datarr.data, &size)
-                    if err:
-                        raise RuntimeError(grib_get_error_message(err))
-                    if key == 'values':
-                        return self._reshape_mask(datarr)
-                    else:
-                        return datarr
+                    return datarr
         elif typ == GRIB_TYPE_STRING:
             size=1024 # grib_get_size returns 1 ?
             err = grib_get_string(self._gh, name, strdata, &size)
@@ -1307,14 +1293,9 @@ cdef class gribmessage(object):
         cdef FILE *out
         bytestr = b'values'
         name = bytestr
-        usenceplib = self.packingType.startswith('grid_complex')
-        # this workaround only needed for grib_api < 1.9.16.
-        if usenceplib:
-            size = self.numberOfValues
-        else:
-            err = grib_get_size(self._gh, name, &size)
-            if err:
-                raise RuntimeError(grib_get_error_message(err))
+        err = grib_get_size(self._gh, name, &size)
+        if err:
+            raise RuntimeError(grib_get_error_message(err))
         err = grib_get_message(self._gh, &message, &size)
         if err:
             raise RuntimeError(grib_get_error_message(err))
@@ -1332,15 +1313,6 @@ cdef class gribmessage(object):
             if datarr.ndim != 1:
                 raise ValueError("reduced grid data array must be 1d")
         if datarr.ndim == 2:
-            # check scan modes for rect grids.
-            # columns scan in the -y direction (so flip)
-            #if not self['jScansPositively']:
-            #    datsave = datarr.copy()
-            #    datarr[::-1,:] = datsave[:,:]
-            # rows scan in the -x direction (so flip)
-            #if self['iScansNegatively']:
-            #    datsave = datarr.copy()
-            #    datarr[:,::-1] = datsave[:,:]
             # adjacent rows scan in opposite direction.
             # (flip every other row)
             if self['alternativeRowScanning']:
@@ -1382,14 +1354,6 @@ cdef class gribmessage(object):
             datarr.shape = (ny,nx)
         # check scan modes for rect grids.
         if datarr.ndim == 2:
-           # columns scan in the -y direction (so flip)
-           #if not self['jScansPositively']:
-           #    datsave = datarr.copy()
-           #    datarr[:,:] = datsave[::-1,:]
-           # rows scan in the -x direction (so flip)
-           #if self['iScansNegatively']:
-           #    datsave = datarr.copy()
-           #    datarr[:,:] = datsave[:,::-1]
            # adjacent rows scan in opposite direction.
            # (flip every other row)
            if self['alternativeRowScanning']:
@@ -1579,35 +1543,11 @@ cdef class gribmessage(object):
             raise ValueError('unsupported grid %s' % self['gridType'])
 
         if self['gridType'] in ['regular_gg','regular_ll']: # regular lat/lon grid
-            #nx = self['Ni']
-            #ny = self['Nj']
-            #lon1 = self['longitudeOfFirstGridPointInDegrees']
-            #lon2 = self['longitudeOfLastGridPointInDegrees']
-            #if lon1 >= 0 and lon2 < 0 and self.iDirectionIncrement > 0:
-            #    lon2 = 360+lon2
-            #if lon1 >= 0 and lon2 < lon1 and self.iDirectionIncrement > 0:
-            #    lon1 = lon1-360
             lat1 = self['latitudeOfFirstGridPointInDegrees']
             lat2 = self['latitudeOfLastGridPointInDegrees']
-            # workaround for grib_api bug with complex packing.
-            # (distinctLongitudes, distinctLatitudes throws error,
-            #  so use np.linspace to define values)
-            #if self.packingType.startswith('grid_complex'):
-            #    # this is not strictly correct for gaussian grids,
-            #    # but the error is very small.
-            #    lats = np.linspace(lat1,lat2,ny)
-            #    lons = np.linspace(lon1,lon2,nx)
-            #else:
-            # this workaround no longer needed (issue #102)
             lats = self['distinctLatitudes']
             if lat2 < lat1 and lats[-1] > lats[0]: lats = lats[::-1]
             lons = self['distinctLongitudes']
-            # don't trust distinctLongitudes 
-            # when longitudeOfLastGridPointInDegrees < 0
-            # (bug in grib_api 1.9.16)
-            # this workaround no longer neede (issue #102)
-            #if lon2 < 0:
-            #    lons = np.linspace(lon1,lon2,nx)
             lons,lats = np.meshgrid(lons,lats) 
         elif self['gridType'] == 'reduced_gg': # reduced global gaussian grid
             if self.expand_reduced:
@@ -1647,8 +1587,6 @@ cdef class gribmessage(object):
             except:
                 nx = self['Ni']
                 ny = self['Nj']
-            # key renamed from xDirectionGridLengthInMetres to
-            # DxInMetres grib_api 1.8.0.1.
             try:
                 dx = self['DxInMetres']
             except:
@@ -1811,12 +1749,7 @@ cdef class gribmessage(object):
             x, y = np.meshgrid(x, y)
             lons, lats = pj(x, y, inverse=True)
         elif self['gridType'] in ['rotated_ll','rotated_gg']:
-            #rotatedlats = self['distinctLatitudes']
-            #rotatedlons = self['distinctLongitudes']
-            #d2r = np.pi/180.
-            #lonsr, latsr = np.meshgrid(rotatedlons*d2r, rotatedlats*d2r)
             pj = pyproj.Proj(self.projparams)
-            #lons,lats = pj(lonsr,latsr,inverse=True)
             lons = self['longitudes'].reshape(self.Nj,self.Ni)
             lats = self['latitudes'].reshape(self.Nj,self.Ni)
         else:
