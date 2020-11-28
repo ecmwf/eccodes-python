@@ -80,6 +80,9 @@ def test_new_from_file():
     with open(fpath, "rb") as f:
         msgid = codes_new_from_file(f, CODES_PRODUCT_METAR)
         assert msgid is None
+    with pytest.raises(Exception):
+        with open(fpath, "rb") as f:
+            codes_new_from_file(f, 1024)
 
 
 def test_any_read():
@@ -577,7 +580,9 @@ def test_bufr_multi_element_constant_arrays():
 
 def test_bufr_new_from_samples_error():
     with pytest.raises(FileNotFoundError):
-        gid = codes_new_from_samples("poopoo", CODES_PRODUCT_BUFR)
+        gid = codes_new_from_samples("nonExistentSample", CODES_PRODUCT_BUFR)
+    with pytest.raises(Exception):
+        codes_new_from_samples("BUFR3_local", 1024)
 
 
 def test_bufr_get_message_size():
