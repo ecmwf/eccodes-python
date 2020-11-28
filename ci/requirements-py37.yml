@@ -14,3 +14,5 @@ dependencies:
   - python=3.7
   - typing
   - black
+  - pyproj
+  - cython

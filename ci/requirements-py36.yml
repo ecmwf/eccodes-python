@@ -13,3 +13,5 @@ dependencies:
   - python=3.6
   - typing
   - black
+  - pyproj
+  - cython
