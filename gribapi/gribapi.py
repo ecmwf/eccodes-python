@@ -308,7 +308,7 @@ def codes_new_from_file(fileobj, product_kind, headers_only=False):
         return gts_new_from_file(fileobj, headers_only)
     if product_kind == CODES_PRODUCT_ANY:
         return any_new_from_file(fileobj, headers_only)
-    raise Exception("Invalid product kind: " + product_kind)
+    raise Exception("Invalid product kind: " + str(product_kind))
 
 
 @require(fileobj=file)
@@ -1031,7 +1031,7 @@ def codes_new_from_samples(samplename, product_kind):
         return grib_new_from_samples(samplename)
     if product_kind == CODES_PRODUCT_BUFR:
         return codes_bufr_new_from_samples(samplename)
-    raise Exception("Invalid product kind: " + product_kind)
+    raise Exception("Invalid product kind: " + str(product_kind))
 
 
 @require(samplename=str)
