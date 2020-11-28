@@ -49,19 +49,21 @@ class NumpyBuildExtCommand(build_ext):
 
 cmdclass = {'build_ext': NumpyBuildExtCommand}
 
-if os.environ.get("ECCODES_DIR"):
-    eccdir = os.environ["ECCODES_DIR"]
-else:
-    raise ValueError('ECCODES_DIR env var not set')
 redtoregext =\
 setuptools.Extension("eccodes/high_level/redtoreg",['eccodes/high_level/redtoreg.pyx'])
-incdirs=[os.path.join(eccdir,"include")]
-libdirs=[os.path.join(eccdir,"lib"),os.path.join(eccdir,"lib64")]
-pygribext =\
-setuptools.Extension("eccodes/high_level/pygrib",['eccodes/high_level/pygrib.pyx'],\
+if os.environ.get("ECCODES_DIR"):
+    eccdir = os.environ["ECCODES_DIR"]
+    incdirs=[os.path.join(eccdir,"include")]
+    libdirs=[os.path.join(eccdir,"lib"),os.path.join(eccdir,"lib64")]
+    pygribext =\
+    setuptools.Extension("eccodes/high_level/pygrib",['eccodes/high_level/pygrib.pyx'],\
      include_dirs=incdirs,\
      library_dirs=libdirs,\
      runtime_library_dirs=libdirs,libraries=["eccodes"])
+else:
+    pygribext =\
+    setuptools.Extension("eccodes/high_level/pygrib",['eccodes/high_level/pygrib.pyx'],\
+    libraries=["eccodes"])
 
 
 setuptools.setup(
