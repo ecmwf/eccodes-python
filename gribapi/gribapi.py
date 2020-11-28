@@ -155,7 +155,6 @@ def err_last(func):
 
 
 def get_handle(msgid):
-    assert isinstance(msgid, int)
     h = ffi.cast("grib_handle*", msgid)
     if h == ffi.NULL:
         raise errors.InvalidGribError(f"get_handle: Bad message ID {msgid}")
@@ -169,7 +168,6 @@ def put_handle(handle):
 
 
 def get_multi_handle(msgid):
-    assert isinstance(msgid, int)
     return ffi.cast("grib_multi_handle*", msgid)
 
 
@@ -178,7 +176,6 @@ def put_multi_handle(handle):
 
 
 def get_index(indexid):
-    assert isinstance(indexid, int)
     return ffi.cast("grib_index*", indexid)
 
 
@@ -187,7 +184,6 @@ def put_index(indexh):
 
 
 def get_iterator(iterid):
-    assert isinstance(iterid, int)
     return ffi.cast("grib_iterator*", iterid)
 
 
@@ -196,7 +192,6 @@ def put_iterator(iterh):
 
 
 def get_grib_keys_iterator(iterid):
-    assert isinstance(iterid, int)
     return ffi.cast("grib_keys_iterator*", iterid)
 
 
@@ -205,7 +200,6 @@ def put_grib_keys_iterator(iterh):
 
 
 def get_bufr_keys_iterator(iterid):
-    assert isinstance(iterid, int)
     return ffi.cast("bufr_keys_iterator*", iterid)
 
 

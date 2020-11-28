@@ -2,12 +2,14 @@
 Changelog for eccodes-python
 ============================
 
-1.0.1 (2020-MM-DD)
+1.0.1 (20YY-MM-DD)
 --------------------
 
-- Remove the apparent support for Python 2
-- Fix CFFI crash on windows (pull request #44)
+- ECC-1171: Performance: Python bindings: remove assert statements
 - ECC-1161: Python3 bindings: Do not raise exception on first failed attempt
+- Remove the apparent support for Python 2 (GitHub pull request #41)
+- Fix CFFI crash on windows (GitHub pull request #44)
+
 
 1.0.0 (2020-10-14)
 --------------------
@@ -31,7 +33,7 @@ Changelog for eccodes-python
 - Fix codes_set_definitions_path() typo
 - Fix grib_get_double_element(). Missing last argument
 - Add more tests to increase coverage
-- Add .__next__() method to eccodes.CodesFile class (pull request #15)
+- Add .__next__() method to eccodes.CodesFile class (GitHub pull request #15)
 - ECC-1113: Python3 bindings under Windows: codes_get_long_array returns incorrect values
 - ECC-1108: Python3 bindings under Windows: use of handle causes crash
 - ECC-1121: Segfault when closing GribFile if messages are closed manually
