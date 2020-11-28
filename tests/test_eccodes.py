@@ -54,6 +54,8 @@ def test_codes_get_native_type():
     assert codes_get_native_type(gid, "referenceValue") is float
     assert codes_get_native_type(gid, "stepType") is str
     assert codes_get_native_type(gid, "section_1") is None
+    with pytest.raises(InvalidGribError):
+        codes_get_native_type(0, "aKey")
 
 
 def test_new_from_file():
