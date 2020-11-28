@@ -26,7 +26,7 @@ def test():
     get the data on the regular gaussian grid (reduced grid expanded
     using linear interpolation by default)
     >>> data = grb.values # values attribute returns the data
-    >>> 'shape/min/max data %s %6.2f %6.2f'%(str(data.shape),data.min(),data.max())
+    >>> 'shape/min/max data %s %6.2f %6.2f' % (data.shape,data.min(),data.max())
     'shape/min/max data (96, 192) 210.71 316.90'
     >>> lats, lons = grb.latlons() # returns lat/lon values on grid.
     >>> str('shape/min/max lats %s %4.2f %4.2f' % (lats.shape,lats.min(),lats.max()))
@@ -37,7 +37,7 @@ def test():
     don't expand to regular grid
     >>> grb.expand_grid(False)
     >>> data = grb.values
-    >>> 'shape/min/max data %s %6.2f %6.2f'%(str(data.shape),data.min(),data.max())
+    >>> 'shape/min/max data %s %6.2f %6.2f' % (data.shape,data.min(),data.max())
     'shape/min/max data (13280,) 209.54 316.90'
     >>> lats, lons = grb.latlons() # returns lat/lon values on grid.
     >>> str('shape/min/max lats %s %4.2f %4.2f' % (lats.shape,lats.min(),lats.max()))
