@@ -58,22 +58,33 @@ redtoregext = setuptools.Extension(
 )
 if os.environ.get("ECCODES_DIR"):
     eccdir = os.environ["ECCODES_DIR"]
-    incdirs = [os.path.join(eccdir, "include")]
-    libdirs = [os.path.join(eccdir, "lib"), os.path.join(eccdir, "lib64")]
-    pygribext = setuptools.Extension(
-        "eccodes.high_level.pygrib",
-        ["eccodes/high_level/pygrib.pyx"],
-        include_dirs=incdirs,
-        library_dirs=libdirs,
-        runtime_library_dirs=libdirs,
-        libraries=["eccodes"],
-    )
+elif os.environ.get("CONDA_PREFIX"):
+    eccdir = os.environ["CONDA_PREFIX"]
 else:
-    pygribext = setuptools.Extension(
-        "eccodes.high_level.pygrib",
-        ["eccodes/high_level/pygrib.pyx"],
-        libraries=["eccodes"],
-    )
+    # look for grib_api.h in a few common locations.
+    for eccdir in [
+        os.path.expanduser("~"),
+        "/usr",
+        "/usr/local",
+        "/opt/local",
+        "/opt",
+        "/sw",
+    ]:
+        try:
+            f = open(os.path.join(eccdir, "grib_api.h"))
+            break
+        except IOError:
+            continue
+incdirs = [os.path.join(eccdir, "include")]
+libdirs = [os.path.join(eccdir, "lib"), os.path.join(eccdir, "lib64")]
+pygribext = setuptools.Extension(
+    "eccodes.high_level.pygrib",
+    ["eccodes/high_level/pygrib.pyx"],
+    include_dirs=incdirs,
+    library_dirs=libdirs,
+    runtime_library_dirs=libdirs,
+    libraries=["eccodes"],
+)
 
 
 setuptools.setup(

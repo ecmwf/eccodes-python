@@ -21,7 +21,6 @@ install:
   - conda env create -n test_env --file ci/requirements-$ENV.yml;
   - source activate test_env
   - conda list
-  - export ECCODES_DIR=$CONDA_PREFIX
   - pip install --no-deps -e .
 
 script:
