@@ -47,13 +47,16 @@ def test():
     >>> grbs.close()
     """
 
+
 if __name__ == "__main__":
     import doctest
+
     failure_count, test_count = doctest.testmod(verbose=True)
     from eccodes import pygrib
     import sys
-    sys.stdout.write('using ECCODES library version %s\n' % pygrib.grib_api_version)
-    if failure_count==0:
+
+    sys.stdout.write("using ECCODES library version %s\n" % pygrib.grib_api_version)
+    if failure_count == 0:
         sys.exit(0)
     else:
         sys.exit(1)

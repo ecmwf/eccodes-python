@@ -35,35 +35,45 @@ def parse_version_from(path):
         raise ValueError("couldn't parse version")
     return version_match.group(1)
 
+
 class NumpyBuildExtCommand(build_ext):
     """
     build_ext command for use when numpy headers are needed.
     from https://stackoverflow.com/questions/2379898/
     and https://stackoverflow.com/questions/48283503/
     """
+
     def run(self):
-        self.distribution.fetch_build_eggs(['numpy'])
+        self.distribution.fetch_build_eggs(["numpy"])
         import numpy
+
         self.include_dirs.append(numpy.get_include())
         build_ext.run(self)
 
-cmdclass = {'build_ext': NumpyBuildExtCommand}
 
-redtoregext =\
-setuptools.Extension("eccodes.high_level.redtoreg",['eccodes/high_level/redtoreg.pyx'])
+cmdclass = {"build_ext": NumpyBuildExtCommand}
+
+redtoregext = setuptools.Extension(
+    "eccodes.high_level.redtoreg", ["eccodes/high_level/redtoreg.pyx"]
+)
 if os.environ.get("ECCODES_DIR"):
     eccdir = os.environ["ECCODES_DIR"]
-    incdirs=[os.path.join(eccdir,"include")]
-    libdirs=[os.path.join(eccdir,"lib"),os.path.join(eccdir,"lib64")]
-    pygribext =\
-    setuptools.Extension("eccodes.high_level.pygrib",['eccodes/high_level/pygrib.pyx'],\
-     include_dirs=incdirs,\
-     library_dirs=libdirs,\
-     runtime_library_dirs=libdirs,libraries=["eccodes"])
+    incdirs = [os.path.join(eccdir, "include")]
+    libdirs = [os.path.join(eccdir, "lib"), os.path.join(eccdir, "lib64")]
+    pygribext = setuptools.Extension(
+        "eccodes.high_level.pygrib",
+        ["eccodes/high_level/pygrib.pyx"],
+        include_dirs=incdirs,
+        library_dirs=libdirs,
+        runtime_library_dirs=libdirs,
+        libraries=["eccodes"],
+    )
 else:
-    pygribext =\
-    setuptools.Extension("eccodes.high_level.pygrib",['eccodes/high_level/pygrib.pyx'],\
-    libraries=["eccodes"])
+    pygribext = setuptools.Extension(
+        "eccodes.high_level.pygrib",
+        ["eccodes/high_level/pygrib.pyx"],
+        libraries=["eccodes"],
+    )
 
 
 setuptools.setup(
@@ -76,9 +86,9 @@ setuptools.setup(
     license="Apache License Version 2.0",
     url="https://github.com/ecmwf/eccodes-python",
     packages=setuptools.find_packages(),
-    cmdclass = cmdclass,
+    cmdclass=cmdclass,
     include_package_data=True,
-    ext_modules       = [redtoregext,pygribext],
+    ext_modules=[redtoregext, pygribext],
     build_requires=["cython"],
     install_requires=[
         "attrs",
