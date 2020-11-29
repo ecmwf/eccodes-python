@@ -61,7 +61,7 @@ if has_cython:
     cmdclass = {"build_ext": NumpyBuildExtCommand}
 
     redtoregext = setuptools.Extension(
-        "eccodes.high_level.redtoreg", ["eccodes/high_level/redtoreg.pyx"]
+        "redtoreg", ["eccodes/high_level/redtoreg.pyx"]
     )
     searchdirs = []
     if os.environ.get("ECCODES_DIR"):
@@ -95,7 +95,7 @@ if has_cython:
         incdirs = []
         libdirs = []
     pygribext = setuptools.Extension(
-        "eccodes.high_level.pygrib",
+        "pygrib",
         ["eccodes/high_level/pygrib.pyx"],
         include_dirs=incdirs,
         library_dirs=libdirs,
