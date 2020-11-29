@@ -91,7 +91,7 @@ if has_cython:
         incdirs = [os.path.join(eccdir, "include")]
         libdirs = [os.path.join(eccdir, "lib"), os.path.join(eccdir, "lib64")]
     else:
-        print("eccodes not found")
+        print("eccodes not found, build may fail...")
         incdirs = []
         libdirs = []
     pygribext = setuptools.Extension(
