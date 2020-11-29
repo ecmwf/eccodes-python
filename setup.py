@@ -60,9 +60,7 @@ if has_cython:
 
     cmdclass = {"build_ext": NumpyBuildExtCommand}
 
-    redtoregext = setuptools.Extension(
-        "redtoreg", ["eccodes/high_level/redtoreg.pyx"]
-    )
+    redtoregext = setuptools.Extension("redtoreg", ["eccodes/high_level/redtoreg.pyx"])
     searchdirs = []
     if os.environ.get("ECCODES_DIR"):
         searchdirs.append(os.environ["ECCODES_DIR"])
