@@ -1361,7 +1361,10 @@ cdef class gribmessage(object):
                datarr[1::2,:] = datsave[1::2,::-1]
            # if there is a missingValue, and some values missing,
            # create a masked array.
-           if self.has_key('missingValue') and self['numberOfMissing']:
+           #if self.has_key('missingValue') and self['numberOfMissing']:
+           # don't trust numberOfMissing
+           if self.has_key('missingValue') and\
+           np.count_nonzero(datarr==self['missingValue']):
                datarr = ma.masked_values(datarr, self['missingValue'])
         return datarr
 
