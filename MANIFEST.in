@@ -1,3 +1,4 @@
+include pyproject.toml
 include .dockerignore
 include *.rst
 include *.yml

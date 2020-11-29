@@ -15,7 +15,13 @@ import os
 import re
 
 import setuptools
-from Cython.Distutils import build_ext
+
+try:
+    from Cython.Distutils import build_ext
+
+    has_cython = True
+except ImportError:
+    has_cython = False
 
 
 def read(path):
@@ -36,55 +42,70 @@ def parse_version_from(path):
     return version_match.group(1)
 
 
-class NumpyBuildExtCommand(build_ext):
-    """
-    build_ext command for use when numpy headers are needed.
-    from https://stackoverflow.com/questions/2379898/
-    and https://stackoverflow.com/questions/48283503/
-    """
+if has_cython:
 
-    def run(self):
-        self.distribution.fetch_build_eggs(["numpy"])
-        import numpy
+    class NumpyBuildExtCommand(build_ext):
+        """
+        build_ext command for use when numpy headers are needed.
+        from https://stackoverflow.com/questions/2379898/
+        and https://stackoverflow.com/questions/48283503/
+        """
 
-        self.include_dirs.append(numpy.get_include())
-        build_ext.run(self)
+        def run(self):
+            self.distribution.fetch_build_eggs(["numpy"])
+            import numpy
 
+            self.include_dirs.append(numpy.get_include())
+            build_ext.run(self)
 
-cmdclass = {"build_ext": NumpyBuildExtCommand}
+    cmdclass = {"build_ext": NumpyBuildExtCommand}
 
-redtoregext = setuptools.Extension(
-    "eccodes.high_level.redtoreg", ["eccodes/high_level/redtoreg.pyx"]
-)
-if os.environ.get("ECCODES_DIR"):
-    eccdir = os.environ["ECCODES_DIR"]
-elif os.environ.get("CONDA_PREFIX"):
-    eccdir = os.environ["CONDA_PREFIX"]
-else:
-    # look for grib_api.h in a few common locations.
-    for eccdir in [
+    redtoregext = setuptools.Extension(
+        "eccodes.high_level.redtoreg", ["eccodes/high_level/redtoreg.pyx"]
+    )
+    searchdirs = []
+    if os.environ.get("ECCODES_DIR"):
+        searchdirs.append(os.environ["ECCODES_DIR"])
+    if os.environ.get("CONDA_PREFIX"):
+        searchdirs.append(os.environ["CONDA_PREFIX"])
+    searchdirs += [
         os.path.expanduser("~"),
         "/usr",
         "/usr/local",
         "/opt/local",
         "/opt",
         "/sw",
-    ]:
+    ]
+    # look for grib_api.h in searchdirs
+    eccdir = None
+    for d in searchdirs:
         try:
-            f = open(os.path.join(eccdir, "grib_api.h"))
+            incpath = os.path.join(os.path.join(d, "include"), "grib_api.h")
+            f = open(incpath)
+            eccdir = d
+            print("eccodes found in %s" % eccdir)
             break
         except IOError:
             continue
-incdirs = [os.path.join(eccdir, "include")]
-libdirs = [os.path.join(eccdir, "lib"), os.path.join(eccdir, "lib64")]
-pygribext = setuptools.Extension(
-    "eccodes.high_level.pygrib",
-    ["eccodes/high_level/pygrib.pyx"],
-    include_dirs=incdirs,
-    library_dirs=libdirs,
-    runtime_library_dirs=libdirs,
-    libraries=["eccodes"],
-)
+    if eccdir is not None:
+        incdirs = [os.path.join(eccdir, "include")]
+        libdirs = [os.path.join(eccdir, "lib"), os.path.join(eccdir, "lib64")]
+    else:
+        print("eccodes not found")
+        incdirs = []
+        libdirs = []
+    pygribext = setuptools.Extension(
+        "eccodes.high_level.pygrib",
+        ["eccodes/high_level/pygrib.pyx"],
+        include_dirs=incdirs,
+        library_dirs=libdirs,
+        runtime_library_dirs=libdirs,
+        libraries=["eccodes"],
+    )
+    ext_modules = [redtoregext, pygribext]
+else:  # if cython not installed, don't build C extensions in high-level API
+    ext_modules = []
+    cmdclass = {}
 
 
 setuptools.setup(
@@ -100,7 +121,7 @@ setuptools.setup(
     cmdclass=cmdclass,
     include_package_data=True,
     ext_modules=[redtoregext, pygribext],
-    build_requires=["cython"],
+    setup_requires=["cython"],
     install_requires=[
         "attrs",
         "cffi",
