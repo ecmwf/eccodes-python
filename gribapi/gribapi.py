@@ -2388,7 +2388,7 @@ def codes_bufr_extract_headers(filepath, is_strict=True):
         i += 1
 
 
-#def codes_extract_offsets(filepath, product_kind, is_strict=True):
+# def codes_extract_offsets(filepath, product_kind, is_strict=True):
 #    """
 #    @brief Message offset extraction (EXPERIMENTAL FEATURE)
 #
