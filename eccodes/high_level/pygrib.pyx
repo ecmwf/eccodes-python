@@ -880,6 +880,7 @@ cdef class gribmessage(object):
         expand_grid(True or False)
 
         toggle expansion of 1D reduced grid data to a regular (2D) grid (on
+        by default)"""
         self.expand_reduced = expand_reduced
 
     def is_missing(self,key):
