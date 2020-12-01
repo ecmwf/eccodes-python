@@ -882,7 +882,10 @@ cdef class gribmessage(object):
             return default
 
     def expand_grid(self,expand_reduced):
-        """toggle expansion of 1D reduced grid data to a regular (2D) grid"""
+        """
+        expand_grid(True or False)
+
+        toggle expansion of 1D reduced grid data to a regular (2D) grid (on
         self.expand_reduced = expand_reduced
 
     def is_missing(self,key):
@@ -904,7 +907,7 @@ cdef class gribmessage(object):
         """
         keys()
 
-        return keys associated with a grib message (a dictionary-like object)
+        return keys associated with a grib message in a list
         """
         cdef grib_keys_iterator* gi
         cdef int err, typ
@@ -940,7 +943,7 @@ cdef class gribmessage(object):
         """
         _read_only_keys()
 
-        return read-only keys associated with a grib message (a dictionary-like object)
+        return read-only keys associated with a grib message in a list
         """
         cdef grib_keys_iterator* gi
         cdef int err, typ
