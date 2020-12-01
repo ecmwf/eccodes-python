@@ -308,7 +308,7 @@ def codes_new_from_file(fileobj, product_kind, headers_only=False):
         return gts_new_from_file(fileobj, headers_only)
     if product_kind == CODES_PRODUCT_ANY:
         return any_new_from_file(fileobj, headers_only)
-    raise Exception("Invalid product kind: " + product_kind)
+    raise ValueError("Invalid product kind %d" % product_kind)
 
 
 @require(fileobj=file)
@@ -1031,7 +1031,7 @@ def codes_new_from_samples(samplename, product_kind):
         return grib_new_from_samples(samplename)
     if product_kind == CODES_PRODUCT_BUFR:
         return codes_bufr_new_from_samples(samplename)
-    raise Exception("Invalid product kind: " + product_kind)
+    raise ValueError("Invalid product kind %d" % product_kind)
 
 
 @require(samplename=str)
@@ -2386,3 +2386,30 @@ def codes_bufr_extract_headers(filepath, is_strict=True):
     while i < num_messages:
         yield _convert_struct_to_dict(headers[i])
         i += 1
+
+
+# def codes_extract_offsets(filepath, product_kind, is_strict=True):
+#    """
+#    @brief Message offset extraction (EXPERIMENTAL FEATURE)
+#
+#    @param filepath       path of input file
+#    @param is_strict      fail as soon as any invalid message is encountered
+#    @return               a list of offsets
+#    @exception CodesInternalError
+#    """
+#    context = lib.grib_context_get_default()
+#    offsets_p = ffi.new("long int**")
+#    num_message_p = ffi.new("int*")
+#
+#    err = lib.codes_extract_offsets_malloc(
+#        context, filepath.encode(ENC), product_kind, offsets_p, num_message_p, is_strict
+#    )
+#    GRIB_CHECK(err)
+#
+#    num_messages = num_message_p[0]
+#    offsets = offsets_p[0]
+#
+#    i = 0
+#    while i < num_messages:
+#        yield offsets[i]
+#        i += 1
