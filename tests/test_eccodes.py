@@ -19,6 +19,14 @@ from eccodes import *
 SAMPLE_DATA_FOLDER = os.path.join(os.path.dirname(__file__), "sample-data")
 TEST_DATA = os.path.join(SAMPLE_DATA_FOLDER, "era5-levels-members.grib")
 
+
+def get_sample_fullpath(sample):
+    samples_path = codes_samples_path()
+    if not os.path.isdir(samples_path):
+        return None
+    return os.path.join(samples_path, sample)
+
+
 # ---------------------------------------------
 # ANY PRODUCT
 # ---------------------------------------------
@@ -61,18 +69,17 @@ def test_codes_get_native_type():
 
 
 def test_new_from_file():
-    samples_path = codes_samples_path()
-    if not os.path.isdir(samples_path):
+    fpath = get_sample_fullpath("GRIB2.tmpl")
+    if fpath is None:
         return
-    fpath = os.path.join(samples_path, "GRIB2.tmpl")
     with open(fpath, "rb") as f:
         msgid = codes_new_from_file(f, CODES_PRODUCT_GRIB)
         assert msgid
-    fpath = os.path.join(samples_path, "BUFR4.tmpl")
+    fpath = get_sample_fullpath("BUFR4.tmpl")
     with open(fpath, "rb") as f:
         msgid = codes_new_from_file(f, CODES_PRODUCT_BUFR)
         assert msgid
-    fpath = os.path.join(samples_path, "clusters_grib1.tmpl")
+    fpath = get_sample_fullpath("clusters_grib1.tmpl")
     with open(fpath, "rb") as f:
         msgid = codes_new_from_file(f, CODES_PRODUCT_ANY)
         assert msgid
@@ -88,10 +95,9 @@ def test_new_from_file():
 
 
 def test_any_read():
-    samples_path = codes_samples_path()
-    if not os.path.isdir(samples_path):
+    fpath = get_sample_fullpath("GRIB1.tmpl")
+    if fpath is None:
         return
-    fpath = os.path.join(samples_path, "GRIB1.tmpl")
     with open(fpath, "rb") as f:
         msgid = codes_any_new_from_file(f)
         assert codes_get(msgid, "edition") == 1
@@ -99,7 +105,7 @@ def test_any_read():
         assert codes_get(msgid, "identifier", str) == "GRIB"
         codes_release(msgid)
 
-    fpath = os.path.join(samples_path, "BUFR3.tmpl")
+    fpath = get_sample_fullpath("BUFR3.tmpl")
     with open(fpath, "rb") as f:
         msgid = codes_any_new_from_file(f)
         assert codes_get(msgid, "edition") == 3
@@ -108,10 +114,9 @@ def test_any_read():
 
 
 def test_count_in_file():
-    samples_path = codes_samples_path()
-    if not os.path.isdir(samples_path):
+    fpath = get_sample_fullpath("GRIB1.tmpl")
+    if fpath is None:
         return
-    fpath = os.path.join(samples_path, "GRIB1.tmpl")
     with open(fpath, "rb") as f:
         assert codes_count_in_file(f) == 1
 
@@ -449,10 +454,9 @@ def test_grib_new_from_file_error(tmp_path):
 
 
 def test_grib_index_new_from_file(tmpdir):
-    samples_path = codes_samples_path()
-    if not os.path.isdir(samples_path):
+    fpath = get_sample_fullpath("GRIB1.tmpl")
+    if fpath is None:
         return
-    fpath = os.path.join(samples_path, "GRIB1.tmpl")
     index_keys = ["shortName", "level", "number", "step"]
     iid = codes_index_new_from_file(fpath, index_keys)
     index_file = str(tmpdir.join("temp.grib.index"))
@@ -480,10 +484,7 @@ def test_grib_index_new_from_file(tmpdir):
 
 def test_grib_multi_support_reset_file():
     # TODO: read an actual multi-field GRIB here
-    samples_path = codes_samples_path()
-    if not os.path.isdir(samples_path):
-        return
-    fpath = os.path.join(samples_path, "GRIB2.tmpl")
+    fpath = get_sample_fullpath("GRIB2.tmpl")
     codes_grib_multi_support_on()
     with open(fpath, "rb") as f:
         codes_grib_multi_support_reset_file(f)
@@ -625,13 +626,22 @@ def test_bufr_get_message_offset():
     assert codes_get_message_offset(gid) == 0
 
 
-# Experimental feature
-def test_bufr_extract_headers():
-    samples_path = codes_samples_path()
-    if not os.path.isdir(samples_path):
+# Experimental features
+def _test_extract_offsets():
+    fpath = get_sample_fullpath("BUFR4.tmpl")
+    if fpath is None:
         return
-    print("Samples path = ", samples_path)
-    fpath = os.path.join(samples_path, "BUFR4_local.tmpl")
+    is_strict = True
+    offsets = codes_extract_offsets(fpath, CODES_PRODUCT_ANY, is_strict)
+    offsets_list = list(offsets)
+    assert len(offsets_list) == 1
+    assert offsets_list[0] == 0
+
+
+def test_bufr_extract_headers():
+    fpath = get_sample_fullpath("BUFR4_local.tmpl")
+    if fpath is None:
+        return
     headers = list(codes_bufr_extract_headers(fpath))
     # Sample file contains just one message
     assert len(headers) == 1
