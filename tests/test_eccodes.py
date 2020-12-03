@@ -207,7 +207,7 @@ def test_grib_set_key_vals():
 
 def test_grib_get_error():
     gid = codes_grib_new_from_samples("regular_ll_sfc_grib2")
-    with pytest.raises( (ValueError, AssertionError) ):
+    with pytest.raises((ValueError, AssertionError)):
         codes_get(gid, None)
 
 
@@ -431,7 +431,7 @@ def test_grib_new_from_samples_error():
 
 
 def test_grib_new_from_file_error(tmp_path):
-    with pytest.raises( (TypeError,AssertionError) ):
+    with pytest.raises((TypeError, AssertionError)):
         codes_grib_new_from_file(None)
     p = tmp_path / "afile.txt"
     p.write_text("GRIBxxxx")
@@ -480,6 +480,17 @@ def test_grib_multi_support_reset_file():
     with open(fpath, "rb") as f:
         codes_grib_multi_support_reset_file(f)
     codes_grib_multi_support_off()
+
+
+def _test_grib_uuid_get_set():
+    # TODO: enable test when ECC-1167 is fixed
+    gid = codes_grib_new_from_samples("GRIB2")
+    codes_set(gid, "gridType", "unstructured_grid")
+    uuid = codes_get_string(gid, "uuidOfHGrid")
+    assert uuid == "00000000000000000000000000000000"
+    codes_set_string(gid, "uuidOfHGrid", "DEfdBEef10203040b00b1e50001100FF")
+    uuid = codes_get_string(gid, "uuidOfHGrid")
+    assert uuid == "defdbeef10203040b00b1e50001100ff"
 
 
 # BUFR
