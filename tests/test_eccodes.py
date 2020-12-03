@@ -207,7 +207,7 @@ def test_grib_set_key_vals():
 
 def test_grib_get_error():
     gid = codes_grib_new_from_samples("regular_ll_sfc_grib2")
-    with pytest.raises(ValueError):
+    with pytest.raises( (ValueError, AssertionError) ):
         codes_get(gid, None)
 
 
@@ -431,7 +431,7 @@ def test_grib_new_from_samples_error():
 
 
 def test_grib_new_from_file_error(tmp_path):
-    with pytest.raises(TypeError):
+    with pytest.raises( (TypeError,AssertionError) ):
         codes_grib_new_from_file(None)
     p = tmp_path / "afile.txt"
     p.write_text("GRIBxxxx")
