@@ -450,7 +450,7 @@ def grib_multi_support_reset_file(fileobj):
     @brief Reset file handle in multiple field support mode
     """
     context = lib.grib_context_get_default()
-    GRIB_CHECK(lib.grib_multi_support_reset_file(context, fileobj))
+    lib.grib_multi_support_reset_file(context, fileobj)
 
 
 @require(msgid=int)
@@ -965,7 +965,7 @@ def grib_get_double(msgid, key):
     return value_p[0]
 
 
-@require(msgid=int, key=str, value=(int, float, str))
+@require(msgid=int, key=str, value=(int, float, np.float16, np.float32, str))
 def grib_set_long(msgid, key, value):
     """
     @brief Set the integer value for a key in a message.
@@ -984,13 +984,13 @@ def grib_set_long(msgid, key, value):
         raise TypeError("Invalid type")
 
     if value > sys.maxsize:
-        raise TypeError("Invalid type")
+        raise ValueError("Value too large")
 
     h = get_handle(msgid)
     GRIB_CHECK(lib.grib_set_long(h, key.encode(ENC), value))
 
 
-@require(msgid=int, key=str, value=(int, float, str))
+@require(msgid=int, key=str, value=(int, float, np.float16, np.float32, str))
 def grib_set_double(msgid, key, value):
     """
     @brief Set the double value for a key in a message.
