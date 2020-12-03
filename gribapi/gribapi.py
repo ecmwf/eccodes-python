@@ -2033,7 +2033,7 @@ def grib_set(msgid, key, value):
     """
     if isinstance(value, int):
         grib_set_long(msgid, key, value)
-    elif isinstance(value, float):
+    elif isinstance(value, (float, np.float16, np.float32, np.float64)):
         grib_set_double(msgid, key, value)
     elif isinstance(value, str):
         grib_set_string(msgid, key, value)
@@ -2069,12 +2069,11 @@ def grib_set_array(msgid, key, value):
     except TypeError:
         pass
 
-    if isinstance(val0, float):
+    if isinstance(val0, (float, np.float16, np.float32, np.float64)):
         grib_set_double_array(msgid, key, value)
     elif isinstance(val0, str):
         grib_set_string_array(msgid, key, value)
     else:
-        # Note: Cannot do isinstance(val0,int) for numpy.int64
         try:
             int(val0)
         except (ValueError, TypeError):

@@ -211,6 +211,7 @@ def test_grib_set_key_vals():
 
 def test_grib_get_error():
     gid = codes_grib_new_from_samples("regular_ll_sfc_grib2")
+    # Note: AssertionError can be raised when type checks are enabled
     with pytest.raises((ValueError, AssertionError)):
         codes_get(gid, None)
 
@@ -418,10 +419,12 @@ def test_grib_ecc_1007():
 
 def test_grib_float_array():
     gid = codes_grib_new_from_samples("regular_ll_sfc_grib2")
-    values = np.ones((100000,), np.float32)
-    codes_set_values(gid, values)
-    getvals = codes_get_values(gid)
-    assert (getvals == 1.0).all()
+    for ftype in (float, np.float16, np.float32, np.float64):
+        values = np.ones((100000,), ftype)
+        codes_set_array(gid, "values", values)
+        assert (codes_get_values(gid) == 1.0).all()
+        codes_set_values(gid, values)
+        assert (codes_get_values(gid) == 1.0).all()
 
 
 def test_gribex_mode():
@@ -435,6 +438,7 @@ def test_grib_new_from_samples_error():
 
 
 def test_grib_new_from_file_error(tmp_path):
+    # Note: AssertionError can be raised when type checks are enabled
     with pytest.raises((TypeError, AssertionError)):
         codes_grib_new_from_file(None)
     p = tmp_path / "afile.txt"
@@ -540,6 +544,14 @@ def test_bufr_encode(tmpdir):
     output = tmpdir.join("test_bufr_encode.bufr")
     with open(str(output), "wb") as fout:
         codes_write(ibufr, fout)
+    codes_release(ibufr)
+
+
+def test_bufr_set_float():
+    ibufr = codes_bufr_new_from_samples("BUFR4")
+    codes_set(ibufr, "unpack", 1)
+    codes_set(ibufr, "totalPrecipitationPast24Hours", np.float32(1.26e04))
+    codes_set(ibufr, "totalPrecipitationPast24Hours", np.float16(1.27e04))
     codes_release(ibufr)
 
 

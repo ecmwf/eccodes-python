@@ -7,6 +7,7 @@ Changelog for eccodes-python
 
 - ECC-1171: Performance: Python bindings: remove assert statements
 - ECC-1161: Python3 bindings: Do not raise exception on first failed attempt
+- ECC-1176: Python3 bindings: float32 recognised as int instead of float
 - Remove the apparent support for Python 2 (GitHub pull request #41)
 - Fix CFFI crash on windows (GitHub pull request #44)
 
