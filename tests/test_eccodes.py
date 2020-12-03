@@ -19,7 +19,9 @@ from eccodes import *
 SAMPLE_DATA_FOLDER = os.path.join(os.path.dirname(__file__), "sample-data")
 TEST_DATA = os.path.join(SAMPLE_DATA_FOLDER, "era5-levels-members.grib")
 
-# ANY
+# ---------------------------------------------
+# ANY PRODUCT
+# ---------------------------------------------
 def test_codes_definition_path():
     df = codes_definition_path()
     assert df is not None
@@ -137,7 +139,9 @@ def test_gts_header():
     codes_gts_header(False)
 
 
+# ---------------------------------------------
 # GRIB
+# ---------------------------------------------
 def test_grib_read():
     gid = codes_grib_new_from_samples("regular_ll_sfc_grib1")
     assert codes_get(gid, "Ni") == 16
@@ -491,9 +495,12 @@ def _test_grib_uuid_get_set():
     codes_set_string(gid, "uuidOfHGrid", "DEfdBEef10203040b00b1e50001100FF")
     uuid = codes_get_string(gid, "uuidOfHGrid")
     assert uuid == "defdbeef10203040b00b1e50001100ff"
+    codes_release(gid)
 
 
+# ---------------------------------------------
 # BUFR
+# ---------------------------------------------
 def test_bufr_read_write(tmpdir):
     bid = codes_new_from_samples("BUFR4", CODES_PRODUCT_BUFR)
     codes_set(bid, "unpack", 1)
