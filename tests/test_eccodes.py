@@ -638,7 +638,7 @@ def _test_extract_offsets():
     assert offsets_list[0] == 0
 
 
-def test_bufr_extract_headers():
+def _test_bufr_extract_headers():
     fpath = get_sample_fullpath("BUFR4_local.tmpl")
     if fpath is None:
         return
