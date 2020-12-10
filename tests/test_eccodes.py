@@ -627,6 +627,21 @@ def test_bufr_get_message_offset():
 
 
 # Experimental features
+def _test_codes_bufr_key_is_header():
+    bid = codes_bufr_new_from_samples("BUFR4_local_satellite")
+    assert codes_bufr_key_is_header(bid, "edition")
+    assert codes_bufr_key_is_header(bid, "satelliteID")
+    assert codes_bufr_key_is_header(bid, "unexpandedDescriptors")
+
+    with pytest.raises(KeyValueNotFoundError):
+        codes_bufr_key_is_header(bid, "satelliteSensorIndicator")
+
+    codes_set(bid, "unpack", 1)
+
+    assert not codes_bufr_key_is_header(bid, "satelliteSensorIndicator")
+    assert not codes_bufr_key_is_header(bid, "#6#brightnessTemperature")
+
+
 def _test_extract_offsets():
     fpath = get_sample_fullpath("BUFR4.tmpl")
     if fpath is None:

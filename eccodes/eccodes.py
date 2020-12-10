@@ -129,6 +129,7 @@ from gribapi import codes_bufr_multi_element_constant_arrays_on
 from gribapi import codes_bufr_multi_element_constant_arrays_off
 from gribapi import codes_bufr_extract_headers
 
+# from gribapi import codes_bufr_key_is_header
 # from gribapi import codes_extract_offsets
 
 from gribapi.errors import GribInternalError as CodesInternalError

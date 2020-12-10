@@ -2387,6 +2387,24 @@ def codes_bufr_extract_headers(filepath, is_strict=True):
         i += 1
 
 
+# def codes_bufr_key_is_header(msgid, key):
+#    """
+#    @brief Check if the BUFR key is in the header or in the data section.
+#
+#    If the data section has not been unpacked, then passing in a key from
+#    the data section will throw KeyValueNotFoundError.
+#
+#    @param msgid      id of the BUFR message loaded in memory
+#    @param key        key name
+#    @return           1->header, 0->data section
+#    @exception CodesInternalError
+#    """
+#    h = get_handle(msgid)
+#    err, value = err_last(lib.codes_bufr_key_is_header)(h, key.encode(ENC))
+#    GRIB_CHECK(err)
+#    return value
+
+
 # def codes_extract_offsets(filepath, product_kind, is_strict=True):
 #    """
 #    @brief Message offset extraction (EXPERIMENTAL FEATURE)
