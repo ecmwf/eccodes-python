@@ -485,6 +485,8 @@ def test_grib_index_new_from_file(tmpdir):
 def test_grib_multi_support_reset_file():
     # TODO: read an actual multi-field GRIB here
     fpath = get_sample_fullpath("GRIB2.tmpl")
+    if fpath is None:
+        return
     codes_grib_multi_support_on()
     with open(fpath, "rb") as f:
         codes_grib_multi_support_reset_file(f)
@@ -591,6 +593,17 @@ def test_bufr_keys_iterator():
     # assert count == 157
     codes_bufr_keys_iterator_rewind(iterid)
     codes_bufr_keys_iterator_delete(iterid)
+    codes_release(bid)
+
+
+def test_bufr_codes_is_missing():
+    bid = codes_bufr_new_from_samples("BUFR4_local")
+    codes_set(bid, "unpack", 1)
+    assert codes_is_missing(bid, "heightOfBarometerAboveMeanSeaLevel") == 1
+    assert codes_is_missing(bid, "blockNumber") == 1
+    assert codes_is_missing(bid, "stationOrSiteName") == 1
+    assert codes_is_missing(bid, "unexpandedDescriptors") == 0
+    assert codes_is_missing(bid, "ident") == 0
     codes_release(bid)
 
 
