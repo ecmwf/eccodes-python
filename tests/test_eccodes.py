@@ -596,7 +596,7 @@ def test_bufr_keys_iterator():
     codes_release(bid)
 
 
-def test_bufr_codes_is_missing():
+def _test_bufr_codes_is_missing():
     bid = codes_bufr_new_from_samples("BUFR4_local")
     codes_set(bid, "unpack", 1)
     assert codes_is_missing(bid, "heightOfBarometerAboveMeanSeaLevel") == 1
@@ -604,6 +604,12 @@ def test_bufr_codes_is_missing():
     assert codes_is_missing(bid, "stationOrSiteName") == 1
     assert codes_is_missing(bid, "unexpandedDescriptors") == 0
     assert codes_is_missing(bid, "ident") == 0
+
+    codes_set(bid, "stationOrSiteName", "Barca")
+    codes_set(bid, "pack", 1)
+
+    assert codes_is_missing(bid, "stationOrSiteName") == 0
+
     codes_release(bid)
 
 
