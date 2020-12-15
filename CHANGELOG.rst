@@ -10,6 +10,7 @@ Changelog for eccodes-python
 - ECC-1176: Python3 bindings: float32 recognised as int instead of float
 - Remove the apparent support for Python 2 (GitHub pull request #41)
 - Fix CFFI crash on windows (GitHub pull request #44)
+- Add unit testing with GitHub actions (linux, macos and windows) (GitHub pull request #42)
 
 
 1.0.0 (2020-10-14)
