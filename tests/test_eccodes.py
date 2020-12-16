@@ -9,6 +9,10 @@
 # does it submit to any jurisdiction.
 #
 
+"""
+Tests of the ecCodes Python3 bindings
+"""
+
 import os.path
 import math
 import numpy as np
@@ -260,6 +264,7 @@ def test_grib_keys_iterator():
     while codes_keys_iterator_next(iterid):
         keyname = codes_keys_iterator_get_name(iterid)
         keyval = codes_get_string(gid, keyname)
+        assert len(keyval) > 0
         count += 1
     assert count == 10
     codes_keys_iterator_rewind(iterid)
@@ -280,6 +285,7 @@ def test_grib_keys_iterator_skip():
     while codes_keys_iterator_next(iterid):
         keyname = codes_keys_iterator_get_name(iterid)
         keyval = codes_get_string(gid, keyname)
+        assert len(keyval) > 0
         count += 1
     # centre, level and dataType
     assert count == 3
@@ -338,6 +344,9 @@ def test_grib_geoiterator():
         if not result:
             break
         [lat, lon, value] = result
+        assert -90.0 < lat < 90.00
+        assert 0.0 <= lon < 360.0
+        assert math.isclose(value, 1.0, abs_tol=0.001)
         i += 1
     assert i == 348528
     codes_grib_iterator_delete(iterid)
@@ -439,7 +448,7 @@ def test_gribex_mode():
 
 def test_grib_new_from_samples_error():
     with pytest.raises(FileNotFoundError):
-        gid = codes_new_from_samples("poopoo", CODES_PRODUCT_GRIB)
+        codes_new_from_samples("poopoo", CODES_PRODUCT_GRIB)
 
 
 def test_grib_new_from_file_error(tmp_path):
@@ -450,7 +459,7 @@ def test_grib_new_from_file_error(tmp_path):
     p.write_text("GRIBxxxx")
     with open(p, "rb") as f:
         with pytest.raises(UnsupportedEditionError):
-            msg = codes_grib_new_from_file(f)
+            codes_grib_new_from_file(f)
 
 
 def test_grib_index_new_from_file(tmpdir):
@@ -558,7 +567,7 @@ def test_bufr_set_float():
     codes_release(ibufr)
 
 
-def test_bufr_set_string_array(tmpdir):
+def test_bufr_set_string_array():
     ibufr = codes_bufr_new_from_samples("BUFR3_local_satellite")
     codes_set(ibufr, "numberOfSubsets", 3)
     codes_set(ibufr, "unexpandedDescriptors", 307022)
@@ -630,7 +639,7 @@ def test_bufr_multi_element_constant_arrays():
 
 def test_bufr_new_from_samples_error():
     with pytest.raises(FileNotFoundError):
-        gid = codes_new_from_samples("nonExistentSample", CODES_PRODUCT_BUFR)
+        codes_new_from_samples("nonExistentSample", CODES_PRODUCT_BUFR)
     with pytest.raises(ValueError):
         codes_new_from_samples("BUFR3_local", 1024)
 
