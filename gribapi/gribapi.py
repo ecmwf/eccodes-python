@@ -2387,46 +2387,46 @@ def codes_bufr_extract_headers(filepath, is_strict=True):
         i += 1
 
 
-# def codes_bufr_key_is_header(msgid, key):
-#    """
-#    @brief Check if the BUFR key is in the header or in the data section.
-#
-#    If the data section has not been unpacked, then passing in a key from
-#    the data section will throw KeyValueNotFoundError.
-#
-#    @param msgid      id of the BUFR message loaded in memory
-#    @param key        key name
-#    @return           1->header, 0->data section
-#    @exception CodesInternalError
-#    """
-#    h = get_handle(msgid)
-#    err, value = err_last(lib.codes_bufr_key_is_header)(h, key.encode(ENC))
-#    GRIB_CHECK(err)
-#    return value
+def codes_bufr_key_is_header(msgid, key):
+    """
+    @brief Check if the BUFR key is in the header or in the data section.
+
+    If the data section has not been unpacked, then passing in a key from
+    the data section will throw KeyValueNotFoundError.
+
+    @param msgid      id of the BUFR message loaded in memory
+    @param key        key name
+    @return           1->header, 0->data section
+    @exception CodesInternalError
+    """
+    h = get_handle(msgid)
+    err, value = err_last(lib.codes_bufr_key_is_header)(h, key.encode(ENC))
+    GRIB_CHECK(err)
+    return value
 
 
-# def codes_extract_offsets(filepath, product_kind, is_strict=True):
-#    """
-#    @brief Message offset extraction (EXPERIMENTAL FEATURE)
-#
-#    @param filepath       path of input file
-#    @param is_strict      fail as soon as any invalid message is encountered
-#    @return               a list of offsets
-#    @exception CodesInternalError
-#    """
-#    context = lib.grib_context_get_default()
-#    offsets_p = ffi.new("long int**")
-#    num_message_p = ffi.new("int*")
-#
-#    err = lib.codes_extract_offsets_malloc(
-#        context, filepath.encode(ENC), product_kind, offsets_p, num_message_p, is_strict
-#    )
-#    GRIB_CHECK(err)
-#
-#    num_messages = num_message_p[0]
-#    offsets = offsets_p[0]
-#
-#    i = 0
-#    while i < num_messages:
-#        yield offsets[i]
-#        i += 1
+def codes_extract_offsets(filepath, product_kind, is_strict=True):
+    """
+    @brief Message offset extraction (EXPERIMENTAL FEATURE)
+
+    @param filepath       path of input file
+    @param is_strict      fail as soon as any invalid message is encountered
+    @return               a list of offsets
+    @exception CodesInternalError
+    """
+    context = lib.grib_context_get_default()
+    offsets_p = ffi.new("long int**")
+    num_message_p = ffi.new("int*")
+
+    err = lib.codes_extract_offsets_malloc(
+        context, filepath.encode(ENC), product_kind, offsets_p, num_message_p, is_strict
+    )
+    GRIB_CHECK(err)
+
+    num_messages = num_message_p[0]
+    offsets = offsets_p[0]
+
+    i = 0
+    while i < num_messages:
+        yield offsets[i]
+        i += 1

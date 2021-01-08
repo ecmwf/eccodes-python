@@ -502,8 +502,8 @@ def test_grib_multi_support_reset_file():
     codes_grib_multi_support_off()
 
 
-def _test_grib_uuid_get_set():
-    # TODO: enable test when ECC-1167 is fixed
+def test_grib_uuid_get_set():
+    # ECC-1167
     gid = codes_grib_new_from_samples("GRIB2")
     codes_set(gid, "gridType", "unstructured_grid")
     uuid = codes_get_string(gid, "uuidOfHGrid")
@@ -605,7 +605,7 @@ def test_bufr_keys_iterator():
     codes_release(bid)
 
 
-def _test_bufr_codes_is_missing():
+def test_bufr_codes_is_missing():
     bid = codes_bufr_new_from_samples("BUFR4_local")
     codes_set(bid, "unpack", 1)
     assert codes_is_missing(bid, "heightOfBarometerAboveMeanSeaLevel") == 1
@@ -655,7 +655,7 @@ def test_bufr_get_message_offset():
 
 
 # Experimental features
-def _test_codes_bufr_key_is_header():
+def test_codes_bufr_key_is_header():
     bid = codes_bufr_new_from_samples("BUFR4_local_satellite")
     assert codes_bufr_key_is_header(bid, "edition")
     assert codes_bufr_key_is_header(bid, "satelliteID")
@@ -670,7 +670,7 @@ def _test_codes_bufr_key_is_header():
     assert not codes_bufr_key_is_header(bid, "#6#brightnessTemperature")
 
 
-def _test_extract_offsets():
+def test_extract_offsets():
     fpath = get_sample_fullpath("BUFR4.tmpl")
     if fpath is None:
         return
@@ -681,7 +681,7 @@ def _test_extract_offsets():
     assert offsets_list[0] == 0
 
 
-def _test_bufr_extract_headers():
+def test_bufr_extract_headers():
     fpath = get_sample_fullpath("BUFR4_local.tmpl")
     if fpath is None:
         return
