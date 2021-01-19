@@ -2,7 +2,7 @@
 Changelog for eccodes-python
 ============================
 
-1.1.0 (2021-01-DD)
+1.1.0 (2021-01-20)
 --------------------
 
 - ECC-1171: Performance: Python bindings: remove assert statements
