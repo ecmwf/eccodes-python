@@ -155,7 +155,6 @@ def err_last(func):
 
 
 def get_handle(msgid):
-    assert isinstance(msgid, int)
     h = ffi.cast("grib_handle*", msgid)
     if h == ffi.NULL:
         raise errors.InvalidGribError(f"get_handle: Bad message ID {msgid}")
@@ -169,7 +168,6 @@ def put_handle(handle):
 
 
 def get_multi_handle(msgid):
-    assert isinstance(msgid, int)
     return ffi.cast("grib_multi_handle*", msgid)
 
 
@@ -178,7 +176,6 @@ def put_multi_handle(handle):
 
 
 def get_index(indexid):
-    assert isinstance(indexid, int)
     return ffi.cast("grib_index*", indexid)
 
 
@@ -187,7 +184,6 @@ def put_index(indexh):
 
 
 def get_iterator(iterid):
-    assert isinstance(iterid, int)
     return ffi.cast("grib_iterator*", iterid)
 
 
@@ -196,7 +192,6 @@ def put_iterator(iterh):
 
 
 def get_grib_keys_iterator(iterid):
-    assert isinstance(iterid, int)
     return ffi.cast("grib_keys_iterator*", iterid)
 
 
@@ -205,7 +200,6 @@ def put_grib_keys_iterator(iterh):
 
 
 def get_bufr_keys_iterator(iterid):
-    assert isinstance(iterid, int)
     return ffi.cast("bufr_keys_iterator*", iterid)
 
 
@@ -314,7 +308,7 @@ def codes_new_from_file(fileobj, product_kind, headers_only=False):
         return gts_new_from_file(fileobj, headers_only)
     if product_kind == CODES_PRODUCT_ANY:
         return any_new_from_file(fileobj, headers_only)
-    raise Exception("Invalid product kind: " + product_kind)
+    raise ValueError("Invalid product kind %d" % product_kind)
 
 
 @require(fileobj=file)
@@ -456,7 +450,7 @@ def grib_multi_support_reset_file(fileobj):
     @brief Reset file handle in multiple field support mode
     """
     context = lib.grib_context_get_default()
-    GRIB_CHECK(lib.grib_multi_support_reset_file(context, fileobj))
+    lib.grib_multi_support_reset_file(context, fileobj)
 
 
 @require(msgid=int)
@@ -971,7 +965,7 @@ def grib_get_double(msgid, key):
     return value_p[0]
 
 
-@require(msgid=int, key=str, value=(int, float, str))
+@require(msgid=int, key=str, value=(int, float, np.float16, np.float32, str))
 def grib_set_long(msgid, key, value):
     """
     @brief Set the integer value for a key in a message.
@@ -990,13 +984,13 @@ def grib_set_long(msgid, key, value):
         raise TypeError("Invalid type")
 
     if value > sys.maxsize:
-        raise TypeError("Invalid type")
+        raise ValueError("Value too large")
 
     h = get_handle(msgid)
     GRIB_CHECK(lib.grib_set_long(h, key.encode(ENC), value))
 
 
-@require(msgid=int, key=str, value=(int, float, str))
+@require(msgid=int, key=str, value=(int, float, np.float16, np.float32, str))
 def grib_set_double(msgid, key, value):
     """
     @brief Set the double value for a key in a message.
@@ -1037,7 +1031,7 @@ def codes_new_from_samples(samplename, product_kind):
         return grib_new_from_samples(samplename)
     if product_kind == CODES_PRODUCT_BUFR:
         return codes_bufr_new_from_samples(samplename)
-    raise Exception("Invalid product kind: " + product_kind)
+    raise ValueError("Invalid product kind %d" % product_kind)
 
 
 @require(samplename=str)
@@ -2039,7 +2033,7 @@ def grib_set(msgid, key, value):
     """
     if isinstance(value, int):
         grib_set_long(msgid, key, value)
-    elif isinstance(value, float):
+    elif isinstance(value, (float, np.float16, np.float32, np.float64)):
         grib_set_double(msgid, key, value)
     elif isinstance(value, str):
         grib_set_string(msgid, key, value)
@@ -2075,12 +2069,11 @@ def grib_set_array(msgid, key, value):
     except TypeError:
         pass
 
-    if isinstance(val0, float):
+    if isinstance(val0, (float, np.float16, np.float32, np.float64)):
         grib_set_double_array(msgid, key, value)
     elif isinstance(val0, str):
         grib_set_string_array(msgid, key, value)
     else:
-        # Note: Cannot do isinstance(val0,int) for numpy.int64
         try:
             int(val0)
         except (ValueError, TypeError):
@@ -2391,4 +2384,49 @@ def codes_bufr_extract_headers(filepath, is_strict=True):
     i = 0
     while i < num_messages:
         yield _convert_struct_to_dict(headers[i])
+        i += 1
+
+
+def codes_bufr_key_is_header(msgid, key):
+    """
+    @brief Check if the BUFR key is in the header or in the data section.
+
+    If the data section has not been unpacked, then passing in a key from
+    the data section will throw KeyValueNotFoundError.
+
+    @param msgid      id of the BUFR message loaded in memory
+    @param key        key name
+    @return           1->header, 0->data section
+    @exception CodesInternalError
+    """
+    h = get_handle(msgid)
+    err, value = err_last(lib.codes_bufr_key_is_header)(h, key.encode(ENC))
+    GRIB_CHECK(err)
+    return value
+
+
+def codes_extract_offsets(filepath, product_kind, is_strict=True):
+    """
+    @brief Message offset extraction (EXPERIMENTAL FEATURE)
+
+    @param filepath       path of input file
+    @param is_strict      fail as soon as any invalid message is encountered
+    @return               a list of offsets
+    @exception CodesInternalError
+    """
+    context = lib.grib_context_get_default()
+    offsets_p = ffi.new("long int**")
+    num_message_p = ffi.new("int*")
+
+    err = lib.codes_extract_offsets_malloc(
+        context, filepath.encode(ENC), product_kind, offsets_p, num_message_p, is_strict
+    )
+    GRIB_CHECK(err)
+
+    num_messages = num_message_p[0]
+    offsets = offsets_p[0]
+
+    i = 0
+    while i < num_messages:
+        yield offsets[i]
         i += 1

@@ -9,6 +9,10 @@
 # does it submit to any jurisdiction.
 #
 
+"""
+Tests of the ecCodes Python3 bindings
+"""
+
 import os.path
 import math
 import numpy as np
@@ -19,7 +23,17 @@ from eccodes import *
 SAMPLE_DATA_FOLDER = os.path.join(os.path.dirname(__file__), "sample-data")
 TEST_DATA = os.path.join(SAMPLE_DATA_FOLDER, "era5-levels-members.grib")
 
-# ANY
+
+def get_sample_fullpath(sample):
+    samples_path = codes_samples_path()
+    if not os.path.isdir(samples_path):
+        return None
+    return os.path.join(samples_path, sample)
+
+
+# ---------------------------------------------
+# ANY PRODUCT
+# ---------------------------------------------
 def test_codes_definition_path():
     df = codes_definition_path()
     assert df is not None
@@ -54,21 +68,22 @@ def test_codes_get_native_type():
     assert codes_get_native_type(gid, "referenceValue") is float
     assert codes_get_native_type(gid, "stepType") is str
     assert codes_get_native_type(gid, "section_1") is None
+    with pytest.raises(InvalidGribError):
+        codes_get_native_type(0, "aKey")
 
 
 def test_new_from_file():
-    samples_path = codes_samples_path()
-    if not os.path.isdir(samples_path):
+    fpath = get_sample_fullpath("GRIB2.tmpl")
+    if fpath is None:
         return
-    fpath = os.path.join(samples_path, "GRIB2.tmpl")
     with open(fpath, "rb") as f:
         msgid = codes_new_from_file(f, CODES_PRODUCT_GRIB)
         assert msgid
-    fpath = os.path.join(samples_path, "BUFR4.tmpl")
+    fpath = get_sample_fullpath("BUFR4.tmpl")
     with open(fpath, "rb") as f:
         msgid = codes_new_from_file(f, CODES_PRODUCT_BUFR)
         assert msgid
-    fpath = os.path.join(samples_path, "clusters_grib1.tmpl")
+    fpath = get_sample_fullpath("clusters_grib1.tmpl")
     with open(fpath, "rb") as f:
         msgid = codes_new_from_file(f, CODES_PRODUCT_ANY)
         assert msgid
@@ -78,13 +93,15 @@ def test_new_from_file():
     with open(fpath, "rb") as f:
         msgid = codes_new_from_file(f, CODES_PRODUCT_METAR)
         assert msgid is None
+    with pytest.raises(ValueError):
+        with open(fpath, "rb") as f:
+            codes_new_from_file(f, 1024)
 
 
 def test_any_read():
-    samples_path = codes_samples_path()
-    if not os.path.isdir(samples_path):
+    fpath = get_sample_fullpath("GRIB1.tmpl")
+    if fpath is None:
         return
-    fpath = os.path.join(samples_path, "GRIB1.tmpl")
     with open(fpath, "rb") as f:
         msgid = codes_any_new_from_file(f)
         assert codes_get(msgid, "edition") == 1
@@ -92,7 +109,7 @@ def test_any_read():
         assert codes_get(msgid, "identifier", str) == "GRIB"
         codes_release(msgid)
 
-    fpath = os.path.join(samples_path, "BUFR3.tmpl")
+    fpath = get_sample_fullpath("BUFR3.tmpl")
     with open(fpath, "rb") as f:
         msgid = codes_any_new_from_file(f)
         assert codes_get(msgid, "edition") == 3
@@ -101,10 +118,9 @@ def test_any_read():
 
 
 def test_count_in_file():
-    samples_path = codes_samples_path()
-    if not os.path.isdir(samples_path):
+    fpath = get_sample_fullpath("GRIB1.tmpl")
+    if fpath is None:
         return
-    fpath = os.path.join(samples_path, "GRIB1.tmpl")
     with open(fpath, "rb") as f:
         assert codes_count_in_file(f) == 1
 
@@ -132,7 +148,9 @@ def test_gts_header():
     codes_gts_header(False)
 
 
+# ---------------------------------------------
 # GRIB
+# ---------------------------------------------
 def test_grib_read():
     gid = codes_grib_new_from_samples("regular_ll_sfc_grib1")
     assert codes_get(gid, "Ni") == 16
@@ -202,7 +220,8 @@ def test_grib_set_key_vals():
 
 def test_grib_get_error():
     gid = codes_grib_new_from_samples("regular_ll_sfc_grib2")
-    with pytest.raises(ValueError):
+    # Note: AssertionError can be raised when type checks are enabled
+    with pytest.raises((ValueError, AssertionError)):
         codes_get(gid, None)
 
 
@@ -245,6 +264,7 @@ def test_grib_keys_iterator():
     while codes_keys_iterator_next(iterid):
         keyname = codes_keys_iterator_get_name(iterid)
         keyval = codes_get_string(gid, keyname)
+        assert len(keyval) > 0
         count += 1
     assert count == 10
     codes_keys_iterator_rewind(iterid)
@@ -265,6 +285,7 @@ def test_grib_keys_iterator_skip():
     while codes_keys_iterator_next(iterid):
         keyname = codes_keys_iterator_get_name(iterid)
         keyval = codes_get_string(gid, keyname)
+        assert len(keyval) > 0
         count += 1
     # centre, level and dataType
     assert count == 3
@@ -323,6 +344,9 @@ def test_grib_geoiterator():
         if not result:
             break
         [lat, lon, value] = result
+        assert -90.0 < lat < 90.00
+        assert 0.0 <= lon < 360.0
+        assert math.isclose(value, 1.0, abs_tol=0.001)
         i += 1
     assert i == 348528
     codes_grib_iterator_delete(iterid)
@@ -409,10 +433,12 @@ def test_grib_ecc_1007():
 
 def test_grib_float_array():
     gid = codes_grib_new_from_samples("regular_ll_sfc_grib2")
-    values = np.ones((100000,), np.float32)
-    codes_set_values(gid, values)
-    getvals = codes_get_values(gid)
-    assert (getvals == 1.0).all()
+    for ftype in (float, np.float16, np.float32, np.float64):
+        values = np.ones((100000,), ftype)
+        codes_set_array(gid, "values", values)
+        assert (codes_get_values(gid) == 1.0).all()
+        codes_set_values(gid, values)
+        assert (codes_get_values(gid) == 1.0).all()
 
 
 def test_gribex_mode():
@@ -422,24 +448,24 @@ def test_gribex_mode():
 
 def test_grib_new_from_samples_error():
     with pytest.raises(FileNotFoundError):
-        gid = codes_new_from_samples("poopoo", CODES_PRODUCT_GRIB)
+        codes_new_from_samples("poopoo", CODES_PRODUCT_GRIB)
 
 
 def test_grib_new_from_file_error(tmp_path):
-    with pytest.raises(TypeError):
+    # Note: AssertionError can be raised when type checks are enabled
+    with pytest.raises((TypeError, AssertionError)):
         codes_grib_new_from_file(None)
     p = tmp_path / "afile.txt"
     p.write_text("GRIBxxxx")
     with open(p, "rb") as f:
         with pytest.raises(UnsupportedEditionError):
-            msg = codes_grib_new_from_file(f)
+            codes_grib_new_from_file(f)
 
 
 def test_grib_index_new_from_file(tmpdir):
-    samples_path = codes_samples_path()
-    if not os.path.isdir(samples_path):
+    fpath = get_sample_fullpath("GRIB1.tmpl")
+    if fpath is None:
         return
-    fpath = os.path.join(samples_path, "GRIB1.tmpl")
     index_keys = ["shortName", "level", "number", "step"]
     iid = codes_index_new_from_file(fpath, index_keys)
     index_file = str(tmpdir.join("temp.grib.index"))
@@ -467,17 +493,30 @@ def test_grib_index_new_from_file(tmpdir):
 
 def test_grib_multi_support_reset_file():
     # TODO: read an actual multi-field GRIB here
-    samples_path = codes_samples_path()
-    if not os.path.isdir(samples_path):
+    fpath = get_sample_fullpath("GRIB2.tmpl")
+    if fpath is None:
         return
-    fpath = os.path.join(samples_path, "GRIB2.tmpl")
     codes_grib_multi_support_on()
     with open(fpath, "rb") as f:
         codes_grib_multi_support_reset_file(f)
     codes_grib_multi_support_off()
 
 
+def test_grib_uuid_get_set():
+    # ECC-1167
+    gid = codes_grib_new_from_samples("GRIB2")
+    codes_set(gid, "gridType", "unstructured_grid")
+    uuid = codes_get_string(gid, "uuidOfHGrid")
+    assert uuid == "00000000000000000000000000000000"
+    codes_set_string(gid, "uuidOfHGrid", "DEfdBEef10203040b00b1e50001100FF")
+    uuid = codes_get_string(gid, "uuidOfHGrid")
+    assert uuid == "defdbeef10203040b00b1e50001100ff"
+    codes_release(gid)
+
+
+# ---------------------------------------------
 # BUFR
+# ---------------------------------------------
 def test_bufr_read_write(tmpdir):
     bid = codes_new_from_samples("BUFR4", CODES_PRODUCT_BUFR)
     codes_set(bid, "unpack", 1)
@@ -520,7 +559,15 @@ def test_bufr_encode(tmpdir):
     codes_release(ibufr)
 
 
-def test_bufr_set_string_array(tmpdir):
+def test_bufr_set_float():
+    ibufr = codes_bufr_new_from_samples("BUFR4")
+    codes_set(ibufr, "unpack", 1)
+    codes_set(ibufr, "totalPrecipitationPast24Hours", np.float32(1.26e04))
+    codes_set(ibufr, "totalPrecipitationPast24Hours", np.float16(1.27e04))
+    codes_release(ibufr)
+
+
+def test_bufr_set_string_array():
     ibufr = codes_bufr_new_from_samples("BUFR3_local_satellite")
     codes_set(ibufr, "numberOfSubsets", 3)
     codes_set(ibufr, "unexpandedDescriptors", 307022)
@@ -558,6 +605,23 @@ def test_bufr_keys_iterator():
     codes_release(bid)
 
 
+def test_bufr_codes_is_missing():
+    bid = codes_bufr_new_from_samples("BUFR4_local")
+    codes_set(bid, "unpack", 1)
+    assert codes_is_missing(bid, "heightOfBarometerAboveMeanSeaLevel") == 1
+    assert codes_is_missing(bid, "blockNumber") == 1
+    assert codes_is_missing(bid, "stationOrSiteName") == 1
+    assert codes_is_missing(bid, "unexpandedDescriptors") == 0
+    assert codes_is_missing(bid, "ident") == 0
+
+    codes_set(bid, "stationOrSiteName", "Barca")
+    codes_set(bid, "pack", 1)
+
+    assert codes_is_missing(bid, "stationOrSiteName") == 0
+
+    codes_release(bid)
+
+
 def test_bufr_multi_element_constant_arrays():
     codes_bufr_multi_element_constant_arrays_off()
     bid = codes_bufr_new_from_samples("BUFR3_local_satellite")
@@ -575,7 +639,9 @@ def test_bufr_multi_element_constant_arrays():
 
 def test_bufr_new_from_samples_error():
     with pytest.raises(FileNotFoundError):
-        gid = codes_new_from_samples("poopoo", CODES_PRODUCT_BUFR)
+        codes_new_from_samples("nonExistentSample", CODES_PRODUCT_BUFR)
+    with pytest.raises(ValueError):
+        codes_new_from_samples("BUFR3_local", 1024)
 
 
 def test_bufr_get_message_size():
@@ -588,13 +654,37 @@ def test_bufr_get_message_offset():
     assert codes_get_message_offset(gid) == 0
 
 
-# Experimental feature
-def test_bufr_extract_headers():
-    samples_path = codes_samples_path()
-    if not os.path.isdir(samples_path):
+# Experimental features
+def test_codes_bufr_key_is_header():
+    bid = codes_bufr_new_from_samples("BUFR4_local_satellite")
+    assert codes_bufr_key_is_header(bid, "edition")
+    assert codes_bufr_key_is_header(bid, "satelliteID")
+    assert codes_bufr_key_is_header(bid, "unexpandedDescriptors")
+
+    with pytest.raises(KeyValueNotFoundError):
+        codes_bufr_key_is_header(bid, "satelliteSensorIndicator")
+
+    codes_set(bid, "unpack", 1)
+
+    assert not codes_bufr_key_is_header(bid, "satelliteSensorIndicator")
+    assert not codes_bufr_key_is_header(bid, "#6#brightnessTemperature")
+
+
+def test_extract_offsets():
+    fpath = get_sample_fullpath("BUFR4.tmpl")
+    if fpath is None:
         return
-    print("Samples path = ", samples_path)
-    fpath = os.path.join(samples_path, "BUFR4_local.tmpl")
+    is_strict = True
+    offsets = codes_extract_offsets(fpath, CODES_PRODUCT_ANY, is_strict)
+    offsets_list = list(offsets)
+    assert len(offsets_list) == 1
+    assert offsets_list[0] == 0
+
+
+def test_bufr_extract_headers():
+    fpath = get_sample_fullpath("BUFR4_local.tmpl")
+    if fpath is None:
+        return
     headers = list(codes_bufr_extract_headers(fpath))
     # Sample file contains just one message
     assert len(headers) == 1

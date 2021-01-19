@@ -220,6 +220,7 @@ typedef struct codes_bufr_header {
     long rectimeHour;
     long rectimeMinute;
     long rectimeSecond;
+    long restricted;
 
     long   isSatellite;
     double localLongitude1;
