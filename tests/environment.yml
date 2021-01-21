@@ -4,5 +4,5 @@ channels:
 dependencies:
   - attrs>=19.2
   - cffi
-  - eccodes=>2.21.0
+  - eccodes=>2.20.0
   - numpy
