@@ -5,6 +5,8 @@ Changelog for eccodes-python
 1.1.1 (2021-mm-dd)
 --------------------
 
+- Added test for multi-field GRIBs
+
 
 1.1.0 (2021-01-20)
 --------------------

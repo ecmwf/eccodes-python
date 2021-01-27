@@ -21,7 +21,7 @@ import pytest
 from eccodes import *
 
 SAMPLE_DATA_FOLDER = os.path.join(os.path.dirname(__file__), "sample-data")
-TEST_DATA = os.path.join(SAMPLE_DATA_FOLDER, "era5-levels-members.grib")
+TEST_DATA = os.path.join(SAMPLE_DATA_FOLDER, "multi_field.grib2")
 
 
 def get_sample_fullpath(sample):
@@ -492,14 +492,35 @@ def test_grib_index_new_from_file(tmpdir):
 
 
 def test_grib_multi_support_reset_file():
-    # TODO: read an actual multi-field GRIB here
-    fpath = get_sample_fullpath("GRIB2.tmpl")
-    if fpath is None:
-        return
-    codes_grib_multi_support_on()
-    with open(fpath, "rb") as f:
-        codes_grib_multi_support_reset_file(f)
-    codes_grib_multi_support_off()
+    try:
+        # TODO: read an actual multi-field GRIB here
+        fpath = get_sample_fullpath("GRIB2.tmpl")
+        if fpath is None:
+            return
+        codes_grib_multi_support_on()
+        with open(fpath, "rb") as f:
+            codes_grib_multi_support_reset_file(f)
+    finally:
+        codes_grib_multi_support_off()
+
+
+def test_grib_multi_field_write(tmpdir):
+    # Note: codes_grib_multi_new() calls codes_grib_multi_support_on()
+    #       hence the 'finally' block
+    try:
+        gid = codes_grib_new_from_samples("GRIB2")
+        mgid = codes_grib_multi_new()
+        section_num = 4
+        for step in range(12, 132, 12):
+            codes_set(gid, "step", step)
+            codes_grib_multi_append(gid, section_num, mgid)
+        output = tmpdir.join("test_grib_multi_field_write.grib2")
+        with open(str(output), "wb") as fout:
+            codes_grib_multi_write(mgid, fout)
+        codes_grib_multi_release(mgid)
+        codes_release(gid)
+    finally:
+        codes_grib_multi_support_off()
 
 
 def test_grib_uuid_get_set():
