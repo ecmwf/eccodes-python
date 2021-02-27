@@ -64,6 +64,10 @@ CODES_PRODUCT_TAF = 5
 GRIB_MISSING_DOUBLE = -1e100
 GRIB_MISSING_LONG = 2147483647
 
+# Constants for GRIB nearest neighbour
+GRIB_NEAREST_SAME_GRID = 1 << 0
+GRIB_NEAREST_SAME_DATA = 1 << 1
+GRIB_NEAREST_SAME_POINT = 1 << 2
 
 # ECC-1029: Disable function-arguments type-checking unless
 # environment variable is defined and equal to 1
@@ -2356,7 +2360,7 @@ def _convert_struct_to_dict(s):
 
 def codes_bufr_extract_headers(filepath, is_strict=True):
     """
-    @brief BUFR header extraction (EXPERIMENTAL FEATURE)
+    @brief BUFR header extraction
 
     @param filepath       path of input BUFR file
     @param is_strict      fail as soon as any invalid BUFR message is encountered
@@ -2407,7 +2411,7 @@ def codes_bufr_key_is_header(msgid, key):
 
 def codes_extract_offsets(filepath, product_kind, is_strict=True):
     """
-    @brief Message offset extraction (EXPERIMENTAL FEATURE)
+    @brief Message offset extraction
 
     @param filepath       path of input file
     @param is_strict      fail as soon as any invalid message is encountered
@@ -2430,3 +2434,66 @@ def codes_extract_offsets(filepath, product_kind, is_strict=True):
     while i < num_messages:
         yield offsets[i]
         i += 1
+
+
+# EXPERIMENTAL FEATURE
+@require(msgid=int)
+def grib_nearest_new(msgid):
+    h = get_handle(msgid)
+    err, nid = err_last(lib.grib_nearest_new)(h)
+    GRIB_CHECK(err)
+    return put_grib_nearest(nid)
+
+
+def put_grib_nearest(nid):
+    return int(ffi.cast("size_t", nid))
+
+
+def get_grib_nearest(nid):
+    return ffi.cast("grib_nearest*", nid)
+
+
+@require(nid=int)
+def grib_nearest_delete(nid):
+    nh = get_grib_nearest(nid)
+    lib.grib_nearest_delete(nh)
+
+
+@require(nid=int, gribid=int)
+def grib_nearest_find(nid, gribid, inlat, inlon, flags):
+    h = get_handle(gribid)
+    npoints = 4
+    outlats_p = ffi.new("double[]", npoints)
+    outlons_p = ffi.new("double[]", npoints)
+    values_p = ffi.new("double[]", npoints)
+    distances_p = ffi.new("double[]", npoints)
+    indexes_p = ffi.new("int[]", npoints)
+    size = ffi.new("size_t *")
+    nh = get_grib_nearest(nid)
+    err = lib.grib_nearest_find(
+        nh,
+        h,
+        inlat,
+        inlon,
+        flags,
+        outlats_p,
+        outlons_p,
+        values_p,
+        distances_p,
+        indexes_p,
+        size,
+    )
+    GRIB_CHECK(err)
+    result = []
+    for i in range(npoints):
+        result.append(
+            Bunch(
+                lat=outlats_p[i],
+                lon=outlons_p[i],
+                value=values_p[i],
+                distance=distances_p[i],
+                index=indexes_p[i],
+            )
+        )
+
+    return tuple(result)

@@ -21,6 +21,9 @@ from gribapi import CODES_PRODUCT_METAR
 from gribapi import CODES_PRODUCT_ANY
 from gribapi import GRIB_MISSING_DOUBLE as CODES_MISSING_DOUBLE
 from gribapi import GRIB_MISSING_LONG as CODES_MISSING_LONG
+from gribapi import GRIB_NEAREST_SAME_GRID as CODES_GRIB_NEAREST_SAME_GRID
+from gribapi import GRIB_NEAREST_SAME_DATA as CODES_GRIB_NEAREST_SAME_DATA
+from gribapi import GRIB_NEAREST_SAME_POINT as CODES_GRIB_NEAREST_SAME_POINT
 
 from gribapi import gts_new_from_file as codes_gts_new_from_file
 from gribapi import metar_new_from_file as codes_metar_new_from_file
@@ -102,6 +105,11 @@ from gribapi import grib_is_missing as codes_is_missing
 from gribapi import grib_is_defined as codes_is_defined
 from gribapi import grib_find_nearest as codes_grib_find_nearest
 from gribapi import grib_find_nearest_multiple as codes_grib_find_nearest_multiple
+
+from gribapi import grib_nearest_new as codes_grib_nearest_new
+from gribapi import grib_nearest_delete as codes_grib_nearest_delete
+from gribapi import grib_nearest_find as codes_grib_nearest_find
+
 from gribapi import grib_get_native_type as codes_get_native_type
 from gribapi import grib_get as codes_get
 from gribapi import grib_get_array as codes_get_array
