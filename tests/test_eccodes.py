@@ -320,6 +320,7 @@ def test_grib_get_double_element():
     gid = codes_grib_new_from_samples("gg_sfc_grib2")
     elem = codes_get_double_element(gid, "values", 1)
     assert math.isclose(elem, 259.9865, abs_tol=0.001)
+    codes_release(gid)
 
 
 def test_grib_get_double_elements():
@@ -386,6 +387,28 @@ def test_grib_nearest_multiple():
     codes_release(gid)
     assert nearest[0].index == 1770
     assert nearest[1].index == 2500
+
+
+def test_grib_nearest2():
+    gid = codes_grib_new_from_samples("gg_sfc_grib2")
+    lat, lon = 40, 20
+    flags = CODES_GRIB_NEAREST_SAME_GRID | CODES_GRIB_NEAREST_SAME_POINT
+    nid = codes_grib_nearest_new(gid)
+    assert nid > 0
+    nearest = codes_grib_nearest_find(nid, gid, lat, lon, flags)
+    assert len(nearest) == 4
+    expected_indexes = (2679, 2678, 2517, 2516)
+    returned_indexes = (
+        nearest[0].index,
+        nearest[1].index,
+        nearest[2].index,
+        nearest[3].index,
+    )
+    assert sorted(expected_indexes) == sorted(returned_indexes)
+    assert math.isclose(nearest[0].value, 295.22085, abs_tol=0.0001)
+    assert math.isclose(nearest[2].distance, 24.16520, abs_tol=0.0001)
+    codes_release(gid)
+    codes_grib_nearest_delete(nid)
 
 
 def test_grib_ecc_1042():
