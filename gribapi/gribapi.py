@@ -2460,9 +2460,21 @@ def grib_nearest_delete(nid):
 
 
 @require(nid=int, gribid=int)
-def grib_nearest_find(nid, gribid, inlat, inlon, flags):
+def grib_nearest_find(nid, gribid, inlat, inlon, flags, is_lsm=False, npoints=4):
+    # flags has to be one of:
+    #  GRIB_NEAREST_SAME_GRID
+    #  GRIB_NEAREST_SAME_DATA
+    #  GRIB_NEAREST_SAME_POINT
+    if npoints != 4:
+        raise errors.FunctionNotImplementedError(
+            "grib_nearest_find npoints argument: Only 4 points supported"
+        )
+    if is_lsm:
+        raise errors.FunctionNotImplementedError(
+            "grib_nearest_find is_lsm argument: Land sea mask not supported"
+        )
+
     h = get_handle(gribid)
-    npoints = 4
     outlats_p = ffi.new("double[]", npoints)
     outlons_p = ffi.new("double[]", npoints)
     values_p = ffi.new("double[]", npoints)
