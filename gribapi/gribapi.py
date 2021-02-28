@@ -2436,7 +2436,9 @@ def codes_extract_offsets(filepath, product_kind, is_strict=True):
         i += 1
 
 
-# EXPERIMENTAL FEATURE
+# -------------------------------
+# EXPERIMENTAL FEATURES
+# -------------------------------
 @require(msgid=int)
 def grib_nearest_new(msgid):
     h = get_handle(msgid)
