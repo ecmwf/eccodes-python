@@ -148,6 +148,17 @@ def test_gts_header():
     codes_gts_header(False)
 
 
+def test_extract_offsets():
+    fpath = get_sample_fullpath("BUFR4.tmpl")
+    if fpath is None:
+        return
+    is_strict = True
+    offsets = codes_extract_offsets(fpath, CODES_PRODUCT_ANY, is_strict)
+    offsets_list = list(offsets)
+    assert len(offsets_list) == 1
+    assert offsets_list[0] == 0
+
+
 # ---------------------------------------------
 # GRIB
 # ---------------------------------------------
@@ -387,28 +398,6 @@ def test_grib_nearest_multiple():
     codes_release(gid)
     assert nearest[0].index == 1770
     assert nearest[1].index == 2500
-
-
-def test_grib_nearest2():
-    gid = codes_grib_new_from_samples("gg_sfc_grib2")
-    lat, lon = 40, 20
-    flags = CODES_GRIB_NEAREST_SAME_GRID | CODES_GRIB_NEAREST_SAME_POINT
-    nid = codes_grib_nearest_new(gid)
-    assert nid > 0
-    nearest = codes_grib_nearest_find(nid, gid, lat, lon, flags)
-    assert len(nearest) == 4
-    expected_indexes = (2679, 2678, 2517, 2516)
-    returned_indexes = (
-        nearest[0].index,
-        nearest[1].index,
-        nearest[2].index,
-        nearest[3].index,
-    )
-    assert sorted(expected_indexes) == sorted(returned_indexes)
-    assert math.isclose(nearest[0].value, 295.22085, abs_tol=0.0001)
-    assert math.isclose(nearest[2].distance, 24.16520, abs_tol=0.0001)
-    codes_release(gid)
-    codes_grib_nearest_delete(nid)
 
 
 def test_grib_ecc_1042():
@@ -698,7 +687,6 @@ def test_bufr_get_message_offset():
     assert codes_get_message_offset(gid) == 0
 
 
-# Experimental features
 def test_codes_bufr_key_is_header():
     bid = codes_bufr_new_from_samples("BUFR4_local_satellite")
     assert codes_bufr_key_is_header(bid, "edition")
@@ -712,17 +700,6 @@ def test_codes_bufr_key_is_header():
 
     assert not codes_bufr_key_is_header(bid, "satelliteSensorIndicator")
     assert not codes_bufr_key_is_header(bid, "#6#brightnessTemperature")
-
-
-def test_extract_offsets():
-    fpath = get_sample_fullpath("BUFR4.tmpl")
-    if fpath is None:
-        return
-    is_strict = True
-    offsets = codes_extract_offsets(fpath, CODES_PRODUCT_ANY, is_strict)
-    offsets_list = list(offsets)
-    assert len(offsets_list) == 1
-    assert offsets_list[0] == 0
 
 
 def test_bufr_extract_headers():
@@ -739,3 +716,30 @@ def test_bufr_extract_headers():
     assert header["ident"].strip() == "91334"
     assert header["rdbtimeSecond"] == 19
     assert math.isclose(header["localLongitude"], 151.83)
+
+
+# ---------------------------------------------
+# Experimental features
+# ---------------------------------------------
+def test_grib_nearest2():
+    if "codes_grib_nearest_new" not in dir(eccodes):
+        return
+    gid = codes_grib_new_from_samples("gg_sfc_grib2")
+    lat, lon = 40, 20
+    flags = CODES_GRIB_NEAREST_SAME_GRID | CODES_GRIB_NEAREST_SAME_POINT
+    nid = codes_grib_nearest_new(gid)
+    assert nid > 0
+    nearest = codes_grib_nearest_find(nid, gid, lat, lon, flags)
+    assert len(nearest) == 4
+    expected_indexes = (2679, 2678, 2517, 2516)
+    returned_indexes = (
+        nearest[0].index,
+        nearest[1].index,
+        nearest[2].index,
+        nearest[3].index,
+    )
+    assert sorted(expected_indexes) == sorted(returned_indexes)
+    assert math.isclose(nearest[0].value, 295.22085, abs_tol=0.0001)
+    assert math.isclose(nearest[2].distance, 24.16520, abs_tol=0.0001)
+    codes_release(gid)
+    codes_grib_nearest_delete(nid)
