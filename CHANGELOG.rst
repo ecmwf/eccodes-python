@@ -2,10 +2,11 @@
 Changelog for eccodes-python
 ============================
 
-1.1.1 (2021-mm-dd)
+1.2.0 (2021-03-dd)
 --------------------
 
 - Added test for multi-field GRIBs
+- Experimental feature: grib_nearest_find
 
 
 1.1.0 (2021-01-20)

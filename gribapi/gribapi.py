@@ -817,7 +817,6 @@ def grib_keys_iterator_delete(iterid):
     @param iterid      keys iterator id created with @ref grib_keys_iterator_new
     @exception CodesInternalError
     """
-    # aa: THIS LEAKS MEMORY as it doesn't free all the connected iterators
     kih = get_grib_keys_iterator(iterid)
     lib.grib_keys_iterator_delete(kih)
 
@@ -833,7 +832,6 @@ def grib_keys_iterator_get_name(iterid):
     @return          key name to be retrieved
     @exception CodesInternalError
     """
-    # aa: missing call to grib_keys_iterator_get_accessor
     kih = get_grib_keys_iterator(iterid)
     name = lib.grib_keys_iterator_get_name(kih)
     return ffi.string(name).decode(ENC)
@@ -1586,7 +1584,7 @@ def grib_get_double_element(msgid, key, index):
     """
     h = get_handle(msgid)
     value_p = ffi.new("double*")
-    err = lib.grib_get_double_element(h, key.encode(ENC), index, value_p)  # TODO
+    err = lib.grib_get_double_element(h, key.encode(ENC), index, value_p)
     GRIB_CHECK(err)
     return value_p[0]
 
