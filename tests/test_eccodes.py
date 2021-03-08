@@ -413,7 +413,14 @@ def test_grib_ecc_1042():
     assert read_vals[length - 1] == 3
 
     # Trying write with explicit dtype
-    write_vals = np.array([1, 2, 3,], dtype=float,)
+    write_vals = np.array(
+        [
+            1,
+            2,
+            3,
+        ],
+        dtype=float,
+    )
     codes_set_values(gid, write_vals)
     read_vals = codes_get_values(gid)
     assert read_vals[0] == 1
