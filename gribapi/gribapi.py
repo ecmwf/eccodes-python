@@ -2043,8 +2043,11 @@ def grib_set(msgid, key, value):
     #    # The value passed in is iterable; i.e. a list or array etc
     #    grib_set_array(msgid, key, value)
     else:
+        hint = ""
+        if hasattr(value, "__iter__"):
+            hint = " (Hint: for array keys use codes_set_array(msgid, key, value))"
         raise errors.GribInternalError(
-            "Invalid type of value when setting key '%s'." % key
+            "Invalid type of value when setting key '%s'%s." % (key, hint)
         )
 
 
