@@ -2,7 +2,7 @@
 Changelog for eccodes-python
 ============================
 
-1.2.0 (2021-03-dd)
+1.2.0 (2021-03-23)
 --------------------
 
 - Added test for multi-field GRIBs
