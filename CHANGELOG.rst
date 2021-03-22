@@ -2,6 +2,14 @@
 Changelog for eccodes-python
 ============================
 
+1.2.0 (2021-03-23)
+--------------------
+
+- Added test for multi-field GRIBs
+- Fix deprecation warning: `np.float` is a deprecated alias for the builtin `float`
+- Experimental feature: grib_nearest_find
+
+
 1.1.0 (2021-01-20)
 --------------------
 

@@ -21,7 +21,7 @@ import pytest
 from eccodes import *
 
 SAMPLE_DATA_FOLDER = os.path.join(os.path.dirname(__file__), "sample-data")
-TEST_DATA = os.path.join(SAMPLE_DATA_FOLDER, "era5-levels-members.grib")
+TEST_DATA = os.path.join(SAMPLE_DATA_FOLDER, "multi_field.grib2")
 
 
 def get_sample_fullpath(sample):
@@ -146,6 +146,17 @@ def test_new_from_message():
 def test_gts_header():
     codes_gts_header(True)
     codes_gts_header(False)
+
+
+def test_extract_offsets():
+    fpath = get_sample_fullpath("BUFR4.tmpl")
+    if fpath is None:
+        return
+    is_strict = True
+    offsets = codes_extract_offsets(fpath, CODES_PRODUCT_ANY, is_strict)
+    offsets_list = list(offsets)
+    assert len(offsets_list) == 1
+    assert offsets_list[0] == 0
 
 
 # ---------------------------------------------
@@ -320,6 +331,7 @@ def test_grib_get_double_element():
     gid = codes_grib_new_from_samples("gg_sfc_grib2")
     elem = codes_get_double_element(gid, "values", 1)
     assert math.isclose(elem, 259.9865, abs_tol=0.001)
+    codes_release(gid)
 
 
 def test_grib_get_double_elements():
@@ -407,7 +419,7 @@ def test_grib_ecc_1042():
             2,
             3,
         ],
-        dtype=np.float,
+        dtype=float,
     )
     codes_set_values(gid, write_vals)
     read_vals = codes_get_values(gid)
@@ -492,14 +504,35 @@ def test_grib_index_new_from_file(tmpdir):
 
 
 def test_grib_multi_support_reset_file():
-    # TODO: read an actual multi-field GRIB here
-    fpath = get_sample_fullpath("GRIB2.tmpl")
-    if fpath is None:
-        return
-    codes_grib_multi_support_on()
-    with open(fpath, "rb") as f:
-        codes_grib_multi_support_reset_file(f)
-    codes_grib_multi_support_off()
+    try:
+        # TODO: read an actual multi-field GRIB here
+        fpath = get_sample_fullpath("GRIB2.tmpl")
+        if fpath is None:
+            return
+        codes_grib_multi_support_on()
+        with open(fpath, "rb") as f:
+            codes_grib_multi_support_reset_file(f)
+    finally:
+        codes_grib_multi_support_off()
+
+
+def test_grib_multi_field_write(tmpdir):
+    # Note: codes_grib_multi_new() calls codes_grib_multi_support_on()
+    #       hence the 'finally' block
+    try:
+        gid = codes_grib_new_from_samples("GRIB2")
+        mgid = codes_grib_multi_new()
+        section_num = 4
+        for step in range(12, 132, 12):
+            codes_set(gid, "step", step)
+            codes_grib_multi_append(gid, section_num, mgid)
+        output = tmpdir.join("test_grib_multi_field_write.grib2")
+        with open(str(output), "wb") as fout:
+            codes_grib_multi_write(mgid, fout)
+        codes_grib_multi_release(mgid)
+        codes_release(gid)
+    finally:
+        codes_grib_multi_support_off()
 
 
 def test_grib_uuid_get_set():
@@ -654,7 +687,6 @@ def test_bufr_get_message_offset():
     assert codes_get_message_offset(gid) == 0
 
 
-# Experimental features
 def test_codes_bufr_key_is_header():
     bid = codes_bufr_new_from_samples("BUFR4_local_satellite")
     assert codes_bufr_key_is_header(bid, "edition")
@@ -668,17 +700,6 @@ def test_codes_bufr_key_is_header():
 
     assert not codes_bufr_key_is_header(bid, "satelliteSensorIndicator")
     assert not codes_bufr_key_is_header(bid, "#6#brightnessTemperature")
-
-
-def test_extract_offsets():
-    fpath = get_sample_fullpath("BUFR4.tmpl")
-    if fpath is None:
-        return
-    is_strict = True
-    offsets = codes_extract_offsets(fpath, CODES_PRODUCT_ANY, is_strict)
-    offsets_list = list(offsets)
-    assert len(offsets_list) == 1
-    assert offsets_list[0] == 0
 
 
 def test_bufr_extract_headers():
@@ -695,3 +716,30 @@ def test_bufr_extract_headers():
     assert header["ident"].strip() == "91334"
     assert header["rdbtimeSecond"] == 19
     assert math.isclose(header["localLongitude"], 151.83)
+
+
+# ---------------------------------------------
+# Experimental features
+# ---------------------------------------------
+def test_grib_nearest2():
+    if "codes_grib_nearest_new" not in dir(eccodes):
+        return
+    gid = codes_grib_new_from_samples("gg_sfc_grib2")
+    lat, lon = 40, 20
+    flags = CODES_GRIB_NEAREST_SAME_GRID | CODES_GRIB_NEAREST_SAME_POINT
+    nid = codes_grib_nearest_new(gid)
+    assert nid > 0
+    nearest = codes_grib_nearest_find(nid, gid, lat, lon, flags)
+    assert len(nearest) == 4
+    expected_indexes = (2679, 2678, 2517, 2516)
+    returned_indexes = (
+        nearest[0].index,
+        nearest[1].index,
+        nearest[2].index,
+        nearest[3].index,
+    )
+    assert sorted(expected_indexes) == sorted(returned_indexes)
+    assert math.isclose(nearest[0].value, 295.22085, abs_tol=0.0001)
+    assert math.isclose(nearest[2].distance, 24.16520, abs_tol=0.0001)
+    codes_release(gid)
+    codes_grib_nearest_delete(nid)

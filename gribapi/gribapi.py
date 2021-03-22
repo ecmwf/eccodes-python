@@ -64,6 +64,10 @@ CODES_PRODUCT_TAF = 5
 GRIB_MISSING_DOUBLE = -1e100
 GRIB_MISSING_LONG = 2147483647
 
+# Constants for GRIB nearest neighbour
+GRIB_NEAREST_SAME_GRID = 1 << 0
+GRIB_NEAREST_SAME_DATA = 1 << 1
+GRIB_NEAREST_SAME_POINT = 1 << 2
 
 # ECC-1029: Disable function-arguments type-checking unless
 # environment variable is defined and equal to 1
@@ -813,7 +817,6 @@ def grib_keys_iterator_delete(iterid):
     @param iterid      keys iterator id created with @ref grib_keys_iterator_new
     @exception CodesInternalError
     """
-    # aa: THIS LEAKS MEMORY as it doesn't free all the connected iterators
     kih = get_grib_keys_iterator(iterid)
     lib.grib_keys_iterator_delete(kih)
 
@@ -829,7 +832,6 @@ def grib_keys_iterator_get_name(iterid):
     @return          key name to be retrieved
     @exception CodesInternalError
     """
-    # aa: missing call to grib_keys_iterator_get_accessor
     kih = get_grib_keys_iterator(iterid)
     name = lib.grib_keys_iterator_get_name(kih)
     return ffi.string(name).decode(ENC)
@@ -1582,7 +1584,7 @@ def grib_get_double_element(msgid, key, index):
     """
     h = get_handle(msgid)
     value_p = ffi.new("double*")
-    err = lib.grib_get_double_element(h, key.encode(ENC), index, value_p)  # TODO
+    err = lib.grib_get_double_element(h, key.encode(ENC), index, value_p)
     GRIB_CHECK(err)
     return value_p[0]
 
@@ -2356,7 +2358,7 @@ def _convert_struct_to_dict(s):
 
 def codes_bufr_extract_headers(filepath, is_strict=True):
     """
-    @brief BUFR header extraction (EXPERIMENTAL FEATURE)
+    @brief BUFR header extraction
 
     @param filepath       path of input BUFR file
     @param is_strict      fail as soon as any invalid BUFR message is encountered
@@ -2407,7 +2409,7 @@ def codes_bufr_key_is_header(msgid, key):
 
 def codes_extract_offsets(filepath, product_kind, is_strict=True):
     """
-    @brief Message offset extraction (EXPERIMENTAL FEATURE)
+    @brief Message offset extraction
 
     @param filepath       path of input file
     @param is_strict      fail as soon as any invalid message is encountered
@@ -2430,3 +2432,80 @@ def codes_extract_offsets(filepath, product_kind, is_strict=True):
     while i < num_messages:
         yield offsets[i]
         i += 1
+
+
+# -------------------------------
+# EXPERIMENTAL FEATURES
+# -------------------------------
+@require(msgid=int)
+def grib_nearest_new(msgid):
+    h = get_handle(msgid)
+    err, nid = err_last(lib.grib_nearest_new)(h)
+    GRIB_CHECK(err)
+    return put_grib_nearest(nid)
+
+
+def put_grib_nearest(nid):
+    return int(ffi.cast("size_t", nid))
+
+
+def get_grib_nearest(nid):
+    return ffi.cast("grib_nearest*", nid)
+
+
+@require(nid=int)
+def grib_nearest_delete(nid):
+    nh = get_grib_nearest(nid)
+    lib.grib_nearest_delete(nh)
+
+
+@require(nid=int, gribid=int)
+def grib_nearest_find(nid, gribid, inlat, inlon, flags, is_lsm=False, npoints=4):
+    # flags has to be one of:
+    #  GRIB_NEAREST_SAME_GRID
+    #  GRIB_NEAREST_SAME_DATA
+    #  GRIB_NEAREST_SAME_POINT
+    if npoints != 4:
+        raise errors.FunctionNotImplementedError(
+            "grib_nearest_find npoints argument: Only 4 points supported"
+        )
+    if is_lsm:
+        raise errors.FunctionNotImplementedError(
+            "grib_nearest_find is_lsm argument: Land sea mask not supported"
+        )
+
+    h = get_handle(gribid)
+    outlats_p = ffi.new("double[]", npoints)
+    outlons_p = ffi.new("double[]", npoints)
+    values_p = ffi.new("double[]", npoints)
+    distances_p = ffi.new("double[]", npoints)
+    indexes_p = ffi.new("int[]", npoints)
+    size = ffi.new("size_t *")
+    nh = get_grib_nearest(nid)
+    err = lib.grib_nearest_find(
+        nh,
+        h,
+        inlat,
+        inlon,
+        flags,
+        outlats_p,
+        outlons_p,
+        values_p,
+        distances_p,
+        indexes_p,
+        size,
+    )
+    GRIB_CHECK(err)
+    result = []
+    for i in range(npoints):
+        result.append(
+            Bunch(
+                lat=outlats_p[i],
+                lon=outlons_p[i],
+                value=values_p[i],
+                distance=distances_p[i],
+                index=indexes_p[i],
+            )
+        )
+
+    return tuple(result)

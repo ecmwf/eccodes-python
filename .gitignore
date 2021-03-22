@@ -77,6 +77,4 @@ venv.bak/
 
 # local ignores
 .docker-tox/
-tests/sample-data/cds*.grib
-tests/sample-data/cds*.nc
 *.idx
