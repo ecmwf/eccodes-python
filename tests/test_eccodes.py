@@ -478,19 +478,30 @@ def test_grib_index_new_from_file(tmpdir):
     fpath = get_sample_fullpath("GRIB1.tmpl")
     if fpath is None:
         return
-    index_keys = ["shortName", "level", "number", "step"]
+    index_keys = ["shortName", "level", "number", "step", "referenceValue"]
     iid = codes_index_new_from_file(fpath, index_keys)
     index_file = str(tmpdir.join("temp.grib.index"))
     codes_index_write(iid, index_file)
 
     key = "level"
     assert codes_index_get_size(iid, key) == 1
+
+    # Cannot get the native type of a key from an index
+    # so right now the default is str.
     assert codes_index_get(iid, key) == ("500",)
+    assert codes_index_get(iid, key, int) == (500,)
+    assert codes_index_get_long(iid, key) == (500,)
+
+    key = "referenceValue"
+    refVal = 47485.4
+    assert codes_index_get_double(iid, key) == (refVal,)
+    assert codes_index_get(iid, key, float) == (refVal,)
 
     codes_index_select(iid, "level", 500)
     codes_index_select(iid, "shortName", "z")
     codes_index_select(iid, "number", 0)
     codes_index_select(iid, "step", 0)
+    codes_index_select(iid, "referenceValue", refVal)
     gid = codes_new_from_index(iid)
     assert codes_get(gid, "edition") == 1
     assert codes_get(gid, "totalLength") == 107

@@ -5,6 +5,8 @@ Changelog for eccodes-python
 1.3.0 (2021-mm-dd)
 --------------------
 
+- ECC-1226: Python3 bindings: Typo causes AttributeError when calling codes_index_get_double
+
 
 1.2.0 (2021-03-23)
 --------------------

@@ -1448,9 +1448,9 @@ def grib_index_get_double(indexid, key):
 
     values_p = ffi.new("double[]", nval)
     size_p = ffi.new("size_t *", nval)
-    err = lib.grib_index_get_doule(ih, key.encode(ENC), values_p, size_p)
+    err = lib.grib_index_get_double(ih, key.encode(ENC), values_p, size_p)
     GRIB_CHECK(err)
-    return tuple(int(values_p[i]) for i in range(size_p[0]))
+    return tuple(values_p[i] for i in range(size_p[0]))
 
 
 @require(indexid=int, key=str, value=int)
