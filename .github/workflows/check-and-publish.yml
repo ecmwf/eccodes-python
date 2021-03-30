@@ -63,7 +63,7 @@ jobs:
         run: |
           isort .
           black .
-          flake8 .
+          # flake8 . --max-line-length=127
 
       - name: Tests
         run: |
