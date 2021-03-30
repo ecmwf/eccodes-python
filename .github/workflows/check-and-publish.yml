@@ -59,11 +59,22 @@ jobs:
         name: Install ecmwflibs
         run: pip install ecmwflibs
 
+      - name: Coding style
+        run: |
+          isort .
+          black .
+          flake8 .
+
       - name: Tests
         run: |
           python setup.py develop
           pip install -r tests/requirements.txt
           pytest
+          # pytest -v --cov=. --cov-report=xml --cov-branch .
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v1
+        if: "false"
 
   deploy:
     if: ${{ github.event_name == 'release' }}
@@ -90,4 +101,3 @@ jobs:
         run: |
           python setup.py sdist
           twine upload dist/*
-
