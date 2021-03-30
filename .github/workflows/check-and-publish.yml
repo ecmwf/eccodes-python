@@ -2,8 +2,6 @@ name: Check and publish
 
 on:
 
-  workflow_dispatch: {}
-
   push:
     branches: [master, develop]
 
@@ -93,26 +91,3 @@ jobs:
           python setup.py sdist
           twine upload dist/*
 
-  notify:
-    if: ${{ github.event_name == 'release' }}
-
-    name: Send notifications
-    needs: deploy
-
-    runs-on: ubuntu-latest
-
-    strategy:
-      fail-fast: false
-      matrix:
-        repo:
-          - climetlab
-          - ecmwflibs
-
-    steps:
-      - name: Notify ${{ matrix.repo }}
-        uses: mvasigh/dispatch-action@main
-        with:
-          token: ${{ secrets.NOTIFY_ECMWFLIBS }}
-          repo: ${{ matrix.repo }}
-          owner: ecmwf
-          event_type: magics-python-updated
