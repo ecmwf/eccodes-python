@@ -50,6 +50,7 @@ setuptools.setup(
         "attrs",
         "cffi",
         "numpy",
+        "findlibs",
     ],
     tests_require=[
         "pytest",
