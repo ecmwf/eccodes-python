@@ -241,7 +241,7 @@ def gts_new_from_file(fileobj, headers_only=False):
     @return               id of the GTS loaded in memory or None
     @exception CodesInternalError
     """
-    # err, h = err_last(lib.gts_new_from_file)(ffi.NULL, fileobj)
+
     err, h = err_last(lib.codes_handle_new_from_file)(
         ffi.NULL, fileobj, CODES_PRODUCT_GTS
     )
@@ -270,7 +270,7 @@ def metar_new_from_file(fileobj, headers_only=False):
     @return               id of the METAR loaded in memory or None
     @exception CodesInternalError
     """
-    # err, h = err_last(lib.metar_new_from_file)(ffi.NULL, fileobj)
+
     err, h = err_last(lib.codes_handle_new_from_file)(
         ffi.NULL, fileobj, CODES_PRODUCT_METAR
     )
@@ -397,7 +397,7 @@ def grib_new_from_file(fileobj, headers_only=False):
     @return               id of the grib loaded in memory or None
     @exception CodesInternalError
     """
-    # err, h = err_last(lib.grib_new_from_file)(ffi.NULL, fileobj, headers_only)
+
     err, h = err_last(lib.codes_handle_new_from_file)(
         ffi.NULL, fileobj, CODES_PRODUCT_GRIB
     )
@@ -1448,9 +1448,9 @@ def grib_index_get_double(indexid, key):
 
     values_p = ffi.new("double[]", nval)
     size_p = ffi.new("size_t *", nval)
-    err = lib.grib_index_get_doule(ih, key.encode(ENC), values_p, size_p)
+    err = lib.grib_index_get_double(ih, key.encode(ENC), values_p, size_p)
     GRIB_CHECK(err)
-    return tuple(int(values_p[i]) for i in range(size_p[0]))
+    return tuple(values_p[i] for i in range(size_p[0]))
 
 
 @require(indexid=int, key=str, value=int)
@@ -2043,8 +2043,11 @@ def grib_set(msgid, key, value):
     #    # The value passed in is iterable; i.e. a list or array etc
     #    grib_set_array(msgid, key, value)
     else:
+        hint = ""
+        if hasattr(value, "__iter__"):
+            hint = " (Hint: for array keys use codes_set_array(msgid, key, value))"
         raise errors.GribInternalError(
-            "Invalid type of value when setting key '%s'." % key
+            "Invalid type of value when setting key '%s'%s." % (key, hint)
         )
 
 
