@@ -18,8 +18,8 @@ jobs:
         platform: [windows-latest, ubuntu-latest, macos-latest]
         python-version: ["3.6", "3.7", "3.8", "3.9"]
         method: ["conda", "ecmwflibs"]
-      exclude:
-        - method: ecmwflibs # For now
+        excludes:
+          - method: ecmwflibs # For now
 
     name: Python ${{ matrix.python-version }} on ${{ matrix.platform }} (${{ matrix.method }})
     runs-on: ${{ matrix.platform }}
