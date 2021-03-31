@@ -16,7 +16,8 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 import logging
-
+import pkgutil
+import cffi
 
 __version__ = "1.3.1"
 
@@ -33,3 +34,8 @@ if lib is None:
 
 # default encoding for ecCodes strings
 ENC = "ascii"
+
+ffi = cffi.FFI()
+CDEF = pkgutil.get_data(__name__, "grib_api.h")
+CDEF += pkgutil.get_data(__name__, "eccodes.h")
+ffi.cdef(CDEF.decode("utf-8").replace("\r", "\n"))
