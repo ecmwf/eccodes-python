@@ -16,10 +16,7 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 import logging
-import os
-import pkgutil
 
-import cffi
 
 __version__ = "1.3.1"
 
