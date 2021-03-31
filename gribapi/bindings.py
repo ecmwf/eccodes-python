@@ -16,48 +16,23 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 import logging
-import pkgutil
 import os
+import pkgutil
 
 import cffi
 
-__version__ = "1.3.0"
+__version__ = "1.3.1"
 
 LOG = logging.getLogger(__name__)
 
 try:
-    from ._bindings import ffi, lib
-except ModuleNotFoundError:
-    ffi = cffi.FFI()
-    CDEF = pkgutil.get_data(__name__, "grib_api.h")
-    CDEF += pkgutil.get_data(__name__, "eccodes.h")
-    ffi.cdef(CDEF.decode("utf-8").replace("\r", "\n"))
+    import ecmwflibs as findlibs
+except ImportError:
+    import findlibs
 
-    LIBNAMES = ["eccodes", "libeccodes.so", "libeccodes"]
-
-    try:
-        import ecmwflibs
-
-        LIBNAMES.insert(0, ecmwflibs.find("eccodes"))
-    except Exception:
-        pass
-
-    if os.environ.get("ECCODES_DIR"):
-        eccdir = os.environ["ECCODES_DIR"]
-        LIBNAMES.insert(0, os.path.join(eccdir, "lib/libeccodes.so"))
-        LIBNAMES.insert(1, os.path.join(eccdir, "lib64/libeccodes.so"))
-
-    lib = None
-    for libname in LIBNAMES:
-        try:
-            lib = ffi.dlopen(libname)
-            LOG.info("ecCodes library found using name '%s'.", libname)
-            break
-        except OSError:
-            LOG.info("ecCodes library not found using name '%s'.", libname)
-            pass
-    if lib is None:
-        raise RuntimeError(f"ecCodes library not found using {LIBNAMES}")
+lib = findlibs.find("eccodes")
+if lib is None:
+    raise RuntimeError("Cannot find eccodes library")
 
 # default encoding for ecCodes strings
 ENC = "ascii"

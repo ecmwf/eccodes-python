@@ -85,12 +85,12 @@ Project resources
 ============= =========================================================
 Development   https://github.com/ecmwf/eccodes-python
 Download      https://pypi.org/project/eccodes
-Code quality  .. image:: https://api.travis-ci.org/ecmwf/eccodes-python.svg?branch=master
-                :target: https://travis-ci.org/ecmwf/eccodes-python/branches
-                :alt: Build Status on Travis CI
-              .. image:: https://coveralls.io/repos/ecmwf/eccodes-python/badge.svg?branch=master&service=github
-                :target: https://coveralls.io/github/ecmwf/eccodes-python
-                :alt: Coverage Status on Coveralls
+.. Code quality  .. image:: https://api.travis-ci.org/ecmwf/eccodes-python.svg?branch=master
+..                 :target: https://travis-ci.org/ecmwf/eccodes-python/branches
+..                 :alt: Build Status on Travis CI
+..               .. image:: https://coveralls.io/repos/ecmwf/eccodes-python/badge.svg?branch=master&service=github
+..                 :target: https://coveralls.io/github/ecmwf/eccodes-python
+..                 :alt: Coverage Status on Coveralls
 ============= =========================================================
 
 
@@ -127,4 +127,3 @@ License
  In applying this licence, ECMWF does not waive the privileges and immunities
  granted to it by virtue of its status as an intergovernmental organisation nor
  does it submit to any jurisdiction.
-
