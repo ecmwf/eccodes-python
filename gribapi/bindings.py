@@ -39,3 +39,5 @@ ffi = cffi.FFI()
 CDEF = pkgutil.get_data(__name__, "grib_api.h")
 CDEF += pkgutil.get_data(__name__, "eccodes.h")
 ffi.cdef(CDEF.decode("utf-8").replace("\r", "\n"))
+
+lib = ffi.dlopen(lib)
