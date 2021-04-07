@@ -19,7 +19,7 @@ import logging
 import pkgutil
 import cffi
 
-__version__ = "1.3.1"
+__version__ = "1.3.0"
 
 LOG = logging.getLogger(__name__)
 
@@ -30,7 +30,7 @@ except ImportError:
 
 lib = findlibs.find("eccodes")
 if lib is None:
-    raise RuntimeError("Cannot find eccodes library")
+    raise RuntimeError("Cannot find the ecCodes library")
 
 # default encoding for ecCodes strings
 ENC = "ascii"
