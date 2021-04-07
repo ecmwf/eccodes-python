@@ -11,16 +11,28 @@ on:
     types: [created]
 
 jobs:
+  quality:
+    name: Code QA
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: pip install black flake8 isort
+      - run: black --version
+      - run: isort --check . || true
+      - run: black --check . || true
+      - run: flake8 . || true
+
   checks:
     strategy:
       fail-fast: false
       matrix:
-        platform: [ubuntu-latest, macos-latest] # windows-latest, 
+        platform: [ubuntu-latest, macos-latest, windows-latest]
         python-version: ["3.6", "3.7", "3.8", "3.9"]
         method: ["conda"] # , "ecmwflibs"]
 
     name: Python ${{ matrix.python-version }} on ${{ matrix.platform }} (${{ matrix.method }})
     runs-on: ${{ matrix.platform }}
+    needs: quality
 
     defaults:
       run:
@@ -52,13 +64,6 @@ jobs:
       - if: matrix.method == 'ecmwflibs'
         name: Install ecmwflibs
         run: pip install ecmwflibs
-
-      - name: Coding style
-        if: "false"
-        run: |
-          isort . # Looks like isort and black undo each other
-          black .
-          flake8 . # Options are set in tox.ini
 
       - name: Tests
         run: |
