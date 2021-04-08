@@ -105,8 +105,8 @@ Before you submit a pull request, check that it meets these guidelines:
    your new functionality into a function with a docstring, and add the
    feature to the list in README.rst.
 
-3. The pull request should work for Python 2.7, 3.5, 3.6 and 3.7, and for PyPy2 and Pypy3. Check
-   the tox results and make sure that the tests pass for all supported Python versions.
+3. The pull request should work for Python 2.7, 3.5, 3.6, 3.7 and 3.8, and for PyPy2 and Pypy3.
+   Check the tox results and make sure that the tests pass for all supported Python versions.
 
 
 Testing CDS data
