@@ -6,6 +6,7 @@ Changelog for eccodes-python
 --------------------
 
 - Added the "findlibs" module
+- Fix tests/test_high_level_api.py when MEMFS enabled
 - ECC-1226: Python3 bindings: Typo causes AttributeError when calling codes_index_get_double
 
 
