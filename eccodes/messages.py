@@ -268,7 +268,7 @@ class FileIndex(collections.abc.Mapping):
             for key in index_keys:
                 try:
                     value = message[key]
-                except:
+                except Exception:
                     value = "undef"
                 if isinstance(value, (list, np.ndarray)):
                     value = tuple(value)
