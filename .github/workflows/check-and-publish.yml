@@ -72,13 +72,13 @@ jobs:
       - run: python -m eccodes selfcheck
 
       - run: pytest
-        if: matrix.method == 'conda' and matrix.platform == 'windows-latest'
+        if: matrix.method == 'conda' && matrix.platform == 'windows-latest'
         env:
           ECCODES_DEFINITION_PATH: "C:/Miniconda/Library/share/eccodes/definitions"
           ECCODES_SAMPLES_PATH: "C:/Miniconda/Library/share/eccodes/samples"
 
       - run: pytest
-        if: matrix.method != 'conda' or matrix.platform != 'windows-latest'
+        if: matrix.method != 'conda' || matrix.platform != 'windows-latest'
 
       # pytest -v --cov=. --cov-report=xml --cov-branch .
 
