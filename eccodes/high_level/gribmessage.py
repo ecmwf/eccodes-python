@@ -9,8 +9,8 @@ message when it is no longer needed, coordinating this with its host file.
 Author: Daniel Lee, DWD, 2014
 """
 
-from .codesmessage import CodesMessage
 from .. import eccodes
+from .codesmessage import CodesMessage
 
 
 class IndexNotSelectedError(Exception):

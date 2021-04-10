@@ -24,14 +24,16 @@ Numpy is a package used for scientific computing in Python and an efficient cont
 
 """
 
-from functools import wraps
-import sys
 import os
+import sys
+from functools import wraps
+
 import numpy as np
 
-from .bindings import ENC, ffi, lib
-from .bindings import __version__ as bindings_version  # noqa
 from . import errors
+from .bindings import ENC
+from .bindings import __version__ as bindings_version  # noqa
+from .bindings import ffi, lib
 
 try:
     type(file)

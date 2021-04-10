@@ -12,8 +12,8 @@ Author: Daniel Lee, DWD, 2016
 """
 
 from .. import eccodes
-from .codesmessage import CodesMessage
 from .codesfile import CodesFile
+from .codesmessage import CodesMessage
 
 
 class BufrMessage(CodesMessage):

@@ -13,8 +13,9 @@
 Tests of the ecCodes Python3 bindings
 """
 
-import os.path
 import math
+import os.path
+
 import numpy as np
 import pytest
 

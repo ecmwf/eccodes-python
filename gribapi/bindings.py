@@ -17,6 +17,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 import logging
 import pkgutil
+
 import cffi
 
 __version__ = "1.3.0"

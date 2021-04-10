@@ -7,8 +7,9 @@ closes itself and its messages when it is no longer needed.
 Author: Daniel Lee, DWD, 2016
 """
 
-from .. import eccodes
 import io
+
+from .. import eccodes
 
 
 class CodesFile(io.FileIO):

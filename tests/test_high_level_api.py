@@ -1,6 +1,6 @@
 import os
-from eccodes import GribFile
-from eccodes import codes_samples_path
+
+from eccodes import GribFile, codes_samples_path
 
 
 def test_iterating_through_grib_file():
