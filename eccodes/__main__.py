@@ -21,7 +21,7 @@ from . import (
 
 def selfcheck():
     print("Found: ecCodes v%s." % codes_get_api_version())
-    print("Libary:", codes_get_library_path())
+    print("Library:", codes_get_library_path())
     print("Definitions:", codes_definition_path())
     print("Samples:", codes_samples_path())
     print("Your system is ready.")
