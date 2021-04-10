@@ -2394,6 +2394,7 @@ def codes_bufr_extract_headers(filepath, is_strict=True):
         i += 1
 
 
+@require(msgid=int)
 def codes_bufr_key_is_header(msgid, key):
     """
     @brief Check if the BUFR key is in the header or in the data section.
