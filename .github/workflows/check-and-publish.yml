@@ -65,16 +65,13 @@ jobs:
         name: Install ecmwflibs
         run: pip install ecmwflibs
 
-
-      - name: Tests
-        run: |
-          python setup.py develop
-          pip install -r tests/requirements.txt
-          pip freeze
-          env | sort
-          python -m eccodes selfcheck
-          pytest
-          # pytest -v --cov=. --cov-report=xml --cov-branch .
+      - run: python setup.py develop
+      - run: pip install -r tests/requirements.txt
+      - run: pip freeze
+      - run: env | sort
+      - run: python -m eccodes selfcheck
+      - run: pytest
+      # pytest -v --cov=. --cov-report=xml --cov-branch .
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1
