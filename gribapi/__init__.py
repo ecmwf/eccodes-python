@@ -11,7 +11,7 @@
 #
 
 from .gribapi import *  # noqa
-from .gribapi import __version__, bindings_version
+from .gribapi import __version__, lib
 
 # The minimum recommended version for the ecCodes package
 min_recommended_version_str = "2.22.0"

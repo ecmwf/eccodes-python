@@ -11,7 +11,8 @@
 
 """
 @package gribapi
-@brief This package is the \b Python 3 interface to ecCodes. It offers almost one to one bindings to the C API functions.
+@brief This package is the \b Python 3 interface to ecCodes.
+It offers almost one to one bindings to the C API functions.
 
 The Python 3 interface to ecCodes uses the <a href="http://numpy.scipy.org/"><b>NumPy</b></a> package
 as the container of choice for the possible arrays of values that can be encoded/decoded in and from a message.
@@ -1317,7 +1318,10 @@ def grib_index_new_from_file(filename, keys):
 
     @param filename   path of the file to index on
     @param keys       sequence of keys to index on.
-                      The type of the key can be explicitly declared appending :l for long (or alternatively :i), :d for double, :s for string to the key name.
+                      The type of the key can be explicitly declared appending
+                      :l for long (or alternatively :i),
+                      :d for double,
+                      :s for string to the key name.
     @return           index id
     @exception CodesInternalError
     """
@@ -1385,7 +1389,8 @@ def grib_index_get_long(indexid, key):
     @brief Get the distinct values of the key in argument contained in the index.
     The key must belong to the index.
 
-    This function is used when the type of the key was explicitly defined as long or when the native type of the key is long.
+    This function is used when the type of the key was explicitly defined as long or when the native type of
+    the key is long.
 
     \b Examples: \ref grib_index.py "grib_index.py"
 
@@ -1410,7 +1415,8 @@ def grib_index_get_string(indexid, key):
     @brief Get the distinct values of the key in argument contained in the index.
     The key must belong to the index.
 
-    This function is used when the type of the key was explicitly defined as string or when the native type of the key is string.
+    This function is used when the type of the key was explicitly defined as string or when the native type of
+    the key is string.
 
     \b Examples: \ref grib_index.py "grib_index.py"
 
@@ -1436,7 +1442,8 @@ def grib_index_get_double(indexid, key):
     @brief Get the distinct values of the key in argument contained in the index.
     The key must belong to the index.
 
-    This function is used when the type of the key was explicitly defined as double or when the native type of the key is double.
+    This function is used when the type of the key was explicitly defined as double or when the native type
+    of the key is double.
 
     \b Examples: \ref grib_index.py "grib_index.py"
 
@@ -1461,7 +1468,8 @@ def grib_index_select_long(indexid, key, value):
     @brief Select the message subset with key==value.
     The value is an integer.
 
-    The key must have been created with integer type or have integer as native type if the type was not explicitly defined in the index creation.
+    The key must have been created with integer type or have integer as native type if the type
+    was not explicitly defined in the index creation.
 
     \b Examples: \ref grib_index.py "grib_index.py"
 
@@ -1480,7 +1488,8 @@ def grib_index_select_double(indexid, key, value):
     @brief Select the message subset with key==value.
     The value is a double.
 
-    The key must have been created with integer type or have integer as native type if the type was not explicitly defined in the index creation.
+    The key must have been created with integer type or have integer as native type if the type was
+    not explicitly defined in the index creation.
 
     \b Examples: \ref grib_index.py "grib_index.py"
 
@@ -1499,7 +1508,8 @@ def grib_index_select_string(indexid, key, value):
     @brief Select the message subset with key==value.
     The value is an integer.
 
-    The key must have been created with string type or have string as native type if the type was not explicitly defined in the index creation.
+    The key must have been created with string type or have string as native type if the type
+    was not explicitly defined in the index creation.
 
     \b Examples: \ref grib_index.py "grib_index.py"
 
@@ -1518,7 +1528,8 @@ def grib_new_from_index(indexid):
     @brief Create a new handle from an index after having selected the key values.
 
     All the keys belonging to the index must be selected before calling this function.
-    Successive calls to this function will return all the handles compatible with the constraints defined selecting the values of the index keys.
+    Successive calls to this function will return all the handles compatible with the constraints
+    defined selecting the values of the index keys.
 
     The message can be accessed through its gribid and will be available until @ref grib_release is called.
 
@@ -1820,7 +1831,8 @@ def grib_find_nearest(gribid, inlat, inlon, is_lsm=False, npoints=1):
 @require(gribid=int, is_lsm=bool)
 def grib_find_nearest_multiple(gribid, is_lsm, inlats, inlons):
     """
-    @brief Find the nearest point of a set of points whose latitudes and longitudes are given in the inlats, inlons arrays respectively
+    @brief Find the nearest point of a set of points whose latitudes and longitudes are given in
+    the inlats, inlons arrays respectively
 
     @param gribid     id of the GRIB message loaded in memory
     @param is_lsm     True if the nearest land point is required otherwise False.

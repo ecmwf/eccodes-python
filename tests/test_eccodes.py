@@ -391,7 +391,9 @@ def test_grib_nearest():
 
 
 def test_grib_nearest_multiple():
-    gid = eccodes.codes_new_from_samples("reduced_gg_ml_grib2", eccodes.CODES_PRODUCT_GRIB)
+    gid = eccodes.codes_new_from_samples(
+        "reduced_gg_ml_grib2", eccodes.CODES_PRODUCT_GRIB
+    )
     inlats = (30, 13)
     inlons = (-20, 234)
     is_lsm = False
@@ -596,7 +598,9 @@ def test_bufr_encode(tmpdir):
     eccodes.codes_set(ibufr, "pixelSizeOnHorizontal1", 1.25e04)
     eccodes.codes_set(ibufr, "orbitNumber", 31330)
     eccodes.codes_set(ibufr, "#1#beamIdentifier", 1)
-    eccodes.codes_set(ibufr, "#4#likelihoodComputedForSolution", eccodes.CODES_MISSING_DOUBLE)
+    eccodes.codes_set(
+        ibufr, "#4#likelihoodComputedForSolution", eccodes.CODES_MISSING_DOUBLE
+    )
     eccodes.codes_set(ibufr, "pack", 1)
     output = tmpdir.join("test_bufr_encode.bufr")
     with open(str(output), "wb") as fout:
