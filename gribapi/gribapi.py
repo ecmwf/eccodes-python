@@ -34,7 +34,7 @@ import numpy as np
 from . import errors
 from .bindings import ENC
 from .bindings import __version__ as bindings_version  # noqa
-from .bindings import ffi, lib
+from .bindings import ffi, lib, library_path
 
 try:
     type(file)
@@ -2527,3 +2527,7 @@ def grib_nearest_find(nid, gribid, inlat, inlon, flags, is_lsm=False, npoints=4)
         )
 
     return tuple(result)
+
+
+def codes_get_library_path():
+    return library_path

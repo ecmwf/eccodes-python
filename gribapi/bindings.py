@@ -29,8 +29,8 @@ try:
 except ImportError:
     import findlibs
 
-lib = findlibs.find("eccodes")
-if lib is None:
+library_path = findlibs.find("eccodes")
+if library_path is None:
     raise RuntimeError("Cannot find the ecCodes library")
 
 # default encoding for ecCodes strings
@@ -41,4 +41,5 @@ CDEF = pkgutil.get_data(__name__, "grib_api.h")
 CDEF += pkgutil.get_data(__name__, "eccodes.h")
 ffi.cdef(CDEF.decode("utf-8").replace("\r", "\n"))
 
-lib = ffi.dlopen(lib)
+
+lib = ffi.dlopen(library_path)
