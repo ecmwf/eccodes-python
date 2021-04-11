@@ -5,6 +5,7 @@ Changelog for eccodes-python
 1.3.0 (2021-mm-dd)
 --------------------
 
+- ECC-1231: Remove the experimental high-level interface
 - Added the "findlibs" module
 - Fix tests/test_high_level_api.py when MEMFS enabled
 - ECC-1226: Python3 bindings: Typo causes AttributeError when calling codes_index_get_double
