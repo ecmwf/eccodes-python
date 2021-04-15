@@ -2,7 +2,14 @@
 Changelog for eccodes-python
 ============================
 
-1.3.0 (2021-mm-dd)
+
+1.3.1 (2021-04-16)
+--------------------
+
+- Fix the recommended version
+
+
+1.3.0 (2021-04-09)
 --------------------
 
 - ECC-1231: Remove the experimental high-level interface
