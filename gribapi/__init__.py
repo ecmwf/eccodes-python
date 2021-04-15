@@ -11,15 +11,14 @@
 #
 
 from .gribapi import *  # noqa
-from .gribapi import __version__
-from .gribapi import bindings_version
+from .gribapi import __version__, lib
 
-# The minimum required version for the ecCodes package
-min_reqd_version_str = "2.21.0"
-min_reqd_version_int = 22100
+# The minimum recommended version for the ecCodes package
+min_recommended_version_str = "2.21.0"
+min_recommended_version_int = 22100
 
-if lib.grib_get_api_version() < min_reqd_version_int:
+if lib.grib_get_api_version() < min_recommended_version_int:
     print(
         "Warning: ecCodes %s or higher is recommended. You are running version %s"
-        % (min_reqd_version_str, __version__)
+        % (min_recommended_version_str, __version__)
     )

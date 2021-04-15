@@ -1,7 +1,7 @@
 import logging
+import sys
 
 import cffi
-import sys
 
 ffibuilder = cffi.FFI()
 ffibuilder.set_source(

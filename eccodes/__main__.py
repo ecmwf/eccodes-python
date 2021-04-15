@@ -11,11 +11,19 @@
 
 import argparse
 
-from . import codes_get_api_version
+from . import (
+    codes_definition_path,
+    codes_get_api_version,
+    codes_get_library_path,
+    codes_samples_path,
+)
 
 
 def selfcheck():
     print("Found: ecCodes v%s." % codes_get_api_version())
+    print("Library:", codes_get_library_path())
+    print("Definitions:", codes_definition_path())
+    print("Samples:", codes_samples_path())
     print("Your system is ready.")
 
 

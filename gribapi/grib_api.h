@@ -59,6 +59,8 @@ grib_index* grib_index_read(grib_context* c,const char* filename,int *err);
 int grib_index_get_size(const grib_index* index,const char* key,size_t* size);
 int grib_index_get_long(const grib_index* index,const char* key,
                         long* values,size_t *size);
+int grib_index_get_double(const grib_index* index, const char* key,
+                          double* values, size_t* size);
 int grib_index_get_string(const grib_index* index,const char* key,
                           char** values,size_t *size);
 int grib_index_select_long(grib_index* index,const char* key,long value);

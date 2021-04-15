@@ -13,6 +13,7 @@
 import io
 import os
 import re
+import sys
 
 import setuptools
 
@@ -35,6 +36,12 @@ def parse_version_from(path):
     return version_match.group(1)
 
 
+install_requires = ["numpy"]
+if sys.version_info < (3, 7):
+    install_requires = ["numpy<1.20"]
+
+install_requires += ["attrs", "cffi", "findlibs"]
+
 setuptools.setup(
     name="eccodes",
     version=parse_version_from("gribapi/bindings.py"),
@@ -46,11 +53,7 @@ setuptools.setup(
     url="https://github.com/ecmwf/eccodes-python",
     packages=setuptools.find_packages(),
     include_package_data=True,
-    install_requires=[
-        "attrs",
-        "cffi",
-        "numpy",
-    ],
+    install_requires=install_requires,
     tests_require=[
         "pytest",
         "pytest-cov",
@@ -63,10 +66,10 @@ setuptools.setup(
         "Development Status :: 4 - Beta",
         "Intended Audience :: Developers",
         "License :: OSI Approved :: Apache Software License",
-        "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.5",
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: Implementation :: CPython",
         "Programming Language :: Python :: Implementation :: PyPy",
         "Operating System :: OS Independent",
