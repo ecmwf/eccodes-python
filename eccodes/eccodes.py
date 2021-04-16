@@ -210,7 +210,17 @@ from gribapi.errors import (
     WrongTypeError,
 )
 
+from .high_level.bufr import BufrFile, BufrMessage
+from .high_level.gribfile import GribFile
+from .high_level.gribindex import GribIndex
+from .high_level.gribmessage import GribMessage
+
 __all__ = [
+    "BufrFile",
+    "BufrMessage",
+    "GribFile",
+    "GribIndex",
+    "GribMessage",
     "__version__",
     "ArrayTooSmallError",
     "AttributeClashError",
