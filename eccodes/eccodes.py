@@ -210,6 +210,11 @@ from gribapi.errors import (
     WrongTypeError,
 )
 
+from .high_level.bufr import BufrFile, BufrMessage
+from .high_level.gribfile import GribFile
+from .high_level.gribindex import GribIndex
+from .high_level.gribmessage import GribMessage
+
 __all__ = [
     "__version__",
     "ArrayTooSmallError",
@@ -217,6 +222,8 @@ __all__ = [
     "AttributeNotFoundError",
     "bindings_version",
     "BufferTooSmallError",
+    "BufrFile",
+    "BufrMessage",
     "CodeNotFoundInTableError",
     "codes_any_new_from_file",
     "codes_bufr_copy_data",
@@ -353,7 +360,10 @@ __all__ = [
     "FunctionalityNotEnabledError",
     "FunctionNotImplementedError",
     "GeocalculusError",
+    "GribFile",
+    "GribIndex",
     "GribInternalError",
+    "GribMessage",
     "HashArrayNoMatchError",
     "InternalArrayTooSmallError",
     "InternalError",

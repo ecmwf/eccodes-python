@@ -2,6 +2,10 @@
 Changelog for eccodes-python
 ============================
 
+1.3.2 (2021-04-16)
+--------------------
+
+- Restore the experimental high-level interface
 
 1.3.1 (2021-04-16)
 --------------------
