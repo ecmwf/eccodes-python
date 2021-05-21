@@ -1174,6 +1174,15 @@ def grib_get_double_array(msgid, key):
     return arr
 
 
+# See ECC-1246
+def _conv_str(sinput):
+    a_str = ffi.string(sinput)
+    # Check for a MISSING value i.e., each character has all its bits=1
+    if all(x == 255 for x in a_str):
+        return ""
+    return a_str.decode(ENC)
+
+
 @require(msgid=int, key=str)
 def grib_get_string_array(msgid, key):
     """
@@ -1192,7 +1201,7 @@ def grib_get_string_array(msgid, key):
     size_p = ffi.new("size_t *", size)
     err = lib.grib_get_string_array(h, key.encode(ENC), values, size_p)
     GRIB_CHECK(err)
-    return [ffi.string(values[i]).decode(ENC) for i in range(size_p[0])]
+    return [_conv_str(values[i]) for i in range(size_p[0])]
 
 
 @require(msgid=int, key=str)
