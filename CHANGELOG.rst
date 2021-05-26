@@ -5,7 +5,7 @@ Changelog for eccodes-python
 1.3.3 (2021-mm-dd)
 --------------------
 
-- 
+- ECC-1246: UnicodeDecodeError when parsing BUFR file
 
 
 1.3.2 (2021-04-16)
