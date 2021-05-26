@@ -491,7 +491,7 @@ def grib_get_string(msgid, key):
     length_p = ffi.new("size_t *", length)
     err = lib.grib_get_string(h, key.encode(ENC), values, length_p)
     GRIB_CHECK(err)
-    return ffi.string(values, length_p[0]).decode(ENC)
+    return _decode_bytes(values, length_p[0])
 
 
 @require(msgid=int, key=str, value=str)
@@ -1175,12 +1175,16 @@ def grib_get_double_array(msgid, key):
 
 
 # See ECC-1246
-def _conv_str(sinput):
-    a_str = ffi.string(sinput)
+def _decode_bytes(binput, maxlen=None):
+    if maxlen:
+        a_str = ffi.string(binput, maxlen)
+    else:
+        a_str = ffi.string(binput)
     # Check for a MISSING value i.e., each character has all its bits=1
     if all(x == 255 for x in a_str):
         return ""
-    return a_str.decode(ENC)
+    # Replace with a suitable replacement character rather than throw an exception
+    return a_str.decode(ENC, "replace")
 
 
 @require(msgid=int, key=str)
@@ -1201,7 +1205,7 @@ def grib_get_string_array(msgid, key):
     size_p = ffi.new("size_t *", size)
     err = lib.grib_get_string_array(h, key.encode(ENC), values, size_p)
     GRIB_CHECK(err)
-    return [_conv_str(values[i]) for i in range(size_p[0])]
+    return [_decode_bytes(values[i]) for i in range(size_p[0])]
 
 
 @require(msgid=int, key=str)
