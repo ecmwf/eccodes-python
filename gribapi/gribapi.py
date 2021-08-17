@@ -2442,10 +2442,10 @@ def codes_extract_offsets(filepath, product_kind, is_strict=True):
     """
     @brief Message offset extraction
 
-    @param filepath       path of input file
-    @product_kind         one of CODES_PRODUCT_GRIB, CODES_PRODUCT_BUFR, CODES_PRODUCT_ANY or CODES_PRODUCT_GTS
-    @param is_strict      if True, fail as soon as any invalid message is encountered
-    @return               a list of offsets
+    @param filepath   path of input file
+    @product_kind     one of CODES_PRODUCT_GRIB, CODES_PRODUCT_BUFR, CODES_PRODUCT_ANY or CODES_PRODUCT_GTS
+    @param is_strict  if True, fail as soon as any invalid message is encountered
+    @return           a generator that yields offsets (each offset is an integer)
     @exception CodesInternalError
     """
     context = lib.grib_context_get_default()
