@@ -11,6 +11,7 @@
 
 # Authors:
 #   Alessandro Amici - B-Open - https://bopen.eu
+#   Shahram Najm - ECMWF - https://www.ecmwf.int
 #
 
 from __future__ import absolute_import, division, print_function, unicode_literals
