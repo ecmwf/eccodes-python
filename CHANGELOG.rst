@@ -2,7 +2,7 @@
 Changelog for eccodes-python
 ============================
 
-1.3.4 (2021-08-dd)
+1.3.4 (2021-08-27)
 --------------------
 
 - Update documentation
