@@ -45,6 +45,7 @@ from gribapi import (
     codes_new_from_file,
     codes_new_from_samples,
     codes_samples_path,
+    codes_dump,
 )
 from gribapi import grib_clone as codes_clone
 from gribapi import grib_copy_namespace as codes_copy_namespace
@@ -319,6 +320,7 @@ __all__ = [
     "CODES_PRODUCT_METAR",
     "codes_release",
     "codes_samples_path",
+    "codes_dump",
     "codes_set_array",
     "codes_set_definitions_path",
     "codes_set_double_array",

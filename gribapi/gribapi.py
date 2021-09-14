@@ -2373,6 +2373,19 @@ def codes_bufr_multi_element_constant_arrays_off():
     lib.codes_bufr_multi_element_constant_arrays_off(context)
 
 
+@require(msgid=int, output_fileobj=file, mode=str, flags=int)
+def codes_dump(msgid, output_fileobj=sys.stdout, mode="wmo", flags=0):
+    """
+    @brief Print all keys to an output file object, with the given dump mode and flags
+
+    @param msgid          id of the message loaded in memory
+    @param output_fileobj output file object e.g., sys.stdout
+    @param mode           dump mode e.g., "wmo", "debug", "json"
+    """
+    h = get_handle(msgid)
+    lib.grib_dump_content(h, output_fileobj, mode.encode(ENC), flags, ffi.NULL)
+
+
 # Convert the C codes_bufr_header struct to a Python dictionary
 def _convert_struct_to_dict(s):
     result = {}

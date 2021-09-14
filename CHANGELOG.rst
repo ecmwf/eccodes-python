@@ -5,7 +5,8 @@ Changelog for eccodes-python
 1.4.0 (2021-mm-dd)
 --------------------
 
-- ECC-1234: Python3 bindings: Remove the experimental high-level interface
+- ECC-1282: Add codes_dump()
+- ECC-1234: Remove the experimental high-level interface
 
 
 1.3.4 (2021-08-27)

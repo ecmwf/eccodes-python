@@ -15,7 +15,7 @@ Tests of the ecCodes Python3 bindings
 
 import math
 import os.path
-
+import sys
 import numpy as np
 import pytest
 
@@ -558,6 +558,15 @@ def test_grib_uuid_get_set():
     eccodes.codes_set_string(gid, "uuidOfHGrid", "DEfdBEef10203040b00b1e50001100FF")
     uuid = eccodes.codes_get_string(gid, "uuidOfHGrid")
     assert uuid == "defdbeef10203040b00b1e50001100ff"
+    eccodes.codes_release(gid)
+
+
+def test_grib_dump(tmp_path):
+    gid = eccodes.codes_grib_new_from_samples("GRIB2")
+    p = tmp_path / "dump.txt"
+    with open(p, "w") as fout:
+        eccodes.codes_dump(gid, fout)
+        eccodes.codes_dump(gid, fout, "debug")
     eccodes.codes_release(gid)
 
 
