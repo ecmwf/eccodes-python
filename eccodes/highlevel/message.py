@@ -10,6 +10,12 @@ class Message:
     def __del__(self):
         eccodes.codes_release(self.handle)
 
+    def get(self, name):
+        return eccodes.codes_get(self.handle, name)
+
+    def set(self, name, value):
+        return eccodes.codes_set(self.handle, name, value)
+
     def get_array(self, name):
         return eccodes.codes_get_array(self.handle, name)
 
