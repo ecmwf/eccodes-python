@@ -2373,7 +2373,7 @@ def codes_bufr_multi_element_constant_arrays_off():
     lib.codes_bufr_multi_element_constant_arrays_off(context)
 
 
-@require(msgid=int, output_fileobj=file, mode=str, flags=int)
+@require(msgid=int)
 def codes_dump(msgid, output_fileobj=sys.stdout, mode="wmo", flags=0):
     """
     @brief Print all keys to an output file object, with the given dump mode and flags
