@@ -39,13 +39,13 @@ from gribapi import (
     codes_bufr_multi_element_constant_arrays_on,
     codes_bufr_new_from_samples,
     codes_definition_path,
+    codes_dump,
     codes_extract_offsets,
     codes_get_library_path,
     codes_get_version_info,
     codes_new_from_file,
     codes_new_from_samples,
     codes_samples_path,
-    codes_dump,
 )
 from gribapi import grib_clone as codes_clone
 from gribapi import grib_copy_namespace as codes_copy_namespace
