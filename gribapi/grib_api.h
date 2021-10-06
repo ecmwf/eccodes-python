@@ -122,6 +122,8 @@ int grib_set_string_array(grib_handle* h, const char *key, const char **vals, si
 
 void grib_dump_content(const grib_handle* h, FILE* out, const char* mode, unsigned long option_flags, void* arg);
 grib_context* grib_context_get_default(void);
+void grib_context_delete(grib_context* c);
+
 void grib_gts_header_on(grib_context* c) ;
 void grib_gts_header_off(grib_context* c);
 void grib_gribex_mode_on(grib_context* c);

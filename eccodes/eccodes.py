@@ -48,6 +48,7 @@ from gribapi import (
     codes_samples_path,
 )
 from gribapi import grib_clone as codes_clone
+from gribapi import grib_context_delete as codes_context_delete
 from gribapi import grib_copy_namespace as codes_copy_namespace
 from gribapi import grib_count_in_file as codes_count_in_file
 from gribapi import grib_find_nearest as codes_grib_find_nearest
@@ -341,6 +342,7 @@ __all__ = [
     "codes_skip_function",
     "codes_skip_read_only",
     "codes_write",
+    "codes_context_delete",
     "CodesInternalError",
     "ConceptNoMatchError",
     "ConstantFieldError",

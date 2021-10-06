@@ -2351,6 +2351,13 @@ def grib_set_samples_path(samples_path):
     lib.grib_context_set_samples_path(context, samples_path.encode(ENC))
 
 
+def grib_context_delete():
+    """
+    @brief Wipe all the cached data and definitions files in the context
+    """
+    lib.grib_context_delete(ffi.NULL)
+
+
 def codes_bufr_multi_element_constant_arrays_on():
     """
     @brief BUFR: Turn on the mode where you get multiple elements
