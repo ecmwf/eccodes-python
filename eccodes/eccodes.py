@@ -39,6 +39,7 @@ from gribapi import (
     codes_bufr_multi_element_constant_arrays_on,
     codes_bufr_new_from_samples,
     codes_definition_path,
+    codes_dump,
     codes_extract_offsets,
     codes_get_library_path,
     codes_get_version_info,
@@ -47,6 +48,7 @@ from gribapi import (
     codes_samples_path,
 )
 from gribapi import grib_clone as codes_clone
+from gribapi import grib_context_delete as codes_context_delete
 from gribapi import grib_copy_namespace as codes_copy_namespace
 from gribapi import grib_count_in_file as codes_count_in_file
 from gribapi import grib_find_nearest as codes_grib_find_nearest
@@ -210,11 +212,6 @@ from gribapi.errors import (
     WrongTypeError,
 )
 
-from .high_level.bufr import BufrFile, BufrMessage
-from .high_level.gribfile import GribFile
-from .high_level.gribindex import GribIndex
-from .high_level.gribmessage import GribMessage
-
 __all__ = [
     "__version__",
     "ArrayTooSmallError",
@@ -222,8 +219,6 @@ __all__ = [
     "AttributeNotFoundError",
     "bindings_version",
     "BufferTooSmallError",
-    "BufrFile",
-    "BufrMessage",
     "CodeNotFoundInTableError",
     "codes_any_new_from_file",
     "codes_bufr_copy_data",
@@ -326,6 +321,7 @@ __all__ = [
     "CODES_PRODUCT_METAR",
     "codes_release",
     "codes_samples_path",
+    "codes_dump",
     "codes_set_array",
     "codes_set_definitions_path",
     "codes_set_double_array",
@@ -346,6 +342,7 @@ __all__ = [
     "codes_skip_function",
     "codes_skip_read_only",
     "codes_write",
+    "codes_context_delete",
     "CodesInternalError",
     "ConceptNoMatchError",
     "ConstantFieldError",
@@ -360,10 +357,7 @@ __all__ = [
     "FunctionalityNotEnabledError",
     "FunctionNotImplementedError",
     "GeocalculusError",
-    "GribFile",
-    "GribIndex",
     "GribInternalError",
-    "GribMessage",
     "HashArrayNoMatchError",
     "InternalArrayTooSmallError",
     "InternalError",

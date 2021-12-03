@@ -22,7 +22,7 @@ import pytest
 import eccodes
 
 SAMPLE_DATA_FOLDER = os.path.join(os.path.dirname(__file__), "sample-data")
-TEST_DATA = os.path.join(SAMPLE_DATA_FOLDER, "multi_field.grib2")
+TEST_GRIB_DATA = os.path.join(SAMPLE_DATA_FOLDER, "tiggelam_cnmc_sfc.grib2")
 
 
 def get_sample_fullpath(sample):
@@ -33,7 +33,7 @@ def get_sample_fullpath(sample):
 
 
 # ---------------------------------------------
-# ANY PRODUCT
+# PRODUCT ANY
 # ---------------------------------------------
 def test_codes_definition_path():
     df = eccodes.codes_definition_path()
@@ -119,6 +119,8 @@ def test_any_read():
 
 
 def test_count_in_file():
+    with open(TEST_GRIB_DATA, "rb") as f:
+        assert eccodes.codes_count_in_file(f) == 7
     fpath = get_sample_fullpath("GRIB1.tmpl")
     if fpath is None:
         return
@@ -150,18 +152,16 @@ def test_gts_header():
 
 
 def test_extract_offsets():
-    fpath = get_sample_fullpath("BUFR4.tmpl")
-    if fpath is None:
-        return
-    is_strict = True
-    offsets = eccodes.codes_extract_offsets(fpath, eccodes.CODES_PRODUCT_ANY, is_strict)
+    offsets = eccodes.codes_extract_offsets(
+        TEST_GRIB_DATA, eccodes.CODES_PRODUCT_ANY, is_strict=True
+    )
     offsets_list = list(offsets)
-    assert len(offsets_list) == 1
-    assert offsets_list[0] == 0
+    expected = [0, 432, 864, 1296, 1728, 2160, 2616]
+    assert offsets_list == expected
 
 
 # ---------------------------------------------
-# GRIB
+# PRODUCT GRIB
 # ---------------------------------------------
 def test_grib_read():
     gid = eccodes.codes_grib_new_from_samples("regular_ll_sfc_grib1")
@@ -561,8 +561,17 @@ def test_grib_uuid_get_set():
     eccodes.codes_release(gid)
 
 
+def test_grib_dump(tmp_path):
+    gid = eccodes.codes_grib_new_from_samples("GRIB2")
+    p = tmp_path / "dump.txt"
+    with open(p, "w") as fout:
+        eccodes.codes_dump(gid, fout)
+        eccodes.codes_dump(gid, fout, "debug")
+    eccodes.codes_release(gid)
+
+
 # ---------------------------------------------
-# BUFR
+# PRODUCT BUFR
 # ---------------------------------------------
 def test_bufr_read_write(tmpdir):
     bid = eccodes.codes_new_from_samples("BUFR4", eccodes.CODES_PRODUCT_BUFR)

@@ -11,6 +11,7 @@
 
 # Authors:
 #   Alessandro Amici - B-Open - https://bopen.eu
+#   Shahram Najm - ECMWF - https://www.ecmwf.int
 #
 
 from __future__ import absolute_import, division, print_function, unicode_literals
@@ -20,7 +21,7 @@ import pkgutil
 
 import cffi
 
-__version__ = "1.3.4"
+__version__ = "1.4.0"
 
 LOG = logging.getLogger(__name__)
 
