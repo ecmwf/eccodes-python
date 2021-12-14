@@ -2,6 +2,12 @@
 Changelog for eccodes-python
 ============================
 
+1.4.1 (yyyy-mm-dd)
+--------------------
+
+- ECC-1317: Data file tiggelam_cnmc_sfc.grib2 not included in released tar file
+
+
 1.4.0 (2021-12-03)
 --------------------
 
