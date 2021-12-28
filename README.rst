@@ -1,6 +1,6 @@
 
 Python 3 interface to decode and encode GRIB and BUFR files via the
-`ECMWF ecCodes library <https://software.ecmwf.int/wiki/display/ECC/>`_.
+`ECMWF ecCodes library <https://confluence.ecmwf.int/display/ECC/>`_.
 
 Features:
 
@@ -43,7 +43,7 @@ Or if you manage binary packages with *Conda* use::
 
 As an alternative you may install the official source distribution
 by following the instructions at
-https://software.ecmwf.int/wiki/display/ECC/ecCodes+installation
+https://confluence.ecmwf.int/display/ECC/ecCodes+installation
 
 You may run a simple selfcheck command to ensure that your system is set up correctly::
 
