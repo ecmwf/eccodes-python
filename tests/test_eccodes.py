@@ -563,7 +563,7 @@ def test_grib_uuid_get_set():
 
 def test_grib_dump(tmp_path):
     gid = eccodes.codes_grib_new_from_samples("GRIB2")
-    p = tmp_path / "dump.txt"
+    p = tmp_path / "dump_grib.txt"
     with open(p, "w") as fout:
         eccodes.codes_dump(gid, fout)
         eccodes.codes_dump(gid, fout, "debug")
@@ -741,6 +741,15 @@ def test_bufr_extract_headers():
     assert header["ident"].strip() == "91334"
     assert header["rdbtimeSecond"] == 19
     assert math.isclose(header["localLongitude"], 151.83)
+
+
+def test_bufr_dump(tmp_path):
+    bid = eccodes.codes_bufr_new_from_samples("BUFR4")
+    eccodes.codes_set(bid, "unpack", 1)
+    p = tmp_path / "dump_bufr.txt"
+    with open(p, "w") as fout:
+        eccodes.codes_dump(bid, fout, "json")
+    eccodes.codes_release(bid)
 
 
 # ---------------------------------------------
