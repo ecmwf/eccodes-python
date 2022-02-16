@@ -456,6 +456,16 @@ def test_grib_float_array():
         assert (eccodes.codes_get_values(gid) == 1.0).all()
 
 
+def test_grib_set_np_int64():
+    gid = eccodes.codes_grib_new_from_samples("regular_gg_sfc_grib2")
+    eccodes.codes_set(gid, "productDefinitionTemplateNumber", 1)
+    eccodes.codes_set(gid, "number", np.int64(17))
+    assert eccodes.codes_get_long(gid, "number") == 17
+    eccodes.codes_set_long(gid, "number", np.int64(16))
+    assert eccodes.codes_get_long(gid, "number") == 16
+    eccodes.codes_release(gid)
+
+
 def test_gribex_mode():
     eccodes.codes_gribex_mode_on()
     eccodes.codes_gribex_mode_off()
