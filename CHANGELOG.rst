@@ -2,7 +2,7 @@
 Changelog for eccodes-python
 ============================
 
-1.4.1 (2022-03-dd)
+1.4.1 (2022-03-03)
 --------------------
 
 - ECC-1351: Support numpy.int64 in codes_set() and codes_set_long()
