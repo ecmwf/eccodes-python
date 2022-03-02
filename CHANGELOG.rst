@@ -2,6 +2,13 @@
 Changelog for eccodes-python
 ============================
 
+1.4.1 (2022-03-03)
+--------------------
+
+- ECC-1351: Support numpy.int64 in codes_set() and codes_set_long()
+- ECC-1317: Data file tiggelam_cnmc_sfc.grib2 not included in released tar file
+
+
 1.4.0 (2021-12-03)
 --------------------
 

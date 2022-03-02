@@ -32,8 +32,8 @@ source_suffix = ".rst"
 master_doc = "index"
 
 # General information about the project.
-project = u"eccodes-python"
-copyright = u"2017-, European Centre for Medium-Range Weather Forecasts (ECMWF)."
+project = "eccodes-python"
+copyright = "2017-, European Centre for Medium-Range Weather Forecasts (ECMWF)."
 
 # The version info for the project you're documenting, acts as replacement
 # for |version| and |release|, also used in various other places throughout

@@ -456,6 +456,16 @@ def test_grib_float_array():
         assert (eccodes.codes_get_values(gid) == 1.0).all()
 
 
+def test_grib_set_np_int64():
+    gid = eccodes.codes_grib_new_from_samples("regular_gg_sfc_grib2")
+    eccodes.codes_set(gid, "productDefinitionTemplateNumber", 1)
+    eccodes.codes_set(gid, "number", np.int64(17))
+    assert eccodes.codes_get_long(gid, "number") == 17
+    eccodes.codes_set_long(gid, "number", np.int64(16))
+    assert eccodes.codes_get_long(gid, "number") == 16
+    eccodes.codes_release(gid)
+
+
 def test_gribex_mode():
     eccodes.codes_gribex_mode_on()
     eccodes.codes_gribex_mode_off()
@@ -563,7 +573,7 @@ def test_grib_uuid_get_set():
 
 def test_grib_dump(tmp_path):
     gid = eccodes.codes_grib_new_from_samples("GRIB2")
-    p = tmp_path / "dump.txt"
+    p = tmp_path / "dump_grib.txt"
     with open(p, "w") as fout:
         eccodes.codes_dump(gid, fout)
         eccodes.codes_dump(gid, fout, "debug")
@@ -741,6 +751,15 @@ def test_bufr_extract_headers():
     assert header["ident"].strip() == "91334"
     assert header["rdbtimeSecond"] == 19
     assert math.isclose(header["localLongitude"], 151.83)
+
+
+def test_bufr_dump(tmp_path):
+    bid = eccodes.codes_bufr_new_from_samples("BUFR4")
+    eccodes.codes_set(bid, "unpack", 1)
+    p = tmp_path / "dump_bufr.txt"
+    with open(p, "w") as fout:
+        eccodes.codes_dump(bid, fout, "json")
+    eccodes.codes_release(bid)
 
 
 # ---------------------------------------------

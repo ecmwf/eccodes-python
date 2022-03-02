@@ -9,7 +9,7 @@ CF-GRIB
 
 
 Python 3 interface to encode and decode GRIB and BUFR files via the
-`ECMWF ecCodes library <https://software.ecmwf.int/wiki/display/ECC/>`_.
+`ECMWF ecCodes library <https://confluence.ecmwf.int/display/ECC/>`_.
 
 Features:
 

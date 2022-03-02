@@ -970,7 +970,7 @@ def grib_get_double(msgid, key):
     return value_p[0]
 
 
-@require(msgid=int, key=str, value=(int, float, np.float16, np.float32, str))
+@require(msgid=int, key=str, value=(int, float, np.float16, np.float32, np.int64, str))
 def grib_set_long(msgid, key, value):
     """
     @brief Set the integer value for a key in a message.
@@ -2060,7 +2060,7 @@ def grib_set(msgid, key, value):
     @param value      scalar value to set for key
     @exception CodesInternalError
     """
-    if isinstance(value, int):
+    if isinstance(value, (int, np.int64)):
         grib_set_long(msgid, key, value)
     elif isinstance(value, (float, np.float16, np.float32, np.float64)):
         grib_set_double(msgid, key, value)
