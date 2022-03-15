@@ -446,7 +446,23 @@ def test_grib_ecc_1007():
     eccodes.codes_release(gid)
 
 
-def test_grib_float_array():
+def test_grib_set_bitmap():
+    gid = eccodes.codes_grib_new_from_samples("GRIB2")
+    missing = np.Infinity
+    eccodes.codes_set(gid, "bitmapPresent", 1)
+    eccodes.codes_set(gid, "missingValue", missing)
+    # Grid with 100 points 2 of which are missing
+    values = np.ones((100,))
+    values[2] = missing
+    values[4] = missing
+    eccodes.codes_set_values(gid, values)
+    assert eccodes.codes_get(gid, "numberOfDataPoints") == 100
+    assert eccodes.codes_get(gid, "numberOfCodedValues") == 98
+    assert eccodes.codes_get(gid, "numberOfMissing") == 2
+    eccodes.codes_release(gid)
+
+
+def test_grib_set_float_array():
     gid = eccodes.codes_grib_new_from_samples("regular_ll_sfc_grib2")
     for ftype in (float, np.float16, np.float32, np.float64):
         values = np.ones((100000,), ftype)
