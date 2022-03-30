@@ -308,7 +308,7 @@ def test_grib_keys_iterator_skip():
     eccodes.codes_skip_coded(iterid)
     while eccodes.codes_keys_iterator_next(iterid):
         count += 1
-    assert count == 141
+    assert count > 140
     eccodes.codes_keys_iterator_delete(iterid)
     eccodes.codes_release(gid)
 
