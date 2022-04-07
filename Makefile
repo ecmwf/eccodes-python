@@ -2,7 +2,7 @@
 PACKAGE := eccodes-python
 IMAGE := $(PACKAGE)-image
 MODULE := eccodes
-PYTHONS := python3.8 python3.7 python3.6 python3.5 pypy3
+PYTHONS := python3.9 python3.8 python3.7 python3.6 python3.5 pypy3
 PYTHON := python
 
 PYTESTFLAGS_TEST := -v --flakes --doctest-glob '*.rst' --cov=$(MODULE) --cov-report=html --cache-clear

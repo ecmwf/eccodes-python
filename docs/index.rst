@@ -15,7 +15,7 @@ Features:
 
 - reads and writes GRIB 1 and 2 files,
 - reads and writes BUFR 3 and 4 files,
-- supports all modern versions of Python 3.8, 3.7, 3.6, 3.5 and PyPy3,
+- supports all modern versions of Python 3.9, 3.8, 3.7, 3.6 and PyPy3,
 - works on most *Linux* distributions and *MacOS*, the *ecCodes* C-library is the only system dependency,
 - PyPI package can be installed without compiling,
   at the cost of being twice as slow as the original *ecCodes* module,
