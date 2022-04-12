@@ -34,7 +34,9 @@ class ReaderBase:
 
     def peek(self):
         if self._peeked is None:
-            self._peeked = self._next_handle()
+            handle = self._next_handle()
+            if handle is not None:
+                self._peeked = Message(handle)
         return self._peeked
 
 
