@@ -7,10 +7,17 @@ from .message import Message
 
 
 class ReaderBase:
+    def __init__(self):
+        self._peeked = None
+
     def __iter__(self):
         return self
 
     def __next__(self):
+        if self._peeked is not None:
+            msg = self._peeked
+            self._peeked = None
+            return msg
         handle = self._next_handle()
         if handle is None:
             raise StopIteration
@@ -25,9 +32,15 @@ class ReaderBase:
     def __exit__(self, exc_type, exc_value, traceback):
         pass
 
+    def peek(self):
+        if self._peeked is None:
+            self._peeked = self._next_handle()
+        return self._peeked
+
 
 class FileReader(ReaderBase):
     def __init__(self, path):
+        super().__init__()
         self.file = open(path, 'rb')
 
     def _next_handle(self):
@@ -43,6 +56,7 @@ class FileReader(ReaderBase):
 
 class MemoryReader(ReaderBase):
     def __init__(self, buf):
+        super().__init__()
         self.buf = buf
 
     def _next_handle(self):
