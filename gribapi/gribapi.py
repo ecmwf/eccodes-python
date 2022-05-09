@@ -20,7 +20,7 @@ Numpy is a package used for scientific computing in Python and an efficient cont
 
 @em Requirements:
 
-    - Python 3.6 or higher
+    - Python 3.7 or higher
     - NumPy
 
 """

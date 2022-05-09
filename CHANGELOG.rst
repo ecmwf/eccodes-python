@@ -5,6 +5,7 @@ Changelog for eccodes-python
 1.4.2 (2022-mm-dd)
 --------------------
 
+- Drop Python 3.6
 - Add test for GRIB bitmap
 
 
