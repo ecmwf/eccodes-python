@@ -31,6 +31,8 @@ from functools import wraps
 
 import numpy as np
 
+from gribapi.errors import GribInternalError
+
 from . import errors
 from .bindings import ENC
 from .bindings import __version__ as bindings_version  # noqa
