@@ -2,10 +2,10 @@
 Changelog for eccodes-python
 ============================
 
-1.4.2 (2022-mm-dd)
+1.4.2 (2022-05-dd)
 --------------------
 
-- Drop Python 3.6
+- ECC-1389: Drop Python version 3.5 and 3.6
 - Add test for GRIB bitmap
 
 
