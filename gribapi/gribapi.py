@@ -31,7 +31,7 @@ from functools import wraps
 
 import numpy as np
 
-from gribapi.errors import GribInternalError  # noqa
+from gribapi.errors import GribInternalError
 
 from . import errors
 from .bindings import ENC
@@ -1698,9 +1698,7 @@ def grib_set_key_vals(gribid, key_vals):
             if not isinstance(kv, str):
                 raise TypeError("Invalid list/tuple element type '%s'" % kv)
             if "=" not in str(kv):
-                raise errors.GribInternalError(
-                    "Invalid list/tuple element format '%s'" % kv
-                )
+                raise GribInternalError("Invalid list/tuple element format '%s'" % kv)
             if len(key_vals_str) > 0:
                 key_vals_str += ","
             key_vals_str += kv
@@ -2075,7 +2073,7 @@ def grib_set(msgid, key, value):
         hint = ""
         if hasattr(value, "__iter__"):
             hint = " (Hint: for array keys use codes_set_array(msgid, key, value))"
-        raise errors.GribInternalError(
+        raise GribInternalError(
             "Invalid type of value when setting key '%s'%s." % (key, hint)
         )
 
@@ -2111,7 +2109,7 @@ def grib_set_array(msgid, key, value):
         try:
             int(val0)
         except (ValueError, TypeError):
-            raise errors.GribInternalError(
+            raise GribInternalError(
                 "Invalid type of value when setting key '%s'." % key
             )
         grib_set_long_array(msgid, key, value)
@@ -2168,9 +2166,7 @@ def grib_index_select(indexid, key, value):
     elif isinstance(value, str):
         grib_index_select_string(indexid, key, value)
     else:
-        raise errors.GribInternalError(
-            "Invalid type of value when setting key '%s'." % key
-        )
+        raise GribInternalError("Invalid type of value when setting key '%s'." % key)
 
 
 @require(indexid=int, filename=str)
