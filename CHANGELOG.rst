@@ -2,7 +2,7 @@
 Changelog for eccodes-python
 ============================
 
-1.4.2 (2022-05-dd)
+1.4.2 (2022-05-20)
 --------------------
 
 - ECC-1389: Drop Python version 3.5 and 3.6
