@@ -2,6 +2,14 @@
 Changelog for eccodes-python
 ============================
 
+1.4.2 (2022-05-20)
+--------------------
+
+- ECC-1389: Drop Python version 3.5 and 3.6
+- ECC-1390: NameError: name 'GribInternalError' is not defined
+- Add test for GRIB bitmap
+
+
 1.4.1 (2022-03-03)
 --------------------
 
