@@ -10,6 +10,9 @@ class Message:
     def __del__(self):
         eccodes.codes_release(self.handle)
 
+    def copy(self):
+        return Message(eccodes.codes_clone(self.handle))
+
     def get(self, name):
         return eccodes.codes_get(self.handle, name)
 
