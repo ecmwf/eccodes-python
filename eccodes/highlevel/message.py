@@ -22,6 +22,9 @@ class Message:
     def get_array(self, name):
         return eccodes.codes_get_array(self.handle, name)
 
+    def get_size(self, name):
+        return eccodes.codes_get_size(self.handle, name)
+
     def get_data(self):
         return eccodes.codes_grib_get_data(self.handle)
 
