@@ -2,6 +2,11 @@
 Changelog for eccodes-python
 ============================
 
+1.5.0 (2022-mm-dd)
+--------------------
+
+- ECC-1404: Add the grib_get_gaussian_latitudes() function
+
 1.4.2 (2022-05-20)
 --------------------
 

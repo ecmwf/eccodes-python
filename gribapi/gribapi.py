@@ -2262,6 +2262,21 @@ def codes_get_version_info():
     return vinfo
 
 
+@require(order=int)
+def codes_get_gaussian_latitudes(order):
+    """
+    @brief Return the Gaussian latitudes
+
+    @param order    The Gaussian order/number (also called the truncation)
+    @return         A list of latitudes with 2*order elements
+    """
+    num_elems = 2 * order
+    outlats_p = ffi.new("double[]", num_elems)
+    err = lib.grib_get_gaussian_latitudes(order, outlats_p)
+    GRIB_CHECK(err)
+    return outlats_p
+
+
 @require(msgid=int)
 def grib_get_message(msgid):
     """

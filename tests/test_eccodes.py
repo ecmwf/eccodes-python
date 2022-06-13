@@ -781,6 +781,16 @@ def test_bufr_dump(tmp_path):
 # ---------------------------------------------
 # Experimental features
 # ---------------------------------------------
+def test_codes_get_gaussian_latitudes():
+    orders = [256, 1280]
+    # Latitude of the first element (nearest the north pole)
+    expected_lats = [89.731148, 89.946187]
+    for _order, _lat in zip(orders, expected_lats):
+        lats = eccodes.codes_get_gaussian_latitudes(_order)
+        assert len(lats) == 2 * _order
+        assert math.isclose(lats[0], _lat, abs_tol=0.00001)
+
+
 def test_grib_nearest2():
     if "codes_grib_nearest_new" not in dir(eccodes):
         return

@@ -170,7 +170,7 @@ int grib_get_message_size(const grib_handle* h,size_t* size);
 int parse_keyval_string(const char *grib_tool, char *arg, int values_required, int default_type, grib_values values[], int *count);
 
 int grib_get_data(const grib_handle *h, double *lats, double *lons, double *values);
-
+int grib_get_gaussian_latitudes(long trunc, double* lats);
 
 /* EXPERIMENTAL */
 typedef struct codes_bufr_header {
