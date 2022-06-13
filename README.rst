@@ -1,3 +1,5 @@
+.. image:: https://img.shields.io/pypi/v/eccodes.svg
+   :target: https://pypi.python.org/pypi/eccodes/
 
 Python 3 interface to decode and encode GRIB and BUFR files via the
 `ECMWF ecCodes library <https://confluence.ecmwf.int/display/ECC/>`_.
