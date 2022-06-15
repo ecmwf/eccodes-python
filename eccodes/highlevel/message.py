@@ -39,6 +39,9 @@ class Message:
     def set_array(self, name, value):
         return eccodes.codes_set_array(self.handle, name, value)
 
+    def dump(self):
+        eccodes.codes_dump(self.handle)
+
     def write_to(self, fileobj):
         assert isinstance(fileobj, io.IOBase)
         eccodes.codes_write(self.handle, fileobj)
