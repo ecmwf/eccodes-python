@@ -37,3 +37,7 @@ class Message:
 
     def get_buffer(self):
         return eccodes.codes_get_message(self.handle)
+
+    @classmethod
+    def from_samples(cls, name):
+        return cls(eccodes.codes_grib_new_from_samples(name))
