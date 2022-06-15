@@ -8,7 +8,10 @@ class Message:
         self.handle = handle
 
     def __del__(self):
-        eccodes.codes_release(self.handle)
+        try:
+            eccodes.codes_release(self.handle)
+        except Exception:
+            pass
 
     def copy(self):
         return Message(eccodes.codes_clone(self.handle))
