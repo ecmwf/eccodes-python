@@ -3,7 +3,7 @@ import eccodes
 import gribapi
 from gribapi import ffi
 
-from .message import Message
+from .message import GRIBMessage
 
 
 class ReaderBase:
@@ -21,7 +21,7 @@ class ReaderBase:
         handle = self._next_handle()
         if handle is None:
             raise StopIteration
-        return Message(handle)
+        return GRIBMessage(handle)
 
     def _next_handle(self):
         raise NotImplementedError
@@ -36,7 +36,7 @@ class ReaderBase:
         if self._peeked is None:
             handle = self._next_handle()
             if handle is not None:
-                self._peeked = Message(handle)
+                self._peeked = GRIBMessage(handle)
         return self._peeked
 
 

@@ -3,6 +3,7 @@ import io
 
 import eccodes
 
+
 class Message:
     def __init__(self, handle):
         self._handle = handle
@@ -34,7 +35,7 @@ class Message:
         return eccodes.codes_get_size(self._handle, name)
 
     def get_data(self):
-        return eccodes.codes_grib_get_data(self._handle)
+        raise NotImplementedError
 
     def set_array(self, name, value):
         return eccodes.codes_set_array(self._handle, name, value)
@@ -48,6 +49,11 @@ class Message:
 
     def get_buffer(self):
         return eccodes.codes_get_message(self._handle)
+
+
+class GRIBMessage(Message):
+    def get_data(self):
+        return eccodes.codes_grib_get_data(self._handle)
 
     @classmethod
     def from_samples(cls, name):

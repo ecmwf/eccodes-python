@@ -1,2 +1,2 @@
 from .reader import FileReader, MemoryReader, StreamReader
-from .message import Message
+from .message import Message, GRIBMessage
