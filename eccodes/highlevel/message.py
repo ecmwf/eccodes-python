@@ -13,6 +13,9 @@ class Message:
     def copy(self):
         return Message(eccodes.codes_clone(self.handle))
 
+    def __copy__(self):
+        return self.copy()
+
     def get(self, name):
         return eccodes.codes_get(self.handle, name)
 
