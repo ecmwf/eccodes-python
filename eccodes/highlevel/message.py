@@ -20,10 +20,10 @@ class Message:
     def __copy__(self):
         return self.copy()
 
-    def get(self, name):
+    def get(self, name, ktype=None):
         if eccodes.codes_get_size(self._handle, name) > 1:
-            return eccodes.codes_get_array(self._handle, name)
-        return eccodes.codes_get(self._handle, name)
+            return eccodes.codes_get_array(self._handle, name, ktype=ktype)
+        return eccodes.codes_get(self._handle, name, ktype=ktype)
 
     def set(self, name, value):
         return eccodes.codes_set(self._handle, name, value)
