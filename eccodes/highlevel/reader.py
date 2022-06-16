@@ -80,7 +80,7 @@ def pyread_callback(payload, buf, length):
 cstd = ffi.dlopen(None)
 ffi.cdef("void free(void* pointer);")
 ffi.cdef(
-    "void* wmo_read_any_from_stream_malloc(void* stream_data, long (*stream_proc)(void*, void* buffer, long len), size_t* size, int* err);"
+    "void* wmo_read_any_from_stream_malloc(void*, long (*stream_proc)(void*, void*, long), size_t*, int*);"
 )
 
 
