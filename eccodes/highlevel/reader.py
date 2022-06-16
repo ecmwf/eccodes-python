@@ -1,4 +1,3 @@
-
 import eccodes
 import gribapi
 from gribapi import ffi
@@ -43,7 +42,7 @@ class ReaderBase:
 class FileReader(ReaderBase):
     def __init__(self, path):
         super().__init__()
-        self.file = open(path, 'rb')
+        self.file = open(path, "rb")
 
     def _next_handle(self):
         return eccodes.codes_new_from_file(self.file, eccodes.CODES_PRODUCT_GRIB)
@@ -80,12 +79,18 @@ def pyread_callback(payload, buf, length):
 
 cstd = ffi.dlopen(None)
 ffi.cdef("void free(void* pointer);")
-ffi.cdef("void* wmo_read_any_from_stream_malloc(void* stream_data, long (*stream_proc)(void*, void* buffer, long len), size_t* size, int* err);")
+ffi.cdef(
+    "void* wmo_read_any_from_stream_malloc(void* stream_data, long (*stream_proc)(void*, void* buffer, long len), size_t* size, int* err);"
+)
+
+
 def codes_new_from_stream(stream):
     sh = ffi.new_handle(stream)
     length = ffi.new("size_t*")
     err = ffi.new("int*")
-    err, buf = gribapi.err_last(gribapi.lib.wmo_read_any_from_stream_malloc)(sh, pyread_callback, length)
+    err, buf = gribapi.err_last(gribapi.lib.wmo_read_any_from_stream_malloc)(
+        sh, pyread_callback, length
+    )
     buf = ffi.gc(buf, cstd.free, size=length[0])
     if err:
         if err != gribapi.lib.GRIB_END_OF_FILE:
