@@ -160,6 +160,21 @@ def test_extract_offsets():
     assert offsets_list == expected
 
 
+def test_any_new_from_samples():
+    msgid = eccodes.codes_new_from_samples(
+        "reduced_gg_ml_grib2", eccodes.CODES_PRODUCT_ANY
+    )
+    assert eccodes.codes_get(msgid, "identifier") == "GRIB"
+    eccodes.codes_release(msgid)
+    msgid = eccodes.codes_new_from_samples("BUFR4", eccodes.CODES_PRODUCT_ANY)
+    assert eccodes.codes_get(msgid, "identifier") == "BUFR"
+    eccodes.codes_release(msgid)
+
+    msgid = eccodes.codes_any_new_from_samples("diag.tmpl")
+    assert eccodes.codes_get(msgid, "identifier") == "DIAG"
+    eccodes.codes_release(msgid)
+
+
 # ---------------------------------------------
 # PRODUCT GRIB
 # ---------------------------------------------
