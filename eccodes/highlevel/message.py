@@ -1,5 +1,5 @@
-from contextlib import contextmanager
 import io
+from contextlib import contextmanager
 
 import eccodes
 
@@ -69,7 +69,6 @@ class Message:
     def __contains__(self, name):
         return bool(eccodes.codes_is_defined(self._handle, name))
 
-
     class _KeyIterator:
         def __init__(self, message, namespace=None, iter_keys=True, iter_values=False):
             self._message = message
@@ -99,8 +98,7 @@ class Message:
                 return value
             return key, value
 
-
-    def  __iter__(self):
+    def __iter__(self):
         return self._KeyIterator(self)
 
     def keys(self, namespace=None):
