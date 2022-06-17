@@ -1,6 +1,16 @@
+from contextlib import contextmanager
 import io
 
 import eccodes
+
+
+@contextmanager
+def raise_keyerror(name):
+    """Make operations on a key raise a KeyError if not found"""
+    try:
+        yield
+    except eccodes.KeyValueNotFoundError:
+        raise KeyError(name)
 
 
 class Message:
@@ -20,24 +30,29 @@ class Message:
         return self.copy()
 
     def get(self, name, ktype=None):
-        if eccodes.codes_get_size(self._handle, name) > 1:
-            return eccodes.codes_get_array(self._handle, name, ktype=ktype)
-        return eccodes.codes_get(self._handle, name, ktype=ktype)
+        with raise_keyerror(name):
+            if eccodes.codes_get_size(self._handle, name) > 1:
+                return eccodes.codes_get_array(self._handle, name, ktype=ktype)
+            return eccodes.codes_get(self._handle, name, ktype=ktype)
 
     def set(self, name, value):
-        return eccodes.codes_set(self._handle, name, value)
+        with raise_keyerror(name):
+            return eccodes.codes_set(self._handle, name, value)
 
     def get_array(self, name):
-        return eccodes.codes_get_array(self._handle, name)
+        with raise_keyerror(name):
+            return eccodes.codes_get_array(self._handle, name)
 
     def get_size(self, name):
-        return eccodes.codes_get_size(self._handle, name)
+        with raise_keyerror(name):
+            return eccodes.codes_get_size(self._handle, name)
 
     def get_data(self):
         raise NotImplementedError
 
     def set_array(self, name, value):
-        return eccodes.codes_set_array(self._handle, name, value)
+        with raise_keyerror(name):
+            return eccodes.codes_set_array(self._handle, name, value)
 
     def dump(self):
         eccodes.codes_dump(self._handle)
