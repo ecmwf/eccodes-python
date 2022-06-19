@@ -160,7 +160,7 @@ def test_extract_offsets():
     assert offsets_list == expected
 
 
-def test_any_new_from_samples():
+def _test_any_new_from_samples():
     msgid = eccodes.codes_new_from_samples(
         "reduced_gg_ml_grib2", eccodes.CODES_PRODUCT_ANY
     )
