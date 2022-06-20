@@ -1038,6 +1038,8 @@ def codes_new_from_samples(samplename, product_kind):
         return grib_new_from_samples(samplename)
     if product_kind == CODES_PRODUCT_BUFR:
         return codes_bufr_new_from_samples(samplename)
+    if product_kind == CODES_PRODUCT_ANY:
+        return codes_any_new_from_samples(samplename)
     raise ValueError("Invalid product kind %d" % product_kind)
 
 
@@ -1080,6 +1082,25 @@ def codes_bufr_new_from_samples(samplename):
     h = lib.codes_bufr_handle_new_from_samples(ffi.NULL, samplename.encode(ENC))
     if h == ffi.NULL:
         raise errors.FileNotFoundError(f"bufr_new_from_samples failed: {samplename}")
+    return put_handle(h)
+
+
+@require(samplename=str)
+def codes_any_new_from_samples(samplename):
+    """
+    @brief Create a new valid message from a sample.
+
+    The available samples are picked up from the directory pointed to
+    by the environment variable ECCODES_SAMPLES_PATH.
+    To know where the samples directory is run the codes_info tool.\n
+
+    @param samplename   name of the sample to be used
+    @return             id of the message loaded in memory
+    @exception CodesInternalError
+    """
+    h = lib.codes_handle_new_from_samples(ffi.NULL, samplename.encode(ENC))
+    if h == ffi.NULL:
+        raise errors.FileNotFoundError(f"any_new_from_samples failed: {samplename}")
     return put_handle(h)
 
 

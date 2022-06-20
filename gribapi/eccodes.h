@@ -14,6 +14,7 @@ typedef struct grib_context           codes_context;
 grib_handle* codes_handle_new_from_file(codes_context* c, FILE* f, ProductKind product, int* error);
 
 codes_handle* codes_bufr_handle_new_from_samples(codes_context* c, const char* sample_name);
+codes_handle* codes_handle_new_from_samples(codes_context* c, const char* sample_name);
 
 int codes_bufr_copy_data(grib_handle* hin, grib_handle* hout);
 
