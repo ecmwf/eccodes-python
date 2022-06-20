@@ -24,27 +24,38 @@ def test_read_message():
 
 
 def test_message_get():
+    dummy_default = object()
+    known_missing = "scaleFactorOfSecondFixedSurface"
     with eccodes.FileReader(TEST_GRIB_DATA) as reader:
         message = next(reader)
         assert message.get("edition") == 2
         assert message.get("nonexistent") is None
-        assert message.get("nonexistent", 42) == 42
+        assert message.get("nonexistent", dummy_default) is dummy_default
         assert message.get("centre", ktype=int) == 250
         vals = message.get("values")
         assert len(vals) == message.get("numberOfValues")
         assert message["Ni"] == 511
         with pytest.raises(KeyError):
             message["invalid"]
+        # keys set as MISSING
+        assert message.is_missing(known_missing)
+        assert message.get(known_missing) is None
+        assert message.get(known_missing, dummy_default) is dummy_default
+        with pytest.raises(KeyError):
+            message[known_missing]
 
 
 def test_message_set():
+    missing_key = "scaleFactorOfFirstFixedSurface"
     with eccodes.FileReader(TEST_GRIB_DATA) as reader:
         message = next(reader)
         message.set("centre", "ecmf")
         vals = np.arange(message.get("numberOfValues"), dtype=np.float32)
         message.set_array("values", vals)
+        message.set_missing(missing_key)
         assert message.get("centre") == "ecmf"
         assert np.all(message.get("values") == vals)
+        assert message.is_missing(missing_key)
 
 
 def test_message_iter():
@@ -68,6 +79,18 @@ def test_message_iter():
         assert values[keys.index("shortName")] == "z"
         assert values[keys.index("centre")] == "ecmf"
         assert values[-1] == "7777"
+
+
+def test_message_iter_missingvalues():
+    missing_key = "level"
+    with eccodes.FileReader(TEST_GRIB_DATA2) as reader:
+        message = next(reader)
+        message[missing_key] = 42
+        message.set_missing(missing_key)
+
+        assert missing_key not in set(message)
+        assert missing_key not in set(message.keys())
+        assert missing_key not in dict(message.items())
 
 
 def test_message_copy():
