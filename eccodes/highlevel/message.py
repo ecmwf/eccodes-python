@@ -53,7 +53,7 @@ class Message:
         with raise_keyerror(name):
             return eccodes.codes_get_size(self._handle, name)
 
-    def get_data(self):
+    def get_data_points(self):
         raise NotImplementedError
 
     def set_array(self, name, value):
@@ -122,7 +122,7 @@ class Message:
 
 
 class GRIBMessage(Message):
-    def get_data(self):
+    def get_data_points(self):
         return eccodes.codes_grib_get_data(self._handle)
 
     @classmethod
