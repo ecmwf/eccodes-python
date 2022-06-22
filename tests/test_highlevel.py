@@ -34,6 +34,8 @@ def test_message_get():
         assert message.get("centre", ktype=int) == 250
         vals = message.get("values")
         assert len(vals) == message.get("numberOfValues")
+        vals2 = message.data
+        assert np.all(vals == vals2)
         assert message["Ni"] == 511
         with pytest.raises(KeyError):
             message["invalid"]

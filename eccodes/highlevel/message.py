@@ -135,6 +135,16 @@ class Message:
 
 
 class GRIBMessage(Message):
+    def __init__(self, handle):
+        super().__init__(handle)
+        self._data = None
+
+    @property
+    def data(self):
+        if self._data is None:
+            self._data = self._get("values")
+        return self._data
+
     def get_data_points(self):
         return eccodes.codes_grib_get_data(self._handle)
 
