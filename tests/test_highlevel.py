@@ -33,6 +33,7 @@ def test_message_get():
         assert message.get("nonexistent") is None
         assert message.get("nonexistent", dummy_default) is dummy_default
         assert message.get("centre", ktype=int) == 250
+        assert message.get("dataType:int") == 11
         num_vals = message.get("numberOfValues")
         assert message.get_size("values") == num_vals
         vals = message.get("values")
@@ -40,6 +41,7 @@ def test_message_get():
         vals2 = message.data
         assert np.all(vals == vals2)
         assert message["Ni"] == 511
+        assert message["gridType:int"] == 0
         with pytest.raises(KeyError):
             message["invalid"]
         # keys set as MISSING

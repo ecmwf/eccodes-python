@@ -4,6 +4,13 @@ from contextlib import contextmanager
 import eccodes
 
 
+_TYPES_MAP = {
+    "float": float,
+    "int": int,
+    "str": str,
+}
+
+
 @contextmanager
 def raise_keyerror(name):
     """Make operations on a key raise a KeyError if not found"""
@@ -30,6 +37,12 @@ class Message:
         return self.copy()
 
     def _get(self, name, ktype=None):
+        name, sep, stype = name.partition(":")
+        if sep and ktype is None:
+            try:
+                ktype = _TYPES_MAP[stype]
+            except KeyError:
+                raise ValueError(f"Unknown key type {stype!r}")
         with raise_keyerror(name):
             if eccodes.codes_is_missing(self._handle, name):
                 raise KeyError(name)
