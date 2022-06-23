@@ -5,6 +5,7 @@ Changelog for eccodes-python
 1.5.0 (2022-mm-dd)
 --------------------
 
+- ECC-1415: Implement a higher-level Python interface
 - ECC-1404: Add the grib_get_gaussian_latitudes() function
 - ECC-1405: Add new function: codes_any_new_from_samples
 - GitHub pull request #62: add pypi badge
