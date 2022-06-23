@@ -77,14 +77,19 @@ def pyread_callback(payload, buf, length):
     return n if n > 0 else -1  # -1 means EOF
 
 
-cstd = ffi.dlopen(None)
-ffi.cdef("void free(void* pointer);")
-ffi.cdef(
-    "void* wmo_read_any_from_stream_malloc(void*, long (*stream_proc)(void*, void*, long), size_t*, int*);"
-)
+try:
+    cstd = ffi.dlopen(None)  # Raises OSError on Windows
+    ffi.cdef("void free(void* pointer);")
+    ffi.cdef(
+        "void* wmo_read_any_from_stream_malloc(void*, long (*stream_proc)(void*, void*, long), size_t*, int*);"
+    )
+except OSError:
+    cstd = None
 
 
 def codes_new_from_stream(stream):
+    if cstd is None:
+        raise OSError("This feature is not supported on Windows")
     sh = ffi.new_handle(stream)
     length = ffi.new("size_t*")
     err = ffi.new("int*")
@@ -107,6 +112,9 @@ def codes_new_from_stream(stream):
 
 class StreamReader(ReaderBase):
     def __init__(self, stream):
+        if cstd is None:
+            raise OSError("This feature is not supported on Windows")
+        super().__init__()
         self.stream = stream
 
     def _next_handle(self):
