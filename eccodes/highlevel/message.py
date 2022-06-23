@@ -3,7 +3,6 @@ from contextlib import contextmanager
 
 import eccodes
 
-
 _TYPES_MAP = {
     "float": float,
     "int": int,
