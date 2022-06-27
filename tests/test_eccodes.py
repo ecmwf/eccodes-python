@@ -22,7 +22,8 @@ import pytest
 import eccodes
 
 SAMPLE_DATA_FOLDER = os.path.join(os.path.dirname(__file__), "sample-data")
-TEST_GRIB_DATA = os.path.join(SAMPLE_DATA_FOLDER, "tiggelam_cnmc_sfc.grib2")
+TEST_GRIB_TIGGE_DATA = os.path.join(SAMPLE_DATA_FOLDER, "tiggelam_cnmc_sfc.grib2")
+TEST_GRIB_ERA5_DATA = os.path.join(SAMPLE_DATA_FOLDER, "era5-levels-members.grib")
 
 
 def get_sample_fullpath(sample):
@@ -119,8 +120,10 @@ def test_any_read():
 
 
 def test_count_in_file():
-    with open(TEST_GRIB_DATA, "rb") as f:
+    with open(TEST_GRIB_TIGGE_DATA, "rb") as f:
         assert eccodes.codes_count_in_file(f) == 7
+    with open(TEST_GRIB_ERA5_DATA, "rb") as f:
+        assert eccodes.codes_count_in_file(f) == 160
     fpath = get_sample_fullpath("GRIB1.tmpl")
     if fpath is None:
         return
@@ -153,7 +156,7 @@ def test_gts_header():
 
 def test_extract_offsets():
     offsets = eccodes.codes_extract_offsets(
-        TEST_GRIB_DATA, eccodes.CODES_PRODUCT_ANY, is_strict=True
+        TEST_GRIB_TIGGE_DATA, eccodes.CODES_PRODUCT_ANY, is_strict=True
     )
     offsets_list = list(offsets)
     expected = [0, 432, 864, 1296, 1728, 2160, 2616]
