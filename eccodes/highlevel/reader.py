@@ -32,6 +32,7 @@ class ReaderBase:
         pass
 
     def peek(self):
+        """Return the next available message without consuming it"""
         if self._peeked is None:
             handle = self._next_handle()
             if handle is not None:
@@ -40,6 +41,7 @@ class ReaderBase:
 
 
 class FileReader(ReaderBase):
+    """Read messages from a file"""
     def __init__(self, path):
         super().__init__()
         self.file = open(path, "rb")
@@ -56,6 +58,7 @@ class FileReader(ReaderBase):
 
 
 class MemoryReader(ReaderBase):
+    """Read messages from memory"""
     def __init__(self, buf):
         super().__init__()
         self.buf = buf
@@ -111,6 +114,7 @@ def codes_new_from_stream(stream):
 
 
 class StreamReader(ReaderBase):
+    """Read messages from a stream (an object with a ``read`` method)"""
     def __init__(self, stream):
         if cstd is None:
             raise OSError("This feature is not supported on Windows")

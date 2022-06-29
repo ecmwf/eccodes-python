@@ -30,6 +30,7 @@ class Message:
             pass
 
     def copy(self):
+        """Create a copy of the current message"""
         return Message(eccodes.codes_clone(self._handle))
 
     def __copy__(self):
@@ -50,20 +51,52 @@ class Message:
             return eccodes.codes_get(self._handle, name, ktype=ktype)
 
     def get(self, name, default=None, ktype=None):
+        """Get the value of a key
+
+        Parameters
+        ----------
+        name: str
+            Name of the key. Can be suffixed with ":str", ":int", or ":float" to
+            request a specific type.
+        default: any, optional
+            Value if the key is not Found, or ``None`` if not specified.
+        ktype: type
+            Request a specific type for the value. Overrides the suffix in ``name``"""
         try:
             return self._get(name, ktype=ktype)
         except KeyError:
             return default
 
     def set(self, name, value):
+        """Set the value of the given key
+
+        Raises
+        ------
+        KeyError
+            If the key does not exist
+        """
         with raise_keyerror(name):
             return eccodes.codes_set(self._handle, name, value)
 
     def get_array(self, name):
+        """Get the value of the given key as an array
+
+        Raises
+        ------
+        KeyError
+            If the key is not set
+        """
         with raise_keyerror(name):
             return eccodes.codes_get_array(self._handle, name)
 
     def get_size(self, name):
+        """Get the size of the given key
+
+        Raises
+        ------
+        KeyError
+            If the key is not set
+        """
         with raise_keyerror(name):
             return eccodes.codes_get_size(self._handle, name)
 
@@ -71,14 +104,35 @@ class Message:
         raise NotImplementedError
 
     def is_missing(self, name):
+        """Check whether the key is set to a missing value
+
+        Raises
+        ------
+        KeyError
+            If the key is not set
+        """
         with raise_keyerror(name):
             return bool(eccodes.codes_is_missing(self._handle, name))
 
     def set_array(self, name, value):
+        """Set the value of the given key
+
+        Raises
+        ------
+        KeyError
+            If the key does not exist
+        """
         with raise_keyerror(name):
             return eccodes.codes_set_array(self._handle, name, value)
 
     def set_missing(self, name):
+        """Set the given key as missing
+
+        Raises
+        ------
+        KeyError
+            If the key does not exist
+        """
         with raise_keyerror(name):
             return eccodes.codes_set_missing(self._handle, name)
 
@@ -127,22 +181,28 @@ class Message:
         return self._KeyIterator(self)
 
     def keys(self, namespace=None):
+        """Iterate over all the available keys"""
         return self._KeyIterator(self, namespace, iter_keys=True, iter_values=False)
 
     def values(self, namespace=None):
+        """Iterate over the values of all the available keys"""
         return self._KeyIterator(self, namespace, iter_keys=False, iter_values=True)
 
     def items(self, namespace=None):
+        """Iterate over all the available key-value pairs"""
         return self._KeyIterator(self, namespace, iter_keys=True, iter_values=True)
 
     def dump(self):
+        """Print out a textual representation of the message"""
         eccodes.codes_dump(self._handle)
 
     def write_to(self, fileobj):
+        """Write the message to a file object"""
         assert isinstance(fileobj, io.IOBase)
         eccodes.codes_write(self._handle, fileobj)
 
     def get_buffer(self):
+        """Return a buffer containing the encoded message"""
         return eccodes.codes_get_message(self._handle)
 
 
@@ -153,13 +213,16 @@ class GRIBMessage(Message):
 
     @property
     def data(self):
+        """Return the array of values"""
         if self._data is None:
             self._data = self._get("values")
         return self._data
 
     def get_data_points(self):
+        """Get the list of ``(lat, lon, value)`` data points"""
         return eccodes.codes_grib_get_data(self._handle)
 
     @classmethod
     def from_samples(cls, name):
+        """Create a message from a sample"""
         return cls(eccodes.codes_grib_new_from_samples(name))
