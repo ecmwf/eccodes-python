@@ -244,10 +244,8 @@ def compat_create_exclusive(path, *args, **kwargs):
     with io.open(fd, mode="wb", *args, **kwargs) as file:
         try:
             yield file
-        except Exception:
-            file.close()
+        finally:
             os.unlink(path)
-            raise
 
 
 @attr.attrs()
