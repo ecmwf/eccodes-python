@@ -92,9 +92,6 @@ def test_new_from_file():
     with open(fpath, "rb") as f:
         msgid = eccodes.codes_new_from_file(f, eccodes.CODES_PRODUCT_GTS)
         assert msgid is None
-    with open(fpath, "rb") as f:
-        msgid = eccodes.codes_new_from_file(f, eccodes.CODES_PRODUCT_METAR)
-        assert msgid is None
     with pytest.raises(ValueError):
         with open(fpath, "rb") as f:
             eccodes.codes_new_from_file(f, 1024)
@@ -142,11 +139,11 @@ def test_new_from_message():
     eccodes.codes_release(newgid)
 
     # This time read from a string rather than a file
-    metar_str = "METAR LQMO 022350Z 09003KT 6000 FEW010 SCT035 BKN060 08/08 Q1003="
-    newgid = eccodes.codes_new_from_message(metar_str)
-    cccc = eccodes.codes_get(newgid, "CCCC")
-    assert cccc == "LQMO"
-    eccodes.codes_release(newgid)
+    # metar_str = "METAR LQMO 022350Z 09003KT 6000 FEW010 SCT035 BKN060 08/08 Q1003="
+    # newgid = eccodes.codes_new_from_message(metar_str)
+    # cccc = eccodes.codes_get(newgid, "CCCC")
+    # assert cccc == "LQMO"
+    # eccodes.codes_release(newgid)
 
 
 def test_gts_header():
