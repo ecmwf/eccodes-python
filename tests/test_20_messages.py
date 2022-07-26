@@ -3,6 +3,9 @@ import os.path
 import numpy as np
 import pytest
 
+# flake8: noqa
+
+
 # from eccodes import messages
 
 SAMPLE_DATA_FOLDER = os.path.join(os.path.dirname(__file__), "sample-data")
