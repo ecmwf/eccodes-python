@@ -27,6 +27,7 @@ from gribapi import any_new_from_file as codes_any_new_from_file
 from gribapi import bindings_version
 from gribapi import bufr_new_from_file as codes_bufr_new_from_file
 from gribapi import (
+    codes_any_new_from_samples,
     codes_bufr_copy_data,
     codes_bufr_extract_headers,
     codes_bufr_key_is_header,
@@ -41,6 +42,7 @@ from gribapi import (
     codes_definition_path,
     codes_dump,
     codes_extract_offsets,
+    codes_get_gaussian_latitudes,
     codes_get_library_path,
     codes_get_version_info,
     codes_new_from_file,
@@ -233,6 +235,7 @@ __all__ = [
     "codes_bufr_multi_element_constant_arrays_on",
     "codes_bufr_new_from_file",
     "codes_bufr_new_from_samples",
+    "codes_any_new_from_samples",
     "CODES_CHECK",
     "codes_clone",
     "codes_copy_namespace",
@@ -246,6 +249,7 @@ __all__ = [
     "codes_get_double_elements",
     "codes_get_double",
     "codes_get_elements",
+    "codes_get_gaussian_latitudes",
     "codes_get_library_path",
     "codes_get_long_array",
     "codes_get_long",

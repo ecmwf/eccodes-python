@@ -22,7 +22,8 @@ import pytest
 import eccodes
 
 SAMPLE_DATA_FOLDER = os.path.join(os.path.dirname(__file__), "sample-data")
-TEST_GRIB_DATA = os.path.join(SAMPLE_DATA_FOLDER, "tiggelam_cnmc_sfc.grib2")
+TEST_GRIB_TIGGE_DATA = os.path.join(SAMPLE_DATA_FOLDER, "tiggelam_cnmc_sfc.grib2")
+TEST_GRIB_ERA5_DATA = os.path.join(SAMPLE_DATA_FOLDER, "era5-levels-members.grib")
 
 
 def get_sample_fullpath(sample):
@@ -91,9 +92,6 @@ def test_new_from_file():
     with open(fpath, "rb") as f:
         msgid = eccodes.codes_new_from_file(f, eccodes.CODES_PRODUCT_GTS)
         assert msgid is None
-    with open(fpath, "rb") as f:
-        msgid = eccodes.codes_new_from_file(f, eccodes.CODES_PRODUCT_METAR)
-        assert msgid is None
     with pytest.raises(ValueError):
         with open(fpath, "rb") as f:
             eccodes.codes_new_from_file(f, 1024)
@@ -119,8 +117,10 @@ def test_any_read():
 
 
 def test_count_in_file():
-    with open(TEST_GRIB_DATA, "rb") as f:
+    with open(TEST_GRIB_TIGGE_DATA, "rb") as f:
         assert eccodes.codes_count_in_file(f) == 7
+    with open(TEST_GRIB_ERA5_DATA, "rb") as f:
+        assert eccodes.codes_count_in_file(f) == 160
     fpath = get_sample_fullpath("GRIB1.tmpl")
     if fpath is None:
         return
@@ -139,11 +139,11 @@ def test_new_from_message():
     eccodes.codes_release(newgid)
 
     # This time read from a string rather than a file
-    metar_str = "METAR LQMO 022350Z 09003KT 6000 FEW010 SCT035 BKN060 08/08 Q1003="
-    newgid = eccodes.codes_new_from_message(metar_str)
-    cccc = eccodes.codes_get(newgid, "CCCC")
-    assert cccc == "LQMO"
-    eccodes.codes_release(newgid)
+    # metar_str = "METAR LQMO 022350Z 09003KT 6000 FEW010 SCT035 BKN060 08/08 Q1003="
+    # newgid = eccodes.codes_new_from_message(metar_str)
+    # cccc = eccodes.codes_get(newgid, "CCCC")
+    # assert cccc == "LQMO"
+    # eccodes.codes_release(newgid)
 
 
 def test_gts_header():
@@ -153,11 +153,26 @@ def test_gts_header():
 
 def test_extract_offsets():
     offsets = eccodes.codes_extract_offsets(
-        TEST_GRIB_DATA, eccodes.CODES_PRODUCT_ANY, is_strict=True
+        TEST_GRIB_TIGGE_DATA, eccodes.CODES_PRODUCT_ANY, is_strict=True
     )
     offsets_list = list(offsets)
     expected = [0, 432, 864, 1296, 1728, 2160, 2616]
     assert offsets_list == expected
+
+
+def _test_any_new_from_samples():
+    msgid = eccodes.codes_new_from_samples(
+        "reduced_gg_ml_grib2", eccodes.CODES_PRODUCT_ANY
+    )
+    assert eccodes.codes_get(msgid, "identifier") == "GRIB"
+    eccodes.codes_release(msgid)
+    msgid = eccodes.codes_new_from_samples("BUFR4", eccodes.CODES_PRODUCT_ANY)
+    assert eccodes.codes_get(msgid, "identifier") == "BUFR"
+    eccodes.codes_release(msgid)
+
+    msgid = eccodes.codes_any_new_from_samples("diag.tmpl")
+    assert eccodes.codes_get(msgid, "identifier") == "DIAG"
+    eccodes.codes_release(msgid)
 
 
 # ---------------------------------------------
@@ -781,6 +796,16 @@ def test_bufr_dump(tmp_path):
 # ---------------------------------------------
 # Experimental features
 # ---------------------------------------------
+def test_codes_get_gaussian_latitudes():
+    orders = [256, 1280]
+    # Latitude of the first element (nearest the north pole)
+    expected_lats = [89.731148, 89.946187]
+    for _order, _lat in zip(orders, expected_lats):
+        lats = eccodes.codes_get_gaussian_latitudes(_order)
+        assert len(lats) == 2 * _order
+        assert math.isclose(lats[0], _lat, abs_tol=0.00001)
+
+
 def test_grib_nearest2():
     if "codes_grib_nearest_new" not in dir(eccodes):
         return

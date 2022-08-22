@@ -11,3 +11,4 @@
 #
 
 from .eccodes import *  # noqa
+from .highlevel import *  # noqa

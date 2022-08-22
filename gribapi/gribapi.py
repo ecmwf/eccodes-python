@@ -1038,6 +1038,8 @@ def codes_new_from_samples(samplename, product_kind):
         return grib_new_from_samples(samplename)
     if product_kind == CODES_PRODUCT_BUFR:
         return codes_bufr_new_from_samples(samplename)
+    if product_kind == CODES_PRODUCT_ANY:
+        return codes_any_new_from_samples(samplename)
     raise ValueError("Invalid product kind %d" % product_kind)
 
 
@@ -1080,6 +1082,25 @@ def codes_bufr_new_from_samples(samplename):
     h = lib.codes_bufr_handle_new_from_samples(ffi.NULL, samplename.encode(ENC))
     if h == ffi.NULL:
         raise errors.FileNotFoundError(f"bufr_new_from_samples failed: {samplename}")
+    return put_handle(h)
+
+
+@require(samplename=str)
+def codes_any_new_from_samples(samplename):
+    """
+    @brief Create a new valid message from a sample.
+
+    The available samples are picked up from the directory pointed to
+    by the environment variable ECCODES_SAMPLES_PATH.
+    To know where the samples directory is run the codes_info tool.\n
+
+    @param samplename   name of the sample to be used
+    @return             id of the message loaded in memory
+    @exception CodesInternalError
+    """
+    h = lib.codes_handle_new_from_samples(ffi.NULL, samplename.encode(ENC))
+    if h == ffi.NULL:
+        raise errors.FileNotFoundError(f"any_new_from_samples failed: {samplename}")
     return put_handle(h)
 
 
@@ -2260,6 +2281,21 @@ def codes_get_version_info():
     vinfo["eccodes"] = grib_get_api_version()
     vinfo["bindings"] = bindings_version
     return vinfo
+
+
+@require(order=int)
+def codes_get_gaussian_latitudes(order):
+    """
+    @brief Return the Gaussian latitudes
+
+    @param order    The Gaussian order/number (also called the truncation)
+    @return         A list of latitudes with 2*order elements
+    """
+    num_elems = 2 * order
+    outlats_p = ffi.new("double[]", num_elems)
+    err = lib.grib_get_gaussian_latitudes(order, outlats_p)
+    GRIB_CHECK(err)
+    return outlats_p
 
 
 @require(msgid=int)
