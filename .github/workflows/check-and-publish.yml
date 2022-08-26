@@ -63,7 +63,7 @@ jobs:
           pip install pytest pytest-cov isort black flake8
 
       - if: matrix.method == 'conda'
-        run: conda install eccodes
+        run: conda install 'eccodes>=2.27.0'
 
       - if: matrix.method == 'ecmwflibs'
         name: Install ecmwflibs
