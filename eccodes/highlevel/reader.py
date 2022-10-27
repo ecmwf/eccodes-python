@@ -73,13 +73,20 @@ class MemoryReader(ReaderBase):
         return handle
 
 
-@ffi.callback("long(*)(void*, void*, long)")
-def pyread_callback(payload, buf, length):
-    stream = ffi.from_handle(payload)
-    read = stream.read(length)
-    n = len(read)
-    ffi.buffer(buf, length)[:n] = read
-    return n if n > 0 else -1  # -1 means EOF
+try:
+
+    @ffi.callback("long(*)(void*, void*, long)")
+    def pyread_callback(payload, buf, length):
+        stream = ffi.from_handle(payload)
+        read = stream.read(length)
+        n = len(read)
+        ffi.buffer(buf, length)[:n] = read
+        return n if n > 0 else -1  # -1 means EOF
+
+
+except MemoryError:
+    # ECC-1460 ffi.callback raises a MemoryError if it cannot allocate write+execute memory
+    pyread_callback = None
 
 
 try:
@@ -95,6 +102,10 @@ except OSError:
 def codes_new_from_stream(stream):
     if cstd is None:
         raise OSError("This feature is not supported on Windows")
+    if pyread_callback is None:
+        raise OSError(
+            "This feature cannot be used because the OS prevents allocating write+execute memory"
+        )
     sh = ffi.new_handle(stream)
     length = ffi.new("size_t*")
     err = ffi.new("int*")
@@ -121,6 +132,10 @@ class StreamReader(ReaderBase):
     def __init__(self, stream):
         if cstd is None:
             raise OSError("This feature is not supported on Windows")
+        if pyread_callback is None:
+            raise OSError(
+                "This feature cannot be used because the OS prevents allocating write+execute memory"
+            )
         super().__init__()
         self.stream = stream
 
