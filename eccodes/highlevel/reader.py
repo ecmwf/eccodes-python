@@ -83,7 +83,6 @@ try:
         ffi.buffer(buf, length)[:n] = read
         return n if n > 0 else -1  # -1 means EOF
 
-
 except MemoryError:
     # ECC-1460 ffi.callback raises a MemoryError if it cannot allocate write+execute memory
     pyread_callback = None
