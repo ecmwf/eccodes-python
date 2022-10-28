@@ -6,6 +6,7 @@ Changelog for eccodes-python
 --------------------
 
 - ECC-1446: Python3 bindings: Data file era5-levels-members.grib not included in released tar file
+- ECC-1460: Python bindings: Cannot import eccodes on M1 MacBook Pro
 
 1.5.0 (2022-08-25)
 --------------------
