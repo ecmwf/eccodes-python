@@ -68,10 +68,10 @@ class Message:
             return default
 
     def set(self, *args):
-        """If two arguments are given, assumes this takes form of a single key 
-        value pair and sets the value of the given key. If a dictionary is passed 
-        then sets the values of all keys in the dictionary. Note, ordering 
-        if the keys is important. Finally, checks if value 
+        """If two arguments are given, assumes this takes form of a single key
+        value pair and sets the value of the given key. If a dictionary is passed
+        then sets the values of all keys in the dictionary. Note, ordering
+        if the keys is important. Finally, checks if value
         has been set correctly
 
         Raises
@@ -94,11 +94,11 @@ class Message:
         for name, value in key_values.items():
             with raise_keyerror(name):
                 eccodes.codes_set(self._handle, name, value)
-        
+
         # Check values just set
         for name, value in key_values.items():
             saved_value = self.get(name)
-            cast_value = value 
+            cast_value = value
             if not isinstance(value, type(saved_value)):
                 cast_value = type(saved_value)(value)
             if saved_value != cast_value:
