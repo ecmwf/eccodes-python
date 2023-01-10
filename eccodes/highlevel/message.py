@@ -102,7 +102,7 @@ class Message:
             if not isinstance(value, type(saved_value)):
                 cast_value = type(saved_value)(value)
             if saved_value != cast_value:
-                raise ValueError(f"Unexpected retrieved value {saved_value}. Expected {cast_value}")
+                raise ValueError(f"Unexpected retrieved value {saved_value} for key {name}. Expected {cast_value}")
 
     def get_array(self, name):
         """Get the value of the given key as an array
