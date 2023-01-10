@@ -89,7 +89,7 @@ class Message:
             key_values = args[0]
         else:
             raise TypeError(
-                f"Unsupported argument type. Expects two arguments consisting \
+                "Unsupported argument type. Expects two arguments consisting \
             of key and value pair, or a dictionary of key-value pairs"
             )
 
