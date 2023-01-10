@@ -67,16 +67,42 @@ class Message:
         except KeyError:
             return default
 
-    def set(self, name, value):
-        """Set the value of the given key
+    def set(self, *args):
+        """If two arguments are given, assumes this takes form of a single key 
+        value pair and sets the value of the given key. If a dictionary is passed 
+        then sets the values of all keys in the dictionary. Note, ordering 
+        if the keys is important. Finally, checks if value 
+        has been set correctly
 
         Raises
         ------
+        TypeError
+            If arguments do not take one of the two expected forms
         KeyError
             If the key does not exist
+        ValueError
+            If the set value of one of the keys is not the expected value
         """
-        with raise_keyerror(name):
-            return eccodes.codes_set(self._handle, name, value)
+        if isinstance(args[0], str) and len(args) == 2:
+            key_values = {args[0]: args[1]}
+        elif isinstance(args[0], dict):
+            key_values = args[0]
+        else:
+            raise TypeError(f"Unsupported argument type. Expects two arguments consisting \
+            of key and value pair, or a dictionary of key value pairs")
+
+        for name, value in key_values.items():
+            with raise_keyerror(name):
+                eccodes.codes_set(self._handle, name, value)
+        
+        # Check values just set
+        for name, value in key_values.items():
+            saved_value = self.get(name)
+            cast_value = value 
+            if not isinstance(value, type(saved_value)):
+                cast_value = type(saved_value)(value)
+            if saved_value != cast_value:
+                raise ValueError(f"Unexpected retrieved value {saved_value}. Expected {cast_value}")
 
     def get_array(self, name):
         """Get the value of the given key as an array

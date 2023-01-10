@@ -64,6 +64,22 @@ def test_message_set():
         assert np.all(message.get("values") == vals)
         assert message.is_missing(missing_key)
 
+def test_message_set_multiple():
+     with eccodes.FileReader(TEST_GRIB_DATA) as reader:
+        message = next(reader)
+        message.set({
+            "centre": "ecmf",
+            "numberOfValues": 10, 
+            "shortName": "z", 
+            })
+        with pytest.raises(TypeError):
+            message.set("centre", "ecmwf", 2)
+        with pytest.raises(ValueError):
+            message.set("stepRange", "0-12")
+        message.set({
+            "stepType": "max", 
+            "stepRange": "0-12"
+            })
 
 def test_message_iter():
     with eccodes.FileReader(TEST_GRIB_DATA2) as reader:
