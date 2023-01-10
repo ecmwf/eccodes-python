@@ -2,11 +2,12 @@
 Changelog for eccodes-python
 ============================
 
-1.5.1 (2022-mm-dd)
+1.5.1 (2023-01-dd)
 --------------------
 
 - ECC-1446: Data file era5-levels-members.grib not included in released tar file
 - ECC-1460: Cannot import eccodes on M1 MacBook Pro
+- ECC-1505: High-level Message.set function should allow dictionary and check result
 
 1.5.0 (2022-08-25)
 --------------------
