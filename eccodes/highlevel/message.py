@@ -88,8 +88,10 @@ class Message:
         elif isinstance(args[0], dict):
             key_values = args[0]
         else:
-            raise TypeError(f"Unsupported argument type. Expects two arguments consisting \
-            of key and value pair, or a dictionary of key value pairs")
+            raise TypeError(
+                f"Unsupported argument type. Expects two arguments consisting \
+            of key and value pair, or a dictionary of key-value pairs"
+            )
 
         for name, value in key_values.items():
             with raise_keyerror(name):
@@ -102,7 +104,9 @@ class Message:
             if not isinstance(value, type(saved_value)):
                 cast_value = type(saved_value)(value)
             if saved_value != cast_value:
-                raise ValueError(f"Unexpected retrieved value {saved_value}. Expected {cast_value}")
+                raise ValueError(
+                    f"Unexpected retrieved value {saved_value}. Expected {cast_value}"
+                )
 
     def get_array(self, name):
         """Get the value of the given key as an array
