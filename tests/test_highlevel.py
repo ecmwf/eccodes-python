@@ -82,6 +82,16 @@ def test_message_set_multiple():
         message.set({"stepType": "max", "stepRange": "0-12"})
 
 
+def test_message_set_check_off():
+    with eccodes.FileReader(TEST_GRIB_DATA) as reader:
+        message = next(reader)
+        assert message.get("longitudeOfFirstGridPoint") == 344250000
+        assert message.get("longitudeOfLastGridPoint") == 16125000
+        message.set("swapScanningX", 1, check_values=False)
+        assert message.get("longitudeOfFirstGridPoint") == 16125000
+        assert message.get("longitudeOfLastGridPoint") == 344250000
+
+
 def test_message_iter():
     with eccodes.FileReader(TEST_GRIB_DATA2) as reader:
         message = next(reader)

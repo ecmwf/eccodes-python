@@ -67,12 +67,12 @@ class Message:
         except KeyError:
             return default
 
-    def set(self, *args):
+    def set(self, *args, check_values: bool = True):
         """If two arguments are given, assumes this takes form of a single key
-        value pair and sets the value of the given key. If a dictionary is passed
+        value pair and sets the value of the given key. If a dictionary is passed in,
         then sets the values of all keys in the dictionary. Note, ordering
-        if the keys is important. Finally, checks if value
-        has been set correctly
+        of the keys is important. Finally, by default, checks if values
+        have been set correctly
 
         Raises
         ------
@@ -97,16 +97,17 @@ class Message:
             with raise_keyerror(name):
                 eccodes.codes_set(self._handle, name, value)
 
-        # Check values just set
-        for name, value in key_values.items():
-            saved_value = self.get(name)
-            cast_value = value
-            if not isinstance(value, type(saved_value)):
-                cast_value = type(saved_value)(value)
-            if saved_value != cast_value:
-                raise ValueError(
-                    f"Unexpected retrieved value {saved_value} for key {name}. Expected {cast_value}"
-                )
+        if check_values:
+            # Check values just set
+            for name, value in key_values.items():
+                saved_value = self.get(name)
+                cast_value = value
+                if not isinstance(value, type(saved_value)):
+                    cast_value = type(saved_value)(value)
+                if saved_value != cast_value:
+                    raise ValueError(
+                        f"Unexpected retrieved value {saved_value} for key {name}. Expected {cast_value}"
+                    )
 
     def get_array(self, name):
         """Get the value of the given key as an array
