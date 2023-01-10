@@ -31,8 +31,8 @@ jobs:
         method: ["conda", "ecmwflibs"]
         exclude:
           - platform: macos-latest
-            python-version: "3.7"
-            method: "conda"
+            python-version: "3.9"
+            method: "ecmwflibs"
 
     name: Python ${{ matrix.python-version }} on ${{ matrix.platform }} (${{ matrix.method }})
     runs-on: ${{ matrix.platform }}
