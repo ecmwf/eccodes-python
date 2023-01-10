@@ -69,9 +69,9 @@ class Message:
 
     def set(self, *args, check_values: bool = True):
         """If two arguments are given, assumes this takes form of a single key
-        value pair and sets the value of the given key. If a dictionary is passed
+        value pair and sets the value of the given key. If a dictionary is passed in,
         then sets the values of all keys in the dictionary. Note, ordering
-        if the keys is important. Finally, by default, checks if values
+        of the keys is important. Finally, by default, checks if values
         have been set correctly
 
         Raises
