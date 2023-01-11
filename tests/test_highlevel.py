@@ -52,7 +52,7 @@ def test_message_get():
             message[known_missing]
 
 
-def test_message_set():
+def test_message_set_plain():
     missing_key = "scaleFactorOfFirstFixedSurface"
     with eccodes.FileReader(TEST_GRIB_DATA) as reader:
         message = next(reader)
@@ -65,7 +65,7 @@ def test_message_set():
         assert message.is_missing(missing_key)
 
 
-def test_message_set_multiple():
+def test_message_set_dict_with_checks():
     with eccodes.FileReader(TEST_GRIB_DATA) as reader:
         message = next(reader)
         message.set(
@@ -82,7 +82,7 @@ def test_message_set_multiple():
         message.set({"stepType": "max", "stepRange": "0-12"})
 
 
-def test_message_set_check_off():
+def test_message_set_dict_no_checks():
     with eccodes.FileReader(TEST_GRIB_DATA) as reader:
         message = next(reader)
         assert message.get("longitudeOfFirstGridPoint") == 344250000
