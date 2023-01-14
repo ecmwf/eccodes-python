@@ -50,7 +50,7 @@ https://confluence.ecmwf.int/display/ECC/ecCodes+installation
 You may run a simple selfcheck command to ensure that your system is set up correctly::
 
     $ python -m eccodes selfcheck
-    Found: ecCodes v2.21.0.
+    Found: ecCodes v2.27.0.
     Your system is ready.
 
 
@@ -78,7 +78,7 @@ the binary bindings::
     $ pip install -e .
     $ python builder.py
 
-To revert back to ABI level, in-line more just remove the compiled bindings::
+To revert back to ABI level, in-line mode just remove the compiled bindings::
 
     $ rm gribapi/_bindings.*
 
