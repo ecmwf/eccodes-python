@@ -2,7 +2,7 @@
 Changelog for eccodes-python
 ============================
 
-1.5.1 (2023-01-dd)
+1.5.1 (2023-01-25)
 --------------------
 
 - ECC-1446: Data file era5-levels-members.grib not included in released tar file
