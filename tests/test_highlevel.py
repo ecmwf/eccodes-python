@@ -70,7 +70,7 @@ def test_message_set_dict_with_checks():
         message = next(reader)
         message.set(
             {
-                "centre": "ecmf",
+                "centre": 98,
                 "numberOfValues": 10,
                 "shortName": "z",
             }
