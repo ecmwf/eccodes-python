@@ -1925,7 +1925,7 @@ def grib_get_native_type(msgid, key):
     """
     @brief Retrieve the native type of a key.
 
-    Possible values can be int, float or string.
+    Possible values can be int, float or str.
 
     @param msgid   id of the message loaded in memory
     @param key     key we want to find out the type for
