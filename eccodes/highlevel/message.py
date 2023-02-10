@@ -104,7 +104,7 @@ class Message:
                 if isinstance(value, str):
                     saved_value = eccodes.codes_get_string(self._handle, name)
                 elif isinstance(value, int):
-                    saved_value = eccodes.codes_get_long(self.__handle, name)
+                    saved_value = eccodes.codes_get_long(self._handle, name)
                 else:
                     saved_value = self.get(name)
                     if not isinstance(value, type(saved_value)):
