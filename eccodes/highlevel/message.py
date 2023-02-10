@@ -100,13 +100,16 @@ class Message:
         if check_values:
             # Check values just set
             for name, value in key_values.items():
+                cast_value = value
                 if isinstance(value, str):
                     saved_value = eccodes.codes_get_string(self._handle, name)
                 else:
-                    saved_value = eccodes.codes_get_long(self._handle, name)
-                if saved_value != value:
+                    saved_value = self.get(name)
+                    if not isinstance(value, type(saved_value)):
+                        cast_value = type(saved_value)(value)
+                if saved_value != cast_value:
                     raise ValueError(
-                        f"Unexpected retrieved value {saved_value} for key {name}. Expected {value}"
+                        f"Unexpected retrieved value {saved_value} for key {name}. Expected {cast_value}"
                     )
 
     def get_array(self, name):
