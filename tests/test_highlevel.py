@@ -80,6 +80,7 @@ def test_message_set_dict_with_checks():
         with pytest.raises(ValueError):
             message.set("stepRange", "0-12")
         message.set({"stepType": "max", "stepRange": "0-12"})
+        message.set("iDirectionIncrementInDegrees", 1.5)
 
 
 def test_message_set_dict_no_checks():
