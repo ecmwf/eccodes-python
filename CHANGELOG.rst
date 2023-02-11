@@ -7,6 +7,7 @@ Changelog for eccodes-python
 
 - Add support for Python version 3.10
 - ECC-1524: Check values in High-level Message.set function should retrieve based on value type
+- ECC-1527: Handle floats in high-level Message.set function check values
 
 
 1.5.1 (2023-01-25)
