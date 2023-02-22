@@ -253,13 +253,23 @@ def test_grib_get_error():
 
 
 def test_grib_get_array():
-    gid = eccodes.codes_grib_new_from_samples("reduced_gg_pl_160_grib1")
+    gid = eccodes.codes_grib_new_from_samples("reduced_gg_pl_160_grib2")
     pl = eccodes.codes_get_array(gid, "pl")
     assert pl[0] == 18
     pli = eccodes.codes_get_array(gid, "pl", int)
     assert np.array_equal(pl, pli)
     pls = eccodes.codes_get_array(gid, "centre", str)
     assert pls == ["ecmf"]
+
+    lats = eccodes.codes_get_array(gid, "latitudes")
+    assert len(lats) == 138346
+    lats = eccodes.codes_get_array(gid, "distinctLatitudes")
+    assert len(lats) == 320
+
+    lons = eccodes.codes_get_array(gid, "longitudes")
+    assert len(lons) == 138346
+    lons = eccodes.codes_get_array(gid, "distinctLongitudes")
+    assert len(lons) == 4762
     eccodes.codes_release(gid)
 
 
