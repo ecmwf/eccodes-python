@@ -260,7 +260,21 @@ def test_grib_get_array():
     assert np.array_equal(pl, pli)
     pls = eccodes.codes_get_array(gid, "centre", str)
     assert pls == ["ecmf"]
+    eccodes.codes_release(gid)
 
+
+def test_grib_gaussian_latitudes():
+    orders = [256, 1280]
+    # Latitude of the first element (nearest the north pole)
+    expected_lats = [89.731148, 89.946187]
+    for _order, _lat in zip(orders, expected_lats):
+        lats = eccodes.codes_get_gaussian_latitudes(_order)
+        assert len(lats) == 2 * _order
+        assert math.isclose(lats[0], _lat, abs_tol=0.00001)
+
+
+def test_grib_latitudes_longitudes():
+    gid = eccodes.codes_grib_new_from_samples("reduced_gg_pl_160_grib2")
     lats = eccodes.codes_get_array(gid, "latitudes")
     assert len(lats) == 138346
     assert math.isclose(lats[0], 89.570089, abs_tol=0.00001)
@@ -275,7 +289,6 @@ def test_grib_get_array():
     lons = eccodes.codes_get_array(gid, "distinctLongitudes")
     assert len(lons) == 4762
     assert math.isclose(lons[4761], 359.4375, abs_tol=0.00001)
-    eccodes.codes_release(gid)
 
 
 def test_grib_get_message_size():
@@ -811,16 +824,6 @@ def test_bufr_dump(tmp_path):
 # ---------------------------------------------
 # Experimental features
 # ---------------------------------------------
-def test_codes_get_gaussian_latitudes():
-    orders = [256, 1280]
-    # Latitude of the first element (nearest the north pole)
-    expected_lats = [89.731148, 89.946187]
-    for _order, _lat in zip(orders, expected_lats):
-        lats = eccodes.codes_get_gaussian_latitudes(_order)
-        assert len(lats) == 2 * _order
-        assert math.isclose(lats[0], _lat, abs_tol=0.00001)
-
-
 def test_grib_nearest2():
     if "codes_grib_nearest_new" not in dir(eccodes):
         return
