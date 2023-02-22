@@ -263,13 +263,18 @@ def test_grib_get_array():
 
     lats = eccodes.codes_get_array(gid, "latitudes")
     assert len(lats) == 138346
+    assert math.isclose(lats[0], 89.570089, abs_tol=0.00001)
     lats = eccodes.codes_get_array(gid, "distinctLatitudes")
     assert len(lats) == 320
+    assert math.isclose(lats[0], 89.570089, abs_tol=0.00001)
+    assert math.isclose(lats[319], -89.570089, abs_tol=0.00001)
 
     lons = eccodes.codes_get_array(gid, "longitudes")
     assert len(lons) == 138346
+    assert math.isclose(lons[138345], 340.00, abs_tol=0.00001)
     lons = eccodes.codes_get_array(gid, "distinctLongitudes")
     assert len(lons) == 4762
+    assert math.isclose(lons[4761], 359.4375, abs_tol=0.00001)
     eccodes.codes_release(gid)
 
 
