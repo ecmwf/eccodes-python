@@ -46,11 +46,7 @@ except NameError:
     file = io.IOBase
     long = int
 
-KEYTYPES = {
-    1: int,
-    2: float,
-    3: str,
-}
+KEYTYPES = {1: int, 2: float, 3: str, 4: bytes}
 
 CODES_PRODUCT_ANY = 0
 """ Generic product kind """
@@ -1975,6 +1971,8 @@ def grib_get(msgid, key, ktype=None):
     elif ktype is float:
         result = grib_get_double(msgid, key)
     elif ktype is str:
+        result = grib_get_string(msgid, key)
+    elif ktype is bytes:
         result = grib_get_string(msgid, key)
 
     return result
