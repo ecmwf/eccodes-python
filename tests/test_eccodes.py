@@ -625,6 +625,7 @@ def test_grib_uuid_get_set():
     key = "uuidOfHGrid"
     ntype = eccodes.codes_get_native_type(gid, key)
     assert ntype == bytes
+
     uuid = eccodes.codes_get_string(gid, key)
     assert uuid == "00000000000000000000000000000000"
     eccodes.codes_set_string(gid, key, "DEfdBEef10203040b00b1e50001100FF")
@@ -632,6 +633,9 @@ def test_grib_uuid_get_set():
     assert uuid == "defdbeef10203040b00b1e50001100ff"
     uuid = eccodes.codes_get(gid, key)
     assert uuid == "defdbeef10203040b00b1e50001100ff"
+
+    uuid_arr = eccodes.codes_get_array(gid, key)
+    assert uuid_arr == ["defdbeef10203040b00b1e50001100ff"]
     eccodes.codes_release(gid)
 
 

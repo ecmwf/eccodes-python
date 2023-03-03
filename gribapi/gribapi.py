@@ -2004,6 +2004,8 @@ def grib_get_array(msgid, key, ktype=None):
         result = grib_get_double_array(msgid, key)
     elif ktype is str:
         result = grib_get_string_array(msgid, key)
+    elif ktype is bytes:
+        result = grib_get_string_array(msgid, key)
 
     return result
 
