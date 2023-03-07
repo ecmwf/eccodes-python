@@ -5,6 +5,7 @@ Changelog for eccodes-python
 1.5.2 (2023-mm-dd)
 --------------------
 
+- ECC-1539: Use the 'warnings' library for selfcheck
 - ECC-1538: Add support for CODES_TYPE_BYTES
 - Add support for Python version 3.10
 - ECC-1524: Check values in High-level Message.set function should retrieve based on value type
