@@ -38,11 +38,13 @@ def get_sample_fullpath(sample):
 # ---------------------------------------------
 def test_codes_definition_path():
     df = eccodes.codes_definition_path()
+    print(f"\n\teccodes.codes_definition_path returned {df}")
     assert df is not None
 
 
 def test_codes_samples_path():
     sp = eccodes.codes_samples_path()
+    print(f"\n\teccodes.codes_samples_path returned {sp}")
     assert sp is not None
 
 
