@@ -1196,7 +1196,7 @@ def grib_get_double_array(msgid, key):
 @require(msgid=int, key=str)
 def grib_get_float_array(msgid, key):
     """
-    @brief Get the value of the key as a NumPy array of doubles.
+    @brief Get the value of the key as a NumPy array of floats.
 
     @param msgid   id of the message loaded in memory
     @param key     key name
