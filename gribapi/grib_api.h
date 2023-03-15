@@ -109,6 +109,7 @@ int grib_get_double_elements(const grib_handle* h, const char* key, const int* i
 int grib_get_string(const grib_handle* h, const char* key, char* mesg, size_t *length);
 int grib_get_string_array(const grib_handle* h, const char* key, char** vals, size_t *length);
 int grib_get_double_array(const grib_handle* h, const char* key, double* vals, size_t *length);
+int grib_get_float_array(const grib_handle* h, const char* key, float* vals, size_t *length);
 int grib_get_long_array(const grib_handle* h, const char* key, long* vals, size_t *length);
 
 int grib_copy_namespace(grib_handle* dest, const char* name, grib_handle* src);

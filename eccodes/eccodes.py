@@ -61,6 +61,7 @@ from gribapi import grib_get_array as codes_get_array
 from gribapi import grib_get_data as codes_grib_get_data
 from gribapi import grib_get_double as codes_get_double
 from gribapi import grib_get_double_array as codes_get_double_array
+from gribapi import grib_get_float_array as codes_get_float_array
 from gribapi import grib_get_double_element as codes_get_double_element
 from gribapi import grib_get_double_elements as codes_get_double_elements
 from gribapi import grib_get_elements as codes_get_elements
