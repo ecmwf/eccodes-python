@@ -2020,13 +2020,13 @@ def grib_get_array(msgid, key, ktype=None, dtype=np.float64):
     result = None
     if ktype is int:
         result = grib_get_long_array(msgid, key)
-    elif ktype is float
+    elif ktype is float:
         if dtype is np.float32 or dtype == 'float32':
             result = grib_get_float_array(msgid, key)
         elif dtype is np.float64 or dtype == 'float64':
             result = grib_get_double_array(msgid, key)
         else:
-            raise TypeError(f'Unsupported data type {dtype}. Supported data types are numpy.float32 and numpy.float64)
+            raise TypeError(f'Unsupported data type {dtype}. Supported data types are numpy.float32 and numpy.float64')
     elif ktype is str:
         result = grib_get_string_array(msgid, key)
     elif ktype is bytes:
@@ -2055,7 +2055,7 @@ def grib_get_values(gribid, dtype=np.float64):
     elif dtype is np.float64 or dtype == 'float64':
         result = grib_get_double_array(gribid, "values")
     else:
-        raise TypeError(f'Unsupported data type {dtype}. Supported data types are numpy.float32 and numpy.float64)
+        raise TypeError(f'Unsupported data type {dtype}. Supported data types are numpy.float32 and numpy.float64')
 
     return result
 
