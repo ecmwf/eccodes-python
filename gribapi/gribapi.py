@@ -2011,6 +2011,7 @@ def grib_get_array(msgid, key, ktype=None, dtype=np.float64):
     @param msgid      id of the message loaded in memory
     @param key        the key to get the value for
     @param ktype      the type we want the output in (can be int, float or string), native type if not specified
+    @param dtype      array data type: numpy.float32 or numpy.float64
     @return           numpy.ndarray
     @exception CodesInternalError
     """
@@ -2045,6 +2046,7 @@ def grib_get_values(gribid, dtype=np.float64):
     \b Examples: \ref grib_print_data.py "grib_print_data.py", \ref grib_samples.py "grib_samples.py"
 
     @param gribid   id of the GRIB loaded in memory
+    @param dtype    values data type: numpy.float32 or numpy.float64
     @return         numpy.ndarray
     @exception CodesInternalError
     """
