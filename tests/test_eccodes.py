@@ -269,6 +269,10 @@ def test_grib_get_array():
     fvals = eccodes.codes_get_array(gid, "values", out_dtype=np.float32)
     assert len(fvals) == 138346
     assert type(fvals[0]) == np.float32
+
+    vals = eccodes.codes_get_array(gid, "values", out_dtype=float)
+    assert type(vals[0]) == np.float64
+
     fvals = eccodes.codes_get_float_array(gid, "values")
     assert type(fvals[0]) == np.float32
 

@@ -2024,7 +2024,7 @@ def grib_get_array(msgid, key, ktype=None, out_dtype=np.float64):
     elif ktype is float:
         if out_dtype is np.float32 or out_dtype == "float32":
             result = grib_get_float_array(msgid, key)
-        elif out_dtype is np.float64 or out_dtype == "float64":
+        elif out_dtype is float or out_dtype is np.float64 or out_dtype == "float64":
             result = grib_get_double_array(msgid, key)
         else:
             raise TypeError(
