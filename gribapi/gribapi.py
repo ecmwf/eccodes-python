@@ -1999,19 +1999,19 @@ def grib_get(msgid, key, ktype=None):
 
 
 @require(msgid=int, key=str)
-def grib_get_array(msgid, key, ktype=None, dtype=np.float64):
+def grib_get_array(msgid, key, ktype=None, out_dtype=np.float64):
     """
     @brief Get the contents of an array key.
 
     The type of the array returned depends on the native type of the requested key.
     For numeric data, the output array will be stored in a NumPy ndarray.
-    The type of value returned can be forced by using the type argument of the function.
-    The type argument can be int, float or string.
+    The type of value returned can be forced by using the ktype argument of the function.
+    The ktype argument can be int, float, str or bytes.
 
     @param msgid      id of the message loaded in memory
     @param key        the key to get the value for
-    @param ktype      the type we want the output in (can be int, float or string), native type if not specified
-    @param dtype      array data type: numpy.float32 or numpy.float64
+    @param ktype      the type we want the output in (can be int, float, str or bytes), native type if not specified
+    @param out_dtype  data type of the output for floating-point keys: numpy.float32 or numpy.float64
     @return           numpy.ndarray
     @exception CodesInternalError
     """
@@ -2022,13 +2022,13 @@ def grib_get_array(msgid, key, ktype=None, dtype=np.float64):
     if ktype is int:
         result = grib_get_long_array(msgid, key)
     elif ktype is float:
-        if dtype is np.float32 or dtype == "float32":
+        if out_dtype is np.float32 or out_dtype == "float32":
             result = grib_get_float_array(msgid, key)
-        elif dtype is np.float64 or dtype == "float64":
+        elif out_dtype is np.float64 or out_dtype == "float64":
             result = grib_get_double_array(msgid, key)
         else:
             raise TypeError(
-                f"Unsupported data type {dtype}. Supported data types are numpy.float32 and numpy.float64"
+                f"Unsupported data type {out_dtype}. Supported data types are numpy.float32 and numpy.float64"
             )
     elif ktype is str:
         result = grib_get_string_array(msgid, key)
@@ -2039,7 +2039,7 @@ def grib_get_array(msgid, key, ktype=None, dtype=np.float64):
 
 
 @require(gribid=int)
-def grib_get_values(gribid, dtype=np.float64):
+def grib_get_values(gribid, out_dtype=np.float64):
     """
     @brief Retrieve the contents of the 'values' key for a GRIB message.
 
@@ -2047,20 +2047,20 @@ def grib_get_values(gribid, dtype=np.float64):
 
     \b Examples: \ref grib_print_data.py "grib_print_data.py", \ref grib_samples.py "grib_samples.py"
 
-    @param gribid   id of the GRIB loaded in memory
-    @param dtype    values data type: numpy.float32 or numpy.float64
-    @return         numpy.ndarray
+    @param gribid      id of the GRIB loaded in memory
+    @param out_dtype   data type of the output: numpy.float32 or numpy.float64
+    @return            numpy.ndarray
     @exception CodesInternalError
     """
     result = None
 
-    if dtype is np.float32 or dtype == "float32":
+    if out_dtype is np.float32 or out_dtype == "float32":
         result = grib_get_float_array(gribid, "values")
-    elif dtype is np.float64 or dtype == "float64":
+    elif out_dtype is np.float64 or out_dtype == "float64":
         result = grib_get_double_array(gribid, "values")
     else:
         raise TypeError(
-            f"Unsupported data type {dtype}. Supported data types are numpy.float32 and numpy.float64"
+            f"Unsupported data type {out_dtype}. Supported output data types are numpy.float32 and numpy.float64"
         )
 
     return result

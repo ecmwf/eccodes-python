@@ -262,6 +262,16 @@ def test_grib_get_array():
     assert np.array_equal(pl, pli)
     pls = eccodes.codes_get_array(gid, "centre", str)
     assert pls == ["ecmf"]
+    dvals = eccodes.codes_get_array(gid, "values")
+    assert len(dvals) == 138346
+    assert type(dvals[0]) == np.float64
+
+    fvals = eccodes.codes_get_array(gid, "values", out_dtype=np.float32)
+    assert len(fvals) == 138346
+    assert type(fvals[0]) == np.float32
+    fvals = eccodes.codes_get_float_array(gid, "values")
+    assert type(fvals[0]) == np.float32
+
     eccodes.codes_release(gid)
 
 

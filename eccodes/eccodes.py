@@ -64,6 +64,7 @@ from gribapi import grib_get_double_array as codes_get_double_array
 from gribapi import grib_get_double_element as codes_get_double_element
 from gribapi import grib_get_double_elements as codes_get_double_elements
 from gribapi import grib_get_elements as codes_get_elements
+from gribapi import grib_get_float_array as codes_get_float_array
 from gribapi import grib_get_long as codes_get_long
 from gribapi import grib_get_long_array as codes_get_long_array
 from gribapi import grib_get_message as codes_get_message
@@ -249,6 +250,7 @@ __all__ = [
     "codes_get_double_elements",
     "codes_get_double",
     "codes_get_elements",
+    "codes_get_float_array",
     "codes_get_gaussian_latitudes",
     "codes_get_library_path",
     "codes_get_long_array",
