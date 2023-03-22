@@ -15,10 +15,15 @@ on:
   # Trigger the workflow manually
   workflow_dispatch: ~
 
+  # Trigger after public PR approved for CI
+  pull_request_target:
+    types: [labeled]
+
 jobs:
   # Build and test this packcage on HPC
   ci-hpc:
     name: ci-hpc
+    if: ${{ !github.event.pull_request.head.repo.fork && github.event.action != 'labeled' || github.event.label.name == 'approved-for-ci' }}
     uses: ./.github/workflows/reusable-ci-hpc.yml
     with:
       eccodes-python: ecmwf/eccodes-python@${{ github.event.pull_request.head.sha || github.sha }}
