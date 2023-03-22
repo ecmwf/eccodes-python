@@ -1,0 +1,31 @@
+name: reusable-ci-hpc
+
+on:
+  workflow_call:
+    inputs:
+      eccodes:
+        required: false
+        type: string
+      eccodes-python:
+        required: false
+        type: string
+
+jobs:
+  ci-hpc:
+    name: ci-hpc
+    uses: ecmwf-actions/reusable-workflows/.github/workflows/ci-hpc.yml@v2
+    with:
+      name-prefix: eccodes-python-
+      build-inputs: |
+        --package: ${{ inputs.eccodes-python || 'ecmwf/eccodes-python@develop' }}
+        --python: 3.10
+        --env: |
+          ECCODES_SAMPLES_PATH=../install/eccodes/share/eccodes/samples
+          ECCODES_DEFINITION_PATH=../install/eccodes/share/eccodes/definitions
+        --modules: |
+          ecbuild
+          ninja
+        --dependencies: |
+          ${{ inputs.eccodes || 'ecmwf/eccodes@develop' }}
+        --parallel: 64
+    secrets: inherit
