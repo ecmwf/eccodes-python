@@ -517,6 +517,21 @@ def test_grib_set_float_array():
         assert (eccodes.codes_get_values(gid) == 1.0).all()
 
 
+def test_grib_set_2d_array():
+    gid = eccodes.codes_grib_new_from_samples("GRIB2")
+    num_vals = eccodes.codes_get(gid, "numberOfValues")
+    assert num_vals == 496
+    vals2d = np.array([[11, 2, 3], [4, 15, -6]], np.float64)
+    eccodes.codes_set_double_array(gid, "values", vals2d)
+    num_vals = eccodes.codes_get(gid, "numberOfValues")
+    assert num_vals == 6
+    vals = eccodes.codes_get_double_array(gid, "values")
+    assert vals[0] == 11.0
+    assert vals[1] == 2.0
+    assert vals[4] == 15.0
+    assert vals[5] == -6.0
+
+
 def test_grib_set_np_int64():
     gid = eccodes.codes_grib_new_from_samples("regular_gg_sfc_grib2")
     eccodes.codes_set(gid, "productDefinitionTemplateNumber", 1)

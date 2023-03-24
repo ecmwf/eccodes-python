@@ -1159,6 +1159,8 @@ def grib_set_double_array(msgid, key, inarray):
     length = len(inarray)
     if isinstance(inarray, np.ndarray):
         nd = inarray
+        # ECC-1555
+        length = inarray.size
         if length > 0:
             if not isinstance(nd[0], float):
                 # ECC-1042: input array of integers
