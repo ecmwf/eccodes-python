@@ -6,6 +6,7 @@ Changelog for eccodes-python
 --------------------
 
 - Add support for Python versions 3.10 and 3.11
+- ECC-1555: 2D numpy array incorrectly handled
 - ECC-1539: Use the 'warnings' library for selfcheck
 - ECC-1538: Add support for CODES_TYPE_BYTES
 - ECC-1524: Check values in High-level Message.set function should retrieve based on value type
