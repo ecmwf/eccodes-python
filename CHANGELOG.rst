@@ -2,7 +2,7 @@
 Changelog for eccodes-python
 ============================
 
-1.5.2 (2023-mm-dd)
+1.5.2 (2023-04-dd)
 --------------------
 
 - Add support for Python versions 3.10 and 3.11
