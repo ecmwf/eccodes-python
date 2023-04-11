@@ -1195,6 +1195,26 @@ def grib_get_double_array(msgid, key):
     return arr
 
 
+@require(msgid=int, key=str)
+def grib_get_float_array(msgid, key):
+    """
+    @brief Get the value of the key as a NumPy array of floats.
+
+    @param msgid   id of the message loaded in memory
+    @param key     key name
+    @return        numpy.ndarray
+    @exception CodesInternalError
+    """
+    h = get_handle(msgid)
+    nval = grib_get_size(msgid, key)
+    length_p = ffi.new("size_t*", nval)
+    arr = np.empty((nval,), dtype="float32")
+    vals_p = ffi.cast("float *", arr.ctypes.data)
+    err = lib.grib_get_float_array(h, key.encode(ENC), vals_p, length_p)
+    GRIB_CHECK(err)
+    return arr
+
+
 # See ECC-1246
 def _decode_bytes(binput, maxlen=None):
     if maxlen:
@@ -1947,7 +1967,7 @@ def grib_get(msgid, key, ktype=None):
 
     The type of value returned depends on the native type of the requested key.
     The type of value returned can be forced by using the type argument of the
-    function. The type argument can be int, float or str.
+    function. The ktype argument can be int, float, str or bytes.
 
     The \em msgid references a message loaded in memory.
 
@@ -1957,7 +1977,7 @@ def grib_get(msgid, key, ktype=None):
 
     @param msgid      id of the message loaded in memory
     @param key        key name
-    @param ktype      the type we want the output in (int, float or str), native type if not specified
+    @param ktype      the type we want the output in, native type if not specified
     @return           scalar value of key as int, float or str
     @exception CodesInternalError
     """
@@ -1987,13 +2007,13 @@ def grib_get_array(msgid, key, ktype=None):
 
     The type of the array returned depends on the native type of the requested key.
     For numeric data, the output array will be stored in a NumPy ndarray.
-    The type of value returned can be forced by using the type argument of the function.
-    The type argument can be int, float or string.
+    The type of value returned can be forced by using the ktype argument of the function.
+    The ktype argument can be int, float, float32, float64, str or bytes.
 
-    @param msgid      id of the message loaded in memory
-    @param key        the key to get the value for
-    @param ktype      the type we want the output in (can be int, float or string), native type if not specified
-    @return           numpy.ndarray
+    @param msgid  id of the message loaded in memory
+    @param key    the key to get the value for
+    @param ktype  the type we want the output in, native type if not specified
+    @return       numpy.ndarray or None
     @exception CodesInternalError
     """
     if ktype is None:
@@ -2002,8 +2022,10 @@ def grib_get_array(msgid, key, ktype=None):
     result = None
     if ktype is int:
         result = grib_get_long_array(msgid, key)
-    elif ktype is float:
+    elif ktype is float or ktype is np.float64:
         result = grib_get_double_array(msgid, key)
+    elif ktype is np.float32:
+        result = grib_get_float_array(msgid, key)
     elif ktype is str:
         result = grib_get_string_array(msgid, key)
     elif ktype is bytes:
@@ -2013,7 +2035,7 @@ def grib_get_array(msgid, key, ktype=None):
 
 
 @require(gribid=int)
-def grib_get_values(gribid):
+def grib_get_values(gribid, ktype=float):
     """
     @brief Retrieve the contents of the 'values' key for a GRIB message.
 
@@ -2021,11 +2043,23 @@ def grib_get_values(gribid):
 
     \b Examples: \ref grib_print_data.py "grib_print_data.py", \ref grib_samples.py "grib_samples.py"
 
-    @param gribid   id of the GRIB loaded in memory
-    @return         numpy.ndarray
+    @param gribid    id of the GRIB loaded in memory
+    @param ktype     data type of the result: numpy.float32 or numpy.float64
+    @return          numpy.ndarray
     @exception CodesInternalError
     """
-    return grib_get_double_array(gribid, "values")
+    result = None
+
+    if ktype is np.float32:
+        result = grib_get_float_array(gribid, "values")
+    elif ktype is np.float64 or ktype is float:
+        result = grib_get_double_array(gribid, "values")
+    else:
+        raise TypeError(
+            f"Unsupported data type {ktype}. Supported data types are numpy.float32 and numpy.float64"
+        )
+
+    return result
 
 
 @require(gribid=int)
