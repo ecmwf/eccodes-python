@@ -255,7 +255,7 @@ def test_grib_get_error():
         eccodes.codes_get(gid, None)
 
 
-def _test_grib_get_array():
+def test_grib_get_array():
     gid = eccodes.codes_grib_new_from_samples("reduced_gg_pl_160_grib2")
     pl = eccodes.codes_get_array(gid, "pl")
     assert pl[0] == 18
