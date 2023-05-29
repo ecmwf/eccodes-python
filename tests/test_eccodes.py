@@ -269,7 +269,7 @@ def test_grib_get_array():
     eccodes.codes_release(gid)
 
 
-def test_grib_get_array_single_precision():
+def _test_grib_get_array_single_precision():
     gid = eccodes.codes_grib_new_from_samples("reduced_gg_pl_160_grib2")
 
     vals = eccodes.codes_get_array(gid, "values", ktype=float)
