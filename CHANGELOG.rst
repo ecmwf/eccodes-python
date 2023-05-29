@@ -5,7 +5,7 @@ Changelog for eccodes-python
 1.6.0 (2023-mm-dd)
 --------------------
 
-- ECC-1467: GRIB: Support data values array decoded as "floats" (single-precision) to reduce memory consumption
+- ECC-1601: GRIB: Support data values array decoded in single-precision
 
 1.5.2 (2023-04-04)
 --------------------
