@@ -20,11 +20,20 @@ on:
     types: [labeled]
 
 jobs:
-  # Build and test this packcage on HPC
-  ci-hpc:
-    name: ci-hpc
+  # Run CI including downstream packages on self-hosted runners
+  downstream-ci:
+    name: downstream-ci
     if: ${{ !github.event.pull_request.head.repo.fork && github.event.action != 'labeled' || github.event.label.name == 'approved-for-ci' }}
-    uses: ./.github/workflows/reusable-ci-hpc.yml
+    uses: ecmwf-actions/downstream-ci/.github/workflows/downstream-ci.yml@main
+    with:
+      eccodes-python: ecmwf/eccodes-python@${{ github.event.pull_request.head.sha || github.sha }}
+    secrets: inherit
+
+  # Build downstream packages on HPC
+  downstream-ci-hpc:
+    name: downstream-ci-hpc
+    if: ${{ !github.event.pull_request.head.repo.fork && github.event.action != 'labeled' || github.event.label.name == 'approved-for-ci' }}
+    uses: ecmwf-actions/downstream-ci/.github/workflows/downstream-ci-hpc.yml@main
     with:
       eccodes-python: ecmwf/eccodes-python@${{ github.event.pull_request.head.sha || github.sha }}
     secrets: inherit
