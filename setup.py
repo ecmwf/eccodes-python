@@ -41,6 +41,8 @@ if sys.version_info < (3, 7):
     install_requires = ["numpy<1.20"]
 elif sys.version_info < (3, 8):
     install_requires = ["numpy<1.22"]
+elif sys.version_info < (3, 9):
+    install_requires = ["numpy<1.25"]
 
 install_requires += ["attrs", "cffi", "findlibs"]
 
