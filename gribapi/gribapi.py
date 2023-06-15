@@ -2528,6 +2528,25 @@ def codes_bufr_key_is_header(msgid, key):
     return value
 
 
+@require(msgid=int)
+def codes_bufr_key_is_coordinate(msgid, key):
+    """
+    @brief Check if the BUFR key corresponds to a coordinate descriptor.
+
+    If the data section has not been unpacked, then passing in a key from
+    the data section will throw KeyValueNotFoundError.
+
+    @param msgid      id of the BUFR message loaded in memory
+    @param key        key name
+    @return           1->coordinate, 0->not coordinate
+    @exception CodesInternalError
+    """
+    h = get_handle(msgid)
+    err, value = err_last(lib.codes_bufr_key_is_coordinate)(h, key.encode(ENC))
+    GRIB_CHECK(err)
+    return value
+
+
 def codes_extract_offsets(filepath, product_kind, is_strict=True):
     """
     @brief Message offset extraction

@@ -6,6 +6,7 @@ Changelog for eccodes-python
 --------------------
 
 - ECC-1601: GRIB: Support data values array decoded in single-precision
+- ECC-1611: Add function to determine if a BUFR key is a coordinate descriptor
 
 1.5.2 (2023-04-04)
 --------------------

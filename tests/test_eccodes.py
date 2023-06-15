@@ -833,9 +833,21 @@ def test_codes_bufr_key_is_header():
         eccodes.codes_bufr_key_is_header(bid, "satelliteSensorIndicator")
 
     eccodes.codes_set(bid, "unpack", 1)
-
     assert not eccodes.codes_bufr_key_is_header(bid, "satelliteSensorIndicator")
     assert not eccodes.codes_bufr_key_is_header(bid, "#6#brightnessTemperature")
+
+
+def _test_codes_bufr_key_is_coordinate():
+    bid = eccodes.codes_bufr_new_from_samples("BUFR4")
+    assert not eccodes.codes_bufr_key_is_coordinate(bid, "edition")
+
+    with pytest.raises(eccodes.KeyValueNotFoundError):
+        eccodes.codes_bufr_key_is_coordinate(bid, "latitude")
+
+    eccodes.codes_set(bid, "unpack", 1)
+    assert eccodes.codes_bufr_key_is_coordinate(bid, "latitude")
+    assert eccodes.codes_bufr_key_is_coordinate(bid, "#14#timePeriod")
+    assert not eccodes.codes_bufr_key_is_coordinate(bid, "dewpointTemperature")
 
 
 def test_bufr_extract_headers():
