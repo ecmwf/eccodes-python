@@ -2,7 +2,7 @@
 Changelog for eccodes-python
 ============================
 
-1.6.0 (2023-mm-dd)
+1.6.0 (2023-07-dd)
 --------------------
 
 - ECC-1601: GRIB: Support data values array decoded in single-precision
