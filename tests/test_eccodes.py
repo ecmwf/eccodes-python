@@ -565,7 +565,7 @@ def test_gribex_mode():
 
 def test_grib_new_from_samples_error():
     with pytest.raises(eccodes.FileNotFoundError):
-        eccodes.codes_new_from_samples("poopoo", eccodes.CODES_PRODUCT_GRIB)
+        eccodes.codes_new_from_samples("nonExistentSample", eccodes.CODES_PRODUCT_GRIB)
 
 
 def test_grib_new_from_file_error(tmp_path):
