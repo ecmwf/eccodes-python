@@ -56,6 +56,17 @@ def test_codes_set_samples_path():
     eccodes.codes_set_samples_path(eccodes.codes_samples_path())
 
 
+def test_api_version():
+    vs = eccodes.codes_get_api_version()
+    assert type(vs) == str
+    assert len(vs) > 0
+    assert vs == eccodes.codes_get_api_version(str)
+    vi = eccodes.codes_get_api_version(int)
+    assert type(vi) == int
+    assert vi > 20000
+    print(vi)
+
+
 def test_version_info():
     vinfo = eccodes.codes_get_version_info()
     assert len(vinfo) == 2

@@ -2283,11 +2283,12 @@ def grib_gts_header(flag):
         lib.grib_gts_header_off(context)
 
 
-def grib_get_api_version():
+def grib_get_api_version(vformat=str):
     """
     @brief Get the API version.
 
-    Returns the version of the API as a string in the format "major.minor.revision".
+    Returns the version of the API as a string in the format "major.minor.revision"
+    or as an integer (10000*major + 100*minor + revision)
     """
 
     def div(v, d):
@@ -2297,11 +2298,14 @@ def grib_get_api_version():
         raise RuntimeError("Could not load the ecCodes library!")
 
     v = lib.grib_get_api_version()
-    v, revision = div(v, 100)
-    v, minor = div(v, 100)
-    major = v
 
-    return "%d.%d.%d" % (major, minor, revision)
+    if vformat is str:
+        v, revision = div(v, 100)
+        v, minor = div(v, 100)
+        major = v
+        return "%d.%d.%d" % (major, minor, revision)
+    else:
+        return v
 
 
 __version__ = grib_get_api_version()
