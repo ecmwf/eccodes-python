@@ -2,15 +2,12 @@
 Changelog for eccodes-python
 ============================
 
-1.x.y (2023-mm-dd)
---------------------
-
-- ECC-1622: Drop Python version 3.7
 
 1.6.0 (2023-07-dd)
 --------------------
 
 - ECC-1630: Get API version as an integer
+- ECC-1622: Drop Python version 3.7
 - ECC-1601: GRIB: Support data values array decoded in single-precision
 - ECC-1611: Add function to determine if a BUFR key is a coordinate descriptor
 
