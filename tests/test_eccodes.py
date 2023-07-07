@@ -280,7 +280,11 @@ def test_grib_get_array():
     eccodes.codes_release(gid)
 
 
-def _test_grib_get_array_single_precision():
+def test_grib_get_array_single_precision():
+    if eccodes.codes_get_api_version(int) < 23100:
+        print("Test skipped (ecCodes version too old)")
+        return
+
     gid = eccodes.codes_grib_new_from_samples("reduced_gg_pl_160_grib2")
 
     dvals = eccodes.codes_get_array(gid, "values", ktype=float)
@@ -853,7 +857,11 @@ def test_codes_bufr_key_is_header():
     assert not eccodes.codes_bufr_key_is_header(bid, "#6#brightnessTemperature")
 
 
-def _test_codes_bufr_key_is_coordinate():
+def test_codes_bufr_key_is_coordinate():
+    if eccodes.codes_get_api_version(int) < 23100:
+        print("Test skipped (ecCodes version too old)")
+        return
+
     bid = eccodes.codes_bufr_new_from_samples("BUFR4")
     assert not eccodes.codes_bufr_key_is_coordinate(bid, "edition")
 
@@ -864,6 +872,8 @@ def _test_codes_bufr_key_is_coordinate():
     assert eccodes.codes_bufr_key_is_coordinate(bid, "latitude")
     assert eccodes.codes_bufr_key_is_coordinate(bid, "#14#timePeriod")
     assert not eccodes.codes_bufr_key_is_coordinate(bid, "dewpointTemperature")
+
+    eccodes.codes_release(bid)
 
 
 def test_bufr_extract_headers():
