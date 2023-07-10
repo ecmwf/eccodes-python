@@ -3,7 +3,7 @@ Changelog for eccodes-python
 ============================
 
 
-1.6.0 (2023-07-dd)
+1.6.0 (2023-07-11)
 --------------------
 
 - ECC-1630: Get API version as an integer
