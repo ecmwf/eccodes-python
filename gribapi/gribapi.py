@@ -1449,7 +1449,7 @@ def grib_index_get_long(indexid, key):
     \b Examples: \ref grib_index.py "grib_index.py"
 
     @param indexid   id of an index created from a file. The index must have been created with the key in argument.
-    @param key       key for wich the values are returned
+    @param key       key for which the values are returned
     @return          tuple with values of key in index
     @exception CodesInternalError
     """
@@ -1475,7 +1475,7 @@ def grib_index_get_string(indexid, key):
     \b Examples: \ref grib_index.py "grib_index.py"
 
     @param indexid   id of an index created from a file. The index must have been created with the key in argument.
-    @param key       key for wich the values are returned
+    @param key       key for which the values are returned
     @return          tuple with values of key in index
     @exception CodesInternalError
     """
@@ -1502,7 +1502,7 @@ def grib_index_get_double(indexid, key):
     \b Examples: \ref grib_index.py "grib_index.py"
 
     @param indexid  id of an index created from a file. The index must have been created with the key in argument.
-    @param key      key for wich the values are returned
+    @param key      key for which the values are returned
     @return         tuple with values of key in index
     @exception CodesInternalError
     """
