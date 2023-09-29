@@ -58,11 +58,11 @@ def test_codes_set_samples_path():
 
 def test_api_version():
     vs = eccodes.codes_get_api_version()
-    assert type(vs) == str
+    assert type(vs) is str
     assert len(vs) > 0
     assert vs == eccodes.codes_get_api_version(str)
     vi = eccodes.codes_get_api_version(int)
-    assert type(vi) == int
+    assert type(vi) is int
     assert vi > 20000
     print(vi)
 
@@ -276,23 +276,27 @@ def test_grib_get_array():
     assert pls == ["ecmf"]
     dvals = eccodes.codes_get_array(gid, "values")
     assert len(dvals) == 138346
-    assert type(dvals[0]) == np.float64
+    assert type(dvals[0]) is np.float64
     eccodes.codes_release(gid)
 
 
-def _test_grib_get_array_single_precision():
+def test_grib_get_array_single_precision():
+    if eccodes.codes_get_api_version(int) < 23100:
+        print("Test skipped (ecCodes version too old)")
+        return
+
     gid = eccodes.codes_grib_new_from_samples("reduced_gg_pl_160_grib2")
 
     dvals = eccodes.codes_get_array(gid, "values", ktype=float)
-    assert type(dvals[0]) == np.float64
+    assert type(dvals[0]) is np.float64
     fvals = eccodes.codes_get_array(gid, "values", ktype=np.float32)
-    assert type(fvals[0]) == np.float32
+    assert type(fvals[0]) is np.float32
     fvals = eccodes.codes_get_float_array(gid, "values")
-    assert type(fvals[0]) == np.float32
+    assert type(fvals[0]) is np.float32
     dvals = eccodes.codes_get_values(gid)
-    assert type(dvals[0]) == np.float64
+    assert type(dvals[0]) is np.float64
     fvals = eccodes.codes_get_values(gid, np.float32)
-    assert type(fvals[0]) == np.float32
+    assert type(fvals[0]) is np.float32
 
     eccodes.codes_release(gid)
 
@@ -853,7 +857,11 @@ def test_codes_bufr_key_is_header():
     assert not eccodes.codes_bufr_key_is_header(bid, "#6#brightnessTemperature")
 
 
-def _test_codes_bufr_key_is_coordinate():
+def test_codes_bufr_key_is_coordinate():
+    if eccodes.codes_get_api_version(int) < 23100:
+        print("Test skipped (ecCodes version too old)")
+        return
+
     bid = eccodes.codes_bufr_new_from_samples("BUFR4")
     assert not eccodes.codes_bufr_key_is_coordinate(bid, "edition")
 
@@ -864,6 +872,8 @@ def _test_codes_bufr_key_is_coordinate():
     assert eccodes.codes_bufr_key_is_coordinate(bid, "latitude")
     assert eccodes.codes_bufr_key_is_coordinate(bid, "#14#timePeriod")
     assert not eccodes.codes_bufr_key_is_coordinate(bid, "dewpointTemperature")
+
+    eccodes.codes_release(bid)
 
 
 def test_bufr_extract_headers():

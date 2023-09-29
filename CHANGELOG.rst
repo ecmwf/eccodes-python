@@ -2,6 +2,11 @@
 Changelog for eccodes-python
 ============================
 
+1.6.1 (2023-10-02)
+--------------------
+
+- ECC-1693: Update minimum recommended version
+- Fix flake8 warning E721
 
 1.6.0 (2023-07-11)
 --------------------
