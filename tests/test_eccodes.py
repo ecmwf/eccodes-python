@@ -69,8 +69,8 @@ def test_api_version():
 
 def test_version_info():
     vinfo = eccodes.codes_get_version_info()
+    print("ecCodes version information: ", vinfo)
     assert len(vinfo) == 2
-    print(vinfo)
 
 
 def test_codes_is_defined():
