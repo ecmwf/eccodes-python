@@ -49,7 +49,7 @@ def test_codes_samples_path():
 
 
 def test_codes_set_definitions_path():
-    eccodes.eccodes.codes_set_definitions_path(eccodes.codes_definition_path())
+    eccodes.codes_set_definitions_path(eccodes.codes_definition_path())
 
 
 def test_codes_set_samples_path():
@@ -239,7 +239,7 @@ def test_grib_codes_set_missing():
     eccodes.codes_set(gid, "typeOfFirstFixedSurface", "sfc")
     eccodes.codes_set_missing(gid, "scaleFactorOfFirstFixedSurface")
     eccodes.codes_set_missing(gid, "scaledValueOfFirstFixedSurface")
-    assert eccodes.eccodes.codes_is_missing(gid, "scaleFactorOfFirstFixedSurface")
+    assert eccodes.codes_is_missing(gid, "scaleFactorOfFirstFixedSurface")
 
 
 def test_grib_set_key_vals():
@@ -352,7 +352,7 @@ def test_grib_clone():
 
 def test_grib_keys_iterator():
     gid = eccodes.codes_grib_new_from_samples("reduced_gg_pl_1280_grib1")
-    iterid = eccodes.eccodes.codes_keys_iterator_new(gid, "ls")
+    iterid = eccodes.codes_keys_iterator_new(gid, "ls")
     count = 0
     while eccodes.codes_keys_iterator_next(iterid):
         keyname = eccodes.codes_keys_iterator_get_name(iterid)
@@ -361,7 +361,7 @@ def test_grib_keys_iterator():
         count += 1
     assert count == 10
     eccodes.codes_keys_iterator_rewind(iterid)
-    eccodes.eccodes.codes_keys_iterator_delete(iterid)
+    eccodes.codes_keys_iterator_delete(iterid)
     eccodes.codes_release(gid)
 
 
@@ -520,8 +520,8 @@ def test_grib_ecc_1007():
     values = np.zeros((numvals,))
     values[0] = 12  # Make sure it's not a constant field
     eccodes.codes_set_values(gid, values)
-    maxv = eccodes.eccodes.codes_get(gid, "max")
-    minv = eccodes.eccodes.codes_get(gid, "min")
+    maxv = eccodes.codes_get(gid, "max")
+    minv = eccodes.codes_get(gid, "min")
     assert minv == 0
     assert maxv == 12
     eccodes.codes_release(gid)
@@ -609,7 +609,7 @@ def test_grib_index_new_from_file(tmpdir):
     eccodes.codes_index_write(iid, index_file)
 
     key = "level"
-    assert eccodes.eccodes.codes_index_get_size(iid, key) == 1
+    assert eccodes.codes_index_get_size(iid, key) == 1
 
     # Cannot get the native type of a key from an index
     # so right now the default is str.
@@ -699,6 +699,12 @@ def test_grib_dump(tmp_path):
         eccodes.codes_dump(gid, fout)
         eccodes.codes_dump(gid, fout, "debug")
     eccodes.codes_release(gid)
+
+
+def test_grib_copy_namespace():
+    gid1 = eccodes.codes_grib_new_from_samples("GRIB2")
+    gid2 = eccodes.codes_grib_new_from_samples("reduced_gg_pl_32_grib2")
+    eccodes.codes_copy_namespace(gid1, "ls", gid2)
 
 
 # ---------------------------------------------
@@ -795,7 +801,7 @@ def test_bufr_keys_iterator():
 
 
 def test_bufr_codes_is_missing():
-    bid = eccodes.eccodes.codes_bufr_new_from_samples("BUFR4_local")
+    bid = eccodes.codes_bufr_new_from_samples("BUFR4_local")
     eccodes.codes_set(bid, "unpack", 1)
     assert eccodes.codes_is_missing(bid, "heightOfBarometerAboveMeanSeaLevel") == 1
     assert eccodes.codes_is_missing(bid, "blockNumber") == 1
@@ -899,6 +905,13 @@ def test_bufr_dump(tmp_path):
     with open(p, "w") as fout:
         eccodes.codes_dump(bid, fout, "json")
     eccodes.codes_release(bid)
+
+
+def test_bufr_copy_data():
+    bid1 = eccodes.codes_bufr_new_from_samples("BUFR4_local")
+    bid2 = eccodes.codes_bufr_new_from_samples("BUFR4")
+    bid3 = eccodes.codes_bufr_copy_data(bid1, bid2)
+    assert bid3
 
 
 # ---------------------------------------------
