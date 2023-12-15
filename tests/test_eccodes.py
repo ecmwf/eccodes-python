@@ -84,8 +84,8 @@ def test_codes_get_native_type():
     assert eccodes.codes_get_native_type(gid, "referenceValue") is float
     assert eccodes.codes_get_native_type(gid, "stepType") is str
     assert eccodes.codes_get_native_type(gid, "section_1") is None
-    with pytest.raises(eccodes.InvalidGribError):
-        eccodes.codes_get_native_type(0, "aKey")
+    with pytest.raises(eccodes.NullHandleError):
+        eccodes.codes_get_native_type(0, "aKey")  # NULL handle
 
 
 def test_new_from_file():

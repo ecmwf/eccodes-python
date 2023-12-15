@@ -192,7 +192,7 @@ class InvalidIndexError(GribInternalError):
 
 
 class InvalidGribError(GribInternalError):
-    """Invalid grib id."""
+    """Invalid GRIB id."""
 
 
 class InvalidFileError(GribInternalError):

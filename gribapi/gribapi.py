@@ -162,13 +162,13 @@ def err_last(func):
 def get_handle(msgid):
     h = ffi.cast("grib_handle*", msgid)
     if h == ffi.NULL:
-        raise errors.InvalidGribError(f"get_handle: Bad message ID {msgid}")
+        raise errors.NullHandleError(f"get_handle: Bad message ID {msgid}")
     return h
 
 
 def put_handle(handle):
     if handle == ffi.NULL:
-        raise errors.InvalidGribError(f"put_handle: Bad message ID {handle}")
+        raise errors.NullHandleError(f"put_handle: Bad message ID {handle}")
     return int(ffi.cast("size_t", handle))
 
 
@@ -1137,7 +1137,7 @@ def grib_clone(msgid_src):
     h_src = get_handle(msgid_src)
     h_dest = lib.grib_handle_clone(h_src)
     if h_dest == ffi.NULL:
-        raise errors.InvalidGribError("clone failed")
+        raise errors.MessageInvalidError("clone failed")
     return put_handle(h_dest)
 
 
@@ -2381,7 +2381,7 @@ def grib_new_from_message(message):
         message = message.encode(ENC)
     h = lib.grib_handle_new_from_message_copy(ffi.NULL, message, len(message))
     if h == ffi.NULL:
-        raise errors.InvalidGribError("new_from_message failed")
+        raise errors.MessageInvalidError("new_from_message failed")
     return put_handle(h)
 
 
