@@ -2,6 +2,11 @@
 Changelog for eccodes-python
 ============================
 
+1.7.0 (2024-MM-DD)
+--------------------
+
+- Add clone with headers only
+
 1.6.1 (2023-10-02)
 --------------------
 

@@ -1121,7 +1121,7 @@ def codes_bufr_copy_data(msgid_src, msgid_dst):
 
 
 @require(msgid_src=int)
-def grib_clone(msgid_src):
+def grib_clone(msgid_src, headers_only=False):
     r"""
     @brief Create a copy of a message.
 
@@ -1130,12 +1130,16 @@ def grib_clone(msgid_src):
 
     \b Examples: \ref grib_clone.py "grib_clone.py"
 
-    @param msgid_src   id of message to be cloned
-    @return            id of clone
+    @param msgid_src    id of message to be cloned
+    @param headers_only whether or not to load the message with the headers only
+    @return             id of clone
     @exception CodesInternalError
     """
     h_src = get_handle(msgid_src)
-    h_dest = lib.grib_handle_clone(h_src)
+    if headers_only:
+        h_dest = lib.grib_handle_clone_headers_only(h_src)
+    else:
+        h_dest = lib.grib_handle_clone(h_src)
     if h_dest == ffi.NULL:
         raise errors.MessageInvalidError("clone failed")
     return put_handle(h_dest)

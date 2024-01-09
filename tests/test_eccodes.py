@@ -350,6 +350,18 @@ def test_grib_clone():
     eccodes.codes_release(clone)
 
 
+def test_grib_clone_headers_only():
+    with open(TEST_GRIB_ERA5_DATA, "rb") as f:
+        msgid1 = eccodes.codes_grib_new_from_file(f)
+        msgid2 = eccodes.codes_clone(msgid1, headers_only=True)
+        assert eccodes.codes_get(msgid1, "totalLength") == 14752
+        assert eccodes.codes_get(msgid2, "totalLength") == 112
+        assert eccodes.codes_get(msgid1, "bitsPerValue") == 16
+        assert eccodes.codes_get(msgid2, "bitsPerValue") == 0
+        eccodes.codes_release(msgid1)
+        eccodes.codes_release(msgid2)
+
+
 def test_grib_keys_iterator():
     gid = eccodes.codes_grib_new_from_samples("reduced_gg_pl_1280_grib1")
     iterid = eccodes.codes_keys_iterator_new(gid, "ls")

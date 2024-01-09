@@ -38,7 +38,7 @@ struct grib_values {
   int         has_value;
   int         equal;
   grib_values* next;
-} ;
+};
 
 typedef struct grib_handle    grib_handle;
 typedef struct grib_multi_handle    grib_multi_handle;
@@ -74,7 +74,8 @@ int grib_count_in_file(grib_context* c, FILE* f,int* n);
 grib_handle* grib_handle_new_from_file(grib_context* c, FILE* f, int* error);
 grib_handle* grib_handle_new_from_message_copy(grib_context* c, const void* data, size_t data_len);
 grib_handle* grib_handle_new_from_samples (grib_context* c, const char* sample_name);
-grib_handle* grib_handle_clone(const grib_handle* h)                 ;
+grib_handle* grib_handle_clone(const grib_handle* h);
+grib_handle* grib_handle_clone_headers_only(const grib_handle* h);
 int grib_handle_delete(grib_handle* h);
 grib_multi_handle* grib_multi_handle_new(grib_context* c);
 int grib_multi_handle_append(grib_handle* h,int start_section,grib_multi_handle* mh);
@@ -125,7 +126,7 @@ void grib_dump_content(const grib_handle* h, FILE* out, const char* mode, unsign
 grib_context* grib_context_get_default(void);
 void grib_context_delete(grib_context* c);
 
-void grib_gts_header_on(grib_context* c) ;
+void grib_gts_header_on(grib_context* c);
 void grib_gts_header_off(grib_context* c);
 void grib_gribex_mode_on(grib_context* c);
 void grib_gribex_mode_off(grib_context* c);
