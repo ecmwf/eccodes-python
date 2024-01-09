@@ -282,8 +282,7 @@ def test_grib_get_array():
 
 def test_grib_get_array_single_precision():
     if eccodes.codes_get_api_version(int) < 23100:
-        print("Test skipped (ecCodes version too old)")
-        return
+        pytest.skip("ecCodes version too old")
 
     gid = eccodes.codes_grib_new_from_samples("reduced_gg_pl_160_grib2")
 
@@ -352,8 +351,8 @@ def test_grib_clone():
 
 def test_grib_clone_headers_only():
     if eccodes.codes_get_api_version(int) < 23400:
-        print("Test skipped (ecCodes version too old)")
-        return
+        pytest.skip("ecCodes version too old")
+
     with open(TEST_GRIB_ERA5_DATA, "rb") as f:
         msgid1 = eccodes.codes_grib_new_from_file(f)
         msgid2 = eccodes.codes_clone(msgid1, headers_only=True)
@@ -880,8 +879,7 @@ def test_codes_bufr_key_is_header():
 
 def test_codes_bufr_key_is_coordinate():
     if eccodes.codes_get_api_version(int) < 23100:
-        print("Test skipped (ecCodes version too old)")
-        return
+        pytest.skip("ecCodes version too old")
 
     bid = eccodes.codes_bufr_new_from_samples("BUFR4")
     assert not eccodes.codes_bufr_key_is_coordinate(bid, "edition")
