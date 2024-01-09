@@ -351,6 +351,9 @@ def test_grib_clone():
 
 
 def test_grib_clone_headers_only():
+    if eccodes.codes_get_api_version(int) < 23400:
+        print("Test skipped (ecCodes version too old)")
+        return
     with open(TEST_GRIB_ERA5_DATA, "rb") as f:
         msgid1 = eccodes.codes_grib_new_from_file(f)
         msgid2 = eccodes.codes_clone(msgid1, headers_only=True)
