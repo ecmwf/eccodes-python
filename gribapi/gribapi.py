@@ -1127,11 +1127,13 @@ def grib_clone(msgid_src, headers_only=False):
 
     Create a copy of a given message (\em msgid_src) resulting in a new
     message in memory (\em msgid_dest) identical to the original one.
+    If the headers_only option is enabled, the clone will not contain
+    the Bitmap and Data sections
 
     \b Examples: \ref grib_clone.py "grib_clone.py"
 
     @param msgid_src    id of message to be cloned
-    @param headers_only whether or not to load the message with the headers only
+    @param headers_only whether or not to clone the message with the headers only
     @return             id of clone
     @exception CodesInternalError
     """

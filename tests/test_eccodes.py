@@ -356,6 +356,9 @@ def test_grib_clone_headers_only():
     with open(TEST_GRIB_ERA5_DATA, "rb") as f:
         msgid1 = eccodes.codes_grib_new_from_file(f)
         msgid2 = eccodes.codes_clone(msgid1, headers_only=True)
+        msg1_size = eccodes.codes_get_message_size(msgid1)
+        msg2_size = eccodes.codes_get_message_size(msgid2)
+        assert msg1_size > msg2_size
         assert eccodes.codes_get(msgid1, "totalLength") == 14752
         assert eccodes.codes_get(msgid2, "totalLength") == 112
         assert eccodes.codes_get(msgid1, "bitsPerValue") == 16
