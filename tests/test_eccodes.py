@@ -446,6 +446,13 @@ def test_grib_get_double_elements():
     assert elems == elems2
 
 
+def test_grib_get_values():
+    gid = eccodes.codes_grib_new_from_samples("gg_sfc_grib2")
+    with pytest.raises(TypeError):
+        eccodes.codes_get_values(gid, str)
+    eccodes.codes_release(gid)
+
+
 def test_grib_geoiterator():
     gid = eccodes.codes_grib_new_from_samples("reduced_gg_pl_256_grib2")
     iterid = eccodes.codes_grib_iterator_new(gid, 0)
@@ -499,6 +506,9 @@ def test_grib_nearest_multiple():
     eccodes.codes_release(gid)
     assert nearest[0].index == 1770
     assert nearest[1].index == 2500
+    # Error condition
+    with pytest.raises(ValueError):
+        eccodes.codes_grib_find_nearest_multiple(gid, is_lsm, (1, 2), (1, 2, 3))
 
 
 def test_grib_ecc_1042():
@@ -953,5 +963,12 @@ def test_grib_nearest2():
     assert sorted(expected_indexes) == sorted(returned_indexes)
     assert math.isclose(nearest[0].value, 295.22085, abs_tol=0.0001)
     assert math.isclose(nearest[2].distance, 24.16520, abs_tol=0.0001)
+
+    # Error conditions
+    with pytest.raises(eccodes.FunctionNotImplementedError):
+        eccodes.codes_grib_nearest_find(nid, gid, lat, lon, flags, is_lsm=True)
+    with pytest.raises(eccodes.FunctionNotImplementedError):
+        eccodes.codes_grib_nearest_find(nid, gid, lat, lon, flags, False, npoints=5)
+
     eccodes.codes_release(gid)
     eccodes.codes_grib_nearest_delete(nid)
