@@ -752,12 +752,10 @@ def grib_iterator_next(iterid):
     lat_p = ffi.new("double*")
     lon_p = ffi.new("double*")
     value_p = ffi.new("double*")
-    err = lib.grib_iterator_next(iterh, lat_p, lon_p, value_p)
-    if err == 0:
+    retval = lib.grib_iterator_next(iterh, lat_p, lon_p, value_p)
+    if retval == 0:
+        # No more data available. End of iteration
         return []
-    elif err < 0:
-        GRIB_CHECK(err)
-        return None
     else:
         return (lat_p[0], lon_p[0], value_p[0])
 
@@ -803,8 +801,7 @@ def grib_keys_iterator_next(iterid):
     """
     kih = get_grib_keys_iterator(iterid)
     res = lib.grib_keys_iterator_next(kih)
-    if res < 0:
-        GRIB_CHECK(res)
+    # res is 0 or 1
     return res
 
 
@@ -887,8 +884,7 @@ def codes_bufr_keys_iterator_next(iterid):
     """
     bki = get_bufr_keys_iterator(iterid)
     res = lib.codes_bufr_keys_iterator_next(bki)
-    if res < 0:
-        GRIB_CHECK(res)
+    # res is 0 or 1
     return res
 
 
