@@ -2557,10 +2557,10 @@ def codes_extract_offsets(filepath, product_kind, is_strict=True):
     """
     @brief Message offset extraction
 
-    @param filepath   path of input file
-    @product_kind     one of CODES_PRODUCT_GRIB, CODES_PRODUCT_BUFR, CODES_PRODUCT_ANY or CODES_PRODUCT_GTS
-    @param is_strict  if True, fail as soon as any invalid message is encountered
-    @return           a generator that yields offsets (each offset is an integer)
+    @param filepath      path of input file
+    @param product_kind  one of CODES_PRODUCT_GRIB, CODES_PRODUCT_BUFR, CODES_PRODUCT_ANY or CODES_PRODUCT_GTS
+    @param is_strict     if True, fail as soon as any invalid message is encountered
+    @return              a generator that yields offsets (as integers)
     @exception CodesInternalError
     """
     context = lib.grib_context_get_default()
@@ -2578,6 +2578,42 @@ def codes_extract_offsets(filepath, product_kind, is_strict=True):
     i = 0
     while i < num_messages:
         yield offsets[i]
+        i += 1
+
+
+def codes_extract_offsets_sizes(filepath, product_kind, is_strict=True):
+    """
+    @brief Message offset and size extraction
+
+    @param filepath      path of input file
+    @param product_kind  one of CODES_PRODUCT_GRIB, CODES_PRODUCT_BUFR, CODES_PRODUCT_ANY or CODES_PRODUCT_GTS
+    @param is_strict     if True, fail as soon as any invalid message is encountered
+    @return              a generator that yields lists of pairs of offsets and sizes (as integers)
+    @exception CodesInternalError
+    """
+    context = lib.grib_context_get_default()
+    offsets_p = ffi.new("long int**")
+    sizes_p = ffi.new("size_t**")
+    num_message_p = ffi.new("int*")
+
+    err = lib.codes_extract_offsets_sizes_malloc(
+        context,
+        filepath.encode(ENC),
+        product_kind,
+        offsets_p,
+        sizes_p,
+        num_message_p,
+        is_strict,
+    )
+    GRIB_CHECK(err)
+
+    num_messages = num_message_p[0]
+    offsets = offsets_p[0]
+    sizes = sizes_p[0]
+
+    i = 0
+    while i < num_messages:
+        yield (offsets[i], sizes[i])
         i += 1
 
 

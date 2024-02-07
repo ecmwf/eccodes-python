@@ -174,6 +174,26 @@ def test_extract_offsets():
     assert offsets_list == expected
 
 
+def test_extract_offsets_sizes():
+    if eccodes.codes_get_api_version(int) < 23400:
+        pytest.skip("ecCodes version too old")
+
+    offsets_sizes = eccodes.codes_extract_offsets_sizes(
+        TEST_GRIB_TIGGE_DATA, eccodes.CODES_PRODUCT_ANY, is_strict=True
+    )
+    result = list(offsets_sizes)
+    expected = [
+        (0, 432),
+        (432, 432),
+        (864, 432),
+        (1296, 432),
+        (1728, 432),
+        (2160, 456),
+        (2616, 456),
+    ]
+    assert result == expected
+
+
 def test_any_new_from_samples():
     msgid = eccodes.codes_new_from_samples(
         "reduced_gg_ml_grib2", eccodes.CODES_PRODUCT_ANY
