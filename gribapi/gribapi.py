@@ -168,7 +168,7 @@ def get_handle(msgid):
 
 def put_handle(handle):
     if handle == ffi.NULL:
-        raise errors.NullHandleError(f"put_handle: Bad message ID {handle}")
+        raise errors.NullHandleError(f"put_handle: Bad message ID: handle is NULL")
     return int(ffi.cast("size_t", handle))
 
 
