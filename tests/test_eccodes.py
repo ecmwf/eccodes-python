@@ -179,7 +179,7 @@ def test_extract_offsets_sizes():
         pytest.skip("ecCodes version too old")
 
     offsets_sizes = eccodes.codes_extract_offsets_sizes(
-        TEST_GRIB_TIGGE_DATA, eccodes.CODES_PRODUCT_ANY, is_strict=True
+        TEST_GRIB_TIGGE_DATA, eccodes.CODES_PRODUCT_GRIB, is_strict=True
     )
     result = list(offsets_sizes)
     expected = [
