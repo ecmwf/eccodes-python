@@ -162,13 +162,13 @@ def err_last(func):
 def get_handle(msgid):
     h = ffi.cast("grib_handle*", msgid)
     if h == ffi.NULL:
-        raise errors.InvalidGribError(f"get_handle: Bad message ID {msgid}")
+        raise errors.NullHandleError(f"get_handle: Bad message ID {msgid}")
     return h
 
 
 def put_handle(handle):
     if handle == ffi.NULL:
-        raise errors.InvalidGribError(f"put_handle: Bad message ID {handle}")
+        raise errors.NullHandleError("put_handle: Bad message ID (handle is NULL)")
     return int(ffi.cast("size_t", handle))
 
 
@@ -752,12 +752,10 @@ def grib_iterator_next(iterid):
     lat_p = ffi.new("double*")
     lon_p = ffi.new("double*")
     value_p = ffi.new("double*")
-    err = lib.grib_iterator_next(iterh, lat_p, lon_p, value_p)
-    if err == 0:
+    retval = lib.grib_iterator_next(iterh, lat_p, lon_p, value_p)
+    if retval == 0:
+        # No more data available. End of iteration
         return []
-    elif err < 0:
-        GRIB_CHECK(err)
-        return None
     else:
         return (lat_p[0], lon_p[0], value_p[0])
 
@@ -803,8 +801,7 @@ def grib_keys_iterator_next(iterid):
     """
     kih = get_grib_keys_iterator(iterid)
     res = lib.grib_keys_iterator_next(kih)
-    if res < 0:
-        GRIB_CHECK(res)
+    # res is 0 or 1
     return res
 
 
@@ -887,8 +884,7 @@ def codes_bufr_keys_iterator_next(iterid):
     """
     bki = get_bufr_keys_iterator(iterid)
     res = lib.codes_bufr_keys_iterator_next(bki)
-    if res < 0:
-        GRIB_CHECK(res)
+    # res is 0 or 1
     return res
 
 
@@ -1121,23 +1117,29 @@ def codes_bufr_copy_data(msgid_src, msgid_dst):
 
 
 @require(msgid_src=int)
-def grib_clone(msgid_src):
+def grib_clone(msgid_src, headers_only=False):
     r"""
     @brief Create a copy of a message.
 
     Create a copy of a given message (\em msgid_src) resulting in a new
     message in memory (\em msgid_dest) identical to the original one.
+    If the headers_only option is enabled, the clone will not contain
+    the Bitmap and Data sections
 
     \b Examples: \ref grib_clone.py "grib_clone.py"
 
-    @param msgid_src   id of message to be cloned
-    @return            id of clone
+    @param msgid_src    id of message to be cloned
+    @param headers_only whether or not to clone the message with the headers only
+    @return             id of clone
     @exception CodesInternalError
     """
     h_src = get_handle(msgid_src)
-    h_dest = lib.grib_handle_clone(h_src)
+    if headers_only:
+        h_dest = lib.grib_handle_clone_headers_only(h_src)
+    else:
+        h_dest = lib.grib_handle_clone(h_src)
     if h_dest == ffi.NULL:
-        raise errors.InvalidGribError("clone failed")
+        raise errors.MessageInvalidError("clone failed")
     return put_handle(h_dest)
 
 
@@ -2381,7 +2383,7 @@ def grib_new_from_message(message):
         message = message.encode(ENC)
     h = lib.grib_handle_new_from_message_copy(ffi.NULL, message, len(message))
     if h == ffi.NULL:
-        raise errors.InvalidGribError("new_from_message failed")
+        raise errors.MessageInvalidError("new_from_message failed")
     return put_handle(h)
 
 
@@ -2555,10 +2557,10 @@ def codes_extract_offsets(filepath, product_kind, is_strict=True):
     """
     @brief Message offset extraction
 
-    @param filepath   path of input file
-    @product_kind     one of CODES_PRODUCT_GRIB, CODES_PRODUCT_BUFR, CODES_PRODUCT_ANY or CODES_PRODUCT_GTS
-    @param is_strict  if True, fail as soon as any invalid message is encountered
-    @return           a generator that yields offsets (each offset is an integer)
+    @param filepath      path of input file
+    @param product_kind  one of CODES_PRODUCT_GRIB, CODES_PRODUCT_BUFR, CODES_PRODUCT_ANY or CODES_PRODUCT_GTS
+    @param is_strict     if True, fail as soon as any invalid message is encountered
+    @return              a generator that yields offsets (as integers)
     @exception CodesInternalError
     """
     context = lib.grib_context_get_default()
@@ -2576,6 +2578,42 @@ def codes_extract_offsets(filepath, product_kind, is_strict=True):
     i = 0
     while i < num_messages:
         yield offsets[i]
+        i += 1
+
+
+def codes_extract_offsets_sizes(filepath, product_kind, is_strict=True):
+    """
+    @brief Message offset and size extraction
+
+    @param filepath      path of input file
+    @param product_kind  one of CODES_PRODUCT_GRIB, CODES_PRODUCT_BUFR, CODES_PRODUCT_ANY or CODES_PRODUCT_GTS
+    @param is_strict     if True, fail as soon as any invalid message is encountered
+    @return              a generator that yields lists of pairs of offsets and sizes (as integers)
+    @exception CodesInternalError
+    """
+    context = lib.grib_context_get_default()
+    offsets_p = ffi.new("long int**")
+    sizes_p = ffi.new("size_t**")
+    num_message_p = ffi.new("int*")
+
+    err = lib.codes_extract_offsets_sizes_malloc(
+        context,
+        filepath.encode(ENC),
+        product_kind,
+        offsets_p,
+        sizes_p,
+        num_message_p,
+        is_strict,
+    )
+    GRIB_CHECK(err)
+
+    num_messages = num_message_p[0]
+    offsets = offsets_p[0]
+    sizes = sizes_p[0]
+
+    i = 0
+    while i < num_messages:
+        yield (offsets[i], sizes[i])
         i += 1
 
 

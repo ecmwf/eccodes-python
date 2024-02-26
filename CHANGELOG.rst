@@ -2,6 +2,11 @@
 Changelog for eccodes-python
 ============================
 
+1.7.0 (2024-02-26)
+--------------------
+- ECC-1761: Add function to extract message offsets and sizes
+- ECC-1742: Add function to clone only the meta-data of a message
+
 1.6.1 (2023-10-02)
 --------------------
 
