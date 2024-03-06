@@ -965,7 +965,7 @@ def test_bufr_copy_data():
 # ---------------------------------------------
 def test_grib_nearest2():
     if "codes_grib_nearest_new" not in dir(eccodes):
-        return
+        pytest.skip("codes_grib_nearest_new absent")
     gid = eccodes.codes_grib_new_from_samples("gg_sfc_grib2")
     lat, lon = 40, 20
     flags = eccodes.CODES_GRIB_NEAREST_SAME_GRID | eccodes.CODES_GRIB_NEAREST_SAME_POINT
