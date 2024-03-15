@@ -28,6 +28,7 @@ jobs:
     with:
       eccodes-python: ecmwf/eccodes-python@${{ github.event.pull_request.head.sha || github.sha }}
       codecov_upload: true
+      python_qa: true
     secrets: inherit
 
   # Build downstream packages on HPC
