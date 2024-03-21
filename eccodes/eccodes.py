@@ -73,6 +73,7 @@ from gribapi import grib_get_message as codes_get_message
 from gribapi import grib_get_message_offset as codes_get_message_offset
 from gribapi import grib_get_message_size as codes_get_message_size
 from gribapi import grib_get_native_type as codes_get_native_type
+from gribapi import grib_get_offset as codes_get_offset
 from gribapi import grib_get_size as codes_get_size
 from gribapi import grib_get_string as codes_get_string
 from gribapi import grib_get_string_array as codes_get_string_array
@@ -263,6 +264,7 @@ __all__ = [
     "codes_get_message_size",
     "codes_get_message",
     "codes_get_native_type",
+    "codes_get_offset",
     "codes_get_size",
     "codes_get_string_array",
     "codes_get_string_length",

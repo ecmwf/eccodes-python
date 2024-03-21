@@ -358,6 +358,14 @@ def test_grib_get_message_offset():
     assert eccodes.codes_get_message_offset(gid) == 0
 
 
+def test_grib_get_key_offset():
+    gid = eccodes.codes_grib_new_from_samples("GRIB2")
+    assert eccodes.codes_get_offset(gid, "identifier") == 0
+    assert eccodes.codes_get_offset(gid, "discipline") == 6
+    assert eccodes.codes_get_offset(gid, "offsetSection1") == 16
+    assert eccodes.codes_get_offset(gid, "7777") == 175
+
+
 def test_grib_clone():
     gid = eccodes.codes_grib_new_from_samples("GRIB2")
     clone = eccodes.codes_clone(gid)

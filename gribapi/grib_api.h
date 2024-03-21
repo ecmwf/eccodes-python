@@ -100,6 +100,7 @@ int grib_nearest_find_multiple(const grib_handle* h, int is_lsm,
     double* outlats, double* outlons,
     double* values, double* distances, int* indexes);
 
+int grib_get_offset(const grib_handle* h, const char* key, size_t* offset);
 int grib_get_size(const grib_handle* h, const char* key,size_t *size);
 
 int grib_get_length(const grib_handle* h, const char* key,size_t *length);

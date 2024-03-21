@@ -579,9 +579,26 @@ def grib_multi_append(ingribid, startsection, multigribid):
 
 
 @require(msgid=int, key=str)
+def grib_get_offset(msgid, key):
+    """
+    @brief Get the byte offset of a key. If several keys of the same name
+    are present, the offset of the last one is returned
+
+    @param msgid      id of the message loaded in memory
+    @param key        name of the key
+    @exception CodesInternalError
+    """
+    h = get_handle(msgid)
+    offset_p = ffi.new("size_t*")
+    err = lib.grib_get_offset(h, key.encode(ENC), offset_p)
+    GRIB_CHECK(err)
+    return offset_p[0]
+
+
+@require(msgid=int, key=str)
 def grib_get_size(msgid, key):
     """
-    @brief Get the size of an array key.
+    @brief Get the size of a key. Return 1 for scalar keys and >1 for array keys
 
     \b Examples: \ref grib_get_keys.py "grib_get_keys.py",\ref count_messages.py "count_messages.py"
 
