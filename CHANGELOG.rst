@@ -5,7 +5,7 @@ Changelog for eccodes-python
 1.7.1 (2024-MM-DD)
 --------------------
 
-- Add codes_get_offset
+- ECC-1790: Add codes_get_offset
 
 1.7.0 (2024-02-26)
 --------------------
