@@ -8,6 +8,8 @@
 # nor does it submit to any jurisdiction.
 
 set -eaux
+python_version=$1
+
 uname -a
 
 # HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK=1
@@ -19,6 +21,7 @@ arch=$(arch)
 ARCH="arch -$arch"
 
 source scripts/common.sh
+source scripts/select-python.sh $python_version
 
 
 #$ARCH brew install cmake ninja pkg-config automake
