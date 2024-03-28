@@ -1,0 +1,49 @@
+# (C) Copyright 2024 ECMWF.
+#
+# This software is licensed under the terms of the Apache Licence Version 2.0
+# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+# In applying this licence, ECMWF does not waive the privileges and immunities
+# granted to it by virtue of its status as an intergovernmental organisation
+# nor does it submit to any jurisdiction.
+
+name: Build MacOS ARM
+
+on:
+  workflow_dispatch: {}
+
+  release:
+    types: [created]
+
+  # repository_dispatch:
+  #   types: [eccodes-updated, magics-updated]
+
+  push:
+    paths:
+    - 'scripts/common.sh'
+    - 'scripts/build-macos.sh'
+    #- 'scripts/wheel-macos.sh'
+    #- 'tools/copy-licences.py'
+
+# We don't use "actions/setup-python@v4" as it installs a universal python
+# which creates universal wheels. We want to create wheels for the specific
+# architecture we are running on.
+
+jobs:
+
+  build:
+
+    # if: false
+
+    runs-on: [self-hosted, macOS, ARM64]
+
+    name: Build
+
+    steps:
+
+    - run: sudo mkdir -p /Users/runner
+    - run: sudo chown administrator:staff /Users/runner
+
+    - uses: actions/checkout@v2
+
+    - run: ./scripts/select-python.sh "3.10"
+    - run: ./scripts/build-macos.sh
