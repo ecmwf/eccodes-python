@@ -16,7 +16,7 @@ on:
     types: [created]
 
   # repository_dispatch:
-  #   types: [eccodes-updated, magics-updated]
+  #   types: [eccodes-updated]
 
   push:
     paths:
