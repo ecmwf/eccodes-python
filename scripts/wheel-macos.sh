@@ -72,7 +72,6 @@ newname=$(echo $name | sed "s/_universal2/_${arch}/")
 echo $name $newname
 
 # Do it twice to get the list of libraries
-
 $ARCH delocate-wheel -w wheelhouse dist/*.whl
 unzip -l wheelhouse/*.whl | grep 'dylib' >libs
 #IR pip3 install -r tools/requirements.txt
