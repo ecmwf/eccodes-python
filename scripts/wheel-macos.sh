@@ -8,6 +8,8 @@
 # nor does it submit to any jurisdiction.
 
 set -eaux
+python_version=$1
+
 
 arch=$(arch)
 [[ $arch == "i386" ]] && arch="x86_64" # GitHub Actions on macOS declare i386
@@ -53,14 +55,25 @@ diet() {
 # version=$(echo $1| sed 's/\.//')
 env | sort
 
-# set up conda environment
-if [ -f /opt/conda/etc/profile.d/conda.sh ]; then
-    source /opt/conda/etc/profile.d/conda.sh
-    conda create -y -p ./dist_venv
-    conda activate ./dist_venv
-fi
+pip3 list
+brew list
 
-pip3 install wheel delocate setuptools
+# set up conda environment
+#if [ -f /opt/conda/etc/profile.d/conda.sh ]; then
+#    source /opt/conda/etc/profile.d/conda.sh
+#    conda create -y -p ./dist_venv
+#    conda activate ./dist_venv
+#    conda install pip
+#fi
+
+# set up virtualenv
+$ARCH python3 -m venv ./dist_venv
+source ./dist_venv/bin/activate
+
+pip3 list
+brew list
+
+pip3 install wheel delocate setuptools pytest
 
 rm -fr dist wheelhouse tmp
 $ARCH python3 setup.py bdist_wheel
@@ -72,7 +85,6 @@ newname=$(echo $name | sed "s/_universal2/_${arch}/")
 echo $name $newname
 
 # Do it twice to get the list of libraries
-
 $ARCH delocate-wheel -w wheelhouse dist/*.whl
 unzip -l wheelhouse/*.whl | grep 'dylib' >libs
 #IR pip3 install -r tools/requirements.txt
@@ -88,3 +100,8 @@ $ARCH python3 setup.py  bdist_wheel # --plat-name $arch
 # find dist/*.dist-info -print
 
 $ARCH delocate-wheel -w wheelhouse dist/*.whl
+
+# test the wheel
+pip install --force-reinstall wheelhouse/*.whl
+cd tests
+pytest
