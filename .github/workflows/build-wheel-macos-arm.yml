@@ -9,7 +9,8 @@
 name: Build MacOS ARM
 
 on:
-  workflow_dispatch: {}
+  # Trigger the workflow manually
+  workflow_dispatch: ~
 
   release:
     types: [created]
