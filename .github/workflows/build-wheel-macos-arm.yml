@@ -9,19 +9,20 @@
 name: Build MacOS ARM
 
 on:
-  workflow_dispatch: {}
+  # Trigger the workflow manually
+  workflow_dispatch: ~
 
   release:
     types: [created]
 
   # repository_dispatch:
-  #   types: [eccodes-updated, magics-updated]
+  #   types: [eccodes-updated]
 
   push:
     paths:
     - 'scripts/common.sh'
     - 'scripts/build-macos.sh'
-    #- 'scripts/wheel-macos.sh'
+    - 'scripts/wheel-macos.sh'
     #- 'tools/copy-licences.py'
 
 # We don't use "actions/setup-python@v4" as it installs a universal python
@@ -46,3 +47,4 @@ jobs:
     - uses: actions/checkout@v2
 
     - run: ./scripts/build-macos.sh "3.10"
+    - run: ./scripts/wheel-macos.sh "3.10"
