@@ -22,7 +22,7 @@ on:
     paths:
     - 'scripts/common.sh'
     - 'scripts/build-macos.sh'
-    - 'scripts/wheel-macos-arm.sh'
+    - 'scripts/wheel-macos.sh'
     #- 'tools/copy-licences.py'
 
 # We don't use "actions/setup-python@v4" as it installs a universal python
