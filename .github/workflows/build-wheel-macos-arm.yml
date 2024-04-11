@@ -81,6 +81,7 @@ jobs:
     - run: ls -l
     - run: ./scripts/select-python.sh  ${{ matrix.python-version }}
     - run: echo $PATH
+    - run: python3 -m venv ./dist_venv_${{ matrix.python-version }}
     - run: source ./dist_venv_${{ matrix.python-version }}/bin/activate
     - run: echo $PATH
     - run: pip3 install --upgrade pip
