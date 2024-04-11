@@ -10,7 +10,6 @@
 set -eaux
 python_version=$1
 
-
 arch=$(arch)
 [[ $arch == "i386" ]] && arch="x86_64" # GitHub Actions on macOS declare i386
 
@@ -54,6 +53,9 @@ diet() {
 
 # version=$(echo $1| sed 's/\.//')
 env | sort
+
+source scripts/select-python.sh $python_version
+
 
 pip3 list
 brew list
