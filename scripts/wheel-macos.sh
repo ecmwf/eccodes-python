@@ -60,7 +60,7 @@ if [ -f /opt/conda/etc/profile.d/conda.sh ]; then
     conda activate ./dist_venv
 fi
 
-pip3 install wheel delocate setuptools
+pip3 install wheel delocate setuptools pytest
 
 rm -fr dist wheelhouse tmp
 $ARCH python3 setup.py bdist_wheel
