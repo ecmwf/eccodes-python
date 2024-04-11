@@ -15,16 +15,10 @@ ECBUILD_VERSION=master
 
 GIT_ECCODES=https://github.com/ecmwf/eccodes.git
 ECCODES_VERSION=2.33.2
-ECCODES_EXTRA_CMAKE_OPTIONS="-DENABLE_PNG=ON -DENABLE_JPG=ON"
+ECCODES_EXTRA_CMAKE_OPTIONS="-DENABLE_PNG=ON -DENABLE_JPG=ON -DENABLE_NETCDF=0 -DENABLE_EXAMPLES=0"
 
 GIT_AEC=https://github.com/MathisRosenhauer/libaec.git
 AEC_VERSION=master
-
-GIT_NETCDF=https://github.com/Unidata/netcdf-c.git
-NETCDF_VERSION=${NETCDF_VERSION:=master}
-
-GIT_HDF5=https://github.com/HDFGroup/hdf5.git
-HDF5_VERSION=${HDF5_VERSION:=hdf5-1_10_5}
 
 rm -fr src build build-binaries
 
