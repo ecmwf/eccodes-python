@@ -58,14 +58,6 @@ env | sort
 pip3 list
 brew list
 
-# set up conda environment
-#if [ -f /opt/conda/etc/profile.d/conda.sh ]; then
-#    source /opt/conda/etc/profile.d/conda.sh
-#    conda create -y -p ./dist_venv
-#    conda activate ./dist_venv
-#    conda install pip
-#fi
-
 # set up virtualenv
 $ARCH python3 -m venv ./dist_venv_${python_version}
 source ./dist_venv_${python_version}/bin/activate
