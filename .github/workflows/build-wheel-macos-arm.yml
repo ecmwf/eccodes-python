@@ -48,3 +48,53 @@ jobs:
 
     - run: ./scripts/build-macos.sh "3.10"
     - run: ./scripts/wheel-macos.sh "3.10"
+    - run: ls -l wheelhouse
+    - uses: actions/upload-artifact@v2
+      name: Upload wheel 3.10
+      with:
+        name: wheel-macos-3.10
+        path: wheelhouse/*.whl
+    - run: rm -fr wheelhouse
+  
+  test:
+    needs: build
+
+    runs-on: [self-hosted, macOS, ARM64]
+
+    strategy:
+      fail-fast: true
+      max-parallel: 1
+      matrix:
+        # python-version: ["3.9", "3.10", "3.11"]
+        python-version: ["3.10"]
+
+    name: Test with Python ${{ matrix.python-version }}
+
+    steps:
+
+    - uses: actions/checkout@v2
+
+    - uses: actions/download-artifact@v2
+      with:
+        name: wheel-macos-${{ matrix.python-version }}
+
+    - run: ls -l
+    - run: ./scripts/select-python.sh  ${{ matrix.python-version }}
+    - run: echo $PATH
+    - run: source ./dist_venv_${{ matrix.python-version }}/bin/activate
+    - run: echo $PATH
+    - run: pip3 install --upgrade pip
+    - run: ls -l /opt/homebrew/opt/python@${{ matrix.python-version }}/libexec/bin
+    - run: which python3
+    - run: python3 --version
+    - run: pwd
+    - run: ls -l
+    - run: pip3 install *.whl
+    - run: pip3 install -r tests/requirements.txt
+    - run: pip3 freeze
+
+    - run: pytest -v -s
+      working-directory: tests
+
+    - run: rm -fr *.whl tests
+  

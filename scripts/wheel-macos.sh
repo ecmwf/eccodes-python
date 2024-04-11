@@ -67,8 +67,8 @@ brew list
 #fi
 
 # set up virtualenv
-$ARCH python3 -m venv ./dist_venv
-source ./dist_venv/bin/activate
+$ARCH python3 -m venv ./dist_venv_${python_version}
+source ./dist_venv_${python_version}/bin/activate
 
 pip3 list
 brew list
