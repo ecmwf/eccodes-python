@@ -8,6 +8,8 @@
 # nor does it submit to any jurisdiction.
 
 set -eaux
+python_version=$1
+
 
 arch=$(arch)
 [[ $arch == "i386" ]] && arch="x86_64" # GitHub Actions on macOS declare i386
@@ -53,6 +55,9 @@ diet() {
 # version=$(echo $1| sed 's/\.//')
 env | sort
 
+pip3 list
+brew list
+
 # set up conda environment
 if [ -f /opt/conda/etc/profile.d/conda.sh ]; then
     source /opt/conda/etc/profile.d/conda.sh
@@ -60,6 +65,9 @@ if [ -f /opt/conda/etc/profile.d/conda.sh ]; then
     conda activate ./dist_venv
     conda install pip
 fi
+
+pip3 list
+brew list
 
 pip3 install wheel delocate setuptools pytest
 
