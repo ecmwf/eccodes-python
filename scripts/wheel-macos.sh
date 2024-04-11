@@ -10,7 +10,6 @@
 set -eaux
 python_version=$1
 
-
 arch=$(arch)
 [[ $arch == "i386" ]] && arch="x86_64" # GitHub Actions on macOS declare i386
 
