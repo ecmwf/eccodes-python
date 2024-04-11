@@ -96,6 +96,7 @@ jobs:
         pwd
         ls -l
         pip3 install *.whl
+        pip3 install pytest
         pip3 install -r tests/requirements.txt
         pip3 freeze
         cd tests
