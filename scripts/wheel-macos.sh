@@ -55,6 +55,9 @@ diet() {
 # version=$(echo $1| sed 's/\.//')
 env | sort
 
+source scripts/select-python.sh $python_version
+
+
 pip3 list
 brew list
 
