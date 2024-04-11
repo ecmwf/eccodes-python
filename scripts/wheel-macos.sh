@@ -58,6 +58,7 @@ if [ -f /opt/conda/etc/profile.d/conda.sh ]; then
     source /opt/conda/etc/profile.d/conda.sh
     conda create -y -p ./dist_venv
     conda activate ./dist_venv
+    conda install pip
 fi
 
 pip3 install wheel delocate setuptools pytest
