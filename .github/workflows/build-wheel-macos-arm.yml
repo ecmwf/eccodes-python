@@ -112,7 +112,7 @@ jobs:
           python3 -m venv ${VENV_DIR}
           source ${VENV_DIR}/bin/activate
           pip3 install twine
-          twine upload *.whl
+          twine upload --repository testpypi *.whl
         env:
           TWINE_USERNAME: __token__
           TWINE_PASSWORD: ${{ secrets.PYPI_TEST_API_TOKEN }}
