@@ -81,7 +81,7 @@ jobs:
     - run: |
         set -x
         ls -l
-        ./scripts/select-python.sh  ${{ matrix.python-version }}
+        source ./scripts/select-python.sh  ${{ matrix.python-version }}
         echo $PATH
         rm -rf ./dist_venv_${{ matrix.python-version }}
         which python3
