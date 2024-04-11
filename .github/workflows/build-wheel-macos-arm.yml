@@ -79,10 +79,13 @@ jobs:
         name: wheel-macos-${{ matrix.python-version }}
 
     - run: |
+        set -x
         ls -l
         ./scripts/select-python.sh  ${{ matrix.python-version }}
         echo $PATH
         rm -rf ./dist_venv_${{ matrix.python-version }}
+        which python3
+        python3 --version
         python3 -m venv ./dist_venv_${{ matrix.python-version }}
         source ./dist_venv_${{ matrix.python-version }}/bin/activate
         echo $PATH
