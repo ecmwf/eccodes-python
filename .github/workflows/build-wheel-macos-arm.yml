@@ -66,8 +66,8 @@ jobs:
       fail-fast: true
       max-parallel: 1
       matrix:
-        # python-version: ["3.9", "3.10", "3.11"]
-        python-version: ["3.10"]
+        python-version: ["3.9", "3.10", "3.11"]
+        # python-version: ["3.10"]
 
     name: Test with Python ${{ matrix.python-version }}
 
@@ -96,8 +96,8 @@ jobs:
       fail-fast: true
       max-parallel: 1
       matrix:
-        #python-version: ["3.9", "3.10", "3.11"]
-        python-version: ["3.10"]
+        python-version: ["3.9", "3.10", "3.11"]
+        # python-version: ["3.10"]
 
     steps:
 
