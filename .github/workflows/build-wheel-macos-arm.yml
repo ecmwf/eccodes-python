@@ -135,6 +135,7 @@ jobs:
           python3 -m venv ${VENV_DIR}
           source ${VENV_DIR}/bin/activate
           pip3 install twine
+          ls -l artifact-${{ matrix.python-version }}/*.whl
           twine upload --repository testpypi artifact-${{ matrix.python-version }}/*.whl
         env:
           TWINE_USERNAME: __token__
