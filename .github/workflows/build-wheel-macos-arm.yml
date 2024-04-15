@@ -24,6 +24,7 @@ on:
     - 'scripts/build-macos.sh'
     - 'scripts/wheel-macos.sh'
     - 'scripts/test-macos.sh'
+    - '.github/workflows/build-wheel-macos-arm.yml'
     #- 'tools/copy-licences.py'
 
 # We don't use "actions/setup-python@v4" as it installs a universal python
