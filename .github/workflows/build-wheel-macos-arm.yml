@@ -21,6 +21,7 @@ on:
   push:
     paths:
     - 'scripts/common.sh'
+    - 'scripts/select-python.sh'
     - 'scripts/build-macos.sh'
     - 'scripts/wheel-macos.sh'
     - 'scripts/test-macos.sh'
