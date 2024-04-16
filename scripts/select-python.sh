@@ -10,7 +10,7 @@
 set -xe
 version=$1
 
-P_PATH=$(brew --prefix python@$version)/libexec/bin
+P_PATH=$(brew --prefix --installed python@$version)/libexec/bin
 PATH=$P_PATH:$PATH
 
 # temporarily do not fail on unbound env vars so that this script can work outside GitHub Actions

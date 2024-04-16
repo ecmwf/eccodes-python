@@ -21,6 +21,7 @@ on:
   push:
     paths:
     - 'scripts/common.sh'
+    - 'scripts/select-python.sh'
     - 'scripts/build-macos.sh'
     - 'scripts/wheel-macos.sh'
     - 'scripts/test-macos.sh'
@@ -37,7 +38,7 @@ jobs:
 
     # if: false
 
-    runs-on: [self-hosted, macOS, ARM64]
+    runs-on: [self-hosted, macOS, X64]
 
     name: Build
 
@@ -80,7 +81,7 @@ jobs:
   test:
     needs: build
 
-    runs-on: [self-hosted, macOS, ARM64]
+    runs-on: [self-hosted, macOS, X64]
 
     strategy:
       fail-fast: true
@@ -110,7 +111,7 @@ jobs:
 
     name: Deploy wheel ${{ matrix.python-version }}
 
-    runs-on: [self-hosted, macOS, ARM64]
+    runs-on: [self-hosted, macOS, X64]
 
     strategy:
       fail-fast: true
