@@ -94,7 +94,7 @@ jobs:
 
     runs-on: [self-hosted, macOS, "${{ matrix.arch_type }}"]
 
-    name: Test with Python ${{ matrix.python-version }}
+    name: Test with Python ${{ matrix.python-version }} ${{ matrix.arch_type }}
 
     steps:
 
@@ -113,7 +113,7 @@ jobs:
 
     needs: [test, build]
 
-    name: Deploy wheel ${{ matrix.python-version }}
+    name: Deploy wheel ${{ matrix.python-version }} ${{ matrix.arch_type }}
 
     strategy:
       fail-fast: true
@@ -142,7 +142,7 @@ jobs:
           source ${VENV_DIR}/bin/activate
           pip3 install twine
           ls -l artifact-${{ matrix.arch_type }}-${{ matrix.python-version }}/*.whl
-          #twine upload --repository testpypi artifact-${{ matrix.python-version }}/*.whl
+          twine upload --repository testpypi artifact-${{ matrix.python-version }}/*.whl
         env:
           TWINE_USERNAME: __token__
           TWINE_PASSWORD: ${{ secrets.PYPI_TEST_API_TOKEN }}
