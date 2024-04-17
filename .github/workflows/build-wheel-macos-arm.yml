@@ -41,7 +41,6 @@ jobs:
     strategy:
       matrix:
         arch: [ARM64, X64]
-
     runs-on: [self-hosted, macOS, ${{ matrix.arch }}]
 
     name: Build
