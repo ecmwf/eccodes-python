@@ -38,7 +38,11 @@ jobs:
 
     # if: false
 
-    runs-on: [self-hosted, macOS, X64]
+    strategy:
+      matrix:
+        arch: [ARM64, X64]
+
+    runs-on: [self-hosted, macOS, ${{ matrix.arch }}]
 
     name: Build
 
@@ -54,41 +58,42 @@ jobs:
     - run: ./scripts/wheel-macos.sh "3.9"
     - run: ls -l wheelhouse
     - uses: actions/upload-artifact@v2
-      name: Upload wheel 3.9
+      name: Upload wheel 3.9 ${{ matrix.arch }}
       with:
-        name: wheel-macos-3.9
+        name: wheel-macos-${{ matrix.arch }}-3.9
         path: wheelhouse/*.whl
     - run: rm -fr wheelhouse
 
     - run: ./scripts/wheel-macos.sh "3.10"
     - run: ls -l wheelhouse
     - uses: actions/upload-artifact@v2
-      name: Upload wheel 3.10
+      name: Upload wheel 3.10 ${{ matrix.arch }}
       with:
-        name: wheel-macos-3.10
+        name: wheel-macos-${{ matrix.arch }}-3.10
         path: wheelhouse/*.whl
     - run: rm -fr wheelhouse
 
     - run: ./scripts/wheel-macos.sh "3.11"
     - run: ls -l wheelhouse
     - uses: actions/upload-artifact@v2
-      name: Upload wheel 3.11
+      name: Upload wheel 3.11 ${{ matrix.arch }}
       with:
-        name: wheel-macos-3.11
+        name: wheel-macos-${{ matrix.arch }}-3.11
         path: wheelhouse/*.whl
     - run: rm -fr wheelhouse
 
   test:
     needs: build
 
-    runs-on: [self-hosted, macOS, X64]
-
     strategy:
       fail-fast: true
       max-parallel: 1
       matrix:
+        arch: [ARM64, X64]
         python-version: ["3.9", "3.10", "3.11"]
         # python-version: ["3.10"]
+
+    runs-on: [self-hosted, macOS, ${{ matrix.arch }}]
 
     name: Test with Python ${{ matrix.python-version }}
 
@@ -98,7 +103,7 @@ jobs:
 
     - uses: actions/download-artifact@v2
       with:
-        name: wheel-macos-${{ matrix.python-version }}
+        name: wheel-macos-${{ matrix.arch }}-${{ matrix.python-version }}
 
     - run: ./scripts/test-macos.sh  ${{ matrix.python-version }}
 
@@ -111,23 +116,24 @@ jobs:
 
     name: Deploy wheel ${{ matrix.python-version }}
 
-    runs-on: [self-hosted, macOS, X64]
-
     strategy:
       fail-fast: true
       max-parallel: 1
       matrix:
+        arch: [ARM64, X64]
         python-version: ["3.9", "3.10", "3.11"]
         # python-version: ["3.10"]
 
+        runs-on: [self-hosted, macOS, ${{ matrix.arch }}]
+
     steps:
 
-      - run: mkdir artifact-${{ matrix.python-version }}
+      - run: mkdir artifact-${{ matrix.arch }}-${{ matrix.python-version }}
 
       - uses: actions/download-artifact@v2
         with:
-          name: wheel-macos-${{ matrix.python-version }}
-          path: artifact-${{ matrix.python-version }}
+          name: wheel-macos-${{ matrix.arch }}-${{ matrix.python-version }}
+          path: artifact-${{ matrix.arch }}-${{ matrix.python-version }}
 
       - run: |
           source ./scripts/select-python.sh ${{ matrix.python-version }}
@@ -136,8 +142,8 @@ jobs:
           python3 -m venv ${VENV_DIR}
           source ${VENV_DIR}/bin/activate
           pip3 install twine
-          ls -l artifact-${{ matrix.python-version }}/*.whl
-          twine upload --repository testpypi artifact-${{ matrix.python-version }}/*.whl
+          ls -l artifact-${{ matrix.arch }}-${{ matrix.python-version }}/*.whl
+          #twine upload --repository testpypi artifact-${{ matrix.python-version }}/*.whl
         env:
           TWINE_USERNAME: __token__
           TWINE_PASSWORD: ${{ secrets.PYPI_TEST_API_TOKEN }}
