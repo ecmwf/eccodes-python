@@ -64,7 +64,7 @@ brew list
 $ARCH python -m venv ./dist_venv_${python_version}
 source ./dist_venv_${python_version}/bin/activate
 
-pip3 list
+pip list
 brew list
 
 pip3 install wheel delocate setuptools pytest
