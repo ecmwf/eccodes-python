@@ -19,7 +19,7 @@ if [ ! -d "${CONDA_PY_ENV_DIR}" ]; then
 fi
 
 conda activate $CONDA_PY_ENV_DIR
-conda install -y python=${{ inputs.version }} openldap
+conda install -y python=$version openldap
 
 which python3
 python3 --version
