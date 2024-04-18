@@ -14,7 +14,7 @@ PATH=$(pwd)/install/bin:$PATH
 
 source scripts/common.sh
 
-for p in gobject-introspection-devel openjpeg-devel
+for p in libpng-devel gobject-introspection-devel openjpeg-devel
 do
     sudo yum install -y $p
     # There may be a better way
