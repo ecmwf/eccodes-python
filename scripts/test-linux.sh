@@ -22,6 +22,9 @@ pip install pytest
 pip install -r tests/requirements.txt
 pip freeze
 
+ls -l $RUNNER_TEMP/venv_$version/lib/python${python_version}/site-packages/eccodes.libs/
+ldd   $RUNNER_TEMP/venv_$version/lib/python${python_version}/site-packages/eccodes.libs//libeccodes-e6c1734d.so
+
 cd tests
 pytest -v -s
 
