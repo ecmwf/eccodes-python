@@ -94,7 +94,7 @@ jobs:
       matrix: # We don't test 3.6, as it is not supported anymore by github actions
         python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
 
-    runs-on: [self-hosted, Linux]
+    runs-on: [self-hosted, Linux, platform-builder-Rocky-8.6]
 
     name: Test with ${{ matrix.python-version }}
 
