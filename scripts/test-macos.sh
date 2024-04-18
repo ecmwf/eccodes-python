@@ -13,7 +13,7 @@ python_version=$1
 VENV_DIR=./dist_venv_${python_version}
 
 ls -l
-source ./scripts/select-python.sh ${python_version}
+source ./scripts/select-python-macos.sh ${python_version}
 echo $PATH
 
 rm -rf ${VENV_DIR}
