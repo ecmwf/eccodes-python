@@ -13,8 +13,6 @@ python_version=$1
 ls -l
 source ./scripts/select-python-linux.sh ${python_version}
 
-ls -l $RUNNER_TEMP/venv_$version/lib/python${python_version}/site-packages/eccodes.libs/
-
 echo $PATH
 pwd
 ls -l
@@ -23,6 +21,8 @@ pip install *.whl
 pip install pytest
 pip install -r tests/requirements.txt
 pip freeze
+
+ls -l $RUNNER_TEMP/venv_$version/lib/python${python_version}/site-packages/eccodes.libs/
 
 cd tests
 pytest -v -s
