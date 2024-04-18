@@ -37,7 +37,7 @@ jobs:
 
     # if: false
 
-    runs-on: [self-hosted, Linux]
+    runs-on: [self-hosted, Linux, platform-builder-Rocky-8.6]
     container: dockcross/manylinux2014-x64:latest
 
     name: Build manylinux2014
