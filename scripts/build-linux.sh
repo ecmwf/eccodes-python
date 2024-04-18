@@ -9,12 +9,11 @@
 # (rm -fr build-other/netcdf/; cd src/netcdf/; git checkout -- .; git clean -f .)
 set -eaux
 
-# We want the sqlite3 we just compiled
-PATH=$(pwd)/install/bin:$PATH
+pwd
 
 source scripts/common.sh
 
-for p in gobject-introspection-devel openjpeg-devel
+for p in libaec-devel libpng-devel gobject-introspection-devel openjpeg-devel
 do
     sudo yum install -y $p
     # There may be a better way
@@ -43,7 +42,7 @@ LD_LIBRARY_PATH=$TOPDIR/install/lib:$TOPDIR/install/lib64:$LD_LIBRARY_PATH
 
 # Build eccodes
 
-cd $TOPDIR/build-ecmwf/eccodes
+cd $TOPDIR/build-binaries/eccodes
 
 $TOPDIR/src/ecbuild/bin/ecbuild \
     $TOPDIR/src/eccodes \
@@ -58,12 +57,13 @@ $TOPDIR/src/ecbuild/bin/ecbuild \
     -DCMAKE_INSTALL_PREFIX=$TOPDIR/install $ECCODES_EXTRA_CMAKE_OPTIONS
 
 cd $TOPDIR
-cmake --build build-ecmwf/eccodes --target install
+cmake --build build-binaries/eccodes --target install
 
 
 
 # Create wheel
 
+mkdir -p install/lib/
 cp install/lib64/*.so install/lib/
 strip --strip-debug install/lib/*.so
 
