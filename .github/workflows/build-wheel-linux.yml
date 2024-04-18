@@ -122,7 +122,7 @@ jobs:
 
     name: Deploy wheel ${{ matrix.python-version }}
 
-    runs-on: [self-hosted, Linux]
+    runs-on: [self-hosted, Linux, platform-builder-Rocky-8.6]
 
 
     steps:
