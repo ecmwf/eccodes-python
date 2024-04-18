@@ -13,6 +13,8 @@ python_version=$1
 ls -l
 source ./scripts/select-python-linux.sh ${python_version}
 
+ls -l $RUNNER_TEMP/venv_$version/lib/python${python_version}/site-packages/eccodes.libs/
+
 echo $PATH
 pwd
 ls -l
