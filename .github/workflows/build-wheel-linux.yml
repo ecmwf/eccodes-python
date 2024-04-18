@@ -21,7 +21,7 @@ on:
   push:
     paths:
     - 'scripts/common.sh'
-    - 'scripts/select-python.sh'
+    - 'scripts/select-python-linux.sh'
     - 'scripts/wheel-linux.sh'
     - 'scripts/build-linux.sh'
     - '.github/workflows/build-wheel-linux.yml'
@@ -84,3 +84,61 @@ jobs:
         with:
           name: wheel-manylinux2014-3.12
           path: wheelhouse/*.whl
+
+  test:
+
+    needs: build
+
+    strategy:
+      fail-fast: false
+      matrix: # We don't test 3.6, as it is not supported anymore by github actions
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
+
+    runs-on: [self-hosted, Linux, platform-builder-Rocky-8.6]
+
+    name: Test with ${{ matrix.python-version }}
+
+    steps:
+
+      - uses: actions/checkout@v2
+
+      - uses: actions/download-artifact@v2
+        with:
+          name: wheel-manylinux2014-${{ matrix.python-version }}
+  
+      - run: ./scripts/test-linux.sh  ${{ matrix.python-version }}
+
+
+  deploy:
+
+    if: ${{ github.event_name == 'release' }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.8", "3.9", "3.10", "3.11"]
+
+    needs: [test, build]
+
+    name: Deploy wheel ${{ matrix.python-version }}
+
+    runs-on: [self-hosted, Linux, platform-builder-Rocky-8.6]
+
+
+    steps:
+
+      - run: mkdir artifact-${{ matrix.python-version }}
+
+      - uses: actions/download-artifact@v2
+        with:
+          name: wheel-manylinux2014-${{ matrix.python-version }}
+          path: artifact-${{ matrix.python-version }}
+
+      - run: |
+          source ./scripts/select-python-linux.sh ${{ matrix.python-version }}
+          pip3 install twine
+          ls -l artifact-${{ matrix.python-version }}/*.whl
+          twine upload --repository testpypi artifact-${{ matrix.python-version }}/*.whl
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_TEST_API_TOKEN }}
