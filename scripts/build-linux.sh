@@ -9,8 +9,7 @@
 # (rm -fr build-other/netcdf/; cd src/netcdf/; git checkout -- .; git clean -f .)
 set -eaux
 
-# We want the sqlite3 we just compiled
-PATH=$(pwd)/install/bin:$PATH
+pwd
 
 source scripts/common.sh
 
@@ -64,6 +63,7 @@ cmake --build build-binaries/eccodes --target install
 
 # Create wheel
 
+mkdir -p install/lib/
 cp install/lib64/*.so install/lib/
 strip --strip-debug install/lib/*.so
 
