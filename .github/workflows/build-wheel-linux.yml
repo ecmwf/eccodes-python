@@ -24,6 +24,7 @@ on:
     - 'scripts/select-python-linux.sh'
     - 'scripts/wheel-linux.sh'
     - 'scripts/build-linux.sh'
+    - 'scripts/test-linux.sh'
     - '.github/workflows/build-wheel-linux.yml'
     #- 'tools/copy-licences.py'
 
