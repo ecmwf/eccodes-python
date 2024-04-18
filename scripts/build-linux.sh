@@ -9,6 +9,10 @@
 # (rm -fr build-other/netcdf/; cd src/netcdf/; git checkout -- .; git clean -f .)
 set -eaux
 
+# ensure the cleanup task can delete our workspace
+umask 0000
+chmod -R a+w .
+
 pwd
 
 source scripts/common.sh

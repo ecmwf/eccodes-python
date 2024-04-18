@@ -9,6 +9,10 @@
 
 set -eaux
 
+# ensure the cleanup task can delete our workspace
+umask 0000
+chmod -R a+w .
+
 version=$(echo $1| sed 's/\.//')
 
 TOPDIR=$(/bin/pwd)
