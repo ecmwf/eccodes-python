@@ -61,7 +61,7 @@ pip3 list
 brew list
 
 # set up virtualenv
-$ARCH python3 -m venv ./dist_venv_${python_version}
+$ARCH python -m venv ./dist_venv_${python_version}
 source ./dist_venv_${python_version}/bin/activate
 
 pip3 list
@@ -70,7 +70,7 @@ brew list
 pip3 install wheel delocate setuptools pytest
 
 rm -fr dist wheelhouse tmp
-$ARCH python3 setup.py bdist_wheel
+$ARCH python setup.py bdist_wheel
 
 #IR diet
 
@@ -82,12 +82,12 @@ echo $name $newname
 $ARCH delocate-wheel -w wheelhouse dist/*.whl
 unzip -l wheelhouse/*.whl | grep 'dylib' >libs
 #IR pip3 install -r tools/requirements.txt
-#IR python3 ./tools/copy-licences.py libs
+#IR python ./tools/copy-licences.py libs
 
 DISTUTILS_DEBUG=1
 
 rm -fr dist wheelhouse
-$ARCH python3 setup.py  bdist_wheel # --plat-name $arch
+$ARCH python setup.py  bdist_wheel # --plat-name $arch
 #IR diet
 
 # mv dist/$name $newname

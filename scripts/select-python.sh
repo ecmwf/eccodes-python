@@ -21,5 +21,3 @@ fi
 set -u
 
 echo Python version $1 at $P_PATH
-which python3
-python3 --version
