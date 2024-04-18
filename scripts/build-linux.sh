@@ -43,7 +43,7 @@ LD_LIBRARY_PATH=$TOPDIR/install/lib:$TOPDIR/install/lib64:$LD_LIBRARY_PATH
 
 # Build eccodes
 
-cd $TOPDIR/build-ecmwf/eccodes
+cd $TOPDIR/build-binaries/eccodes
 
 $TOPDIR/src/ecbuild/bin/ecbuild \
     $TOPDIR/src/eccodes \
@@ -58,7 +58,7 @@ $TOPDIR/src/ecbuild/bin/ecbuild \
     -DCMAKE_INSTALL_PREFIX=$TOPDIR/install $ECCODES_EXTRA_CMAKE_OPTIONS
 
 cd $TOPDIR
-cmake --build build-ecmwf/eccodes --target install
+cmake --build build-binaries/eccodes --target install
 
 
 
