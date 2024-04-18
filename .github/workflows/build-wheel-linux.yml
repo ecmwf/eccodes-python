@@ -22,11 +22,8 @@ on:
     paths:
     - 'scripts/common.sh'
     - 'scripts/select-python.sh'
-    - 'scripts/build-macos.sh'
-    - 'scripts/wheel-macos.sh'
-    - 'scripts/test-macos.sh'
+    - 'scripts/wheel-linux.sh'
     - 'scripts/build-linux.sh'
-    - '.github/workflows/build-wheel-macos-arm.yml'
     - '.github/workflows/build-wheel-linux.yml'
     #- 'tools/copy-licences.py'
 
