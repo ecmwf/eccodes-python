@@ -17,21 +17,21 @@ source ./scripts/select-python.sh ${python_version}
 echo $PATH
 
 rm -rf ${VENV_DIR}
-which python3
-python3 --version
-python3 -m venv ${VENV_DIR}
+which python
+python --version
+python -m venv ${VENV_DIR}
 source ${VENV_DIR}/bin/activate
 echo $PATH
-which python3
-python3 --version
+which python
+python --version
 
 pwd
 ls -l
 
-pip3 install *.whl
-pip3 install pytest
-pip3 install -r tests/requirements.txt
-pip3 freeze
+pip install *.whl
+pip install pytest
+pip install -r tests/requirements.txt
+pip freeze
 
 cd tests
 pytest -v -s
