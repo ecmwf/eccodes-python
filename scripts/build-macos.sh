@@ -21,7 +21,7 @@ arch=$(arch)
 ARCH="arch -$arch"
 
 source scripts/common.sh
-source scripts/select-python.sh $python_version
+source scripts/select-python-macos.sh $python_version
 
 
 #$ARCH brew install cmake ninja pkg-config automake
