@@ -22,11 +22,8 @@ on:
     paths:
     - 'scripts/common.sh'
     - 'scripts/select-python.sh'
-    - 'scripts/build-macos.sh'
-    - 'scripts/wheel-macos.sh'
-    - 'scripts/test-macos.sh'
+    - 'scripts/wheel-linux.sh'
     - 'scripts/build-linux.sh'
-    - '.github/workflows/build-wheel-macos-arm.yml'
     - '.github/workflows/build-wheel-linux.yml'
     #- 'tools/copy-licences.py'
 
@@ -53,4 +50,37 @@ jobs:
         name: Upload wheel 3.8
         with:
           name: wheel-manylinux2014-3.8
+          path: wheelhouse/*.whl
+
+      ################################################################
+      - run: ./scripts/wheel-linux.sh 3.9
+      - uses: actions/upload-artifact@v2
+        name: Upload wheel 3.9
+        with:
+          name: wheel-manylinux2014-3.9
+          path: wheelhouse/*.whl
+
+      ################################################################
+      - run: ./scripts/wheel-linux.sh 3.10
+      - uses: actions/upload-artifact@v2
+        name: Upload wheel 3.10
+        with:
+          name: wheel-manylinux2014-3.10
+
+          path: wheelhouse/*.whl
+
+      ################################################################
+      - run: ./scripts/wheel-linux.sh 3.11
+      - uses: actions/upload-artifact@v2
+        name: Upload wheel 3.11
+        with:
+          name: wheel-manylinux2014-3.11
+          path: wheelhouse/*.whl
+
+      ################################################################
+      - run: ./scripts/wheel-linux.sh 3.12
+      - uses: actions/upload-artifact@v2
+        name: Upload wheel 3.12
+        with:
+          name: wheel-manylinux2014-3.12
           path: wheelhouse/*.whl
