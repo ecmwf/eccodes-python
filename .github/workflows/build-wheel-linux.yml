@@ -25,6 +25,7 @@ on:
     - 'scripts/build-macos.sh'
     - 'scripts/wheel-macos.sh'
     - 'scripts/test-macos.sh'
+    - 'scripts/build-linux.sh'
     - '.github/workflows/build-wheel-macos-arm.yml'
     - '.github/workflows/build-wheel-linux.yml'
     #- 'tools/copy-licences.py'
@@ -42,6 +43,14 @@ jobs:
     name: Build manylinux2014
 
     steps:
+      - uses: actions/checkout@v2
 
-    - run: ls -l 
+      - run: ./scripts/build-linux.sh
 
+      ################################################################
+      - run: ./scripts/wheel-linux.sh 3.8
+      - uses: actions/upload-artifact@v2
+        name: Upload wheel 3.8
+        with:
+          name: wheel-manylinux2014-3.8
+          path: wheelhouse/*.whl
