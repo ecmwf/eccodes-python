@@ -22,7 +22,7 @@ rm -fr dist wheelhouse
 
 auditwheel repair dist/*.whl
 unzip -l wheelhouse/*.whl | grep 'eccodes.libs/' > libs
-pip3 install -r tools/requirements.txt
+#IR pip3 install -r tools/requirements.txt
 
 #IR python3 ./tools/copy-licences.py libs
 
