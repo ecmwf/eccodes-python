@@ -46,9 +46,9 @@ def find_binary_libs(name):
 
     name = _lookup(name)
 
-    if int(os.environ.get("PYTHON_ECCODES_USE_INSTALLED_BINARIES", "0")):
+    if int(os.environ.get("ECCODES_PYTHON_USE_INSTALLED_BINARIES", "0")):
         logging.debug(
-            f"{name} lib search: PYTHON_ECCODES_USE_INSTALLED_BINARIES set, so using findlibs"
+            f"{name} lib search: ECCODES_PYTHON_USE_INSTALLED_BINARIES set, so using findlibs"
         )
         import findlibs
 
@@ -82,9 +82,9 @@ def find_binary_libs(name):
                             try:
                                 from eccodes._eccodes import versions as _versions
                             except ImportError as e:
-                                # ImportError: DLL load failed while importing _eccodes: The specified module could not be found.
                                 logging.warn(str(e))
                                 raise
+                            logging.debug(f"{name} lib search: versions:", _versions())
                             return foundlib
 
     logging.debug(f"{name} lib search: did not find library")
