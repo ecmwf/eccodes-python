@@ -74,17 +74,19 @@ jobs:
       - run: pip install -r tests/requirements.txt
       - run: pip freeze
       - run: env | sort
-      - run: python -m eccodes selfcheck
+      - run: ECCODES_PYTHON_USE_INSTALLED_BINARIES=1 python -m eccodes selfcheck
 
       - run: pytest
         if: matrix.method == 'conda' && matrix.platform == 'windows-latest'
         env:
           ECCODES_DEFINITION_PATH: 'C:/Miniconda/Library/share/eccodes/definitions'
           ECCODES_SAMPLES_PATH: 'C:/Miniconda/Library/share/eccodes/samples'
+          ECCODES_PYTHON_USE_INSTALLED_BINARIES: '1'
 
       - run: pytest
         if: matrix.method != 'conda' || matrix.platform != 'windows-latest'
-
+        env:
+          ECCODES_PYTHON_USE_INSTALLED_BINARIES: '1'
       # pytest -v --cov=. --cov-report=xml --cov-branch .
 
       - name: Upload coverage to Codecov
