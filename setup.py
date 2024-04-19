@@ -41,18 +41,23 @@ libdir = os.path.realpath("install/lib")
 incdir = os.path.realpath("install/include")
 libs = ["eccodes"]
 
-# https://setuptools.pypa.io/en/latest/userguide/ext_modules.html
-ext_modules = [
-    setuptools.Extension(
-        "eccodes._eccodes",
-        sources=["eccodes/_eccodes.cc"],
-        language="c++",
-        libraries=libs,
-        library_dirs=[libdir],
-        include_dirs=[incdir],
-        extra_link_args=["-Wl,-rpath," + libdir],
-    )
-]
+if "--binary-wheel" in sys.argv:
+    sys.argv.remove("--binary-wheel")
+
+    # https://setuptools.pypa.io/en/latest/userguide/ext_modules.html
+    ext_modules = [
+        setuptools.Extension(
+            "eccodes._eccodes",
+            sources=["eccodes/_eccodes.cc"],
+            language="c++",
+            libraries=libs,
+            library_dirs=[libdir],
+            include_dirs=[incdir],
+            extra_link_args=["-Wl,-rpath," + libdir],
+        )
+    ]
+else:
+    ext_modules = []
 
 
 install_requires = ["numpy"]
