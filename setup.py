@@ -35,6 +35,7 @@ def parse_version_from(path):
         raise ValueError("couldn't parse version")
     return version_match.group(1)
 
+
 # for the binary wheel
 libdir = os.path.realpath("install/lib")
 incdir = os.path.realpath("install/include")
