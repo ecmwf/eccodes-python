@@ -50,7 +50,14 @@ def find_binary_libs(name):
         logging.debug(
             f"{name} lib search: ECCODES_PYTHON_USE_INSTALLED_BINARIES set, so using findlibs"
         )
-        import findlibs
+        try:
+            import ecmwflibs as findlibs
+
+            logging.debug(f"{name} lib search: using ecmwflibs")
+        except ImportError:
+            import findlibs
+
+            logging.debug(f"{name} lib search: no ecmwflibs, using findlibs")
 
         foundlib = findlibs.find(name)
         logging.debug(f"{name} lib search: findlibs returned {foundlib}")
