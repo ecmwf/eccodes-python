@@ -78,6 +78,13 @@ def find_binary_libs(name):
                             logging.debug(
                                 f"{name} lib search: returning wheel from {foundlib}"
                             )
+                            # force linking with the C++ 'glue' library
+                            try:
+                                from eccodes._eccodes import versions as _versions
+                            except ImportError as e:
+                                # ImportError: DLL load failed while importing _eccodes: The specified module could not be found.
+                                logging.warn(str(e))
+                                raise
                             return foundlib
 
     logging.debug(f"{name} lib search: did not find library")
