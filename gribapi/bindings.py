@@ -42,6 +42,18 @@ def _lookup(name):
     return _MAP.get(name, name)
 
 
+def get_findlibs(name):
+    try:
+        import ecmwflibs as findlibs
+
+        logging.debug(f"{name} lib search: using ecmwflibs")
+    except ImportError:
+        import findlibs
+
+        logging.debug(f"{name} lib search: no ecmwflibs, using findlibs")
+    return findlibs
+
+
 def find_binary_libs(name):
 
     name = _lookup(name)
@@ -50,8 +62,8 @@ def find_binary_libs(name):
         logging.debug(
             f"{name} lib search: ECCODES_PYTHON_USE_INSTALLED_BINARIES set, so using findlibs"
         )
-        import findlibs
 
+        findlibs = get_findlibs(name)
         foundlib = findlibs.find(name)
         logging.debug(f"{name} lib search: findlibs returned {foundlib}")
         return foundlib
