@@ -20,7 +20,7 @@ TOPDIR=$(/bin/pwd)
 LD_LIBRARY_PATH=$TOPDIR/install/lib:$TOPDIR/install/lib64:$LD_LIBRARY_PATH
 
 rm -fr dist wheelhouse
-/opt/python/cp${version}-cp${version}*/bin/python3 setup.py bdist_wheel
+/opt/python/cp${version}-cp${version}*/bin/python3 setup.py --binary-wheel bdist_wheel
 
 # Do it twice to get the list of libraries
 
@@ -32,6 +32,6 @@ unzip -l wheelhouse/*.whl | grep 'eccodes.libs/' > libs
 #IR python3 ./tools/copy-licences.py libs
 
 rm -fr dist wheelhouse
-/opt/python/cp${version}-cp${version}*/bin/python3 setup.py bdist_wheel
+/opt/python/cp${version}-cp${version}*/bin/python3 setup.py --binary-wheel bdist_wheel
 auditwheel repair dist/*.whl
 rm -fr dist
