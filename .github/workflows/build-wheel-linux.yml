@@ -1,0 +1,144 @@
+# (C) Copyright 2024 ECMWF.
+#
+# This software is licensed under the terms of the Apache Licence Version 2.0
+# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+# In applying this licence, ECMWF does not waive the privileges and immunities
+# granted to it by virtue of its status as an intergovernmental organisation
+# nor does it submit to any jurisdiction.
+
+name: Build Linux
+
+on:
+  # Trigger the workflow manually
+  workflow_dispatch: ~
+
+  release:
+    types: [created]
+
+  # repository_dispatch:
+  #   types: [eccodes-updated]
+
+  push:
+    paths:
+    - 'scripts/common.sh'
+    - 'scripts/select-python-linux.sh'
+    - 'scripts/wheel-linux.sh'
+    - 'scripts/build-linux.sh'
+    - 'scripts/test-linux.sh'
+    - '.github/workflows/build-wheel-linux.yml'
+    #- 'tools/copy-licences.py'
+
+
+jobs:
+
+  build:
+
+    # if: false
+
+    runs-on: [self-hosted, Linux, platform-builder-Rocky-8.6]
+    container: dockcross/manylinux2014-x64:latest
+
+    name: Build manylinux2014
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - run: ./scripts/build-linux.sh
+
+      ################################################################
+      - run: ./scripts/wheel-linux.sh 3.8
+      - uses: actions/upload-artifact@v2
+        name: Upload wheel 3.8
+        with:
+          name: wheel-manylinux2014-3.8
+          path: wheelhouse/*.whl
+
+      # ################################################################
+      - run: ./scripts/wheel-linux.sh 3.9
+      - uses: actions/upload-artifact@v2
+        name: Upload wheel 3.9
+        with:
+          name: wheel-manylinux2014-3.9
+          path: wheelhouse/*.whl
+
+      # ################################################################
+      - run: ./scripts/wheel-linux.sh 3.10
+      - uses: actions/upload-artifact@v2
+        name: Upload wheel 3.10
+        with:
+          name: wheel-manylinux2014-3.10
+          path: wheelhouse/*.whl
+
+      # ################################################################
+      - run: ./scripts/wheel-linux.sh 3.11
+      - uses: actions/upload-artifact@v2
+        name: Upload wheel 3.11
+        with:
+          name: wheel-manylinux2014-3.11
+          path: wheelhouse/*.whl
+
+      # ################################################################
+      - run: ./scripts/wheel-linux.sh 3.12
+      - uses: actions/upload-artifact@v2
+        name: Upload wheel 3.12
+        with:
+          name: wheel-manylinux2014-3.12
+          path: wheelhouse/*.whl
+
+  test:
+
+    needs: build
+
+    strategy:
+      fail-fast: false
+      matrix: # We don't test 3.6, as it is not supported anymore by github actions
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
+
+    runs-on: [self-hosted, Linux, platform-builder-Rocky-8.6]
+
+    name: Test with ${{ matrix.python-version }}
+
+    steps:
+
+      - uses: actions/checkout@v2
+
+      - uses: actions/download-artifact@v2
+        with:
+          name: wheel-manylinux2014-${{ matrix.python-version }}
+  
+      - run: ./scripts/test-linux.sh  ${{ matrix.python-version }}
+
+
+  deploy:
+
+    if: ${{ github.event_name == 'release' }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.8", "3.9", "3.10", "3.11"]
+
+    needs: [test, build]
+
+    name: Deploy wheel ${{ matrix.python-version }}
+
+    runs-on: [self-hosted, Linux, platform-builder-Rocky-8.6]
+
+
+    steps:
+
+      - run: mkdir artifact-${{ matrix.python-version }}
+
+      - uses: actions/download-artifact@v2
+        with:
+          name: wheel-manylinux2014-${{ matrix.python-version }}
+          path: artifact-${{ matrix.python-version }}
+
+      - run: |
+          source ./scripts/select-python-linux.sh ${{ matrix.python-version }}
+          pip3 install twine
+          ls -l artifact-${{ matrix.python-version }}/*.whl
+          twine upload --repository testpypi artifact-${{ matrix.python-version }}/*.whl
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_TEST_API_TOKEN }}
