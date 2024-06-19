@@ -24,7 +24,7 @@ Limitations:
 Installation
 ============
 
-The package is installed from PyPI with::
+The package can be installed from PyPI with::
 
     $ pip install eccodes
 
