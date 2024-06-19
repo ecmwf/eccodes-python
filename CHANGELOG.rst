@@ -2,10 +2,15 @@
 Changelog for eccodes-python
 ============================
 
-1.7.1 (2024-MM-DD)
+1.8.0 (2024-MM-DD)
 --------------------
 
 - ECC-1790: Add codes_get_offset
+
+1.7.1 (2024-06-19)
+--------------------
+
+- `np.Infinity` was removed in the NumPy 2.0 release
 
 1.7.0 (2024-02-26)
 --------------------
