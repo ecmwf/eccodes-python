@@ -576,7 +576,8 @@ def test_grib_ecc_1007():
 
 def test_grib_set_bitmap():
     gid = eccodes.codes_grib_new_from_samples("GRIB2")
-    missing = np.Infinity
+    # Note: np.Infinity was removed in the NumPy 2.0 release. Use np.inf instead
+    missing = np.inf
     eccodes.codes_set(gid, "bitmapPresent", 1)
     eccodes.codes_set(gid, "missingValue", missing)
     # Grid with 100 points 2 of which are missing
@@ -965,7 +966,7 @@ def test_bufr_copy_data():
 # ---------------------------------------------
 def test_grib_nearest2():
     if "codes_grib_nearest_new" not in dir(eccodes):
-        return
+        pytest.skip("codes_grib_nearest_new absent")
     gid = eccodes.codes_grib_new_from_samples("gg_sfc_grib2")
     lat, lon = 40, 20
     flags = eccodes.CODES_GRIB_NEAREST_SAME_GRID | eccodes.CODES_GRIB_NEAREST_SAME_POINT

@@ -2,6 +2,10 @@
 Changelog for eccodes-python
 ============================
 
+1.7.1 (2024-06-19)
+--------------------
+- `np.Infinity` was removed in the NumPy 2.0 release
+
 1.7.0 (2024-02-26)
 --------------------
 - ECC-1761: Add function to extract message offsets and sizes

@@ -581,7 +581,7 @@ def grib_multi_append(ingribid, startsection, multigribid):
 @require(msgid=int, key=str)
 def grib_get_size(msgid, key):
     """
-    @brief Get the size of an array key.
+    @brief Get the size of a key. Return 1 for scalar keys and >1 for array keys
 
     \b Examples: \ref grib_get_keys.py "grib_get_keys.py",\ref count_messages.py "count_messages.py"
 
