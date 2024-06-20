@@ -111,12 +111,12 @@ jobs:
 
   deploy:
 
-    if: ${{ github.event_name == 'release' }}
+    # if: ${{ github.event_name == 'release' }}
 
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.8", "3.9", "3.10", "3.11"]
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
 
     needs: [test, build]
 
@@ -129,13 +129,15 @@ jobs:
 
       - run: mkdir artifact-${{ matrix.python-version }}
 
+      - uses: actions/checkout@v2
+
       - uses: actions/download-artifact@v2
         with:
           name: wheel-manylinux2014-${{ matrix.python-version }}
           path: artifact-${{ matrix.python-version }}
 
       - run: |
-          source ./scripts/select-python-linux.sh ${{ matrix.python-version }}
+          source ./scripts/select-python-linux.sh 3.10
           pip3 install twine
           ls -l artifact-${{ matrix.python-version }}/*.whl
           twine upload --repository testpypi artifact-${{ matrix.python-version }}/*.whl
