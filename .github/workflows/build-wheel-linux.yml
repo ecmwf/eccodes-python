@@ -25,8 +25,8 @@ on:
     - 'scripts/wheel-linux.sh'
     - 'scripts/build-linux.sh'
     - 'scripts/test-linux.sh'
+    - 'scripts/copy-licences.py'
     - '.github/workflows/build-wheel-linux.yml'
-    #- 'tools/copy-licences.py'
 
 
 jobs:

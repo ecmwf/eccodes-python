@@ -70,7 +70,7 @@ brew list
 pip3 install wheel delocate setuptools pytest
 
 rm -fr dist wheelhouse tmp
-$ARCH python setup.py bdist_wheel
+$ARCH python setup.py --binary-wheel bdist_wheel
 
 #IR diet
 
@@ -81,13 +81,13 @@ echo $name $newname
 # Do it twice to get the list of libraries
 $ARCH delocate-wheel -w wheelhouse dist/*.whl
 unzip -l wheelhouse/*.whl | grep 'dylib' >libs
-#IR pip3 install -r tools/requirements.txt
-#IR python ./tools/copy-licences.py libs
+pip3 install -r scripts/requirements.txt
+python ./scripts/copy-licences.py libs
 
 DISTUTILS_DEBUG=1
 
 rm -fr dist wheelhouse
-$ARCH python setup.py  bdist_wheel # --plat-name $arch
+$ARCH python setup.py --binary-wheel bdist_wheel # --plat-name $arch
 #IR diet
 
 # mv dist/$name $newname
