@@ -56,8 +56,21 @@ if "--binary-wheel" in sys.argv:
             extra_link_args=["-Wl,-rpath," + libdir],
         )
     ]
+
+    def shared(directory):
+        result = []
+        for path, dirs, files in os.walk(directory):
+            for f in files:
+                result.append(os.path.join(path, f))
+        return result
+
+    # Paths must be relative to package directory...
+    shared_files = ["versions.txt"]
+    shared_files += [x[len("eccodes/") :] for x in shared("eccodes/copying")]
+
 else:
     ext_modules = []
+    shared_files = []
 
 
 install_requires = ["numpy"]
@@ -81,6 +94,7 @@ setuptools.setup(
     url="https://github.com/ecmwf/eccodes-python",
     packages=setuptools.find_packages(),
     include_package_data=True,
+    package_data={"": shared_files},
     install_requires=install_requires,
     tests_require=[
         "pytest",

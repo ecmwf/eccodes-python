@@ -27,9 +27,9 @@ rm -fr dist wheelhouse
 auditwheel repair dist/*.whl
 unzip -l wheelhouse/*.whl
 unzip -l wheelhouse/*.whl | grep 'eccodes.libs/' > libs
-#IR pip3 install -r tools/requirements.txt
 
-#IR python3 ./tools/copy-licences.py libs
+pip3 install -r scripts/requirements.txt
+python3 ./scripts/copy-licences.py libs
 
 rm -fr dist wheelhouse
 /opt/python/cp${version}-cp${version}*/bin/python3 setup.py --binary-wheel bdist_wheel
