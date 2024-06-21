@@ -10,7 +10,6 @@
 set -eaux
 rm -f versions
 
-
 GIT_ECBUILD=https://github.com/ecmwf/ecbuild.git
 ECBUILD_VERSION=master
 
