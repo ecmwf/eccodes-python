@@ -58,11 +58,11 @@ def test_codes_set_samples_path():
 
 def test_api_version():
     vs = eccodes.codes_get_api_version()
-    assert type(vs) is str
+    assert isinstance(vs, str)
     assert len(vs) > 0
     assert vs == eccodes.codes_get_api_version(str)
     vi = eccodes.codes_get_api_version(int)
-    assert type(vi) is int
+    assert isinstance(vi, int)
     assert vi > 20000
     print(vi)
 
