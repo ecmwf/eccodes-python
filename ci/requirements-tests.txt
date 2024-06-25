@@ -10,7 +10,7 @@ attrs==19.1.0
 cffi==1.12.2
 coverage==4.5.3           # via pytest-cov
 execnet==1.5.0            # via pytest-cache
-future==0.17.1
+future==0.18.3
 mccabe==0.6.1             # via pytest-mccabe
 more-itertools==5.0.0     # via pytest
 numpy==1.16.2
