@@ -1,0 +1,15 @@
+check-manifest
+detox
+IPython
+matplotlib
+notebook
+pip-tools
+pyroma
+pytest-mypy
+setuptools
+tox
+tox-pyenv
+wheel
+zest.releaser
+black
+
