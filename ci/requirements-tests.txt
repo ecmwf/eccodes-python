@@ -13,7 +13,7 @@ execnet==1.5.0            # via pytest-cache
 future==0.18.3
 mccabe==0.6.1             # via pytest-mccabe
 more-itertools==5.0.0     # via pytest
-numpy==1.16.2
+numpy==1.22.0
 pep8==1.7.1               # via pytest-pep8
 pluggy==0.9.0             # via pytest
 py==1.8.0                 # via pytest
