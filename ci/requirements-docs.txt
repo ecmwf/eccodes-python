@@ -10,7 +10,7 @@ babel==2.6.0
     # via sphinx
 certifi==2019.3.9
     # via requests
-chardet==3.0.4
+charset-normalizer==3.3.2
     # via requests
 docutils==0.14
     # via sphinx
@@ -32,7 +32,7 @@ pytest-runner==4.4
     # via -r requirements-docs.in
 pytz==2018.9
     # via babel
-requests==2.21.0
+requests==2.32.2
     # via sphinx
 six==1.12.0
     # via
