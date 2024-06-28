@@ -22,8 +22,6 @@ pep8==1.7.1
     # via pytest-pep8
 pluggy==0.9.0
     # via pytest
-py==1.11.0
-    # via pytest
 pyflakes==2.1.1
     # via pytest-flakes
 pytest==4.3.1
