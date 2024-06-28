@@ -733,7 +733,7 @@ def test_grib_uuid_get_set():
     eccodes.codes_set(gid, "gridType", "unstructured_grid")
     key = "uuidOfHGrid"
     ntype = eccodes.codes_get_native_type(gid, key)
-    assert ntype == bytes
+    assert ntype is bytes
 
     uuid = eccodes.codes_get_string(gid, key)
     assert uuid == "00000000000000000000000000000000"
