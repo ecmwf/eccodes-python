@@ -37,6 +37,11 @@ EXTENSIONS = {
     "win32": ".dll",
 }
 
+# convenient way to trace the search for the library
+if int(os.environ.get("ECCODES_PYTHON_TRACE_LIB_SEARCH", "0")):
+    LOG.setLevel(logging.DEBUG)
+    LOG.addHandler(logging.StreamHandler())
+
 
 def _lookup(name):
     return _MAP.get(name, name)
@@ -46,11 +51,11 @@ def get_findlibs(name):
     try:
         import ecmwflibs as findlibs
 
-        logging.debug(f"{name} lib search: using ecmwflibs")
+        LOG.debug(f"{name} lib search: using ecmwflibs")
     except ImportError:
         import findlibs
 
-        logging.debug(f"{name} lib search: no ecmwflibs, using findlibs")
+        LOG.debug(f"{name} lib search: no ecmwflibs, using findlibs")
     return findlibs
 
 
@@ -59,17 +64,17 @@ def find_binary_libs(name):
     name = _lookup(name)
     env_var = "ECCODES_PYTHON_USE_SEPARATE_BINARIES"
     if int(os.environ.get(env_var, "0")):
-        logging.debug(f"{name} lib search: {env_var} set, so using findlibs")
+        LOG.debug(f"{name} lib search: {env_var} set, so using findlibs")
 
     else:
-        logging.debug(f"{name} lib search: trying to find binary wheel")
+        LOG.debug(f"{name} lib search: trying to find binary wheel")
         here = os.path.dirname(__file__)
         # eccodes libs are actually in eccodes dir, not gribapi dir
         here = os.path.abspath(os.path.join(here, os.path.pardir, "eccodes"))
         extension = EXTENSIONS.get(sys.platform, ".so")
 
         for libdir in [here + ".libs", os.path.join(here, ".dylibs"), here]:
-            logging.debug(f"{name} lib search: looking in {libdir}")
+            LOG.debug(f"{name} lib search: looking in {libdir}")
             if not name.startswith("lib"):
                 libnames = ["lib" + name, name]
             else:
@@ -81,28 +86,26 @@ def find_binary_libs(name):
                         for libname in libnames:
                             if libname == file.split("-")[0].split(".")[0]:
                                 foundlib = os.path.join(libdir, file)
-                                logging.debug(
+                                LOG.debug(
                                     f"{name} lib search: returning wheel from {foundlib}"
                                 )
                                 # force linking with the C++ 'glue' library
                                 try:
                                     from eccodes._eccodes import versions as _versions
                                 except ImportError as e:
-                                    logging.warn(str(e))
+                                    LOG.warn(str(e))
                                     raise
-                                logging.debug(
-                                    f"{name} lib search: versions:", _versions()
-                                )
+                                LOG.debug(f"{name} lib search: versions:", _versions())
                                 return foundlib
 
-        logging.debug(
-            f"{name} lib search: did not find library from wheel; trying with findlibs"
+        LOG.debug(
+            f"{name} lib search: did not find library from wheel; try to find as separate lib"
         )
 
     # if did not find the binary wheel, or the env var is set, fall back to findlibs
     findlibs = get_findlibs(name)
     foundlib = findlibs.find(name)
-    logging.debug(f"{name} lib search: findlibs returned {foundlib}")
+    LOG.debug(f"{name} lib search: findlibs returned {foundlib}")
     return foundlib
 
 

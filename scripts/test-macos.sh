@@ -34,6 +34,6 @@ pip install -r tests/requirements.txt
 pip freeze
 
 cd tests
-pytest -v -s
+ECCODES_PYTHON_TRACE_LIB_SEARCH=1 pytest -v -s
 
 rm -fr *.whl tests
