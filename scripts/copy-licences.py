@@ -43,6 +43,10 @@ ENTRIES = {
         "home": "https://github.com/uclouvain/openjpeg",
         "copying": "https://raw.githubusercontent.com/uclouvain/openjpeg/master/LICENSE",
     },
+    "libopenjpeg": {
+        "home": "https://code.google.com/archive/p/openjpeg/",
+        "copying": "https://raw.githubusercontent.com/uclouvain/openjpeg/master/LICENSE",
+    },
     "libjpeg": {
         "home": "http://ijg.org",
         "copying": "https://jpegclub.org/reference/libjpeg-license/",
