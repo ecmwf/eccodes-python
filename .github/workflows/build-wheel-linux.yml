@@ -28,6 +28,8 @@ on:
     - 'scripts/copy-licences.py'
     - '.github/workflows/build-wheel-linux.yml'
 
+env:
+  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
 
 jobs:
 
