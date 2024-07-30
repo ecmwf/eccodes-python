@@ -36,7 +36,7 @@ jobs:
 
   build:
 
-    if: false  # for temporarily disabling for debugging
+    # if: false  # for temporarily disabling for debugging
 
     strategy:
       matrix:
