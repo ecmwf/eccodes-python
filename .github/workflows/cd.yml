@@ -1,11 +1,24 @@
 name: cd
 
 on:
+  # Trigger the workflow manually
+  workflow_dispatch: ~
+
   push:
     tags:
       - '**'
-
+    paths:
+      - '.github/workflows/cd.yml'
+      - '.github/workflows/build-wheel-linux.yml'
 jobs:
-  pypi:
-    uses: ecmwf-actions/reusable-workflows/.github/workflows/cd-pypi.yml@v2
+  wheel-linux:
+    uses: ./.github/workflows/build-wheel-linux.yml
     secrets: inherit
+  wheel-macos:
+    uses: ./.github/workflows/build-wheel-macos-arm.yml
+    secrets: inherit
+  pypi:
+    needs: [wheel-linux, wheel-macos]
+    uses: ecmwf-actions/reusable-workflows/.github/workflows/cd-pypi.yml@feature/pypi-token-as-secret
+    with:
+      testpypi: true

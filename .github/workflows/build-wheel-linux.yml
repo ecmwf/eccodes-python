@@ -6,14 +6,15 @@
 # granted to it by virtue of its status as an intergovernmental organisation
 # nor does it submit to any jurisdiction.
 
+
 name: Build Linux
 
 on:
   # Trigger the workflow manually
   workflow_dispatch: ~
 
-  release:
-    types: [created]
+  # Allow to be called from another workflow
+  workflow_call: ~
 
   # repository_dispatch:
   #   types: [eccodes-updated]
