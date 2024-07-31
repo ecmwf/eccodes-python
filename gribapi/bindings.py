@@ -55,7 +55,7 @@ def get_findlibs(name):
     except ImportError:
         import findlibs
 
-        LOG.debug(f"{name} lib search: no ecmwflibs, using findlibs")
+        LOG.debug(f"{name} lib search: ecmwflibs package not installed, using findlibs")
     return findlibs
 
 
@@ -87,7 +87,7 @@ def find_binary_libs(name):
                             if libname == file.split("-")[0].split(".")[0]:
                                 foundlib = os.path.join(libdir, file)
                                 LOG.debug(
-                                    f"{name} lib search: returning wheel from {foundlib}"
+                                    f"{name} lib search: returning wheel library from {foundlib}"
                                 )
                                 # force linking with the C++ 'glue' library
                                 try:
@@ -95,7 +95,9 @@ def find_binary_libs(name):
                                 except ImportError as e:
                                     LOG.warn(str(e))
                                     raise
-                                LOG.debug(f"{name} lib search: versions:", _versions())
+                                LOG.debug(
+                                    f"{name} lib search: versions: %s", _versions()
+                                )
                                 return foundlib
 
         LOG.debug(
