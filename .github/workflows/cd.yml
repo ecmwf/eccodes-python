@@ -22,3 +22,5 @@ jobs:
     uses: ecmwf-actions/reusable-workflows/.github/workflows/cd-pypi.yml@feature/pypi-token-as-secret
     with:
       testpypi: true
+    secrets: inherit
+
