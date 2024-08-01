@@ -37,14 +37,14 @@ done
 
 sudo yum install -y flex bison
 
-sudo ln -sf /opt/python/cp36-cp36m/bin/python /usr/local/bin/python3
-sudo ln -sf /opt/python/cp36-cp36m/bin/python3-config /usr/local/bin/python3-config
-sudo ln -sf /opt/python/cp36-cp36m/bin/pip /usr/local/bin/pip3
+sudo ln -sf /opt/python/cp310-cp310/bin/python /usr/local/bin/python3
+sudo ln -sf /opt/python/cp310-cp310/bin/python3-config /usr/local/bin/python3-config
+sudo ln -sf /opt/python/cp310-cp310/bin/pip /usr/local/bin/pip3
 
-sudo pip3 install ninja auditwheel meson
+sudo pip3 install ninja auditwheel meson 'setuptools>=72.1.0'
 
-sudo ln -sf /opt/python/cp36-cp36m/bin/meson /usr/local/bin/meson
-sudo ln -sf /opt/python/cp36-cp36m/bin/ninja /usr/local/bin/ninja
+sudo ln -sf /opt/python/cp310-cp310/bin/meson /usr/local/bin/meson
+sudo ln -sf /opt/python/cp310-cp310/bin/ninja /usr/local/bin/ninja
 
 PKG_CONFIG_PATH=/usr/lib64/pkgconfig:/usr/lib/pkgconfig:$PKG_CONFIG_PATH
 PKG_CONFIG_PATH=$TOPDIR/install/lib/pkgconfig:$TOPDIR/install/lib64/pkgconfig:$PKG_CONFIG_PATH
