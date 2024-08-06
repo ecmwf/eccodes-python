@@ -19,7 +19,7 @@ jobs:
     secrets: inherit
   pypi:
     needs: [wheel-linux, wheel-macos]
-    uses: ecmwf-actions/reusable-workflows/.github/workflows/cd-pypi.yml@feature/pypi-token-as-secret
+    uses: ecmwf-actions/reusable-workflows/.github/workflows/cd-pypi.yml@v2
     with:
       testpypi: true
     secrets: inherit
