@@ -114,7 +114,7 @@ jobs:
 
   deploy:
 
-    # if: ${{ github.event_name == 'release' }}
+    if: ${{ github.ref_type == 'tag' || github.event_name == 'release' }}
 
     strategy:
       fail-fast: false
