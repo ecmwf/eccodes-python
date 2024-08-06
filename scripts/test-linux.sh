@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# (C) Copyright 2024 ECMWF.
+# (C) Copyright 2024- ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -23,7 +23,6 @@ pip install -r tests/requirements.txt
 pip freeze
 
 ls -l $RUNNER_TEMP/venv_$version/lib/python${python_version}/site-packages/eccodes.libs/
-#ldd   $RUNNER_TEMP/venv_$version/lib/python${python_version}/site-packages/eccodes.libs//libeccodes-e6c1734d.so
 
 cd tests
 ECCODES_PYTHON_TRACE_LIB_SEARCH=1 pytest -v -s

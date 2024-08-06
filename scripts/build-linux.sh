@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# (C) Copyright 2024 ECMWF.
+# (C) Copyright 2024- ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -65,7 +65,7 @@ $TOPDIR/src/ecbuild/bin/ecbuild \
     -DENABLE_MEMFS=1 \
     -DENABLE_INSTALL_ECCODES_DEFINITIONS=0 \
     -DENABLE_INSTALL_ECCODES_SAMPLES=0 \
-    -DCMAKE_INSTALL_PREFIX=$TOPDIR/install $ECCODES_EXTRA_CMAKE_OPTIONS
+    -DCMAKE_INSTALL_PREFIX=$TOPDIR/install $ECCODES_COMMON_CMAKE_OPTIONS
 
 cd $TOPDIR
 cmake --build build-binaries/eccodes --target install

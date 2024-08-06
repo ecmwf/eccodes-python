@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# (C) Copyright 2024 ECMWF.
+# (C) Copyright 2024- ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -15,7 +15,7 @@ ECBUILD_VERSION=master
 
 GIT_ECCODES=https://github.com/ecmwf/eccodes.git
 ECCODES_VERSION=2.33.2
-ECCODES_EXTRA_CMAKE_OPTIONS="-DENABLE_PNG=ON -DENABLE_JPG=ON -DENABLE_NETCDF=0 -DENABLE_EXAMPLES=0"
+ECCODES_COMMON_CMAKE_OPTIONS="-DENABLE_PNG=ON -DENABLE_JPG=ON -DENABLE_NETCDF=0 -DENABLE_EXAMPLES=0"
 
 GIT_AEC=https://github.com/MathisRosenhauer/libaec.git
 AEC_VERSION=master
