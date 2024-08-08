@@ -47,18 +47,6 @@ def _lookup(name):
     return _MAP.get(name, name)
 
 
-def get_findlibs(name):
-    try:
-        import ecmwflibs as findlibs
-
-        LOG.debug(f"{name} lib search: using ecmwflibs")
-    except ImportError:
-        import findlibs
-
-        LOG.debug(f"{name} lib search: ecmwflibs package not installed, using findlibs")
-    return findlibs
-
-
 def find_binary_libs(name):
 
     name = _lookup(name)
@@ -105,7 +93,8 @@ def find_binary_libs(name):
         )
 
     # if did not find the binary wheel, or the env var is set, fall back to findlibs
-    findlibs = get_findlibs(name)
+    import findlibs
+
     foundlib = findlibs.find(name)
     LOG.debug(f"{name} lib search: findlibs returned {foundlib}")
     return foundlib
