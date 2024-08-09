@@ -6,6 +6,8 @@ Changelog for eccodes-python
 --------------------
 
 - ECC-1790: Add codes_get_offset
+- ECC-1899: API function to allow setting debug level
+
 
 1.7.1 (2024-06-19)
 --------------------

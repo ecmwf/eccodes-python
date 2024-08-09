@@ -2422,6 +2422,16 @@ def codes_samples_path():
     return ffi.string(spath).decode(ENC)
 
 
+def grib_set_debug(dmode):
+    """
+    @brief Set the debug mode
+
+    @param dmode  -1, 0 or 1
+    """
+    context = lib.grib_context_get_default()
+    lib.grib_context_set_debug(context, dmode)
+
+
 @require(defs_path=str)
 def grib_set_definitions_path(defs_path):
     """

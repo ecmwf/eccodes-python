@@ -48,6 +48,13 @@ def test_codes_samples_path():
     assert sp is not None
 
 
+def test_codes_set_debug():
+    if eccodes.codes_get_api_version(int) < 23700:
+        pytest.skip("ecCodes version too old")
+    eccodes.codes_set_debug(-1)
+    eccodes.codes_set_debug(0)
+
+
 def test_codes_set_definitions_path():
     eccodes.codes_set_definitions_path(eccodes.codes_definition_path())
 

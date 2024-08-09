@@ -132,6 +132,7 @@ void grib_gts_header_off(grib_context* c);
 void grib_gribex_mode_on(grib_context* c);
 void grib_gribex_mode_off(grib_context* c);
 void grib_context_set_definitions_path(grib_context* c, const char* path);
+void grib_context_set_debug(grib_context* c, int mode);
 void grib_context_set_samples_path(grib_context* c, const char* path);
 void grib_multi_support_on(grib_context* c);
 void grib_multi_support_off(grib_context* c);
