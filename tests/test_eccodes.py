@@ -80,6 +80,18 @@ def test_version_info():
     assert len(vinfo) == 2
 
 
+def test_codes_get_features():
+    if eccodes.codes_get_api_version(int) < 23700:
+        pytest.skip("ecCodes version too old")
+
+    features = eccodes.codes_get_features(eccodes.CODES_FEATURES_ALL)
+    print(f"\n\tAll features = {features}")
+    features = eccodes.codes_get_features(eccodes.CODES_FEATURES_DISABLED)
+    print(f"\tDisabled features = {features}")
+    features = eccodes.codes_get_features(eccodes.CODES_FEATURES_ENABLED)
+    print(f"\tEnabled features = {features}")
+
+
 def test_codes_is_defined():
     gid = eccodes.codes_grib_new_from_samples("sh_sfc_grib1")
     assert eccodes.codes_is_defined(gid, "JS")

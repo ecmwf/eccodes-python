@@ -10,6 +10,9 @@
 #
 #
 from gribapi import (
+    CODES_FEATURES_ALL,
+    CODES_FEATURES_DISABLED,
+    CODES_FEATURES_ENABLED,
     CODES_PRODUCT_ANY,
     CODES_PRODUCT_BUFR,
     CODES_PRODUCT_GRIB,
@@ -44,6 +47,7 @@ from gribapi import (
     codes_dump,
     codes_extract_offsets,
     codes_extract_offsets_sizes,
+    codes_get_features,
     codes_get_gaussian_latitudes,
     codes_get_library_path,
     codes_get_version_info,
@@ -249,6 +253,9 @@ __all__ = [
     "codes_definition_path",
     "codes_extract_offsets",
     "codes_extract_offsets_sizes",
+    "CODES_FEATURES_ALL",
+    "CODES_FEATURES_ENABLED",
+    "CODES_FEATURES_DISABLED",
     "codes_get_api_version",
     "codes_get_array",
     "codes_get_double_array",
@@ -273,6 +280,7 @@ __all__ = [
     "codes_get_values",
     "codes_get_version_info",
     "codes_get",
+    "codes_get_features",
     "codes_grib_find_nearest_multiple",
     "codes_grib_find_nearest",
     "codes_grib_get_data",

@@ -70,6 +70,12 @@ GRIB_NEAREST_SAME_GRID = 1 << 0
 GRIB_NEAREST_SAME_DATA = 1 << 1
 GRIB_NEAREST_SAME_POINT = 1 << 2
 
+# Constants for feature selection
+CODES_FEATURES_ALL = 0
+CODES_FEATURES_ENABLED = 1
+CODES_FEATURES_DISABLED = 2
+
+
 # ECC-1029: Disable function-arguments type-checking unless
 # environment variable is defined and equal to 1
 enable_type_checks = os.environ.get("ECCODES_PYTHON_ENABLE_TYPE_CHECKS") == "1"
@@ -2642,6 +2648,23 @@ def codes_extract_offsets_sizes(filepath, product_kind, is_strict=True):
     while i < num_messages:
         yield (offsets[i], sizes[i])
         i += 1
+
+
+@require(select=int)
+def codes_get_features(select=CODES_FEATURES_ALL):
+    """
+    @brief Get the list of library features.
+
+    @param select   One of CODES_FEATURES_ALL, CODES_FEATURES_ENABLED or CODES_FEATURES_DISABLED
+    @return         space-separated string of feature names
+    @exception CodesInternalError
+    """
+    ssize = 1024
+    result = ffi.new("char[]", ssize)
+    size_p = ffi.new("size_t *", ssize)
+    err = lib.codes_get_features(result, size_p, select)
+    GRIB_CHECK(err)
+    return ffi.string(result).decode(ENC)
 
 
 # -------------------------------

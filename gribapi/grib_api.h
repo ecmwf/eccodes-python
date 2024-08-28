@@ -176,6 +176,9 @@ int parse_keyval_string(const char *grib_tool, char *arg, int values_required, i
 int grib_get_data(const grib_handle *h, double *lats, double *lons, double *values);
 int grib_get_gaussian_latitudes(long trunc, double* lats);
 
+int codes_is_feature_enabled(const char* feature);
+int codes_get_features(char* result, size_t* length, int select);
+
 /* EXPERIMENTAL */
 typedef struct codes_bufr_header {
     unsigned long message_offset;
