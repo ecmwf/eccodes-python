@@ -22,7 +22,7 @@ jobs:
     uses: ./.github/workflows/build-wheel-linux.yml
     secrets: inherit
   wheel-macos:
-    uses: ./.github/workflows/build-wheel-macos-arm.yml
+    uses: ./.github/workflows/build-wheel-macos.yml
     secrets: inherit
   pypi:
     needs: [wheel-linux, wheel-macos]
