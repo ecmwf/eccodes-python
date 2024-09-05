@@ -24,16 +24,40 @@ Limitations:
 Installation
 ============
 
+.. note::
+   From version 2.37.0, the ecCodes Python bindings come supplied with the ecCodes binary library.
+   See below for details.
+
+
 The package is installed from PyPI with::
 
     $ pip install eccodes
+
+This installation will, by default, include the ecCodes binary library (as of version 2.37.0), meaning that no
+external ecCodes binary library is required. If you have an external ecCodes binary library that you wish to use,
+set the following environment variable before you import eccodes:
+
+    $ export ECCODES_PYTHON_USE_FINDLIBS=1
+
+If this is set, the ecCodes' Python bindings will use the `findlibs <https://github.com/ecmwf/findlibs>`_ package
+to locate the binary library (this was the behaviour before version 2.37.0).
+
+In order to gain insights into the search for the binary library, set the following environment variable before
+importing eccodes:
+
+    $ export ECCODES_PYTHON_TRACE_LIB_SEARCH=1
+ 
+You may also install a version of ecCodes' Python interface that does not include a binary library at all:
+
+    $ pip install eccodes --no-binary eccodes
 
 
 System dependencies
 -------------------
 
-The Python module depends on the ECMWF *ecCodes* library
-that must be installed on the system and accessible as a shared library.
+The Python module depends on the ECMWF *ecCodes* library. From version 2.37.0, this is supplied with
+the Python module. If you wish to install and use a separate binary library (see above), it
+must be installed on the system and accessible as a shared library.
 
 On a MacOS with HomeBrew use::
 
@@ -50,7 +74,7 @@ https://confluence.ecmwf.int/display/ECC/ecCodes+installation
 You may run a simple selfcheck command to ensure that your system is set up correctly::
 
     $ python -m eccodes selfcheck
-    Found: ecCodes v2.27.0.
+    Found: ecCodes v2.37.0.
     Your system is ready.
 
 
