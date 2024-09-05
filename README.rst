@@ -24,9 +24,8 @@ Limitations:
 Installation
 ============
 
-.. note::
-   From version 2.37.0, the ecCodes Python bindings come supplied with the ecCodes binary library.
-   See below for details.
+> From version 2.37.0, the ecCodes Python bindings come supplied with the ecCodes binary library.
+  See below for details.
 
 
 The package is installed from PyPI with::
