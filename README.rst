@@ -33,7 +33,7 @@ The package is installed from PyPI with::
 
 This installation will, by default, include the ecCodes binary library (as of version 2.37.0), meaning that no
 external ecCodes binary library is required. If you have an external ecCodes binary library that you wish to use,
-set the following environment variable before you import eccodes:
+set the following environment variable before you import eccodes::
 
     $ export ECCODES_PYTHON_USE_FINDLIBS=1
 
@@ -41,11 +41,11 @@ If this is set, the ecCodes' Python bindings will use the `findlibs <https://git
 to locate the binary library (this was the behaviour before version 2.37.0).
 
 In order to gain insights into the search for the binary library, set the following environment variable before
-importing eccodes:
+importing eccodes::
 
     $ export ECCODES_PYTHON_TRACE_LIB_SEARCH=1
  
-You may also install a version of ecCodes' Python interface that does not include a binary library at all:
+You may also install a version of ecCodes' Python interface that does not include a binary library at all::
 
     $ pip install eccodes --no-binary eccodes
 
