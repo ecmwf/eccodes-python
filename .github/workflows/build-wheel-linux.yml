@@ -144,7 +144,7 @@ jobs:
           source ./scripts/select-python-linux.sh 3.10
           pip3 install twine
           ls -l artifact-${{ matrix.python-version }}/*.whl
-          twine upload --repository testpypi artifact-${{ matrix.python-version }}/*.whl
+          twine upload artifact-${{ matrix.python-version }}/*.whl
         env:
           TWINE_USERNAME: __token__
-          TWINE_PASSWORD: ${{ secrets.PYPI_TEST_API_TOKEN }}
+          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}

@@ -27,7 +27,5 @@ jobs:
   pypi:
     needs: [wheel-linux, wheel-macos]
     uses: ecmwf-actions/reusable-workflows/.github/workflows/cd-pypi.yml@v2
-    with:
-      testpypi: true
     secrets: inherit
 
