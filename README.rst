@@ -46,7 +46,8 @@ importing eccodes::
 
     $ export ECCODES_PYTHON_TRACE_LIB_SEARCH=1
  
-You may also install a version of ecCodes' Python interface that does not include a binary library at all::
+You may also install a version of ecCodes' Python interface that does not include a binary library at all,
+in which case the findlibs mechanism will be used as before::
 
     $ pip install eccodes --no-binary eccodes
 
