@@ -24,7 +24,8 @@ Limitations:
 Installation
 ============
 
-**From version 2.37.0, the ecCodes Python bindings additionally provide the ecCodes binary library. See below for details.**
+**From version 2.37.0, the ecCodes Python bindings additionally provide the ecCodes binary library, and will
+follow the version numbering of the ecCodes binary library. See below for details.**
 
 
 The package is installed from PyPI with::
@@ -38,7 +39,7 @@ set the following environment variable before you import eccodes::
     $ export ECCODES_PYTHON_USE_FINDLIBS=1
 
 If this is set, the ecCodes' Python bindings will use the `findlibs <https://github.com/ecmwf/findlibs>`_ package
-to locate the binary library (this was the behaviour before version 2.37.0).
+to locate the binary library (findlibs was the only mechanism used before version 2.37.0).
 
 In order to gain insights into the search for the binary library, set the following environment variable before
 importing eccodes::
