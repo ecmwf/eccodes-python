@@ -48,6 +48,13 @@ def test_codes_samples_path():
     assert sp is not None
 
 
+def test_codes_set_debug():
+    if eccodes.codes_get_api_version(int) < 23700:
+        pytest.skip("ecCodes version too old")
+    eccodes.codes_set_debug(-1)
+    eccodes.codes_set_debug(0)
+
+
 def test_codes_set_definitions_path():
     eccodes.codes_set_definitions_path(eccodes.codes_definition_path())
 
@@ -58,11 +65,11 @@ def test_codes_set_samples_path():
 
 def test_api_version():
     vs = eccodes.codes_get_api_version()
-    assert type(vs) is str
+    assert isinstance(vs, str)
     assert len(vs) > 0
     assert vs == eccodes.codes_get_api_version(str)
     vi = eccodes.codes_get_api_version(int)
-    assert type(vi) is int
+    assert isinstance(vi, int)
     assert vi > 20000
     print(vi)
 
@@ -71,6 +78,18 @@ def test_version_info():
     vinfo = eccodes.codes_get_version_info()
     print("ecCodes version information: ", vinfo)
     assert len(vinfo) == 2
+
+
+def test_codes_get_features():
+    if eccodes.codes_get_api_version(int) < 23700:
+        pytest.skip("ecCodes version too old")
+
+    features = eccodes.codes_get_features(eccodes.CODES_FEATURES_ALL)
+    print(f"\n\tAll features = {features}")
+    features = eccodes.codes_get_features(eccodes.CODES_FEATURES_DISABLED)
+    print(f"\tDisabled features = {features}")
+    features = eccodes.codes_get_features(eccodes.CODES_FEATURES_ENABLED)
+    print(f"\tEnabled features = {features}")
 
 
 def test_codes_is_defined():
@@ -356,6 +375,14 @@ def test_grib_get_message_size():
 def test_grib_get_message_offset():
     gid = eccodes.codes_grib_new_from_samples("GRIB2")
     assert eccodes.codes_get_message_offset(gid) == 0
+
+
+def test_grib_get_key_offset():
+    gid = eccodes.codes_grib_new_from_samples("GRIB2")
+    assert eccodes.codes_get_offset(gid, "identifier") == 0
+    assert eccodes.codes_get_offset(gid, "discipline") == 6
+    assert eccodes.codes_get_offset(gid, "offsetSection1") == 16
+    assert eccodes.codes_get_offset(gid, "7777") == 175
 
 
 def test_grib_clone():
@@ -725,7 +752,7 @@ def test_grib_uuid_get_set():
     eccodes.codes_set(gid, "gridType", "unstructured_grid")
     key = "uuidOfHGrid"
     ntype = eccodes.codes_get_native_type(gid, key)
-    assert ntype == bytes
+    assert ntype is bytes
 
     uuid = eccodes.codes_get_string(gid, key)
     assert uuid == "00000000000000000000000000000000"

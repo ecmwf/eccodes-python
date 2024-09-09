@@ -10,6 +10,9 @@
 #
 #
 from gribapi import (
+    CODES_FEATURES_ALL,
+    CODES_FEATURES_DISABLED,
+    CODES_FEATURES_ENABLED,
     CODES_PRODUCT_ANY,
     CODES_PRODUCT_BUFR,
     CODES_PRODUCT_GRIB,
@@ -44,6 +47,7 @@ from gribapi import (
     codes_dump,
     codes_extract_offsets,
     codes_extract_offsets_sizes,
+    codes_get_features,
     codes_get_gaussian_latitudes,
     codes_get_library_path,
     codes_get_version_info,
@@ -73,6 +77,7 @@ from gribapi import grib_get_message as codes_get_message
 from gribapi import grib_get_message_offset as codes_get_message_offset
 from gribapi import grib_get_message_size as codes_get_message_size
 from gribapi import grib_get_native_type as codes_get_native_type
+from gribapi import grib_get_offset as codes_get_offset
 from gribapi import grib_get_size as codes_get_size
 from gribapi import grib_get_string as codes_get_string
 from gribapi import grib_get_string_array as codes_get_string_array
@@ -123,6 +128,7 @@ from gribapi import grib_no_fail_on_wrong_length as codes_no_fail_on_wrong_lengt
 from gribapi import grib_release as codes_release
 from gribapi import grib_set as codes_set
 from gribapi import grib_set_array as codes_set_array
+from gribapi import grib_set_debug as codes_set_debug
 from gribapi import grib_set_definitions_path as codes_set_definitions_path
 from gribapi import grib_set_double as codes_set_double
 from gribapi import grib_set_double_array as codes_set_double_array
@@ -247,6 +253,9 @@ __all__ = [
     "codes_definition_path",
     "codes_extract_offsets",
     "codes_extract_offsets_sizes",
+    "CODES_FEATURES_ALL",
+    "CODES_FEATURES_ENABLED",
+    "CODES_FEATURES_DISABLED",
     "codes_get_api_version",
     "codes_get_array",
     "codes_get_double_array",
@@ -263,6 +272,7 @@ __all__ = [
     "codes_get_message_size",
     "codes_get_message",
     "codes_get_native_type",
+    "codes_get_offset",
     "codes_get_size",
     "codes_get_string_array",
     "codes_get_string_length",
@@ -270,6 +280,7 @@ __all__ = [
     "codes_get_values",
     "codes_get_version_info",
     "codes_get",
+    "codes_get_features",
     "codes_grib_find_nearest_multiple",
     "codes_grib_find_nearest",
     "codes_grib_get_data",
@@ -333,6 +344,7 @@ __all__ = [
     "codes_samples_path",
     "codes_dump",
     "codes_set_array",
+    "codes_set_debug",
     "codes_set_definitions_path",
     "codes_set_double_array",
     "codes_set_double",

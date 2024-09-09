@@ -28,7 +28,7 @@ Installation
 follow the version numbering of the ecCodes binary library. See below for details.**
 
 
-The package is installed from PyPI with::
+The package can be installed from PyPI with::
 
     $ pip install eccodes
 

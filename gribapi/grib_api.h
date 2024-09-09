@@ -100,6 +100,7 @@ int grib_nearest_find_multiple(const grib_handle* h, int is_lsm,
     double* outlats, double* outlons,
     double* values, double* distances, int* indexes);
 
+int grib_get_offset(const grib_handle* h, const char* key, size_t* offset);
 int grib_get_size(const grib_handle* h, const char* key,size_t *size);
 
 int grib_get_length(const grib_handle* h, const char* key,size_t *length);
@@ -107,7 +108,7 @@ int grib_get_long(const grib_handle* h, const char* key, long* value);
 int grib_get_double(const grib_handle* h, const char* key, double* value);
 int grib_get_double_element(const grib_handle* h, const char* key, int i, double* value);
 int grib_get_double_elements(const grib_handle* h, const char* key, const int* index_array, long size, double* value);
-int grib_get_string(const grib_handle* h, const char* key, char* mesg, size_t *length);
+int grib_get_string(const grib_handle* h, const char* key, char* value, size_t *length);
 int grib_get_string_array(const grib_handle* h, const char* key, char** vals, size_t *length);
 int grib_get_double_array(const grib_handle* h, const char* key, double* vals, size_t *length);
 int grib_get_float_array(const grib_handle* h, const char* key, float* vals, size_t *length);
@@ -131,6 +132,7 @@ void grib_gts_header_off(grib_context* c);
 void grib_gribex_mode_on(grib_context* c);
 void grib_gribex_mode_off(grib_context* c);
 void grib_context_set_definitions_path(grib_context* c, const char* path);
+void grib_context_set_debug(grib_context* c, int mode);
 void grib_context_set_samples_path(grib_context* c, const char* path);
 void grib_multi_support_on(grib_context* c);
 void grib_multi_support_off(grib_context* c);
@@ -173,6 +175,9 @@ int parse_keyval_string(const char *grib_tool, char *arg, int values_required, i
 
 int grib_get_data(const grib_handle *h, double *lats, double *lons, double *values);
 int grib_get_gaussian_latitudes(long trunc, double* lats);
+
+int codes_is_feature_enabled(const char* feature);
+int codes_get_features(char* result, size_t* length, int select);
 
 /* EXPERIMENTAL */
 typedef struct codes_bufr_header {

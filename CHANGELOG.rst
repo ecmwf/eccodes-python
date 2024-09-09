@@ -2,10 +2,18 @@
 Changelog for eccodes-python
 ============================
 
+2.38.0 (2024-MM-DD)
+--------------------
+
+- ECC-1790: Add codes_get_offset
+- ECC-1899: API function to allow setting debug level
+- Function to query library features
+
 2.37.0 (2024-09-09)
 -------------------
 
 - bundle ecCodes binary library with the PyPi distribution, for Linux and MacOS
+
 
 1.7.1 (2024-06-19)
 --------------------

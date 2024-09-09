@@ -70,6 +70,12 @@ GRIB_NEAREST_SAME_GRID = 1 << 0
 GRIB_NEAREST_SAME_DATA = 1 << 1
 GRIB_NEAREST_SAME_POINT = 1 << 2
 
+# Constants for feature selection
+CODES_FEATURES_ALL = 0
+CODES_FEATURES_ENABLED = 1
+CODES_FEATURES_DISABLED = 2
+
+
 # ECC-1029: Disable function-arguments type-checking unless
 # environment variable is defined and equal to 1
 enable_type_checks = os.environ.get("ECCODES_PYTHON_ENABLE_TYPE_CHECKS") == "1"
@@ -576,6 +582,23 @@ def grib_multi_append(ingribid, startsection, multigribid):
     h = get_handle(ingribid)
     mh = get_multi_handle(multigribid)
     GRIB_CHECK(lib.grib_multi_handle_append(h, startsection, mh))
+
+
+@require(msgid=int, key=str)
+def grib_get_offset(msgid, key):
+    """
+    @brief Get the byte offset of a key. If several keys of the same name
+    are present, the offset of the last one is returned
+
+    @param msgid      id of the message loaded in memory
+    @param key        name of the key
+    @exception CodesInternalError
+    """
+    h = get_handle(msgid)
+    offset_p = ffi.new("size_t*")
+    err = lib.grib_get_offset(h, key.encode(ENC), offset_p)
+    GRIB_CHECK(err)
+    return offset_p[0]
 
 
 @require(msgid=int, key=str)
@@ -2405,6 +2428,16 @@ def codes_samples_path():
     return ffi.string(spath).decode(ENC)
 
 
+def grib_set_debug(dmode):
+    """
+    @brief Set the debug mode
+
+    @param dmode  -1, 0 or 1
+    """
+    context = lib.grib_context_get_default()
+    lib.grib_context_set_debug(context, dmode)
+
+
 @require(defs_path=str)
 def grib_set_definitions_path(defs_path):
     """
@@ -2615,6 +2648,23 @@ def codes_extract_offsets_sizes(filepath, product_kind, is_strict=True):
     while i < num_messages:
         yield (offsets[i], sizes[i])
         i += 1
+
+
+@require(select=int)
+def codes_get_features(select=CODES_FEATURES_ALL):
+    """
+    @brief Get the list of library features.
+
+    @param select   One of CODES_FEATURES_ALL, CODES_FEATURES_ENABLED or CODES_FEATURES_DISABLED
+    @return         space-separated string of feature names
+    @exception CodesInternalError
+    """
+    ssize = 1024
+    result = ffi.new("char[]", ssize)
+    size_p = ffi.new("size_t *", ssize)
+    err = lib.codes_get_features(result, size_p, select)
+    GRIB_CHECK(err)
+    return ffi.string(result).decode(ENC)
 
 
 # -------------------------------
