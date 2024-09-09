@@ -51,7 +51,7 @@ jobs:
 
       ################################################################
       - run: ./scripts/wheel-linux.sh 3.8
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         name: Upload wheel 3.8
         with:
           name: wheel-manylinux2014-3.8
@@ -59,7 +59,7 @@ jobs:
 
       # ################################################################
       - run: ./scripts/wheel-linux.sh 3.9
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         name: Upload wheel 3.9
         with:
           name: wheel-manylinux2014-3.9
@@ -67,7 +67,7 @@ jobs:
 
       # ################################################################
       - run: ./scripts/wheel-linux.sh 3.10
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         name: Upload wheel 3.10
         with:
           name: wheel-manylinux2014-3.10
@@ -75,7 +75,7 @@ jobs:
 
       # ################################################################
       - run: ./scripts/wheel-linux.sh 3.11
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         name: Upload wheel 3.11
         with:
           name: wheel-manylinux2014-3.11
@@ -83,7 +83,7 @@ jobs:
 
       # ################################################################
       - run: ./scripts/wheel-linux.sh 3.12
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         name: Upload wheel 3.12
         with:
           name: wheel-manylinux2014-3.12

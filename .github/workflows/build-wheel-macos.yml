@@ -56,7 +56,7 @@ jobs:
 
     - run: ./scripts/wheel-macos.sh "3.9"
     - run: ls -l wheelhouse
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v4
       name: Upload wheel 3.9 ${{ matrix.arch_type }}
       with:
         name: wheel-macos-${{ matrix.arch_type }}-3.9
@@ -65,7 +65,7 @@ jobs:
 
     - run: ./scripts/wheel-macos.sh "3.10"
     - run: ls -l wheelhouse
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v4
       name: Upload wheel 3.10 ${{ matrix.arch_type }}
       with:
         name: wheel-macos-${{ matrix.arch_type }}-3.10
@@ -74,7 +74,7 @@ jobs:
 
     - run: ./scripts/wheel-macos.sh "3.11"
     - run: ls -l wheelhouse
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v4
       name: Upload wheel 3.11 ${{ matrix.arch_type }}
       with:
         name: wheel-macos-${{ matrix.arch_type }}-3.11
@@ -83,7 +83,7 @@ jobs:
 
     - run: ./scripts/wheel-macos.sh "3.12"
     - run: ls -l wheelhouse
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v4
       name: Upload wheel 3.12 ${{ matrix.arch_type }}
       with:
         name: wheel-macos-${{ matrix.arch_type }}-3.12
