@@ -14,19 +14,26 @@ __pycache__/
 build/
 develop-eggs/
 dist/
+dist_venv*/
 downloads/
 eggs/
 .eggs/
+gribapi/binary-versions.txt
+install/
 lib/
 lib64/
+libs
 parts/
 sdist/
 var/
+versions
 wheels/
+wheelhouse/
 *.egg-info/
 .installed.cfg
 *.egg
 MANIFEST
+build-binaries/
 
 # Installer logs
 pip-log.txt

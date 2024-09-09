@@ -2,6 +2,11 @@
 Changelog for eccodes-python
 ============================
 
+2.37.0 (2024-09-09)
+-------------------
+
+- bundle ecCodes binary library with the PyPi distribution, for Linux and MacOS
+
 1.7.1 (2024-06-19)
 --------------------
 
