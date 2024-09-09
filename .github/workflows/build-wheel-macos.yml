@@ -108,7 +108,7 @@ jobs:
 
     - uses: actions/checkout@v2
 
-    - uses: actions/download-artifact@v2
+    - uses: actions/download-artifact@v4
       with:
         name: wheel-macos-${{ matrix.arch_type }}-${{ matrix.python-version }}
 
@@ -136,7 +136,7 @@ jobs:
 
       - run: mkdir artifact-${{ matrix.arch_type }}-${{ matrix.python-version }}
 
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v4
         with:
           name: wheel-macos-${{ matrix.arch_type }}-${{ matrix.python-version }}
           path: artifact-${{ matrix.arch_type }}-${{ matrix.python-version }}

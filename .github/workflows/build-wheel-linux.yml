@@ -106,7 +106,7 @@ jobs:
 
       - uses: actions/checkout@v2
 
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v3
         with:
           name: wheel-manylinux2014-${{ matrix.python-version }}
   
@@ -135,7 +135,7 @@ jobs:
 
       - uses: actions/checkout@v2
 
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v3
         with:
           name: wheel-manylinux2014-${{ matrix.python-version }}
           path: artifact-${{ matrix.python-version }}
