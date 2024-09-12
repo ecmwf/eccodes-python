@@ -48,7 +48,6 @@ def _lookup(name):
 
 
 def find_binary_libs(name):
-
     name = _lookup(name)
     env_var = "ECCODES_PYTHON_USE_FINDLIBS"
     if int(os.environ.get(env_var, "0")):
