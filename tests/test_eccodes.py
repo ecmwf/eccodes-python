@@ -49,7 +49,7 @@ def test_codes_samples_path():
 
 
 def test_codes_set_debug():
-    if eccodes.codes_get_api_version(int) < 23700:
+    if eccodes.codes_get_api_version(int) < 23800:
         pytest.skip("ecCodes version too old")
     eccodes.codes_set_debug(-1)
     eccodes.codes_set_debug(0)
@@ -81,7 +81,7 @@ def test_version_info():
 
 
 def test_codes_get_features():
-    if eccodes.codes_get_api_version(int) < 23700:
+    if eccodes.codes_get_api_version(int) < 23800:
         pytest.skip("ecCodes version too old")
 
     features = eccodes.codes_get_features(eccodes.CODES_FEATURES_ALL)
