@@ -1,11 +1,31 @@
+# (C) Copyright 2024- ECMWF.
+#
+# This software is licensed under the terms of the Apache Licence Version 2.0
+# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+# In applying this licence, ECMWF does not waive the privileges and immunities
+# granted to it by virtue of its status as an intergovernmental organisation
+# nor does it submit to any jurisdiction.
+
 name: cd
 
 on:
+  # Trigger the workflow manually
+  workflow_dispatch: ~
+
   push:
     tags:
       - '**'
-
+    paths:
+      - '.github/workflows/cd.yml'
 jobs:
+  wheel-linux:
+    uses: ./.github/workflows/build-wheel-linux.yml
+    secrets: inherit
+  wheel-macos:
+    uses: ./.github/workflows/build-wheel-macos.yml
+    secrets: inherit
   pypi:
+    needs: [wheel-linux, wheel-macos]
     uses: ecmwf-actions/reusable-workflows/.github/workflows/cd-pypi.yml@v2
     secrets: inherit
+

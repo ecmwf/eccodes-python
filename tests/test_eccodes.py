@@ -603,7 +603,7 @@ def test_grib_ecc_1007():
 
 def test_grib_set_bitmap():
     gid = eccodes.codes_grib_new_from_samples("GRIB2")
-    # Note: np.Infinity was removed in the NumPy 2.0 release
+    # Note: np.Infinity was removed in the NumPy 2.0 release. Use np.inf instead
     missing = np.inf
     eccodes.codes_set(gid, "bitmapPresent", 1)
     eccodes.codes_set(gid, "missingValue", missing)
