@@ -73,15 +73,15 @@ else:
     shared_files = []
 
 
-install_requires = ["numpy"]
-if sys.version_info < (3, 7):
-    install_requires = ["numpy<1.20"]
-elif sys.version_info < (3, 8):
-    install_requires = ["numpy<1.22"]
-elif sys.version_info < (3, 9):
-    install_requires = ["numpy<1.25"]
-
-install_requires += ["attrs", "cffi", "findlibs"]
+install_requires = [
+    "numpy<1.20 ; python_version < '3.7'",
+    "numpy<1.22 ; python_version >= '3.7' and python_version < '3.8'",
+    "numpy<1.25 ; python_version >= '3.8' and python_version < '3.9'",
+    "numpy ; python_version >= '3.9'",
+    "attrs",
+    "cffi",
+    "findlibs",
+]
 
 setuptools.setup(
     name="eccodes",
