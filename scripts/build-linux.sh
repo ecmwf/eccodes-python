@@ -15,6 +15,9 @@ chmod -R a+w .
 
 pwd
 
+GIT_OPENJPEG=https://github.com/uclouvain/openjpeg
+OPENJPEG_VERSION=2.5.2
+
 # To allow the manylinux image to continue to use yum afer EOL. See, for example:
 #   https://github.com/zanmato1984/arrow/commit/1fe15e06fac23983e5f890c2d749d9ccecd2ca15
 #   https://github.com/apache/arrow/issues/43119
@@ -24,7 +27,7 @@ sudo sed -i s/^mirrorlist=http/#mirrorlist=http/g /etc/yum.repos.d/*.repo
 
 source scripts/common.sh
 
-for p in libaec-devel libpng-devel gobject-introspection-devel openjpeg-devel
+for p in libaec-devel libpng-devel gobject-introspection-devel
 do
     sudo yum install -y $p
     # There may be a better way
@@ -50,6 +53,21 @@ PKG_CONFIG_PATH=/usr/lib64/pkgconfig:/usr/lib/pkgconfig:$PKG_CONFIG_PATH
 PKG_CONFIG_PATH=$TOPDIR/install/lib/pkgconfig:$TOPDIR/install/lib64/pkgconfig:$PKG_CONFIG_PATH
 LD_LIBRARY_PATH=$TOPDIR/install/lib:$TOPDIR/install/lib64:$LD_LIBRARY_PATH
 
+# Build openjpeg
+# - because the one supplied with 'yum' is built with fast-math, which interferes with Python
+
+[[ -d src/openjpeg ]] || git clone --branch $OPENJPEG_VERSION --depth=1 $GIT_OPENJPEG src/openjpeg
+
+mkdir -p $TOPDIR/build-binaries/openjpeg
+cd $TOPDIR/build-binaries/openjpeg
+
+cmake \
+    $TOPDIR/src/openjpeg/ \
+    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+    -DCMAKE_INSTALL_PREFIX=$TOPDIR/install   
+
+cd $TOPDIR
+cmake --build build-binaries/openjpeg --target install
 
 # Build eccodes
 
@@ -61,7 +79,10 @@ $TOPDIR/src/ecbuild/bin/ecbuild \
     -DCMAKE_BUILD_TYPE=RelWithDebInfo \
     -DENABLE_PYTHON=0 \
     -DENABLE_BUILD_TOOLS=0 \
+    -DENABLE_JPG=1 \
     -DENABLE_JPG_LIBJASPER=0 \
+    -DENABLE_JPG_LIBOPENJPEG=1 \
+    -DOPENJPEG_DIR=$TOPDIR/install \
     -DENABLE_MEMFS=1 \
     -DENABLE_INSTALL_ECCODES_DEFINITIONS=0 \
     -DENABLE_INSTALL_ECCODES_SAMPLES=0 \
