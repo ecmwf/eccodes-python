@@ -16,7 +16,7 @@ chmod -R a+w .
 pwd
 
 GIT_OPENJPEG=https://github.com/uclouvain/openjpeg
-OPENJPEG_VERSION=2.5.2
+OPENJPEG_VERSION=v2.5.2
 
 # To allow the manylinux image to continue to use yum afer EOL. See, for example:
 #   https://github.com/zanmato1984/arrow/commit/1fe15e06fac23983e5f890c2d749d9ccecd2ca15
