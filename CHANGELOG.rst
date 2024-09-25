@@ -2,7 +2,7 @@
 Changelog for eccodes-python
 ============================
 
-2.38.0 (2024-MM-DD)
+2.38.0 (2024-09-25)
 --------------------
 
 - ECC-1790: Add codes_get_offset
