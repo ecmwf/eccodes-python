@@ -19,6 +19,8 @@ on:
   #   types: [eccodes-updated]
 
   push:
+    tags-ignore:
+    - '**'
     paths:
     - 'scripts/common.sh'
     - 'scripts/select-python-macos.sh'
