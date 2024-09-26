@@ -119,7 +119,7 @@ jobs:
   
   deploy:
 
-    #if: ${{ github.ref_type == 'tag' || github.event_name == 'release' }}
+    if: ${{ github.ref_type == 'tag' || github.event_name == 'release' }}
 
     needs: [test, build]
 
@@ -154,4 +154,4 @@ jobs:
           twine upload artifact-${{ matrix.arch_type }}-${{ matrix.python-version }}/*.whl
         env:
           TWINE_USERNAME: __token__
-          TWINE_PASSWORD: ${{ secrets.PYPI_TEST_API_TOKEN }}
+          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}

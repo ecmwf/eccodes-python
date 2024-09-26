@@ -24,8 +24,8 @@ jobs:
   wheel-macos:
     uses: ./.github/workflows/build-wheel-macos.yml
     secrets: inherit
-  #pypi:
-  #  needs: [wheel-linux, wheel-macos]
-  #  uses: ecmwf-actions/reusable-workflows/.github/workflows/cd-pypi.yml@v2
-  #  secrets: inherit
+  pypi:
+    needs: [wheel-linux, wheel-macos]
+    uses: ecmwf-actions/reusable-workflows/.github/workflows/cd-pypi.yml@v2
+    secrets: inherit
 
