@@ -2,6 +2,12 @@
 Changelog for eccodes-python
 ============================
 
+2.38.1 (2024-09-27)
+--------------------
+
+- ECC-1923: ecCodes binary wheel can affect floating-point computations in Python
+
+
 2.38.0 (2024-09-25)
 --------------------
 
