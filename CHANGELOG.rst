@@ -2,6 +2,11 @@
 Changelog for eccodes-python
 ============================
 
+2.38.3 (2024-10-17)
+--------------------
+
+- Update version to be the same as the ecCodes library
+
 2.38.1 (2024-09-26)
 --------------------
 
