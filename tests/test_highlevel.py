@@ -59,6 +59,7 @@ def test_message_set_plain():
         message.set("centre", "ecmf")
         vals = np.arange(message.get("numberOfValues"), dtype=np.float32)
         message.set_array("values", vals)
+        message.set("values", vals)
         message.set_missing(missing_key)
         assert message.get("centre") == "ecmf"
         assert np.all(message.get("values") == vals)
