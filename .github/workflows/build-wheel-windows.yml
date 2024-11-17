@@ -1,0 +1,184 @@
+# (C) Copyright 2024- ECMWF.
+#
+# This software is licensed under the terms of the Apache Licence Version 2.0
+# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+# In applying this licence, ECMWF does not waive the privileges and immunities
+# granted to it by virtue of its status as an intergovernmental organisation
+# nor does it submit to any jurisdiction.
+
+
+name: Build Windows
+
+on:
+  # Trigger the workflow manually
+  workflow_dispatch: ~
+
+  # Allow to be called from another workflow
+  workflow_call: ~
+
+  # repository_dispatch:
+  #   types: [eccodes-updated]
+
+  push:
+    tags-ignore:
+    - '**'
+    paths:
+    - 'scripts/common.sh'
+    - 'scripts/select-python-windows.sh'
+    - 'scripts/wheel-windows.sh'
+    - 'scripts/build-windows.sh'
+    - 'scripts/test-windows.sh'
+    - 'scripts/copy-licences.py'
+    - '.github/workflows/build-wheel-windows.yml'
+
+
+jobs:
+
+  build:
+
+    # if: false  # for temporarily disabling for debugging
+
+    runs-on: windows-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        architecture: ["x64"]
+
+    defaults:
+      run:
+        shell: bash
+
+
+    name: Build on ${{ matrix.architecture }}
+    env:
+      WINARCH: ${{ matrix.architecture }}
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: seanmiddleditch/gha-setup-vsdevenv@master
+        with:
+          arch: ${{ matrix.architecture }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.8
+          architecture: ${{ matrix.architecture }}
+
+      - run: ./scripts/build-windows.sh
+        env:
+          WINARCH: ${{ matrix.architecture }}
+
+
+    ################################################################
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.8
+          architecture: ${{ matrix.architecture }}
+
+      - run: ./scripts/wheel-windows.sh 3.8
+      - uses: actions/upload-artifact@v4
+        name: Upload wheel 3.8
+        with:
+          name: wheel-windows-3.8-${{ matrix.architecture }}
+          path: wheelhouse/*.whl
+
+    ################################################################
+
+  test:
+    needs: build
+    runs-on: windows-latest
+    strategy:
+      fail-fast: true
+      matrix:
+        python-version: ["3.8"]
+        architecture: ["x64"]
+
+    defaults:
+      run:
+        shell: bash
+
+    name: Test with Python ${{ matrix.python-version }} ${{ matrix.architecture }}
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+        architecture: ${{ matrix.architecture }}
+
+    - uses: actions/download-artifact@v4
+      with:
+        name: wheel-windows-${{ matrix.python-version }}-${{ matrix.architecture }}
+
+    - run: pip install *.whl
+
+    - run: pip install -r tests/requirements.txt
+
+    - run: pip freeze
+
+    - name: Get some data
+      run: |
+        curl -L https://get.ecmwf.int/repository/test-data/metview/gallery/2m_temperature.grib  -o data.grib
+        curl -L https://github.com/ecmwf/climetlab/raw/main/docs/examples/test.grib -o climetlab.grib
+        curl -L https://github.com/ecmwf/climetlab/raw/main/docs/examples/test.nc -o climetlab.nc
+        ls -l
+      working-directory: tests
+
+    - run: pytest --verbose -s
+      working-directory: tests
+      timeout-minutes: 2
+
+
+  deploy:
+    if: ${{ github.event_name == 'release' }}
+
+    needs: [test, build]
+
+    name: Deploy wheel ${{ matrix.python-version }} ${{ matrix.architecture }}
+
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      matrix:
+        python-version: ["3.8"]
+        architecture: ["x64"]
+
+    steps:
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - run: pip install twine
+
+    - uses: actions/download-artifact@v4
+      with:
+        name: wheel-windows-${{ matrix.python-version }}-${{ matrix.architecture }}
+
+    - run: twine upload *.whl
+      env:
+        TWINE_USERNAME: __token__
+        TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+
+  notify:
+    if: ${{ github.event_name == 'release' }}
+
+    # This is done here because the windows build is the slowest
+    name: Notify universal
+
+    needs: deploy
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: mvasigh/dispatch-action@main
+      with:
+        token: ${{ secrets.NOTIFY_ECMWFLIBS }}
+        repo: ecmwflibs
+        owner: ecmwf
+        event_type: ecmwflibs-windows-uploaded
