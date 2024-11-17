@@ -97,10 +97,10 @@ cmake --build build-binaries/eccodes --target install
 # Create wheel
 
 rm -fr dist wheelhouse eccodes/share
-python tools/copy-dlls.py eccodes/
+python scripts/copy-dlls.py eccodes/
 pip install -r tools/requirements.txt
 find eccodes -name '*.dll' > libs
-python ./tools/copy-licences.py libs
+python ./scripts/copy-licences.py libs
 
 mkdir -p install/include
 
