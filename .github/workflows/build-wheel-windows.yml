@@ -106,10 +106,10 @@ jobs:
       - name: Set up Python 3.10
         uses: actions/setup-python@v4
         with:
-          python-version: 3.10
+          python-version: "3.10"
           architecture: ${{ matrix.architecture }}
 
-      - run: ./scripts/wheel-windows.sh 3.10
+      - run: ./scripts/wheel-windows.sh "3.10"
       - uses: actions/upload-artifact@v4
         name: Upload wheel 3.10
         with:
@@ -121,10 +121,10 @@ jobs:
       - name: Set up Python 3.11
         uses: actions/setup-python@v4
         with:
-          python-version: 3.11
+          python-version: "3.11"
           architecture: ${{ matrix.architecture }}
 
-      - run: ./scripts/wheel-windows.sh 3.11
+      - run: ./scripts/wheel-windows.sh "3.11"
       - uses: actions/upload-artifact@v4
         name: Upload wheel 3.11
         with:
@@ -136,10 +136,10 @@ jobs:
       - name: Set up Python 3.12
         uses: actions/setup-python@v4
         with:
-          python-version: 3.12
+          python-version: "3.12"
           architecture: ${{ matrix.architecture }}
 
-      - run: ./scripts/wheel-windows.sh 3.12
+      - run: ./scripts/wheel-windows.sh "3.12"
       - uses: actions/upload-artifact@v4
         name: Upload wheel 3.12
         with:
