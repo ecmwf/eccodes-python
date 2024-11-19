@@ -17,4 +17,3 @@ python setup.py bdist_wheel
 mv dist wheelhouse
 
 ls -l wheelhouse
-ls -l wheelhouse/dist
