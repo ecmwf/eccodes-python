@@ -197,7 +197,7 @@ jobs:
 
 
   deploy:
-    if: ${{ github.event_name == 'release' }}
+    #if: ${{ github.event_name == 'release' }}
 
     needs: [test, build]
 
@@ -222,24 +222,7 @@ jobs:
       with:
         name: wheel-windows-${{ matrix.python-version }}-${{ matrix.architecture }}
 
-    - run: twine upload *.whl
+    - run: twine upload --repository testpypi *.whl
       env:
         TWINE_USERNAME: __token__
-        TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
-
-  notify:
-    if: ${{ github.event_name == 'release' }}
-
-    # This is done here because the windows build is the slowest
-    name: Notify universal
-
-    needs: deploy
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: mvasigh/dispatch-action@main
-      with:
-        token: ${{ secrets.NOTIFY_ECMWFLIBS }}
-        repo: ecmwflibs
-        owner: ecmwf
-        event_type: ecmwflibs-windows-uploaded
+        TWINE_PASSWORD: ${{ secrets.PYPI_TEST_API_TOKEN }}
