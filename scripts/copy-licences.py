@@ -52,6 +52,11 @@ ENTRIES = {
         "copying": "https://jpegclub.org/reference/libjpeg-license/",
         "html": True,
     },
+    "libzlib1": {
+        "home": "https://www.zlib.net/",
+        "copying": "https://www.zlib.net/zlib_license.html",
+        "html": True,
+    },
 }
 
 PATTERNS = {
