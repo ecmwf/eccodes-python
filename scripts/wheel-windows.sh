@@ -13,7 +13,7 @@ set -eaux
 pip install wheel setuptools
 
 rm -fr dist wheelhouse ecmwflibs.egg-info build
-python setup.py bdist_wheel
+python setup.py --binary-wheel bdist_wheel
 mv dist wheelhouse
 
 ls -l wheelhouse
