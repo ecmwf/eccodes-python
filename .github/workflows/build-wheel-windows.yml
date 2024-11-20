@@ -191,7 +191,7 @@ jobs:
         ls -l
       working-directory: tests
 
-    - run: pytest --verbose -s
+    - run: ECCODES_PYTHON_TRACE_LIB_SEARCH=1 pytest --verbose -s
       working-directory: tests
       timeout-minutes: 2
 
