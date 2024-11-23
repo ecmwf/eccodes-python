@@ -16,18 +16,14 @@ on:
   # Allow to be called from another workflow
   workflow_call: ~
 
-  # repository_dispatch:
-  #   types: [eccodes-updated]
-
   push:
     tags-ignore:
     - '**'
     paths:
     - 'scripts/common.sh'
-    - 'scripts/select-python-windows.sh'
     - 'scripts/wheel-windows.sh'
     - 'scripts/build-windows.sh'
-    - 'scripts/test-windows.sh'
+    - 'scripts/copy-dlls.py'
     - 'scripts/copy-licences.py'
     - '.github/workflows/build-wheel-windows.yml'
 
@@ -183,21 +179,13 @@ jobs:
 
     - run: pip freeze
 
-    - name: Get some data
-      run: |
-        curl -L https://get.ecmwf.int/repository/test-data/metview/gallery/2m_temperature.grib  -o data.grib
-        curl -L https://github.com/ecmwf/climetlab/raw/main/docs/examples/test.grib -o climetlab.grib
-        curl -L https://github.com/ecmwf/climetlab/raw/main/docs/examples/test.nc -o climetlab.nc
-        ls -l
-      working-directory: tests
-
     - run: ECCODES_PYTHON_TRACE_LIB_SEARCH=1 pytest --verbose -s
       working-directory: tests
       timeout-minutes: 2
 
 
   deploy:
-    #if: ${{ github.event_name == 'release' }}
+    if: ${{ github.ref_type == 'tag' || github.event_name == 'release' }}
 
     needs: [test, build]
 
@@ -222,7 +210,7 @@ jobs:
       with:
         name: wheel-windows-${{ matrix.python-version }}-${{ matrix.architecture }}
 
-    - run: twine upload --repository testpypi *.whl
+    - run: twine upload *.whl
       env:
         TWINE_USERNAME: __token__
-        TWINE_PASSWORD: ${{ secrets.PYPI_TEST_API_TOKEN }}
+        TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
