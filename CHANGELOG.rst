@@ -2,9 +2,10 @@
 Changelog for eccodes-python
 ============================
 
-2.39.0 (2024-11-dd)
+2.39.0 (2024-11-25)
 --------------------
 
+- ECC-1972: Support Windows with binary wheel
 - Update to artifact actions v4
 
 2.38.3 (2024-10-17)
