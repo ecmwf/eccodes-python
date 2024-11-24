@@ -1,0 +1,216 @@
+# (C) Copyright 2024- ECMWF.
+#
+# This software is licensed under the terms of the Apache Licence Version 2.0
+# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+# In applying this licence, ECMWF does not waive the privileges and immunities
+# granted to it by virtue of its status as an intergovernmental organisation
+# nor does it submit to any jurisdiction.
+
+
+name: Build Windows
+
+on:
+  # Trigger the workflow manually
+  workflow_dispatch: ~
+
+  # Allow to be called from another workflow
+  workflow_call: ~
+
+  push:
+    tags-ignore:
+    - '**'
+    paths:
+    - 'scripts/common.sh'
+    - 'scripts/wheel-windows.sh'
+    - 'scripts/build-windows.sh'
+    - 'scripts/copy-dlls.py'
+    - 'scripts/copy-licences.py'
+    - '.github/workflows/build-wheel-windows.yml'
+
+
+jobs:
+
+  build:
+
+    # if: false  # for temporarily disabling for debugging
+
+    runs-on: windows-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        architecture: ["x64"]
+
+    defaults:
+      run:
+        shell: bash
+
+
+    name: Build on ${{ matrix.architecture }}
+    env:
+      WINARCH: ${{ matrix.architecture }}
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: seanmiddleditch/gha-setup-vsdevenv@master
+        with:
+          arch: ${{ matrix.architecture }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.8
+          architecture: ${{ matrix.architecture }}
+
+      - run: ./scripts/build-windows.sh
+        env:
+          WINARCH: ${{ matrix.architecture }}
+
+
+    ################################################################
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.8
+          architecture: ${{ matrix.architecture }}
+
+      - run: ./scripts/wheel-windows.sh 3.8
+      - uses: actions/upload-artifact@v4
+        name: Upload wheel 3.8
+        with:
+          name: wheel-windows-3.8-${{ matrix.architecture }}
+          path: wheelhouse/*.whl
+
+    ################################################################
+
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.9
+          architecture: ${{ matrix.architecture }}
+
+      - run: ./scripts/wheel-windows.sh 3.9
+      - uses: actions/upload-artifact@v4
+        name: Upload wheel 3.9
+        with:
+          name: wheel-windows-3.9-${{ matrix.architecture }}
+          path: wheelhouse/*.whl
+
+    ################################################################
+
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+          architecture: ${{ matrix.architecture }}
+
+      - run: ./scripts/wheel-windows.sh "3.10"
+      - uses: actions/upload-artifact@v4
+        name: Upload wheel 3.10
+        with:
+          name: wheel-windows-3.10-${{ matrix.architecture }}
+          path: wheelhouse/*.whl
+
+    ################################################################
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+          architecture: ${{ matrix.architecture }}
+
+      - run: ./scripts/wheel-windows.sh "3.11"
+      - uses: actions/upload-artifact@v4
+        name: Upload wheel 3.11
+        with:
+          name: wheel-windows-3.11-${{ matrix.architecture }}
+          path: wheelhouse/*.whl
+
+    ################################################################
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.12"
+          architecture: ${{ matrix.architecture }}
+
+      - run: ./scripts/wheel-windows.sh "3.12"
+      - uses: actions/upload-artifact@v4
+        name: Upload wheel 3.12
+        with:
+          name: wheel-windows-3.12-${{ matrix.architecture }}
+          path: wheelhouse/*.whl
+
+    ################################################################
+
+
+  test:
+    needs: build
+    runs-on: windows-latest
+    strategy:
+      fail-fast: true
+      matrix:
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
+        architecture: ["x64"]
+
+    defaults:
+      run:
+        shell: bash
+
+    name: Test with Python ${{ matrix.python-version }} ${{ matrix.architecture }}
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+        architecture: ${{ matrix.architecture }}
+
+    - uses: actions/download-artifact@v4
+      with:
+        name: wheel-windows-${{ matrix.python-version }}-${{ matrix.architecture }}
+
+    - run: pip install *.whl
+
+    - run: pip install -r tests/requirements.txt
+
+    - run: pip freeze
+
+    - run: ECCODES_PYTHON_TRACE_LIB_SEARCH=1 pytest --verbose -s
+      working-directory: tests
+      timeout-minutes: 2
+
+
+  deploy:
+    if: ${{ github.ref_type == 'tag' || github.event_name == 'release' }}
+
+    needs: [test, build]
+
+    name: Deploy wheel ${{ matrix.python-version }} ${{ matrix.architecture }}
+
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      matrix:
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
+        architecture: ["x64"]
+
+    steps:
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - run: pip install twine
+
+    - uses: actions/download-artifact@v4
+      with:
+        name: wheel-windows-${{ matrix.python-version }}-${{ matrix.architecture }}
+
+    - run: twine upload *.whl
+      env:
+        TWINE_USERNAME: __token__
+        TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}

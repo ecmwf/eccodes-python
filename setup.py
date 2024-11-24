@@ -68,6 +68,11 @@ if "--binary-wheel" in sys.argv:
     shared_files = ["versions.txt"]
     shared_files += [x[len("eccodes/") :] for x in shared("eccodes/copying")]
 
+    if os.name == "nt":
+        for n in os.listdir("eccodes"):
+            if n.endswith(".dll"):
+                shared_files.append(n)
+
 else:
     ext_modules = []
     shared_files = []
