@@ -105,16 +105,13 @@ class Message:
         if check_values:
             # Check values just set
             for name, value in key_values.items():
-                cast_value = value
                 if type(value) in _TYPES_MAP.values():
                     saved_value = self.get(f"{name}:{type(value).__name__}")
                 else:
                     saved_value = self.get(name)
-                    if not isinstance(value, type(saved_value)):
-                        cast_value = type(saved_value)(value)
-                if not np.all(saved_value == cast_value):
+                if not np.all(saved_value == value):
                     raise ValueError(
-                        f"Unexpected retrieved value {saved_value} for key {name}. Expected {cast_value}"
+                        f"Unexpected retrieved value {saved_value} for key {name}. Expected {value}"
                     )
 
     def get_array(self, name):
