@@ -74,7 +74,7 @@ https://confluence.ecmwf.int/display/ECC/ecCodes+installation
 You may run a simple selfcheck command to ensure that your system is set up correctly::
 
     $ python -m eccodes selfcheck
-    Found: ecCodes v2.37.0.
+    Found: ecCodes v2.39.0.
     Your system is ready.
 
 
