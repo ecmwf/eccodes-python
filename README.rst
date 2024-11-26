@@ -126,15 +126,16 @@ https://github.com/ecmwf/eccodes-python
 
 Please see the CONTRIBUTING.rst document for the best way to help.
 
-Maintainer:
+Maintainers:
 
 - `Shahram Najm <https://github.com/shahramn>`_ - `ECMWF <https://ecmwf.int>`_
+- `Eugen Betke <https://github.com/joobog>`_ - `ECMWF <https://ecmwf.int>`_
 
 Contributors:
 
 - `Alessandro Amici <https://github.com/alexamici>`_ - `B-Open <https://bopen.eu>`_
 
-See also the list of `contributors <https://github.com/ecmwf/eccodes-python/contributors>`_
+See also the list of other `contributors <https://github.com/ecmwf/eccodes-python/contributors>`_
 who participated in this project.
 
 .. |copy|   unicode:: U+000A9 .. COPYRIGHT SIGN
