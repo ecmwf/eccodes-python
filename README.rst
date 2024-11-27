@@ -133,6 +133,7 @@ Maintainers:
 
 Contributors:
 
+- `Iain Russell <https://github.com/iainrussell>`_ - `ECMWF <https://ecmwf.int>`_
 - `Alessandro Amici <https://github.com/alexamici>`_ - `B-Open <https://bopen.eu>`_
 
 See also the list of other `contributors <https://github.com/ecmwf/eccodes-python/contributors>`_
