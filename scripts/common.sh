@@ -14,7 +14,7 @@ GIT_ECBUILD=https://github.com/ecmwf/ecbuild.git
 ECBUILD_VERSION=master
 
 GIT_ECCODES=https://github.com/ecmwf/eccodes.git
-ECCODES_VERSION=2.39.1
+ECCODES_VERSION=hotfix/2.39.1
 ECCODES_COMMON_CMAKE_OPTIONS="-DENABLE_PNG=1 -DENABLE_JPG=1 -DENABLE_NETCDF=0 -DENABLE_EXAMPLES=0 -DENABLE_ECCODES_THREADS=1"
 
 GIT_AEC=https://github.com/MathisRosenhauer/libaec.git
