@@ -2,7 +2,7 @@
 Changelog for eccodes-python
 ============================
 
-2.39.1 (2024-mm-dd)
+2.39.1 (2024-12-10)
 --------------------
 
 - Build wheel with thread-safety enabled
