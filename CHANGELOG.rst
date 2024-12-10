@@ -7,6 +7,11 @@ Changelog for eccodes-python
 
 - GitHub pull request #109: Allow setting of array in highlevel.Message.set
 
+2.39.1 (2024-12-10)
+--------------------
+
+- Build wheel with thread-safety enabled
+
 2.39.0 (2024-11-25)
 --------------------
 
