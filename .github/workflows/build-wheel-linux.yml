@@ -7,7 +7,7 @@
 # nor does it submit to any jurisdiction.
 
 
-name: Build Linux
+name: Build Python Wheel for Linux
 
 on:
   # Trigger the workflow manually
@@ -16,31 +16,13 @@ on:
   # Allow to be called from another workflow
   workflow_call: ~
 
+  # TODO automation trigger
   # repository_dispatch:
   #   types: [eccodes-updated]
 
-  push:
-    tags-ignore:
-    - '**'
-    paths:
-    - 'scripts/common.sh'
-    - 'scripts/select-python-linux.sh'
-    - 'scripts/wheel-linux.sh'
-    - 'scripts/build-linux.sh'
-    - 'scripts/test-linux.sh'
-    - 'scripts/copy-licences.py'
-    - '.github/workflows/build-wheel-linux.yml'
-
-# to allow the action to run on the manylinux docker image based on CentOS 7
-env:
-  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
-
 jobs:
-
-  build:
-
-    # if: false  # for temporarily disabling for debugging
-
+  build-python-wheel:
+    name: Build manylinux_2_28
     runs-on: [self-hosted, Linux, platform-builder-Rocky-8.6]
     container:
       image: dockcross/manylinux_2_28-x64:20250109-7bf589c
@@ -152,11 +134,30 @@ jobs:
           name: wheel-manylinux2014-${{ matrix.python-version }}
           path: artifact-${{ matrix.python-version }}
 
+  build-wrapper-wheel:
+    name: Build manylinux_2_28
+    runs-on: [self-hosted, Linux, platform-builder-Rocky-8.6]
+    container:
+      image: eccr.ecmwf.int/wheelmaker/2_28:latest
+      credentials:
+        username: ${{ secrets.ECMWF_DOCKER_REGISTRY_USERNAME }}
+        password: ${{ secrets.ECMWF_DOCKER_REGISTRY_ACCESS_TOKEN }}
+    steps:
+        # TODO convert this to be matrix-friendly. Note it's a bit tricky since
+        # we'd ideally not reexecute the compile step multiple times, but it
+        # (non-essentially) depends on a matrix-based step
+        # NOTE we dont use action checkout because it doesnt cleanup after itself correctly
+      - run: git clone --depth=1 --branch="${GITHUB_REF#refs/heads/}" https://github.com/$GITHUB_REPOSITORY /proj
+      - run: cd /proj && /buildscripts/prepare_deps.sh ./buildconfig 3.11
       - run: |
-          source ./scripts/select-python-linux.sh 3.10
-          pip3 install twine
-          ls -l artifact-${{ matrix.python-version }}/*.whl
-          twine upload artifact-${{ matrix.python-version }}/*.whl
+           cd /proj
+           export PYTHONPATH=/buildscripts/; export LIBDIR=/tmp/prereqs/eccodeslib/lib64; export INCDIR=/tmp/prereqs/eccodeslib/include
+           uv run --python python3.11 python -m build --installer uv --wheel .
+      - run: mkdir -p /build/wheel && mv /proj/dist/*whl /build/wheel
+      - run: cd /proj && /buildscripts/test-wheel.sh ./python_wrapper/buildconfig 3.11 /build/wheel/*whl
+      - run: cd /proj && /buildscripts/upload-pypi.sh /build/wheel/*whl
         env:
           TWINE_USERNAME: __token__
           TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+        # NOTE temporary thing until all the mess gets cleared
+      - run: rm -rf ./* ./.git ./.github
