@@ -16,16 +16,16 @@ import setuptools
 from setup_utils import parse_dependencies, ext_kwargs
 
 
-if sys.version_info < (3, 7):
-    install_requires = ["numpy<1.20"]
-elif sys.version_info < (3, 8):
-    install_requires = ["numpy<1.22"]
-elif sys.version_info < (3, 9):
-    install_requires = ["numpy<1.25"]
-else:
-    install_requires = ["numpy"]
+install_requires = [
+    "numpy<1.20 ; python_version < '3.7'",
+    "numpy<1.22 ; python_version >= '3.7' and python_version < '3.8'",
+    "numpy<1.25 ; python_version >= '3.8' and python_version < '3.9'",
+    "numpy ; python_version >= '3.9'",
+    "attrs",
+    "cffi",
+    "findlibs", # TODO add lb here once released
+]
 
-install_requires += ["attrs", "cffi", "findlibs"]
 ext_modules = [
     setuptools.Extension(
         "eccodes._eccodes",
