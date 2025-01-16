@@ -92,6 +92,15 @@ jobs:
         path: wheelhouse/*.whl
     - run: rm -fr wheelhouse
 
+    - run: ./scripts/wheel-macos.sh "3.13"
+    - run: ls -l wheelhouse
+    - uses: actions/upload-artifact@v4
+      name: Upload wheel 3.13 ${{ matrix.arch_type }}
+      with:
+        name: wheel-macos-${{ matrix.arch_type }}-3.13
+        path: wheelhouse/*.whl
+    - run: rm -fr wheelhouse
+
   test:
     needs: build
 
@@ -100,7 +109,7 @@ jobs:
       max-parallel: 1
       matrix:
         arch_type: [ARM64, X64]
-        python-version: ["3.9", "3.10", "3.11", "3.12"]
+        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13"]
 
     runs-on: [self-hosted, macOS, "${{ matrix.arch_type }}"]
 
@@ -130,13 +139,15 @@ jobs:
       max-parallel: 1
       matrix:
         arch_type: [ARM64, X64]
-        python-version: ["3.9", "3.10", "3.11", "3.12"]
+        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13"]
 
     runs-on: [self-hosted, macOS, "${{ matrix.arch_type }}"]
 
     steps:
 
       - run: mkdir artifact-${{ matrix.arch_type }}-${{ matrix.python-version }}
+
+      - uses: actions/checkout@v4
 
       - uses: actions/download-artifact@v4
         with:

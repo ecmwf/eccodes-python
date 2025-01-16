@@ -42,7 +42,9 @@ jobs:
     # if: false  # for temporarily disabling for debugging
 
     runs-on: [self-hosted, Linux, platform-builder-Rocky-8.6]
-    container: dockcross/manylinux_2_28-x64:latest
+    container:
+      image: dockcross/manylinux_2_28-x64:latest
+      #options: --pull always
 
     name: Build manylinux_2_28-x64
 
@@ -91,6 +93,14 @@ jobs:
           name: wheel-manylinux2014-3.12
           path: wheelhouse/*.whl
 
+      # ################################################################
+      - run: ./scripts/wheel-linux.sh 3.13
+      - uses: actions/upload-artifact@v4
+        name: Upload wheel 3.13
+        with:
+          name: wheel-manylinux2014-3.13
+          path: wheelhouse/*.whl
+
   test:
 
     needs: build
@@ -98,7 +108,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix: # We don't test 3.6, as it is not supported anymore by github actions
-        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13"]
 
     runs-on: [self-hosted, Linux, platform-builder-Rocky-8.6]
 
@@ -122,7 +132,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13"]
 
     needs: [test, build]
 
