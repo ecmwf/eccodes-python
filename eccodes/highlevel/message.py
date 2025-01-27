@@ -1,6 +1,8 @@
 import io
 from contextlib import contextmanager
 
+import numpy as np
+
 import eccodes
 
 _TYPES_MAP = {
@@ -95,23 +97,21 @@ class Message:
 
         for name, value in key_values.items():
             with raise_keyerror(name):
-                eccodes.codes_set(self._handle, name, value)
+                if np.ndim(value) > 0:
+                    eccodes.codes_set_array(self._handle, name, value)
+                else:
+                    eccodes.codes_set(self._handle, name, value)
 
         if check_values:
             # Check values just set
             for name, value in key_values.items():
-                cast_value = value
-                if isinstance(value, str):
-                    saved_value = eccodes.codes_get_string(self._handle, name)
-                elif isinstance(value, int):
-                    saved_value = eccodes.codes_get_long(self._handle, name)
+                if type(value) in _TYPES_MAP.values():
+                    saved_value = self.get(f"{name}:{type(value).__name__}")
                 else:
                     saved_value = self.get(name)
-                    if not isinstance(value, type(saved_value)):
-                        cast_value = type(saved_value)(value)
-                if saved_value != cast_value:
+                if not np.all(saved_value == value):
                     raise ValueError(
-                        f"Unexpected retrieved value {saved_value} for key {name}. Expected {cast_value}"
+                        f"Unexpected retrieved value {saved_value} for key {name}. Expected {value}"
                     )
 
     def get_array(self, name):

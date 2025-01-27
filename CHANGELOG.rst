@@ -2,6 +2,13 @@
 Changelog for eccodes-python
 ============================
 
+2.39.2 (2025-01-27)
+--------------------
+
+- GitHub pull request #109: Allow setting of array in highlevel.Message.set
+- Add support for Python version 3.13
+
+
 2.39.1 (2024-12-10)
 --------------------
 

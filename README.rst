@@ -74,7 +74,7 @@ https://confluence.ecmwf.int/display/ECC/ecCodes+installation
 You may run a simple selfcheck command to ensure that your system is set up correctly::
 
     $ python -m eccodes selfcheck
-    Found: ecCodes v2.37.0.
+    Found: ecCodes v2.39.0.
     Your system is ready.
 
 
@@ -126,15 +126,17 @@ https://github.com/ecmwf/eccodes-python
 
 Please see the CONTRIBUTING.rst document for the best way to help.
 
-Maintainer:
+Maintainers:
 
 - `Shahram Najm <https://github.com/shahramn>`_ - `ECMWF <https://ecmwf.int>`_
+- `Eugen Betke <https://github.com/joobog>`_ - `ECMWF <https://ecmwf.int>`_
 
 Contributors:
 
+- `Iain Russell <https://github.com/iainrussell>`_ - `ECMWF <https://ecmwf.int>`_
 - `Alessandro Amici <https://github.com/alexamici>`_ - `B-Open <https://bopen.eu>`_
 
-See also the list of `contributors <https://github.com/ecmwf/eccodes-python/contributors>`_
+See also the list of other `contributors <https://github.com/ecmwf/eccodes-python/contributors>`_
 who participated in this project.
 
 .. |copy|   unicode:: U+000A9 .. COPYRIGHT SIGN

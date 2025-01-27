@@ -40,8 +40,6 @@ cd $TOPDIR/build-binaries/eccodes
 
 # We disable JASPER because of a linking issue. JPEG support comes from
 # other libraries (e.g. openjpeg)
-# For performance, we do not enable thread-safety (would be -DENABLE_THREADS=1 -DECCODES_OMP_THREADS=1),
-# but may want to consider in the future
 $ARCH $TOPDIR/src/ecbuild/bin/ecbuild \
     $TOPDIR/src/eccodes \
     -GNinja \

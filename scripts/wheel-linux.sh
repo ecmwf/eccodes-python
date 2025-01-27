@@ -19,11 +19,11 @@ TOPDIR=$(/bin/pwd)
 
 LD_LIBRARY_PATH=$TOPDIR/install/lib:$TOPDIR/install/lib64:$LD_LIBRARY_PATH
 
-sudo /opt/python/cp${version}-cp${version}*/bin/pip3 install 'setuptools>=72.1.0'
-/opt/python/cp${version}-cp${version}*/bin/pip3 list
+sudo /opt/python/cp${version}-cp${version}/bin/pip3 install 'setuptools>=72.1.0'
+/opt/python/cp${version}-cp${version}/bin/pip3 list
 
 rm -fr dist wheelhouse
-/opt/python/cp${version}-cp${version}*/bin/python3 setup.py --binary-wheel bdist_wheel
+/opt/python/cp${version}-cp${version}/bin/python3 setup.py --binary-wheel bdist_wheel
 
 # Do it twice to get the list of libraries
 
@@ -35,6 +35,6 @@ pip3 install -r scripts/requirements.txt
 python3 ./scripts/copy-licences.py libs
 
 rm -fr dist wheelhouse
-/opt/python/cp${version}-cp${version}*/bin/python3 setup.py --binary-wheel bdist_wheel
+/opt/python/cp${version}-cp${version}/bin/python3 setup.py --binary-wheel bdist_wheel
 auditwheel repair dist/*.whl
 rm -fr dist
