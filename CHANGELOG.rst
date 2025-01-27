@@ -2,7 +2,7 @@
 Changelog for eccodes-python
 ============================
 
-2.40.0 (YYYY-MM-DD)
+2.39.2 (2024-01-27)
 --------------------
 
 - GitHub pull request #109: Allow setting of array in highlevel.Message.set
