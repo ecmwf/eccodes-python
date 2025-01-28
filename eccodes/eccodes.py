@@ -25,9 +25,13 @@ from gribapi import GRIB_MISSING_LONG as CODES_MISSING_LONG
 from gribapi import GRIB_NEAREST_SAME_DATA as CODES_GRIB_NEAREST_SAME_DATA
 from gribapi import GRIB_NEAREST_SAME_GRID as CODES_GRIB_NEAREST_SAME_GRID
 from gribapi import GRIB_NEAREST_SAME_POINT as CODES_GRIB_NEAREST_SAME_POINT
-from gribapi import __version__
+from gribapi import (
+    __version__,
+)
 from gribapi import any_new_from_file as codes_any_new_from_file
-from gribapi import bindings_version
+from gribapi import (
+    bindings_version,
+)
 from gribapi import bufr_new_from_file as codes_bufr_new_from_file
 from gribapi import (
     codes_any_new_from_samples,
