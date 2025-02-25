@@ -132,6 +132,7 @@ from gribapi import grib_no_fail_on_wrong_length as codes_no_fail_on_wrong_lengt
 from gribapi import grib_release as codes_release
 from gribapi import grib_set as codes_set
 from gribapi import grib_set_array as codes_set_array
+from gribapi import grib_set_data_quality_checks as codes_set_data_quality_checks
 from gribapi import grib_set_debug as codes_set_debug
 from gribapi import grib_set_definitions_path as codes_set_definitions_path
 from gribapi import grib_set_double as codes_set_double
@@ -348,6 +349,7 @@ __all__ = [
     "codes_samples_path",
     "codes_dump",
     "codes_set_array",
+    "codes_set_data_quality_checks",
     "codes_set_debug",
     "codes_set_definitions_path",
     "codes_set_double_array",
