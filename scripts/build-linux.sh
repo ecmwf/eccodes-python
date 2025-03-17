@@ -21,9 +21,9 @@ OPENJPEG_VERSION=v2.5.2
 # To allow the manylinux image to continue to use yum afer EOL. See, for example:
 #   https://github.com/zanmato1984/arrow/commit/1fe15e06fac23983e5f890c2d749d9ccecd2ca15
 #   https://github.com/apache/arrow/issues/43119
-sudo sed -i s/mirror.centos.org/vault.centos.org/g /etc/yum.repos.d/*.repo
-sudo sed -i s/^#.*baseurl=http/baseurl=http/g /etc/yum.repos.d/*.repo
-sudo sed -i s/^mirrorlist=http/#mirrorlist=http/g /etc/yum.repos.d/*.repo
+#sudo sed -i s/mirror.centos.org/vault.centos.org/g /etc/yum.repos.d/*.repo
+#sudo sed -i s/^#.*baseurl=http/baseurl=http/g /etc/yum.repos.d/*.repo
+#sudo sed -i s/^mirrorlist=http/#mirrorlist=http/g /etc/yum.repos.d/*.repo
 
 source scripts/common.sh
 

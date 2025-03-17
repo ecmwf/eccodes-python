@@ -43,7 +43,7 @@ jobs:
 
     runs-on: [self-hosted, Linux, platform-builder-Rocky-8.6]
     container:
-      image: dockcross/manylinux_2_28-x64:latest
+      image: dockcross/manylinux_2_28-x64:20250109-7bf589c
       #options: --pull always
 
     name: Build manylinux_2_28-x64
