@@ -18,9 +18,9 @@ on:
     paths:
       - '.github/workflows/cd.yml'
 jobs:
-  wheel-linux:
-    uses: ./.github/workflows/build-wheel-linux.yml
-    secrets: inherit
+  #wheel-linux:
+  #  uses: ./.github/workflows/build-wheel-linux.yml
+  #  secrets: inherit
   #wheel-macos:
   #  uses: ./.github/workflows/build-wheel-macos.yml
   #  secrets: inherit
@@ -28,8 +28,8 @@ jobs:
   #  uses: ./.github/workflows/build-wheel-windows.yml
   #  secrets: inherit
   pypi:
-    needs: [wheel-linux]
+    #needs: [wheel-linux]
     #needs: [wheel-linux, wheel-macos, wheel-windows]
-    uses: ecmwf-actions/reusable-workflows/.github/workflows/cd-pypi.yml@v2
+    uses: ecmwf/reusable-workflows/.github/workflows/cd-pypi.yml@lenient-pypi
     secrets: inherit
 
