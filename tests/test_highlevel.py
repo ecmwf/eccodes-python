@@ -166,8 +166,13 @@ def test_write_message(tmp_path):
             assert np.all(message1.data == message2.data)
 
 
-def test_message_from_samples():
+def test_grib_message_from_samples():
     message = eccodes.GRIBMessage.from_samples("regular_ll_sfc_grib2")
     assert message["edition"] == 2
     assert message["gridType"] == "regular_ll"
     assert message["levtype"] == "sfc"
+
+
+def test_bufr_message_from_samples():
+    message = eccodes.BUFRMessage.from_samples("BUFR4")
+    assert message["edition"] == 4

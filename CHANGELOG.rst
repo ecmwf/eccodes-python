@@ -6,6 +6,13 @@ Changelog for eccodes-python
 --------------------
 
 - ECC-2034: GRIB encoding: Data quality checks via the API
+- GitHub pull request #124: Add basic BUFR support (high-level interface)
+
+
+2.40.1 (2025-03-17)
+--------------------
+
+- Update version to be the same as the ecCodes library
 
 
 2.40.0 (2025-02-12)
