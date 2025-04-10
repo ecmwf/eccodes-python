@@ -2,7 +2,7 @@
 Changelog for eccodes-python
 ============================
 
-2.41.0 (2025-mm-dd)
+2.41.0 (2025-04-10)
 --------------------
 
 - ECC-2034: GRIB encoding: Data quality checks via the API
