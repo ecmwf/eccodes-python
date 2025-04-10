@@ -2438,6 +2438,21 @@ def grib_set_debug(dmode):
     lib.grib_context_set_debug(context, dmode)
 
 
+@require(val=int)
+def grib_set_data_quality_checks(val):
+    """
+    @brief Enable/Disable GRIB data quality checks
+
+    @param val  0, 1 or 2
+                0 -> disable data quality checks
+                1 -> failure results in an error
+                2 -> failure results in a warning
+    """
+    assert val == 0 or val == 1 or val == 2
+    context = lib.grib_context_get_default()
+    lib.grib_context_set_data_quality_checks(context, val)
+
+
 @require(defs_path=str)
 def grib_set_definitions_path(defs_path):
     """

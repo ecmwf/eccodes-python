@@ -55,6 +55,14 @@ def test_codes_set_debug():
     eccodes.codes_set_debug(0)
 
 
+def test_codes_set_data_quality_checks():
+    if eccodes.codes_get_api_version(int) < 24100:
+        pytest.skip("ecCodes version too old")
+    eccodes.codes_set_data_quality_checks(2)
+    eccodes.codes_set_data_quality_checks(1)
+    eccodes.codes_set_data_quality_checks(0)
+
+
 def test_codes_set_definitions_path():
     eccodes.codes_set_definitions_path(eccodes.codes_definition_path())
 

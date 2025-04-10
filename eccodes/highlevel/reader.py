@@ -2,12 +2,22 @@ import eccodes
 import gribapi
 from gribapi import ffi
 
-from .message import GRIBMessage
+from .message import BUFRMessage, GRIBMessage
+
+_MSG_CLASSES = {
+    eccodes.CODES_PRODUCT_GRIB: GRIBMessage,
+    eccodes.CODES_PRODUCT_BUFR: BUFRMessage,
+}
 
 
 class ReaderBase:
-    def __init__(self):
+    def __init__(self, kind=eccodes.CODES_PRODUCT_GRIB):
         self._peeked = None
+        self._kind = kind
+        cls = _MSG_CLASSES.get(kind)
+        if cls is None:
+            raise ValueError(f"Unsupported product type {kind}")
+        self._msg_class = cls
 
     def __iter__(self):
         return self
@@ -20,7 +30,7 @@ class ReaderBase:
         handle = self._next_handle()
         if handle is None:
             raise StopIteration
-        return GRIBMessage(handle)
+        return self._msg_class(handle)
 
     def _next_handle(self):
         raise NotImplementedError
@@ -36,19 +46,19 @@ class ReaderBase:
         if self._peeked is None:
             handle = self._next_handle()
             if handle is not None:
-                self._peeked = GRIBMessage(handle)
+                self._peeked = self._msg_class(handle)
         return self._peeked
 
 
 class FileReader(ReaderBase):
     """Read messages from a file"""
 
-    def __init__(self, path):
-        super().__init__()
+    def __init__(self, path, kind=eccodes.CODES_PRODUCT_GRIB):
+        super().__init__(kind=kind)
         self.file = open(path, "rb")
 
     def _next_handle(self):
-        return eccodes.codes_new_from_file(self.file, eccodes.CODES_PRODUCT_GRIB)
+        return eccodes.codes_new_from_file(self.file, self._kind)
 
     def __enter__(self):
         self.file.__enter__()
@@ -61,8 +71,8 @@ class FileReader(ReaderBase):
 class MemoryReader(ReaderBase):
     """Read messages from memory"""
 
-    def __init__(self, buf):
-        super().__init__()
+    def __init__(self, buf, kind=eccodes.CODES_PRODUCT_GRIB):
+        super().__init__(kind=kind)
         self.buf = buf
 
     def _next_handle(self):
@@ -128,14 +138,14 @@ def codes_new_from_stream(stream):
 class StreamReader(ReaderBase):
     """Read messages from a stream (an object with a ``read`` method)"""
 
-    def __init__(self, stream):
+    def __init__(self, stream, kind=eccodes.CODES_PRODUCT_GRIB):
         if cstd is None:
             raise OSError("This feature is not supported on Windows")
         if pyread_callback is None:
             raise OSError(
                 "This feature cannot be used because the OS prevents allocating write+execute memory"
             )
-        super().__init__()
+        super().__init__(kind=kind)
         self.stream = stream
 
     def _next_handle(self):
