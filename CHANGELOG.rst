@@ -2,6 +2,12 @@
 Changelog for eccodes-python
 ============================
 
+2.41.1 (2025-mm-dd)
+--------------------
+
+- ECC-2072: high-level 'get' function should return default value if key is not implemented
+
+
 2.41.0 (2025-04-10)
 --------------------
 
