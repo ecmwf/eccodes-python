@@ -2389,7 +2389,7 @@ def grib_get_message(msgid):
     return fixed_length_buffer[:]
 
 
-@require(message=(bytes, str))
+@require(message=(bytes, str, memoryview))
 def grib_new_from_message(message):
     """
     @brief Create a handle from a message in memory.
@@ -2402,8 +2402,12 @@ def grib_new_from_message(message):
     @return        msgid of the newly created message
     @exception CodesInternalError
     """
+    if isinstance(message, memoryview):
+        message = ffi.from_buffer(message)
+
     if isinstance(message, str):
         message = message.encode(ENC)
+
     h = lib.grib_handle_new_from_message_copy(ffi.NULL, message, len(message))
     if h == ffi.NULL:
         raise errors.MessageInvalidError("new_from_message failed")
