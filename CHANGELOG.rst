@@ -2,6 +2,12 @@
 Changelog for eccodes-python
 ============================
 
+2.42.0 (2025-mm-dd)
+--------------------
+
+- ECC-2081: Allow memoryview as input to codes_new_from_message
+
+
 2.41.1 (2025-mm-dd)
 --------------------
 
