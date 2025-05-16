@@ -6,6 +6,7 @@ Changelog for eccodes-python
 --------------------
 
 - ECC-2081: Allow memoryview as input to codes_new_from_message
+- ECC-2086: GRIB: getting the bitmap using up all the memory
 
 
 2.41.1 (2025-mm-dd)
