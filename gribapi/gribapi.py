@@ -2044,6 +2044,10 @@ def grib_get_array(msgid, key, ktype=None):
     if ktype is None:
         ktype = grib_get_native_type(msgid, key)
 
+    # ECC-2086
+    if ktype is bytes and key == "bitmap":
+        return grib_get_long_array(msgid, key)
+
     result = None
     if ktype is int:
         result = grib_get_long_array(msgid, key)
