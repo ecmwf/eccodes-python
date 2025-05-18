@@ -6,6 +6,7 @@ Changelog for eccodes-python
 --------------------
 
 - ECC-2072: high-level 'get' function should return default value if key is not implemented
+- ECC-2086: GRIB: getting the bitmap using up all the memory
 
 
 2.41.0 (2025-04-10)
