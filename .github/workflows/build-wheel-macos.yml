@@ -6,163 +6,77 @@
 # granted to it by virtue of its status as an intergovernmental organisation
 # nor does it submit to any jurisdiction.
 
-name: Build MacOS ARM
+
+name: Build Python Wheel for MacOS
 
 on:
   # Trigger the workflow manually
-  workflow_dispatch: ~
+  workflow_dispatch:
+    inputs:
+      use_test_pypi:
+        description: Use test pypi instead of the regular one
+        required: false
+        type: boolean
+        default: false
 
-  # allow to be called from another workflow
-  workflow_call: ~
-
-  # repository_dispatch:
-  #   types: [eccodes-updated]
-
-  push:
-    tags-ignore:
-    - '**'
-    paths:
-    - 'scripts/common.sh'
-    - 'scripts/select-python-macos.sh'
-    - 'scripts/build-macos.sh'
-    - 'scripts/wheel-macos.sh'
-    - 'scripts/test-macos.sh'
-    - 'scripts/copy-licences.py'
-    - '.github/workflows/build-wheel-macos.yml'
-
-# We don't use "actions/setup-python@v4" as it installs a universal python
-# which creates universal wheels. We want to create wheels for the specific
-# architecture we are running on.
+  # Allow to be called from another workflow -- eg `cd.yml`
+  workflow_call:
+    inputs:
+      use_test_pypi:
+        description: Use test pypi instead of the regular one
+        required: false
+        type: boolean
+        default: false
 
 jobs:
-
   build:
-
-    # if: false  # for temporarily disabling for debugging
-
-    strategy:
-      matrix:
-        arch_type: [ARM64, X64]
-    runs-on: [self-hosted, macOS, "${{ matrix.arch_type }}"]
-
-    name: Build
-
-    steps:
-
-    - run: sudo mkdir -p /Users/runner
-    - run: sudo chown administrator:staff /Users/runner
-
-    - uses: actions/checkout@v2
-
-    - run: ./scripts/build-macos.sh "3.10"
-
-    - run: ./scripts/wheel-macos.sh "3.9"
-    - run: ls -l wheelhouse
-    - uses: actions/upload-artifact@v4
-      name: Upload wheel 3.9 ${{ matrix.arch_type }}
-      with:
-        name: wheel-macos-${{ matrix.arch_type }}-3.9
-        path: wheelhouse/*.whl
-    - run: rm -fr wheelhouse
-
-    - run: ./scripts/wheel-macos.sh "3.10"
-    - run: ls -l wheelhouse
-    - uses: actions/upload-artifact@v4
-      name: Upload wheel 3.10 ${{ matrix.arch_type }}
-      with:
-        name: wheel-macos-${{ matrix.arch_type }}-3.10
-        path: wheelhouse/*.whl
-    - run: rm -fr wheelhouse
-
-    - run: ./scripts/wheel-macos.sh "3.11"
-    - run: ls -l wheelhouse
-    - uses: actions/upload-artifact@v4
-      name: Upload wheel 3.11 ${{ matrix.arch_type }}
-      with:
-        name: wheel-macos-${{ matrix.arch_type }}-3.11
-        path: wheelhouse/*.whl
-    - run: rm -fr wheelhouse
-
-    - run: ./scripts/wheel-macos.sh "3.12"
-    - run: ls -l wheelhouse
-    - uses: actions/upload-artifact@v4
-      name: Upload wheel 3.12 ${{ matrix.arch_type }}
-      with:
-        name: wheel-macos-${{ matrix.arch_type }}-3.12
-        path: wheelhouse/*.whl
-    - run: rm -fr wheelhouse
-
-    - run: ./scripts/wheel-macos.sh "3.13"
-    - run: ls -l wheelhouse
-    - uses: actions/upload-artifact@v4
-      name: Upload wheel 3.13 ${{ matrix.arch_type }}
-      with:
-        name: wheel-macos-${{ matrix.arch_type }}-3.13
-        path: wheelhouse/*.whl
-    - run: rm -fr wheelhouse
-
-  test:
-    needs: build
-
+    name: Build macos wheel
     strategy:
       fail-fast: true
-      max-parallel: 1
       matrix:
         arch_type: [ARM64, X64]
-        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13"]
-
+        python_version: ["3.9", "3.10", "3.11", "3.12", "3.13"]
     runs-on: [self-hosted, macOS, "${{ matrix.arch_type }}"]
-
-    name: Test with Python ${{ matrix.python-version }} ${{ matrix.arch_type }}
-
     steps:
-
-    - uses: actions/checkout@v2
-
-    - uses: actions/download-artifact@v4
-      with:
-        name: wheel-macos-${{ matrix.arch_type }}-${{ matrix.python-version }}
-
-    - run: ./scripts/test-macos.sh  ${{ matrix.python-version }}
-
-  
-  deploy:
-
-    if: ${{ github.ref_type == 'tag' || github.event_name == 'release' }}
-
-    needs: [test, build]
-
-    name: Deploy wheel ${{ matrix.python-version }} ${{ matrix.arch_type }}
-
-    strategy:
-      fail-fast: true
-      max-parallel: 1
-      matrix:
-        arch_type: [ARM64, X64]
-        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13"]
-
-    runs-on: [self-hosted, macOS, "${{ matrix.arch_type }}"]
-
-    steps:
-
-      - run: mkdir artifact-${{ matrix.arch_type }}-${{ matrix.python-version }}
-
+      - run: if [ -z "$(which uv)" ] ; then curl -LsSf https://astral.sh/uv/install.sh | sh ; fi
       - uses: actions/checkout@v4
-
-      - uses: actions/download-artifact@v4
         with:
-          name: wheel-macos-${{ matrix.arch_type }}-${{ matrix.python-version }}
-          path: artifact-${{ matrix.arch_type }}-${{ matrix.python-version }}
-
+          repository: ecmwf/ci-utils
+          ref: 1.latest
+          path: ci-utils
+          token: ${{ secrets.GH_REPO_READ_TOKEN }}
       - run: |
-          source ./scripts/select-python-macos.sh ${{ matrix.python-version }}
-          VENV_DIR=./dist_venv_${{ matrix.python-version }}
-          rm -rf ${VENV_DIR}
-          python3 -m venv ${VENV_DIR}
-          source ${VENV_DIR}/bin/activate
-          pip3 install twine
-          ls -l artifact-${{ matrix.arch_type }}-${{ matrix.python-version }}/*.whl
-          twine upload artifact-${{ matrix.arch_type }}-${{ matrix.python-version }}/*.whl
+          set -euo pipefail
+          git clone --depth=1 --branch="${GITHUB_REF#refs/heads/}" https://github.com/$GITHUB_REPOSITORY ./eccodes-python
+          cd ./eccodes-python
+          if [ "$GITHUB_REF_NAME" != "main" -a "$GITHUB_REF_NAME" != "master" -a "$GITHUB_REF_TYPE" != "tag" ] ; then
+            export UV_CACHE_DIR="/tmp/reallynocache"
+            rm -rf $UV_CACHE_DIR && mkdir $UV_CACHE_DIR
+            EXTRA_PIP="--refresh --no-cache --prerelease=allow"
+          else
+            EXTRA_PIP=""
+          fi
+
+          VENV_ROOT=/tmp/buildvenv
+          uv python install python"${{ matrix.python_version }}"
+          # NOTE twine version forced due to metadata issue, cf wheelmaker Dockerfile
+          rm -rf $VENV_ROOT && uv venv --python python"${{ matrix.python_version }}" $VENV_ROOT && source $VENV_ROOT/bin/activate && uv pip install build twine==6.0.1 delocate setuptools requests
+
+          uv pip install $EXTRA_PIP eccodeslib
+          EL_ROOT=$VENV_ROOT/lib/python"${{ matrix.python_version }}"/site-packages/eccodeslib
+          export LIBDIR=$EL_ROOT/lib
+          export INCDIR=$EL_ROOT/include
+          python -m build --no-isolation .
+
+          uv pip install $EXTRA_PIP ./dist/*whl pytest
+          cd tests
+          ECCODES_PYTHON_TRACE_LIB_SEARCH=1 pytest -v -s
+          cd ..
+
+          if [ "${{ inputs.use_test_pypi }}" = "true" ] ; then UPLOAD_TO=test ; else UPLOAD_TO=prod ; fi
+          BUILDSCRIPTS=$GITHUB_WORKSPACE/ci-utils/wheelmaker/buildscripts
+          PYTHONPATH=$BUILDSCRIPTS $BUILDSCRIPTS/upload-pypi.sh $UPLOAD_TO ./dist
         env:
           TWINE_USERNAME: __token__
-          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+          TWINE_PASSWORD_PROD: ${{ secrets.PYPI_API_TOKEN }}
+          TWINE_PASSWORD_TEST: ${{ secrets.PYPI_TEST_API_TOKEN }}

@@ -39,7 +39,7 @@ if int(os.environ.get("ECCODES_PYTHON_TRACE_LIB_SEARCH", "0")):
 
 
 def _find_eccodes_custom() -> str|None:
-    # TODO deprecate this method in favour of findlibs only
+    # TODO delete once the wheels are eccodeslib-based for all platforms
     name = "eccodes"
     env_var = "ECCODES_PYTHON_USE_FINDLIBS"
     if int(os.environ.get(env_var, "0")):

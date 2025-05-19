@@ -11,153 +11,65 @@ name: Build Python Wheel for Linux
 
 on:
   # Trigger the workflow manually
-  workflow_dispatch: ~
+  workflow_dispatch:
+    inputs:
+      use_test_pypi:
+        description: Use test pypi instead of the regular one
+        required: false
+        type: boolean
+        default: false
 
-  # Allow to be called from another workflow
-  workflow_call: ~
-
-  # TODO automation trigger
-  # repository_dispatch:
-  #   types: [eccodes-updated]
+  # Allow to be called from another workflow -- eg `cd.yml`
+  workflow_call:
+    inputs:
+      use_test_pypi:
+        description: Use test pypi instead of the regular one
+        required: false
+        type: boolean
+        default: false
 
 jobs:
-  build-python-wheel:
+  build:
     name: Build manylinux_2_28
-    runs-on: [self-hosted, Linux, platform-builder-Rocky-8.6]
-    container:
-      image: dockcross/manylinux_2_28-x64:20250109-7bf589c
-      #options: --pull always
-
-    name: Build manylinux_2_28-x64
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - run: ./scripts/build-linux.sh
-
-      ################################################################
-      - run: ./scripts/wheel-linux.sh 3.8
-      - uses: actions/upload-artifact@v4
-        name: Upload wheel 3.8
-        with:
-          name: wheel-manylinux2014-3.8
-          path: wheelhouse/*.whl
-
-      # ################################################################
-      - run: ./scripts/wheel-linux.sh 3.9
-      - uses: actions/upload-artifact@v4
-        name: Upload wheel 3.9
-        with:
-          name: wheel-manylinux2014-3.9
-          path: wheelhouse/*.whl
-
-      # ################################################################
-      - run: ./scripts/wheel-linux.sh 3.10
-      - uses: actions/upload-artifact@v4
-        name: Upload wheel 3.10
-        with:
-          name: wheel-manylinux2014-3.10
-          path: wheelhouse/*.whl
-
-      # ################################################################
-      - run: ./scripts/wheel-linux.sh 3.11
-      - uses: actions/upload-artifact@v4
-        name: Upload wheel 3.11
-        with:
-          name: wheel-manylinux2014-3.11
-          path: wheelhouse/*.whl
-
-      # ################################################################
-      - run: ./scripts/wheel-linux.sh 3.12
-      - uses: actions/upload-artifact@v4
-        name: Upload wheel 3.12
-        with:
-          name: wheel-manylinux2014-3.12
-          path: wheelhouse/*.whl
-
-      # ################################################################
-      - run: ./scripts/wheel-linux.sh 3.13
-      - uses: actions/upload-artifact@v4
-        name: Upload wheel 3.13
-        with:
-          name: wheel-manylinux2014-3.13
-          path: wheelhouse/*.whl
-
-  test:
-
-    needs: build
-
     strategy:
-      fail-fast: false
-      matrix: # We don't test 3.6, as it is not supported anymore by github actions
-        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13"]
-
-    runs-on: [self-hosted, Linux, platform-builder-Rocky-8.6]
-
-    name: Test with ${{ matrix.python-version }}
-
-    steps:
-
-      - uses: actions/checkout@v4
-
-      - uses: actions/download-artifact@v4
-        with:
-          name: wheel-manylinux2014-${{ matrix.python-version }}
-  
-      - run: ./scripts/test-linux.sh  ${{ matrix.python-version }}
-
-
-  deploy:
-
-    if: ${{ github.ref_type == 'tag' || github.event_name == 'release' }}
-
-    strategy:
-      fail-fast: false
+      fail-fast: true
       matrix:
-        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13"]
-
-    needs: [test, build]
-
-    name: Deploy wheel ${{ matrix.python-version }}
-
-    runs-on: [self-hosted, Linux, platform-builder-Rocky-8.6]
-
-
-    steps:
-
-      - run: mkdir artifact-${{ matrix.python-version }}
-
-      - uses: actions/checkout@v4
-
-      - uses: actions/download-artifact@v4
-        with:
-          name: wheel-manylinux2014-${{ matrix.python-version }}
-          path: artifact-${{ matrix.python-version }}
-
-  build-wrapper-wheel:
-    name: Build manylinux_2_28
+        python_version: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13"]
     runs-on: [self-hosted, Linux, platform-builder-Rocky-8.6]
     container:
-      image: eccr.ecmwf.int/wheelmaker/2_28:latest
+      image: eccr.ecmwf.int/wheelmaker/2_28:1.latest
       credentials:
         username: ${{ secrets.ECMWF_DOCKER_REGISTRY_USERNAME }}
         password: ${{ secrets.ECMWF_DOCKER_REGISTRY_ACCESS_TOKEN }}
     steps:
-        # TODO convert this to be matrix-friendly. Note it's a bit tricky since
-        # we'd ideally not reexecute the compile step multiple times, but it
-        # (non-essentially) depends on a matrix-based step
-        # NOTE we dont use action checkout because it doesnt cleanup after itself correctly
-      - run: git clone --depth=1 --branch="${GITHUB_REF#refs/heads/}" https://github.com/$GITHUB_REPOSITORY /proj
-      - run: cd /proj && /buildscripts/prepare_deps.sh ./buildconfig 3.11
       - run: |
-           cd /proj
-           export PYTHONPATH=/buildscripts/; export LIBDIR=/tmp/prereqs/eccodeslib/lib64; export INCDIR=/tmp/prereqs/eccodeslib/include
-           uv run --python python3.11 python -m build --installer uv --wheel .
-      - run: mkdir -p /build/wheel && mv /proj/dist/*whl /build/wheel
-      - run: cd /proj && /buildscripts/test-wheel.sh ./python_wrapper/buildconfig 3.11 /build/wheel/*whl
-      - run: cd /proj && /buildscripts/upload-pypi.sh /build/wheel/*whl
+          set -euo pipefail
+          git clone --depth=1 --branch="${GITHUB_REF#refs/heads/}" https://github.com/$GITHUB_REPOSITORY /src/eccodes-python
+          cd /src/eccodes-python
+          if [ "$GITHUB_REF_NAME" != "main" -a "$GITHUB_REF_NAME" != "master" -a "$GITHUB_REF_TYPE" != "tag" ] ; then
+            export UV_CACHE_DIR="/tmp/reallynocache"
+            rm -rf $UV_CACHE_DIR && mkdir $UV_CACHE_DIR
+            EXTRA_PIP="--refresh --no-cache --prerelease=allow"
+          else
+            EXTRA_PIP=""
+          fi
+
+          VENV_ROOT=/venv/build"${{ matrix.python_version }}"
+          source $VENV_ROOT/bin/activate
+          uv pip install $EXTRA_PIP eccodeslib
+          EL_ROOT=$VENV_ROOT/lib/python"${{ matrix.python_version }}"/site-packages/eccodeslib
+          export LIBDIR=$EL_ROOT/lib64
+          export INCDIR=$EL_ROOT/include
+          python -m build --no-isolation .
+
+          uv pip install $EXTRA_PIP ./dist/*whl pytest
+          cd tests
+          ECCODES_PYTHON_TRACE_LIB_SEARCH=1 pytest -v -s
+          cd ..
+
+          if [ "${{ inputs.use_test_pypi }}" = "true" ] ; then UPLOAD_TO=test ; else UPLOAD_TO=prod ; fi
+          PYTHONPATH=/buildscripts /buildscripts/upload-pypi.sh $UPLOAD_TO ./dist
         env:
           TWINE_USERNAME: __token__
-          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
-        # NOTE temporary thing until all the mess gets cleared
-      - run: rm -rf ./* ./.git ./.github
+          TWINE_PASSWORD_PROD: ${{ secrets.PYPI_API_TOKEN }}
+          TWINE_PASSWORD_TEST: ${{ secrets.PYPI_TEST_API_TOKEN }}

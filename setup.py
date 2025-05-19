@@ -1,19 +1,20 @@
-# (C) Copyright 2024- ECMWF.
+#!/usr/bin/env python
+#
+# (C) Copyright 2017- ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
 # In applying this licence, ECMWF does not waive the privileges and immunities
-# granted to it by virtue of its status as an intergovernmental organisation
-# nor does it submit to any jurisdiction.
-
-# TODO ideally merge this with wheelmaker's setup_utils somehow
+# granted to it by virtue of its status as an intergovernmental organisation nor
+# does it submit to any jurisdiction.
 
 import io
+import importlib.metadata
 import os
 import re
 import sys
 import setuptools
-from setup_utils import parse_dependencies, ext_kwargs
+from wheel.bdist_wheel import bdist_wheel
 
 
 install_requires = [
@@ -23,7 +24,7 @@ install_requires = [
     "numpy ; python_version >= '3.9'",
     "attrs",
     "cffi",
-    "findlibs", # TODO add lb here once released
+    "findlibs>=0.1.1",
 ]
 
 ext_modules = [
@@ -48,35 +49,33 @@ def get_version() -> str:
         raise ValueError("couldn't parse version")
     return version_match.group(1)
 
+def get_eccodeslib_dep() -> list[str]:
+    eccodes_version = importlib.metadata.version("eccodeslib")
+    mj, mn, pt = eccodes_version.split('.', 2)
+    return [
+        f"eccodeslib >= {eccodes_version}, < {int(mj)+1}",
+    ]
+
+class bdist_wheel_ext(bdist_wheel):
+    # cf wheelmaker setup.py for explanation
+    def get_tag(self):
+        python, abi, plat = bdist_wheel.get_tag(self)
+        return python, abi, "manylinux_2_28_x86_64"
+
+ext_kwargs = {
+    'darwin': {},
+    'linux': {"cmdclass": {"bdist_wheel": bdist_wheel_ext}},
+}
+
 setuptools.setup(
     name="eccodes",
     version=get_version(),
     packages=setuptools.find_packages(),
     package_data={"": ["**/*.h"]},
-    install_requires=parse_dependencies() + install_requires,
-    **ext_kwargs[sys.platform],
-    # NOTE what is this? Setuptools 75.6.0 doesnt recognize. Move to extras?
-    tests_require=[
-        "pytest",
-        "pytest-cov",
-        "pytest-flakes",
-    ],
-    test_suite="tests",
+    install_requires=get_eccodeslib_dep() + install_requires,
     zip_safe=True,
     keywords="ecCodes GRIB BUFR",
-    classifiers=[
-        "Development Status :: 4 - Beta",
-        "Intended Audience :: Developers",
-        "License :: OSI Approved :: Apache Software License",
-        "Programming Language :: Python :: 3.8",
-        "Programming Language :: Python :: 3.9",
-        "Programming Language :: Python :: 3.10",
-        "Programming Language :: Python :: 3.11",
-        "Programming Language :: Python :: 3.12",
-        "Programming Language :: Python :: 3.13",
-        "Programming Language :: Python :: Implementation :: CPython",
-        "Programming Language :: Python :: Implementation :: PyPy",
-        "Operating System :: OS Independent",
-    ],
     ext_modules=ext_modules,
+    **ext_kwargs[sys.platform],
+
 )
