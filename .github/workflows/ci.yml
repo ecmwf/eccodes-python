@@ -28,7 +28,7 @@ jobs:
   downstream-ci:
     name: downstream-ci
     if: ${{ !github.event.pull_request.head.repo.fork && github.event.action != 'labeled' || github.event.label.name == 'approved-for-ci' }}
-    uses: ecmwf/downstream-ci/.github/workflows/downstream-ci.yml@main
+    uses: ecmwf/downstream-ci/.github/workflows/downstream-ci.yml@feat/shallow_deps
     with:
       eccodes-python: ecmwf/eccodes-python@${{ github.event.pull_request.head.sha || github.sha }}
       codecov_upload: true
@@ -39,7 +39,7 @@ jobs:
   downstream-ci-hpc:
     name: downstream-ci-hpc
     if: ${{ !github.event.pull_request.head.repo.fork && github.event.action != 'labeled' || github.event.label.name == 'approved-for-ci' }}
-    uses: ecmwf/downstream-ci/.github/workflows/downstream-ci-hpc.yml@main
+    uses: ecmwf/downstream-ci/.github/workflows/downstream-ci-hpc.yml@feat/shallow_deps
     with:
       eccodes-python: ecmwf/eccodes-python@${{ github.event.pull_request.head.sha || github.sha }}
     secrets: inherit
