@@ -38,8 +38,8 @@ if int(os.environ.get("ECCODES_PYTHON_TRACE_LIB_SEARCH", "0")):
     LOG.addHandler(logging.StreamHandler())
 
 
-def _find_eccodes_custom() -> str|None:
-    # TODO delete once the wheels are eccodeslib-based for all platforms
+def _find_eccodes_windows() -> str|None:
+    # TODO delete once windows ceases to be supported
     name = "eccodes"
     env_var = "ECCODES_PYTHON_USE_FINDLIBS"
     if int(os.environ.get(env_var, "0")):
@@ -85,7 +85,9 @@ def _find_eccodes_custom() -> str|None:
         return None
 
 
-library_path = _find_eccodes_custom()
+library_path = None
+if sys.platform == "win32":
+    library_path = _find_eccodes_windows()
 if library_path is None:
     import findlibs
     library_path = findlibs.find("eccodes")
