@@ -8,14 +8,14 @@
 # granted to it by virtue of its status as an intergovernmental organisation nor
 # does it submit to any jurisdiction.
 
-import io
 import importlib.metadata
+import io
 import os
 import re
 import sys
+
 import setuptools
 from wheel.bdist_wheel import bdist_wheel
-
 
 install_requires = [
     "numpy<1.20 ; python_version < '3.7'",
