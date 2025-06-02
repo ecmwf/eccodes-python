@@ -38,7 +38,7 @@ if int(os.environ.get("ECCODES_PYTHON_TRACE_LIB_SEARCH", "0")):
     LOG.addHandler(logging.StreamHandler())
 
 
-def _find_eccodes_windows() -> str|None:
+def _find_eccodes_windows() -> str | None:
     # TODO delete once windows ceases to be supported
     name = "eccodes"
     env_var = "ECCODES_PYTHON_USE_FINDLIBS"
@@ -90,6 +90,7 @@ if sys.platform == "win32":
     library_path = _find_eccodes_windows()
 if library_path is None:
     import findlibs
+
     library_path = findlibs.find("eccodes")
     LOG.debug(f"eccodes lib search: findlibs returned {library_path}")
 if library_path is None:

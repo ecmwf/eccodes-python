@@ -38,6 +38,7 @@ ext_modules = [
     )
 ]
 
+
 def get_version() -> str:
     version_pattern = (
         r"^__version__ = [\"\'](.*)[\"\']"  # More permissive regex pattern
@@ -49,12 +50,14 @@ def get_version() -> str:
         raise ValueError("couldn't parse version")
     return version_match.group(1)
 
+
 def get_eccodeslib_dep() -> list[str]:
     eccodes_version = importlib.metadata.version("eccodeslib")
-    mj, mn, pt = eccodes_version.split('.', 2)
+    mj, mn, pt = eccodes_version.split(".", 2)
     return [
         f"eccodeslib >= {eccodes_version}, < {int(mj)+1}",
     ]
+
 
 class bdist_wheel_ext(bdist_wheel):
     # cf wheelmaker setup.py for explanation
@@ -62,9 +65,10 @@ class bdist_wheel_ext(bdist_wheel):
         python, abi, plat = bdist_wheel.get_tag(self)
         return python, abi, "manylinux_2_28_x86_64"
 
+
 ext_kwargs = {
-    'darwin': {},
-    'linux': {"cmdclass": {"bdist_wheel": bdist_wheel_ext}},
+    "darwin": {},
+    "linux": {"cmdclass": {"bdist_wheel": bdist_wheel_ext}},
 }
 
 setuptools.setup(
@@ -77,5 +81,4 @@ setuptools.setup(
     keywords="ecCodes GRIB BUFR",
     ext_modules=ext_modules,
     **ext_kwargs[sys.platform],
-
 )
