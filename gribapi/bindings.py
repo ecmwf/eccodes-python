@@ -27,11 +27,6 @@ __version__ = "2.42.0"
 
 LOG = logging.getLogger(__name__)
 
-_MAP = {
-    "grib_api": "eccodes",
-    "gribapi": "eccodes",
-}
-
 EXTENSIONS = {
     "darwin": ".dylib",
     "win32": ".dll",
@@ -43,16 +38,13 @@ if int(os.environ.get("ECCODES_PYTHON_TRACE_LIB_SEARCH", "0")):
     LOG.addHandler(logging.StreamHandler())
 
 
-def _lookup(name):
-    return _MAP.get(name, name)
-
-
-def find_binary_libs(name):
-    name = _lookup(name)
+def _find_eccodes_windows() -> str | None:
+    # TODO delete once windows ceases to be supported
+    name = "eccodes"
     env_var = "ECCODES_PYTHON_USE_FINDLIBS"
     if int(os.environ.get(env_var, "0")):
         LOG.debug(f"{name} lib search: {env_var} set, so using findlibs")
-
+        return None
     else:
         LOG.debug(f"{name} lib search: trying to find binary wheel")
         here = os.path.dirname(__file__)
@@ -90,17 +82,17 @@ def find_binary_libs(name):
         LOG.debug(
             f"{name} lib search: did not find library from wheel; try to find as separate lib"
         )
+        return None
 
-    # if did not find the binary wheel, or the env var is set, fall back to findlibs
+
+library_path = None
+if sys.platform == "win32":
+    library_path = _find_eccodes_windows()
+if library_path is None:
     import findlibs
 
-    foundlib = findlibs.find(name)
-    LOG.debug(f"{name} lib search: findlibs returned {foundlib}")
-    return foundlib
-
-
-library_path = find_binary_libs("eccodes")
-
+    library_path = findlibs.find("eccodes")
+    LOG.debug(f"eccodes lib search: findlibs returned {library_path}")
 if library_path is None:
     raise RuntimeError("Cannot find the ecCodes library")
 
