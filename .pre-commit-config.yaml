@@ -1,0 +1,13 @@
+repos:
+- repo: https://github.com/psf/black-pre-commit-mirror
+  rev: 24.8.0
+  hooks:
+  - id: black
+- repo: https://github.com/pycqa/isort
+  rev: 5.13.2
+  hooks:
+  - id: isort
+    args:
+    - --profile black
+ci:
+  autoupdate_schedule: monthly

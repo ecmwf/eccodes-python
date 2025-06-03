@@ -25,18 +25,23 @@ install_requires = [
     "attrs",
     "cffi",
     "findlibs>=0.1.1",
+    'eccodeslib ; platform_system!="Windows"',
 ]
 
-ext_modules = [
-    setuptools.Extension(
-        "eccodes._eccodes",
-        sources=["eccodes/_eccodes.cc"],
-        language="c++",
-        libraries=["eccodes"],
-        library_dirs=[os.environ["LIBDIR"]],
-        include_dirs=[os.environ["INCDIR"]],
-    )
-]
+if os.environ.get("LIBDIR", None):
+    ext_modules = [
+        setuptools.Extension(
+            "eccodes._eccodes",
+            sources=["eccodes/_eccodes.cc"],
+            language="c++",
+            libraries=["eccodes"],
+            library_dirs=[os.environ["LIBDIR"]],
+            include_dirs=[os.environ["INCDIR"]],
+        )
+    ]
+else:
+    # NOTE this hack is due to downstream CI not yet supporting building
+    ext_modules = []
 
 
 def get_version() -> str:
@@ -52,11 +57,14 @@ def get_version() -> str:
 
 
 def get_eccodeslib_dep() -> list[str]:
-    eccodes_version = importlib.metadata.version("eccodeslib")
-    mj, mn, pt = eccodes_version.split(".", 2)
-    return [
-        f"eccodeslib >= {eccodes_version}, < {int(mj)+1}",
-    ]
+    try:
+        eccodes_version = importlib.metadata.version("eccodeslib")
+        mj, mn, pt = eccodes_version.split(".", 2)
+        return [
+            f"eccodeslib >= {eccodes_version}, < {int(mj)+1}",
+        ]
+    except importlib.metadata.PackageNotFoundError:
+        return []
 
 
 class bdist_wheel_ext(bdist_wheel):
