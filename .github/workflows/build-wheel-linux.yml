@@ -53,14 +53,6 @@ jobs:
 
       - run: ./scripts/build-linux.sh
 
-      ################################################################
-      - run: ./scripts/wheel-linux.sh 3.8
-      - uses: actions/upload-artifact@v4
-        name: Upload wheel 3.8
-        with:
-          name: wheel-manylinux2014-3.8
-          path: wheelhouse/*.whl
-
       # ################################################################
       - run: ./scripts/wheel-linux.sh 3.9
       - uses: actions/upload-artifact@v4
@@ -108,7 +100,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix: # We don't test 3.6, as it is not supported anymore by github actions
-        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13"]
+        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13"]
 
     runs-on: [self-hosted, Linux, platform-builder-Rocky-8.6]
 
@@ -132,7 +124,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13"]
+        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13"]
 
     needs: [test, build]
 
