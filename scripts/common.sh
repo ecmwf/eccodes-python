@@ -18,7 +18,7 @@ ECCODES_VERSION=2.42.0
 ECCODES_COMMON_CMAKE_OPTIONS="-DENABLE_PNG=1 -DENABLE_JPG=1 -DENABLE_NETCDF=0 -DENABLE_EXAMPLES=0"
 
 GIT_AEC=https://github.com/MathisRosenhauer/libaec.git
-AEC_VERSION=master
+AEC_VERSION=v1.1.3
 
 rm -fr src build build-binaries
 
