@@ -17,7 +17,7 @@ def raise_keyerror(name):
     """Make operations on a key raise a KeyError if not found"""
     try:
         yield
-    except eccodes.KeyValueNotFoundError:
+    except (eccodes.KeyValueNotFoundError, eccodes.FunctionNotImplementedError):
         raise KeyError(name)
 
 

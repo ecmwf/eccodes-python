@@ -187,6 +187,22 @@ def test_new_from_message():
     # eccodes.codes_release(newgid)
 
 
+def test_new_from_message_memoryview():
+    # ECC-2081
+    fpath = get_sample_fullpath("gg_sfc_grib1.tmpl")
+    if fpath is None:
+        return
+    with open(fpath, "rb") as f:
+        data = f.read()
+        mv = memoryview(data)
+        assert len(mv) == 26860
+        newgid = eccodes.codes_new_from_message(mv)
+        assert eccodes.codes_get(newgid, "packingType") == "grid_simple"
+        assert eccodes.codes_get(newgid, "gridType") == "reduced_gg"
+        assert eccodes.codes_get(newgid, "totalLength") == 26860
+        eccodes.codes_release(newgid)
+
+
 def test_gts_header():
     eccodes.codes_gts_header(True)
     eccodes.codes_gts_header(False)
@@ -623,6 +639,8 @@ def test_grib_set_bitmap():
     assert eccodes.codes_get(gid, "numberOfDataPoints") == 100
     assert eccodes.codes_get(gid, "numberOfCodedValues") == 98
     assert eccodes.codes_get(gid, "numberOfMissing") == 2
+    bmp = eccodes.codes_get_array(gid, "bitmap")
+    assert type(bmp[0]) is np.int64
     eccodes.codes_release(gid)
 
 

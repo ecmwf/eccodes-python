@@ -20,7 +20,7 @@ Numpy is a package used for scientific computing in Python and an efficient cont
 
 @em Requirements:
 
-    - Python 3.8 or higher
+    - Python 3.9 or higher
     - NumPy
 
 """
@@ -2044,6 +2044,10 @@ def grib_get_array(msgid, key, ktype=None):
     if ktype is None:
         ktype = grib_get_native_type(msgid, key)
 
+    # ECC-2086
+    if ktype is bytes and key == "bitmap":
+        return grib_get_long_array(msgid, key)
+
     result = None
     if ktype is int:
         result = grib_get_long_array(msgid, key)
@@ -2389,7 +2393,7 @@ def grib_get_message(msgid):
     return fixed_length_buffer[:]
 
 
-@require(message=(bytes, str))
+@require(message=(bytes, str, memoryview))
 def grib_new_from_message(message):
     """
     @brief Create a handle from a message in memory.
@@ -2402,8 +2406,12 @@ def grib_new_from_message(message):
     @return        msgid of the newly created message
     @exception CodesInternalError
     """
+    if isinstance(message, memoryview):
+        message = ffi.from_buffer(message)
+
     if isinstance(message, str):
         message = message.encode(ENC)
+
     h = lib.grib_handle_new_from_message_copy(ffi.NULL, message, len(message))
     if h == ffi.NULL:
         raise errors.MessageInvalidError("new_from_message failed")
