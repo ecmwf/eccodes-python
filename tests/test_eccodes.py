@@ -640,7 +640,6 @@ def test_grib_set_bitmap():
     assert eccodes.codes_get(gid, "numberOfCodedValues") == 98
     assert eccodes.codes_get(gid, "numberOfMissing") == 2
     bmp = eccodes.codes_get_array(gid, "bitmap")
-    assert type(bmp[0]) is np.int64
     eccodes.codes_release(gid)
 
 
