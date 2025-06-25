@@ -639,7 +639,7 @@ def test_grib_set_bitmap():
     assert eccodes.codes_get(gid, "numberOfDataPoints") == 100
     assert eccodes.codes_get(gid, "numberOfCodedValues") == 98
     assert eccodes.codes_get(gid, "numberOfMissing") == 2
-    bmp = eccodes.codes_get_array(gid, "bitmap")
+    eccodes.codes_get_array(gid, "bitmap")
     eccodes.codes_release(gid)
 
 
