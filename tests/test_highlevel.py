@@ -181,6 +181,7 @@ def test_bufr_message_from_samples():
     message = eccodes.BUFRMessage.from_samples("BUFR4")
     assert message["edition"] == 4
 
+
 def test_read_memory():
     buffer = io.BytesIO()
     with eccodes.FileReader(TEST_GRIB_DATA2) as reader1:
@@ -208,6 +209,7 @@ def test_read_memory():
             ]:
                 assert message1[key] == message2[key]
             assert np.all(message1.data == message2.data)
+
 
 def test_read_stream():
     buffer = io.BytesIO()
