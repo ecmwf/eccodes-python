@@ -1,4 +1,5 @@
 import collections
+import io
 import itertools
 import pathlib
 
@@ -179,3 +180,63 @@ def test_grib_message_from_samples():
 def test_bufr_message_from_samples():
     message = eccodes.BUFRMessage.from_samples("BUFR4")
     assert message["edition"] == 4
+
+
+def test_read_memory():
+    buffer = io.BytesIO()
+    with eccodes.FileReader(TEST_GRIB_DATA2) as reader1:
+        written = []
+        for message in itertools.islice(reader1, 15):
+            message.write_to(buffer)
+            written.append(message)
+
+    with eccodes.MemoryReader(buffer.getvalue()) as reader2:
+        for message1, message2 in itertools.zip_longest(written, reader2):
+            assert message1 is not None
+            assert message2 is not None
+            for key in [
+                "edition",
+                "centre",
+                "typeOfLevel",
+                "level",
+                "dataDate",
+                "stepRange",
+                "dataType",
+                "shortName",
+                "packingType",
+                "gridType",
+                "number",
+            ]:
+                assert message1[key] == message2[key]
+            assert np.all(message1.data == message2.data)
+
+
+def test_read_stream():
+    buffer = io.BytesIO()
+    with eccodes.FileReader(TEST_GRIB_DATA2) as reader1:
+        written = []
+        for message in itertools.islice(reader1, 15):
+            message.write_to(buffer)
+            written.append(message)
+
+    buffer.seek(0, 0)
+
+    with eccodes.StreamReader(buffer) as reader2:
+        for message1, message2 in itertools.zip_longest(written, reader2):
+            assert message1 is not None
+            assert message2 is not None
+            for key in [
+                "edition",
+                "centre",
+                "typeOfLevel",
+                "level",
+                "dataDate",
+                "stepRange",
+                "dataType",
+                "shortName",
+                "packingType",
+                "gridType",
+                "number",
+            ]:
+                assert message1[key] == message2[key]
+            assert np.all(message1.data == message2.data)
