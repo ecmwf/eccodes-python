@@ -2,6 +2,12 @@
 Changelog for eccodes-python
 ============================
 
+2.43.0 (2025-mm-dd)
+--------------------
+
+- GitHub pull request #129: Update MemoryReader to read more than one field
+
+
 2.42.0 (2025-06-25)
 --------------------
 
