@@ -121,13 +121,14 @@ def test_set_logging_file():
         pytest.skip("ecCodes version too old")
 
     nullDeviceFile = "/dev/null"
-    with open(nullDeviceFile, "w") as fnull:
-        eccodes.codes_context_set_logging(fnull)
-        with pytest.raises(eccodes.FileNotFoundError):
-            eccodes.codes_grib_new_from_samples("Silenced")
-        eccodes.codes_context_set_logging(sys.stderr)
-        with pytest.raises(eccodes.FileNotFoundError):
-            eccodes.codes_grib_new_from_samples("Restored")
+    if os.path.exists(nullDeviceFile):
+        with open(nullDeviceFile, "w") as fnull:
+            eccodes.codes_context_set_logging(fnull)
+            with pytest.raises(eccodes.FileNotFoundError):
+                eccodes.codes_grib_new_from_samples("Silenced")
+            eccodes.codes_context_set_logging(sys.stderr)
+            with pytest.raises(eccodes.FileNotFoundError):
+                eccodes.codes_grib_new_from_samples("Restored")
 
 
 def test_new_from_file():
