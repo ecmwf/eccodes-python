@@ -15,6 +15,7 @@ Tests of the ecCodes Python3 bindings
 
 import math
 import os.path
+import sys
 
 import numpy as np
 import pytest
@@ -113,6 +114,20 @@ def test_codes_get_native_type():
     assert eccodes.codes_get_native_type(gid, "section_1") is None
     with pytest.raises(eccodes.NullHandleError):
         eccodes.codes_get_native_type(0, "aKey")  # NULL handle
+
+
+def test_set_logging_file():
+    if eccodes.codes_get_api_version(int) < 24300:
+        pytest.skip("ecCodes version too old")
+
+    nullDeviceFile = "/dev/null"
+    with open(nullDeviceFile, "w") as fnull:
+        eccodes.codes_context_set_logging(fnull)
+        with pytest.raises(eccodes.FileNotFoundError):
+            eccodes.codes_grib_new_from_samples("Silenced")
+        eccodes.codes_context_set_logging(sys.stderr)
+        with pytest.raises(eccodes.FileNotFoundError):
+            eccodes.codes_grib_new_from_samples("Restored")
 
 
 def test_new_from_file():

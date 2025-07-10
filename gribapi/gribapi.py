@@ -464,6 +464,12 @@ def grib_multi_support_reset_file(fileobj):
     lib.grib_multi_support_reset_file(context, fileobj)
 
 
+@require(fileobj=file)
+def grib_context_set_logging(fileobj):
+    context = lib.grib_context_get_default()
+    lib.grib_context_set_logging_file(context, fileobj)
+
+
 @require(msgid=int)
 def grib_release(msgid):
     """
