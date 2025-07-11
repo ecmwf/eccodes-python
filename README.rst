@@ -24,8 +24,11 @@ Limitations:
 Installation
 ============
 
-**From version 2.37.0, the ecCodes Python bindings on PyPi additionally provide the ecCodes binary library, and will
-follow the version numbering of the ecCodes binary library. See below for details.**
+**From version 2.43.0, the ecCodes Python bindings on PyPi will depend
+on the PyPi package 'eccodeslib' on Linux and MacOS. This package provides
+the binary ecCodes library. On Windows, the ecCodes Python bindings will
+continue to directly provide the ecCodes binary library without a dependency
+on eccodeslib. See below for details.**
 
 Installation from PyPI
 ----------------------
@@ -34,17 +37,38 @@ The package can be installed from PyPI with::
 
     $ pip install eccodes
 
-This installation will, by default, include the ecCodes binary library (as of version 2.37.0), meaning that no
-external ecCodes binary library is required. If you have an external ecCodes binary library that you wish to use,
-set the following environment variable before you import eccodes::
+This installation will, by default, include the ecCodes binary library (either
+supplied by the 'eccodes' package on Windows, or via the 'eccodeslib' package
+on Linux and MacOS), meaning that no external ecCodes binary library is
+required.
+
+
+Bypassing the provided binary library
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Linux and MacOS
++++++++++++++++
+
+If you have an external ecCodes binary library that you wish to use, consult the documentation
+of the `findlibs <https://github.com/ecmwf/findlibs>`_ package, which is used by the ecCodes Python bindings to
+locate the binary library. This allows the use of environment variables
+to refine the search algorithm.
+
+
+Windows
++++++++
+
+If you have an external ecCodes binary library that you wish to use, set the
+following environment variable before you import eccodes::
 
     $ export ECCODES_PYTHON_USE_FINDLIBS=1
 
 If this is set, the ecCodes' Python bindings will use the `findlibs <https://github.com/ecmwf/findlibs>`_ package
-to locate the binary library (findlibs was the only mechanism used before version 2.37.0).
- 
-You may also install a version of ecCodes' Python interface that does not include a binary library at all,
-in which case the findlibs mechanism will be used as before::
+to locate the binary library.
+
+You may also install a version of ecCodes' Python interface that does not
+include a binary library at all, in which case the findlibs mechanism will
+be used as before::
 
     $ pip install eccodes --no-binary eccodes
 
@@ -58,15 +82,18 @@ ecCodes' Python bindings can be installed from the `conda-forge <https://conda-f
 
     $ conda install -c conda-forge python-eccodes
 
-This will install the Python bindings (`python-eccodes`) and also the ecCodes binary library (`eccodes`) on which they depend.
+This will install the Python bindings (`python-eccodes`) and also the ecCodes
+binary library (`eccodes`) on which they depend.
 
 
 System dependencies
 -------------------
 
-The Python module depends on the ECMWF *ecCodes* binary library. From version 2.37.0, this library is supplied with
-the Python module on both PyPi and conda, as described above. If you wish to install and use a separate binary library
-(see above), it must be installed on the system and accessible as a shared library.
+The Python module depends on the ECMWF *ecCodes* binary library.
+From version 2.37.0, this library is supplied with the Python
+module on both PyPi and conda, as described above. If you wish
+to install and use a separate binary library (see above), it must
+be installed on the system and accessible as a shared library.
 
 On a MacOS with HomeBrew use::
 
@@ -80,7 +107,8 @@ As an alternative you may install the official source distribution
 by following the instructions at
 https://confluence.ecmwf.int/display/ECC/ecCodes+installation
 
-You may run a simple selfcheck command to ensure that your system is set up correctly::
+You may run a simple selfcheck command to ensure that your system is set
+up correctly::
 
     $ python -m eccodes selfcheck
     Found: ecCodes v2.39.0.
@@ -90,8 +118,8 @@ You may run a simple selfcheck command to ensure that your system is set up corr
 Debugging the library search
 ----------------------------
 
-In order to gain insights into the search for the binary library, set the following environment variable before
-importing eccodes::
+In order to gain insights into the search for the binary library, set
+the following environment variable before importing eccodes::
 
     $ export ECCODES_PYTHON_TRACE_LIB_SEARCH=1
 

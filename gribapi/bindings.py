@@ -53,7 +53,7 @@ def find_binary_libs(name):
     if int(os.environ.get(env_var, "0")):
         LOG.debug(f"{name} lib search: {env_var} set, so using findlibs")
 
-    else:
+    elif os.name == "nt":
         LOG.debug(f"{name} lib search: trying to find binary wheel")
         here = os.path.dirname(__file__)
         # eccodes libs are actually in eccodes dir, not gribapi dir
