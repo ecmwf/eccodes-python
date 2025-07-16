@@ -541,6 +541,10 @@ def test_grib_get_values():
 
 
 def test_grib_geoiterator():
+    # version 2.43 has different sample values. See ECC-2110
+    if eccodes.codes_get_api_version(int) < 24300:
+        pytest.skip("ecCodes version too old")
+
     gid = eccodes.codes_grib_new_from_samples("reduced_gg_pl_256_grib2")
     iterid = eccodes.codes_grib_iterator_new(gid, 0)
     i = 0
