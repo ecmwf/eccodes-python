@@ -1,0 +1,361 @@
+messageNumber 1
+edition 3
+masterTableNumber 0
+bufrHeaderSubCentre 0
+bufrHeaderCentre 98
+updateSequenceNumber 1
+dataCategory 2
+dataSubCategory 101
+masterTablesVersionNumber 13
+localTablesVersionNumber 1
+typicalYearOfCentury 14
+typicalMonth 1
+typicalDay 28
+typicalHour 4
+typicalMinute 0
+typicalDate 20140128
+typicalTime 040000
+numberOfSubsets 1
+observedData 1
+compressedData 0
+unexpandedDescriptors [309007 222000 101000  31002  31031   1031   1032 101000  31002  33007]
+blockNumber 6
+blockNumber->percentConfidence 70
+stationNumber 60
+stationNumber->percentConfidence 70
+radiosondeType 17
+radiosondeType->percentConfidence 70
+radiosondeComputationalMethod 5
+radiosondeComputationalMethod->percentConfidence 70
+year 2014
+year->percentConfidence 70
+month 1
+month->percentConfidence 70
+day 28
+day->percentConfidence 70
+hour 4
+hour->percentConfidence 70
+minute 0
+minute->percentConfidence 70
+latitude 56.290000000000006
+latitude->percentConfidence 70
+longitude 9.110000000000001
+longitude->percentConfidence 70
+heightOfStation 53
+heightOfStation->percentConfidence 70
+cloudCoverTotal --
+verticalSignificanceSurfaceObservations 1
+verticalSignificanceSurfaceObservations->percentConfidence 70
+cloudAmount 8
+cloudAmount->percentConfidence 70
+heightOfBaseOfCloud 80.0
+heightOfBaseOfCloud->percentConfidence 70
+cloudType [36 -- --]
+cloudType->percentConfidence [70 -- --]
+delayedDescriptorReplicationFactor 31
+delayedDescriptorReplicationFactor->percentConfidence 70
+pressure [100000.  99500.  96100.  92900.  92500.  88800.  85000.  84400.  80000.
+  79600.  75900.  70000.  69900.  62100.  60400.  60000.  57000.  55300.
+  53700.  52200.  50800.  50000.  49500.  46700.  45300.  44000.  42700.
+  41500.  40200.  40000.  39000.]
+pressure->percentConfidence [75 70 75 75 82 75 82 75 75 75 75 82 75 75 75 75 75 75 75 75 75 82 75 75
+ 75 75 75 75 75 82 75]
+verticalSoundingSignificance [32 70  2  2 32  6 32  2  6  2  2 32  2  2  2  6  2  2  2  2  2 32  2  2
+  2  2  2  2  2 32  2]
+verticalSoundingSignificance->percentConfidence [70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70
+ 70 70 70 70 70 70 70]
+nonCoordinateGeopotential [110.0 520.0 -- -- 6160.0 -- 12670.0 -- -- -- -- 27290.0 -- -- -- -- -- --
+ -- -- -- 51190.0 -- -- -- -- -- -- -- 66100.0 --]
+nonCoordinateGeopotential->percentConfidence [70 70 -- -- 70 -- 70 -- -- -- -- 70 -- -- -- -- -- -- -- -- -- 70 -- --
+ -- -- -- -- -- 70 --]
+airTemperature [-- 272.3 -- -- 270.5 -- 266.90000000000003 -- -- -- -- 257.90000000000003
+ -- -- -- -- -- -- -- -- -- 238.70000000000002 -- -- -- -- -- -- -- 225.3
+ --]
+airTemperature->percentConfidence [-- 70 -- -- 70 -- 70 -- -- -- -- 70 -- -- -- -- -- -- -- -- -- 70 -- --
+ -- -- -- -- -- 70 --]
+dewpointTemperature [-- 271.8 -- -- 269.0 -- 264.1 -- -- -- -- 247.9 -- -- -- -- -- -- -- --
+ -- 234.8 -- -- -- -- -- -- -- -- --]
+dewpointTemperature->percentConfidence [-- 70 -- -- 70 -- 70 -- -- -- -- 70 -- -- -- -- -- -- -- -- -- 70 -- --
+ -- -- -- -- -- -- --]
+windDirection [-- 110 115 145 145 155 165 170 165 165 150 150 155 165 175 175 190 205
+ 200 220 230 235 235 265 260 270 270 295 335 340 340]
+windDirection->percentConfidence [-- 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70
+ 70 70 70 70 70 70 70]
+windSpeed [-- 6.0 12.0 16.0 15.0 14.0 14.0 14.0 12.0 12.0 12.0 13.0 13.0 13.0 9.0
+ 9.0 9.0 7.0 5.0 4.0 7.0 7.0 7.0 6.0 7.0 8.0 6.0 6.0 5.0 4.0 3.0]
+windSpeed->percentConfidence [-- 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70
+ 70 70 70 70 70 70 70]
+extendedDelayedDescriptorReplicationFactor [237 157]
+centre 98
+generatingApplication 1
+messageNumber 2
+edition 3
+masterTableNumber 0
+bufrHeaderSubCentre 0
+bufrHeaderCentre 98
+updateSequenceNumber 1
+dataCategory 2
+dataSubCategory 101
+masterTablesVersionNumber 13
+localTablesVersionNumber 1
+typicalYearOfCentury 16
+typicalMonth 1
+typicalDay 19
+typicalHour 0
+typicalMinute 0
+typicalDate 20160119
+typicalTime 000000
+rdbType 5
+oldSubtype 101
+localYear 2016
+localMonth 1
+localDay 19
+localHour 0
+localMinute 0
+localSecond 0
+rdbtimeDay 19
+rdbtimeHour 0
+rdbtimeMinute 47
+rdbtimeSecond 12
+rdbtimeTime 004712
+rectimeDay 10
+rectimeHour 10
+rectimeMinute 0
+rectimeSecond 0
+restricted 0
+correction1 0
+correction1Part 1
+correction2 0
+correction2Part 1
+correction3 0
+correction3Part 1
+correction4 0
+correction4Part 1
+qualityControl 70
+newSubtype 0
+numberOfSubsets 1
+localLatitude 51.27
+localLongitude -80.65
+ident 71836
+observedData 1
+compressedData 0
+unexpandedDescriptors [309007 222000 101000  31002  31031   1031   1032 101000  31002  33007
+ 223000 101000  31002  31031   1031   1032 101000  31002 223255]
+blockNumber 71
+blockNumber->percentConfidence 70
+stationNumber 836
+stationNumber->percentConfidence 70
+radiosondeType 80
+radiosondeType->percentConfidence 70
+radiosondeComputationalMethod 4
+radiosondeComputationalMethod->percentConfidence 70
+year 2016
+year->percentConfidence 70
+month 1
+month->percentConfidence 70
+day 19
+day->percentConfidence 70
+hour 0
+hour->percentConfidence 70
+minute 0
+minute->percentConfidence 70
+latitude 51.27
+latitude->percentConfidence 70
+longitude -80.65
+longitude->percentConfidence 70
+heightOfStation 11
+heightOfStation->percentConfidence 70
+cloudCoverTotal --
+verticalSignificanceSurfaceObservations 1
+verticalSignificanceSurfaceObservations->percentConfidence 70
+cloudAmount --
+cloudAmount->percentConfidence 70
+heightOfBaseOfCloud --
+cloudType [-- -- --]
+delayedDescriptorReplicationFactor 53
+delayedDescriptorReplicationFactor->percentConfidence 70
+pressure [101500. 101400. 100700. 100000.  92500.  91000.  89100.  85100.  85000.
+  81000.  74700.  70000.  68900.  66600.  61200.  59400.  57900.  55300.
+  50000.  49900.  46500.  42200.  40000.  36300.  33200.  32900.  32800.
+  32000.  31500.  31300.  30500.  30200.  30000.  29700.  29400.  26200.
+  25000.  23900.  20700.  20000.  18900.  17200.  15000.  14400.  12500.
+  11300.  10000.   7710.   7000.   6330.   5000.   4150.   3930.]
+pressure->percentConfidence [70 75 75 82 82 75 75 75 82 75 75 82 75 75 75 75 75 75 82 75 75 75 82 75
+ 75 75 75 75 75 75 75 75 82 75 75 79 82 75 75 82 75 75 82 75 75 75 82 75
+ 82 75 82 75 75]
+verticalSoundingSignificance [68  4  4 32 32  4  4  4 32  4  4 32  4  4  4  4  4  4 32  4  4  4 32  4
+  4  4  4  4  4  4  4  4 32  4  4 20 32  4  4 32  4  4 32  4  4  4 36  4
+ 32  4 32  8  4]
+verticalSoundingSignificance->percentConfidence [70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70
+ 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70
+ 70 70 70 70 70]
+nonCoordinateGeopotential [110.0 180.0 690.0 1190.0 6890.0 8080.0 9620.0 13010.0 13100.0 16660.0
+ 22630.0 27400.0 28540.0 30990.0 37030.0 39130.0 40920.0 44140.0 51090.0
+ 51220.0 55980.0 62430.0 66000.0 72230.0 77910.0 78480.0 78670.0 80220.0
+ 81210.0 81610.0 83220.0 83840.0 84340.0 84870.0 85500.0 92610.0 95610.0
+ 98240.0 107090.0 109340.0 112710.0 118570.0 127190.0 129700.0 138540.0
+ 144860.0 152590.0 168730.0 174750.0 180870.0 195350.0 -- 209840.0]
+nonCoordinateGeopotential->substitutedValue [100.0 170.0 680.0 1180.0 6880.0 8070.0 9610.0 13000.0 13090.0 16650.0
+ 22630.0 27400.0 28540.0 31000.0 37030.0 39140.0 40930.0 44140.0 51110.0
+ 51230.0 56000.0 62460.0 66040.0 72270.0 77950.0 78520.0 78710.0 80260.0
+ 81250.0 81650.0 83260.0 83880.0 84380.0 84920.0 85550.0 92690.0 95710.0
+ 98330.0 107160.0 109410.0 112790.0 118670.0 127320.0 129840.0 138690.0
+ 145020.0 152760.0 168940.0 174980.0 181100.0 195590.0 -- 210140.0]
+nonCoordinateGeopotential->percentConfidence [70 70 70 74 74 70 70 70 74 70 70 74 70 70 70 70 70 70 74 70 70 70 74 70
+ 70 70 70 70 70 70 70 70 74 70 70 70 74 70 70 74 70 70 74 70 70 70 74 70
+ 74 70 74 -- 70]
+airTemperature [253.9 253.70000000000002 255.10000000000002 255.10000000000002 253.9
+ 253.70000000000002 255.10000000000002 257.90000000000003
+ 257.90000000000003 257.90000000000003 256.1 253.9 253.10000000000002
+ 251.10000000000002 246.3 244.3 244.10000000000002 242.9 237.5 237.3 233.3
+ 230.10000000000002 228.10000000000002 223.3 219.70000000000002
+ 219.70000000000002 219.70000000000002 218.5 218.10000000000002
+ 217.70000000000002 216.9 216.3 216.3 215.9 215.9 214.10000000000002 214.3
+ 213.10000000000002 215.9 215.5 215.10000000000002 217.9 217.9
+ 218.70000000000002 216.9 219.10000000000002 218.10000000000002 216.3
+ 214.3 212.70000000000002 212.70000000000002 -- 210.9]
+airTemperature->percentConfidence [70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70
+ 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70
+ 70 70 70 -- 70]
+dewpointTemperature [251.60000000000002 249.4 251.4 251.4 248.9 247.70000000000002
+ 250.10000000000002 247.9 247.9 236.9 232.10000000000002 235.9
+ 237.10000000000002 238.10000000000002 230.3 236.3 242.20000000000002
+ 239.4 233.9 233.70000000000002 231.0 225.9 224.60000000000002 220.9
+ 214.70000000000002 209.70000000000002 207.70000000000002 208.5 213.3
+ 211.70000000000002 211.9 214.0 213.3 209.9 204.9 194.10000000000002 191.3
+ 190.10000000000002 186.9 187.5 187.10000000000002 185.9 185.9
+ 185.70000000000002 184.9 186.10000000000002 186.10000000000002 184.3
+ 183.3 181.70000000000002 181.70000000000002 -- 180.9]
+dewpointTemperature->percentConfidence [70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70
+ 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70
+ 70 70 70 -- 70]
+windDirection [-- -- -- 290 320 -- -- -- 325 -- -- 350 -- -- -- -- -- -- 60 -- -- -- 70
+ -- -- -- -- -- -- -- -- -- 75 -- -- 75 65 -- -- 50 -- -- 360 -- -- -- 325
+ -- 315 -- 310 310 --]
+windDirection->percentConfidence [-- -- -- 70 70 -- -- -- 70 -- -- 70 -- -- -- -- -- -- 70 -- -- -- 70 --
+ -- -- -- -- -- -- -- -- 70 -- -- 70 70 -- -- 70 -- -- 70 -- -- -- 70 --
+ 70 -- 70 70 --]
+windSpeed [-- -- -- 10.0 10.0 -- -- -- 11.0 -- -- 13.0 -- -- -- -- -- -- 18.0 -- --
+ -- 25.0 -- -- -- -- -- -- -- -- -- 29.0 -- -- 22.0 19.0 -- -- 17.0 -- --
+ 15.0 -- -- -- 20.0 -- 29.0 -- 29.0 34.0 --]
+windSpeed->percentConfidence [-- -- -- 70 70 -- -- -- 70 -- -- 70 -- -- -- -- -- -- 70 -- -- -- 70 --
+ -- -- -- -- -- -- -- -- 70 -- -- 70 70 -- -- 70 -- -- 70 -- -- -- 70 --
+ 70 -- 70 70 --]
+extendedDelayedDescriptorReplicationFactor [391 307 391  52]
+centre [98 98]
+generatingApplication [ 1 10]
+messageNumber 3
+edition 3
+masterTableNumber 0
+bufrHeaderSubCentre 0
+bufrHeaderCentre 98
+updateSequenceNumber 1
+dataCategory 2
+dataSubCategory 101
+masterTablesVersionNumber 13
+localTablesVersionNumber 1
+typicalYearOfCentury 79
+typicalMonth 4
+typicalDay 8
+typicalHour 23
+typicalMinute 0
+typicalDate 20790408
+typicalTime 230000
+rdbType 5
+oldSubtype 101
+localYear 1979
+localMonth 4
+localDay 8
+localHour 23
+localMinute 0
+localSecond 0
+rdbtimeDay 0
+rdbtimeHour 0
+rdbtimeMinute 0
+rdbtimeSecond 0
+rdbtimeTime 000000
+rectimeDay 0
+rectimeHour 0
+rectimeMinute 0
+rectimeSecond 0
+restricted 0
+correction1 0
+correction1Part 1
+correction2 0
+correction2Part 0
+correction3 0
+correction3Part 0
+correction4 0
+correction4Part 0
+qualityControl 50
+newSubtype 0
+numberOfSubsets 1
+localLatitude -54.5
+localLongitude 158.95
+ident 94998
+observedData 1
+compressedData 0
+unexpandedDescriptors [309007 222000 101000  31002  31031   1031   1032 101000  31002  33007]
+blockNumber 94
+blockNumber->percentConfidence 70
+stationNumber 998
+stationNumber->percentConfidence 70
+radiosondeType 79
+radiosondeType->percentConfidence 70
+radiosondeComputationalMethod --
+year 1979
+year->percentConfidence 70
+month 4
+month->percentConfidence 70
+day 8
+day->percentConfidence 70
+hour 23
+hour->percentConfidence 70
+minute 0
+minute->percentConfidence 70
+latitude -54.50000000000001
+latitude->percentConfidence 70
+longitude 158.94998
+longitude->percentConfidence 70
+heightOfStation 6
+heightOfStation->percentConfidence 70
+cloudCoverTotal --
+verticalSignificanceSurfaceObservations --
+cloudAmount --
+heightOfBaseOfCloud --
+cloudType [-- -- --]
+delayedDescriptorReplicationFactor 36
+delayedDescriptorReplicationFactor->percentConfidence 70
+pressure [101000. 100000.  85100.  85000.  81600.  74800.  70000.  67600.  63900.
+  58600.  53400.  50000.  49800.  44300.  40000.  39700.  30000.  25000.
+  23900.  23900.  20800.  20000.  15300.  15000.  10500.  10000.   7800.
+   7400.   7000.   5300.   5000.   3700.   3000.   2300.   2000.      0.]
+pressure->percentConfidence [70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70
+ 70 70 70 70 70 70 70 70 70 70 70 70]
+verticalSoundingSignificance [64 32  4 32  4  4 32  4  4  4  4 32  4  4 32  4 36 32  4 16  4 32  4 32
+  4 32  4  4 32  4 32  4 32  4 32  4]
+verticalSoundingSignificance->percentConfidence [70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70 70
+ 70 70 70 70 70 70 70 70 70 70 70 70]
+nonCoordinateGeopotential [60.0 830.0 -- 13570.0 -- -- 28460.0 -- -- -- -- 53150.0 -- -- 68650.0 --
+ 87480.0 98750.0 -- -- -- 112580.0 -- 130820.0 -- 156710.0 -- -- 179460.0
+ -- 200840.0 -- 233500.0 -- 259190.0 --]
+nonCoordinateGeopotential->percentConfidence [70 75 -- 75 -- -- 75 -- -- -- -- 75 -- -- 75 -- 75 75 -- -- -- 75 -- 75
+ -- 75 -- -- 75 -- 75 -- 75 -- 75 --]
+airTemperature [279.  278.2 266.7 266.7 266.3 268.7 265.1 263.5 259.5 255.1 250.1 247.7
+ 247.5 240.5 235.1 234.7 219.5 214.1 212.5 212.5 219.5 219.9 222.5 222.5
+ 222.1 225.1 221.1 223.5 223.1 220.7 221.3 224.3 222.3 219.7 222.1 228.5]
+airTemperature->percentConfidence [70 70 70 70 70 50 50 70 70 70 70 50 50 70 70 70 50 50 50 50 50 50 50 50
+ 50 50 50 50 50 50 50 50 50 50 50 70]
+dewpointTemperature [273.90000000000003 273.2 261.7 261.7 261.0 -- -- 249.5 249.5
+ 240.10000000000002 236.10000000000002 -- -- 228.5 224.10000000000002
+ 223.70000000000002 -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+ -- 201.5]
+dewpointTemperature->percentConfidence [70 70 70 70 70 -- -- 70 70 70 70 -- -- 70 70 70 -- -- -- -- -- -- -- --
+ -- -- -- -- -- -- -- -- -- -- -- 70]
+windDirection [-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+ -- -- -- -- -- -- -- -- -- -- -- --]
+windSpeed [-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+ -- -- -- -- -- -- -- -- -- -- -- --]
+extendedDelayedDescriptorReplicationFactor [272 148]
+centre 98
+generatingApplication 1

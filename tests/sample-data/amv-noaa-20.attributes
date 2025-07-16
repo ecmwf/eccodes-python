@@ -1,0 +1,326 @@
+messageNumber: 1
+centre->code: '001033'
+centre->units: Common CODE TABLE C-1
+centre->scale: 0
+centre->reference: 0
+centre->width: 8
+subCentre->code: '001034'
+subCentre->units: Common CODE TABLE C-12
+subCentre->scale: 0
+subCentre->reference: 0
+subCentre->width: 8
+softwareVersionNumber->code: '025061'
+softwareVersionNumber->units: CCITT IA5
+softwareVersionNumber->scale: 0
+softwareVersionNumber->reference: 0
+softwareVersionNumber->width: 96
+databaseIdentification->code: '025062'
+databaseIdentification->units: Numeric
+databaseIdentification->scale: 0
+databaseIdentification->reference: 0
+databaseIdentification->width: 14
+satelliteIdentifier->code: '001007'
+satelliteIdentifier->units: CODE TABLE
+satelliteIdentifier->scale: 0
+satelliteIdentifier->reference: 0
+satelliteIdentifier->width: 10
+satelliteChannelCentreFrequency->code: '002153'
+satelliteChannelCentreFrequency->units: Hz
+satelliteChannelCentreFrequency->scale: -8
+satelliteChannelCentreFrequency->reference: 0
+satelliteChannelCentreFrequency->width: 26
+directionOfMotionOfMovingObservingPlatform->code: '001012'
+directionOfMotionOfMovingObservingPlatform->units: deg
+directionOfMotionOfMovingObservingPlatform->scale: 0
+directionOfMotionOfMovingObservingPlatform->reference: 0
+directionOfMotionOfMovingObservingPlatform->width: 9
+crossTrackResolution->code: '002026'
+crossTrackResolution->units: m
+crossTrackResolution->scale: 2
+crossTrackResolution->reference: 0
+crossTrackResolution->width: 22
+alongTrackResolution->code: '002027'
+alongTrackResolution->units: m
+alongTrackResolution->scale: 2
+alongTrackResolution->reference: 0
+alongTrackResolution->width: 22
+segmentSizeAtNadirInXDirection->code: '002028'
+segmentSizeAtNadirInXDirection->units: m
+segmentSizeAtNadirInXDirection->scale: 0
+segmentSizeAtNadirInXDirection->reference: 0
+segmentSizeAtNadirInXDirection->width: 18
+segmentSizeAtNadirInYDirection->code: '002029'
+segmentSizeAtNadirInYDirection->units: m
+segmentSizeAtNadirInYDirection->scale: 0
+segmentSizeAtNadirInYDirection->reference: 0
+segmentSizeAtNadirInYDirection->width: 18
+windProcessingMethod->code: '002161'
+windProcessingMethod->units: FLAG TABLE
+windProcessingMethod->scale: 0
+windProcessingMethod->reference: 0
+windProcessingMethod->width: 16
+tracerCorrelationMethod->code: '002164'
+tracerCorrelationMethod->units: CODE TABLE
+tracerCorrelationMethod->scale: 0
+tracerCorrelationMethod->reference: 0
+tracerCorrelationMethod->width: 3
+satelliteDerivedWindComputationMethod->code: '002023'
+satelliteDerivedWindComputationMethod->units: CODE TABLE
+satelliteDerivedWindComputationMethod->scale: 0
+satelliteDerivedWindComputationMethod->reference: 0
+satelliteDerivedWindComputationMethod->width: 4
+landOrSeaQualifier->code: '008012'
+landOrSeaQualifier->units: CODE TABLE
+landOrSeaQualifier->scale: 0
+landOrSeaQualifier->reference: 0
+landOrSeaQualifier->width: 2
+dayOrNightQualifier->code: '008013'
+dayOrNightQualifier->units: CODE TABLE
+dayOrNightQualifier->scale: 0
+dayOrNightQualifier->reference: 0
+dayOrNightQualifier->width: 2
+gridPointIdentifier->code: '001124'
+gridPointIdentifier->units: Numeric
+gridPointIdentifier->scale: 0
+gridPointIdentifier->reference: 0
+gridPointIdentifier->width: 24
+latitude->code: '005001'
+latitude->units: deg
+latitude->scale: 5
+latitude->reference: -9000000
+latitude->width: 25
+longitude->code: '006001'
+longitude->units: deg
+longitude->scale: 5
+longitude->reference: -18000000
+longitude->width: 26
+year->code: '004001'
+year->units: a
+year->scale: 0
+year->reference: 0
+year->width: 12
+month->code: '004002'
+month->units: mon
+month->scale: 0
+month->reference: 0
+month->width: 4
+day->code: '004003'
+day->units: d
+day->scale: 0
+day->reference: 0
+day->width: 6
+hour->code: '004004'
+hour->units: h
+hour->scale: 0
+hour->reference: 0
+hour->width: 5
+minute->code: '004005'
+minute->units: min
+minute->scale: 0
+minute->reference: 0
+minute->width: 6
+second->code: '004006'
+second->units: s
+second->scale: 0
+second->reference: 0
+second->width: 6
+timePeriod->code: '004086'
+timePeriod->units: s
+timePeriod->scale: 0
+timePeriod->reference: -8192
+timePeriod->width: 15
+extendedHeightAssignmentMethod->code: '002162'
+extendedHeightAssignmentMethod->units: CODE TABLE
+extendedHeightAssignmentMethod->scale: 0
+extendedHeightAssignmentMethod->reference: 0
+extendedHeightAssignmentMethod->width: 6
+pressure->code: '007004'
+pressure->units: Pa
+pressure->scale: -1
+pressure->reference: 0
+pressure->width: 14
+windDirection->code: '011001'
+windDirection->units: deg
+windDirection->scale: 0
+windDirection->reference: 0
+windDirection->width: 9
+windSpeed->code: '011002'
+windSpeed->units: m/s
+windSpeed->scale: 1
+windSpeed->reference: 0
+windSpeed->width: 12
+u->code: ['011003', '011003', '011003', '011003', '011003', '011095', '011095', '011095', '011003']
+u->units: ['m/s', 'm/s', 'm/s', 'm/s', 'm/s', 'm/s', 'm/s', 'm/s', 'm/s']
+u->scale: [1, 1, 1, 1, 1, 1, 1, 1, 1]
+u->reference: [-4096, -4096, -4096, -4096, -4096, -4096, -4096, -4096, -4096]
+u->width: [13, 13, 13, 13, 13, 13, 13, 13, 13]
+v->code: ['011004', '011004', '011004', '011004', '011004', '011096', '011096', '011096', '011004']
+v->units: ['m/s', 'm/s', 'm/s', 'm/s', 'm/s', 'm/s', 'm/s', 'm/s', 'm/s']
+v->scale: [1, 1, 1, 1, 1, 1, 1, 1, 1]
+v->reference: [-4096, -4096, -4096, -4096, -4096, -4096, -4096, -4096, -4096]
+v->width: [13, 13, 13, 13, 13, 13, 13, 13, 13]
+airTemperature->code: '012001'
+airTemperature->units: K
+airTemperature->scale: 1
+airTemperature->reference: 0
+airTemperature->width: 12
+heightOfTopOfCloud->code: '020014'
+heightOfTopOfCloud->units: m
+heightOfTopOfCloud->scale: -1
+heightOfTopOfCloud->reference: -40
+heightOfTopOfCloud->width: 11
+satelliteZenithAngle->code: '007024'
+satelliteZenithAngle->units: deg
+satelliteZenithAngle->scale: 2
+satelliteZenithAngle->reference: -9000
+satelliteZenithAngle->width: 15
+observationSequenceNumber->code: '001023'
+observationSequenceNumber->units: Numeric
+observationSequenceNumber->scale: 0
+observationSequenceNumber->reference: 0
+observationSequenceNumber->width: 9
+delayedDescriptorReplicationFactor->code: '031001'
+delayedDescriptorReplicationFactor->units: Numeric
+delayedDescriptorReplicationFactor->scale: 0
+delayedDescriptorReplicationFactor->reference: 0
+delayedDescriptorReplicationFactor->width: 8
+satelliteClassification->code: '002020'
+satelliteClassification->units: CODE TABLE
+satelliteClassification->scale: 0
+satelliteClassification->reference: 0
+satelliteClassification->width: 9
+satelliteInstruments->code: '002019'
+satelliteInstruments->units: CODE TABLE
+satelliteInstruments->scale: 0
+satelliteInstruments->reference: 0
+satelliteInstruments->width: 11
+channelNumber->code: '005042'
+channelNumber->units: Numeric
+channelNumber->scale: 0
+channelNumber->reference: 0
+channelNumber->width: 6
+orbitNumber->code: '005040'
+orbitNumber->units: Numeric
+orbitNumber->scale: 0
+orbitNumber->reference: 0
+orbitNumber->width: 24
+bearingOrAzimuth->code: '005021'
+bearingOrAzimuth->units: deg
+bearingOrAzimuth->scale: 2
+bearingOrAzimuth->reference: 0
+bearingOrAzimuth->width: 16
+trackingCorrelationOfVector->code: '011113'
+trackingCorrelationOfVector->units: Numeric
+trackingCorrelationOfVector->scale: 3
+trackingCorrelationOfVector->reference: -1000
+trackingCorrelationOfVector->width: 12
+coefficientOfVariation->code: '025148'
+coefficientOfVariation->units: Numeric
+coefficientOfVariation->scale: 2
+coefficientOfVariation->reference: -10000
+coefficientOfVariation->width: 15
+firstOrderStatistics->code: '008023'
+firstOrderStatistics->units: CODE TABLE
+firstOrderStatistics->scale: 0
+firstOrderStatistics->reference: 0
+firstOrderStatistics->width: 6
+xAxisErrorEllipseMajorComponent->code: '020111'
+xAxisErrorEllipseMajorComponent->units: m
+xAxisErrorEllipseMajorComponent->scale: -1
+xAxisErrorEllipseMajorComponent->reference: 0
+xAxisErrorEllipseMajorComponent->width: 17
+yAxisErrorEllipseMinorComponent->code: '020112'
+yAxisErrorEllipseMinorComponent->units: m
+yAxisErrorEllipseMinorComponent->scale: -1
+yAxisErrorEllipseMinorComponent->reference: 0
+yAxisErrorEllipseMinorComponent->width: 17
+angleOfXAxisInErrorEllipse->code: '020114'
+angleOfXAxisInErrorEllipse->units: deg
+angleOfXAxisInErrorEllipse->scale: 2
+angleOfXAxisInErrorEllipse->reference: -18000
+angleOfXAxisInErrorEllipse->width: 16
+timeSignificance->code: '008021'
+timeSignificance->units: CODE TABLE
+timeSignificance->scale: 0
+timeSignificance->reference: 0
+timeSignificance->width: 5
+verticalSignificanceForNwp->code: '008086'
+verticalSignificanceForNwp->units: FLAG TABLE
+verticalSignificanceForNwp->scale: 0
+verticalSignificanceForNwp->reference: 0
+verticalSignificanceForNwp->width: 12
+standardGeneratingApplication->code: '001044'
+standardGeneratingApplication->units: CODE TABLE
+standardGeneratingApplication->scale: 0
+standardGeneratingApplication->reference: 0
+standardGeneratingApplication->width: 8
+percentConfidence->code: '033007'
+percentConfidence->units: %
+percentConfidence->scale: 0
+percentConfidence->reference: 0
+percentConfidence->width: 7
+measurementUncertaintyExpression->code: '008092'
+measurementUncertaintyExpression->units: CODE TABLE
+measurementUncertaintyExpression->scale: 0
+measurementUncertaintyExpression->reference: 0
+measurementUncertaintyExpression->width: 5
+amvQualityFlag->code: '033066'
+amvQualityFlag->units: FLAG TABLE
+amvQualityFlag->scale: 0
+amvQualityFlag->reference: 0
+amvQualityFlag->width: 24
+cloudAmountInSegment->code: '020081'
+cloudAmountInSegment->units: %
+cloudAmountInSegment->scale: 0
+cloudAmountInSegment->reference: 0
+cloudAmountInSegment->width: 7
+cloudType->code: '020012'
+cloudType->units: CODE TABLE
+cloudType->scale: 0
+cloudType->reference: 0
+cloudType->width: 6
+cloudPhase->code: '020056'
+cloudPhase->units: CODE TABLE
+cloudPhase->scale: 0
+cloudPhase->reference: 0
+cloudPhase->width: 3
+pressureAtTopOfCloud->code: '020016'
+pressureAtTopOfCloud->units: Pa
+pressureAtTopOfCloud->scale: -1
+pressureAtTopOfCloud->reference: 0
+pressureAtTopOfCloud->width: 14
+verticalSignificanceSatelliteObservations->code: '008003'
+verticalSignificanceSatelliteObservations->units: CODE TABLE
+verticalSignificanceSatelliteObservations->scale: 0
+verticalSignificanceSatelliteObservations->reference: 0
+verticalSignificanceSatelliteObservations->width: 6
+optimalEstimationCost->code: '025149'
+optimalEstimationCost->units: Numeric
+optimalEstimationCost->scale: 0
+optimalEstimationCost->reference: 0
+optimalEstimationCost->width: 8
+cloudOpticalThickness->code: '013093'
+cloudOpticalThickness->units: Numeric
+cloudOpticalThickness->scale: 0
+cloudOpticalThickness->reference: 0
+cloudOpticalThickness->width: 8
+iceOrLiquidWaterPath->code: '013109'
+iceOrLiquidWaterPath->units: kg m-2
+iceOrLiquidWaterPath->scale: 3
+iceOrLiquidWaterPath->reference: 0
+iceOrLiquidWaterPath->width: 10
+cloudParticleSize->code: '040038'
+cloudParticleSize->units: m
+cloudParticleSize->scale: 7
+cloudParticleSize->reference: 0
+cloudParticleSize->width: 28
+meteorologicalFeature->code: '008011'
+meteorologicalFeature->units: CODE TABLE
+meteorologicalFeature->scale: 0
+meteorologicalFeature->reference: 0
+meteorologicalFeature->width: 6
+emissivity->code: '014050'
+emissivity->units: %
+emissivity->scale: 1
+emissivity->reference: 0
+emissivity->width: 10

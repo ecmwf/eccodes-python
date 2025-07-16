@@ -4,6 +4,7 @@ from contextlib import contextmanager
 import numpy as np
 
 import eccodes
+from ._bufr import BUFRMessage
 
 _TYPES_MAP = {
     "float": float,
@@ -240,24 +241,6 @@ class Message:
     def get_buffer(self):
         """Return a buffer containing the encoded message"""
         return eccodes.codes_get_message(self._handle)
-
-
-class BUFRMessage(Message):
-    def __init__(self, handle):
-        super().__init__(handle)
-
-    def pack(self):
-        """Pack the underlying data"""
-        self.set("pack", 1, check_values=False)
-
-    def unpack(self):
-        """Unpack the underlying data"""
-        self.set("unpack", 1, check_values=False)
-
-    @classmethod
-    def from_samples(cls, name):
-        """Create a message from a sample"""
-        return cls(eccodes.codes_bufr_new_from_samples(name))
 
 
 class GRIBMessage(Message):
