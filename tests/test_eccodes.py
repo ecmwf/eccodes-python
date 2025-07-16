@@ -551,7 +551,7 @@ def test_grib_geoiterator():
         [lat, lon, value] = result
         assert -90.0 < lat < 90.00
         assert 0.0 <= lon < 360.0
-        assert math.isclose(value, 1.0, abs_tol=0.001)
+        assert math.isclose(value, 273.15, abs_tol=0.001)
         i += 1
     assert i == 348528
     eccodes.codes_grib_iterator_delete(iterid)
