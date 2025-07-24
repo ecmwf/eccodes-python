@@ -18,17 +18,11 @@ on:
     paths:
       - '.github/workflows/cd.yml'
 jobs:
-  wheel-linux:
-    uses: ./.github/workflows/build-wheel-linux.yml
-    secrets: inherit
-  wheel-macos:
-    uses: ./.github/workflows/build-wheel-macos.yml
-    secrets: inherit
   wheel-windows:
     uses: ./.github/workflows/build-wheel-windows.yml
     secrets: inherit
   pypi:
-    needs: [wheel-linux, wheel-macos, wheel-windows]
+    needs: [wheel-windows]
     uses: ecmwf/reusable-workflows/.github/workflows/cd-pypi.yml@v2
     secrets: inherit
 
