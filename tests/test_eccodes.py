@@ -117,7 +117,7 @@ def test_codes_get_native_type():
 
 
 def test_set_logging_file():
-    if eccodes.codes_get_api_version(int) < 24300:
+    if eccodes.codes_get_api_version(int) < 24400:
         pytest.skip("ecCodes version too old")
 
     nullDeviceFile = "/dev/null"
@@ -541,8 +541,8 @@ def test_grib_get_values():
 
 
 def test_grib_geoiterator():
-    # version 2.43 has different sample values. See ECC-2110
-    if eccodes.codes_get_api_version(int) < 24300:
+    # version 2.44 has different sample values. See ECC-2110
+    if eccodes.codes_get_api_version(int) < 24400:
         pytest.skip("ecCodes version too old")
 
     gid = eccodes.codes_grib_new_from_samples("reduced_gg_pl_256_grib2")

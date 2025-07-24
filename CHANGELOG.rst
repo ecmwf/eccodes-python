@@ -2,12 +2,17 @@
 Changelog for eccodes-python
 ============================
 
-2.43.0 (2025-mm-dd)
+2.44.0 (2025-mm-dd)
+--------------------
+
+- ECC-2108: Implement a way of switching off error output to stderr
+- GitHub pull request #129: Update MemoryReader to read more than one field
+
+
+2.43.0 (2025-07-24)
 --------------------
 
 - ECC-2106: Use eccodeslib instead of own-built binaries
-- ECC-2108: Implement a way of switching off error output to 'stderr'
-- GitHub pull request #129: Update MemoryReader to read more than one field
 
 
 2.42.0 (2025-06-25)
