@@ -2,6 +2,12 @@
 Changelog for eccodes-python
 ============================
 
+2.43.0 (2025-07-24)
+--------------------
+
+- ECC-2106: Use eccodeslib instead of own-built binaries
+
+
 2.42.0 (2025-06-25)
 --------------------
 
