@@ -172,7 +172,6 @@ from gribapi.errors import (
     EndOfIndexError,
     FileNotFoundError,
     FunctionalityNotEnabledError,
-    RuntimeError,
     FunctionNotImplementedError,
     GeocalculusError,
 )
@@ -213,6 +212,7 @@ from gribapi.errors import (
     OutOfRangeError,
     PrematureEndOfFileError,
     ReadOnlyError,
+    RuntimeError,
     StringTooSmallError,
     SwitchNoMatchError,
     TooManyAttributesError,
