@@ -393,3 +393,5 @@ typedef struct codes_bufr_header {
 #define GRIB_WRONG_BITMAP_SIZE		-66
 /** Functionality not enabled */
 #define GRIB_FUNCTIONALITY_NOT_ENABLED		-67
+/** Runtime error */
+#define GRIB_RUNTIME_ERROR		-80
