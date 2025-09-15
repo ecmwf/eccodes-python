@@ -354,7 +354,7 @@ class Message(View):
                     self.header['localHour']   = datetime.hour
                     self.header['localMinute'] = datetime.minute
                     self.header['localSecond'] = datetime.second
-            now = dt.datetime.now(dt.UTC)
+            now = dt.datetime.now(dt.timezone.utc)
             for prefix in ('rdbtime', 'rectime'):
                 items = ['Day', 'Hour', 'Minute', 'Second']
                 if not (skip_dirty and _any_dirty(self.header, prefix, items)):
