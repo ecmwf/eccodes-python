@@ -1,0 +1,671 @@
+messageNumber 1
+edition 4
+masterTableNumber 0
+bufrHeaderCentre 88
+bufrHeaderSubCentre 0
+updateSequenceNumber 0
+dataCategory 0
+internationalDataSubCategory 0
+dataSubCategory 0
+masterTablesVersionNumber 14
+localTablesVersionNumber 0
+typicalYear 2015
+typicalMonth 1
+typicalDay 26
+typicalHour 10
+typicalMinute 0
+typicalSecond 0
+typicalDate 20150126
+typicalTime 100000
+numberOfSubsets 12
+observedData 1
+compressedData 0
+unexpandedDescriptors [307079   4025  11042]
+subsetNumber 1
+blockNumber 1
+stationNumber 27
+stationOrSiteName TROMSO-HOLT         
+stationType 0
+year 2015
+month 1
+day 26
+hour 10
+minute 0
+latitude 69.65230000000001
+longitude 18.905700000000003
+heightOfStationGroundAboveMeanSeaLevel 20.0
+heightOfBarometerAboveMeanSeaLevel --
+nonCoordinatePressure --
+pressureReducedToMeanSeaLevel --
+3HourPressureChange --
+characteristicOfPressureTendency --
+24HourPressureChange --
+pressure --
+nonCoordinateGeopotentialHeight --
+heightOfSensorAboveLocalGroundOrDeckOfMarinePlatform [2.0 -- 2.0 -- 2.0 2.0 2.0 --]
+airTemperature 276.45
+dewpointTemperature 271.39
+relativeHumidity 69
+horizontalVisibility --
+totalPrecipitationPast24Hours --
+cloudCoverTotal --
+verticalSignificanceSurfaceObservations [-- --]
+cloudAmount [--]
+heightOfBaseOfCloud [--]
+cloudType [-- -- --]
+delayedDescriptorReplicationFactor [0 0 0]
+shortDelayedDescriptorReplicationFactor [0 0 0 0 0 0]
+stateOfGround --
+totalSnowDepth --
+groundMinimumTemperaturePast12Hours --
+presentWeather --
+timePeriod [-- -- -- -- -1 -1 0 -1 0 -10 -- -- -- --]
+pastWeather1 --
+pastWeather2 --
+totalSunshine [-- --]
+totalPrecipitationOrTotalWaterEquivalent [-- 0.0]
+maximumTemperatureAtHeightAndOverPeriodSpecified 276.55
+minimumTemperatureAtHeightAndOverPeriodSpecified 276.25
+instrumentationForWindMeasurement 8
+timeSignificance [2 --]
+windDirection --
+windSpeed --
+maximumWindGustDirection [-- --]
+maximumWindGustSpeed [-- --]
+typeOfInstrumentationForEvaporationMeasurement --
+evaporation --
+maximumWindSpeed10MinuteMeanWind --
+subsetNumber 2
+blockNumber 1
+stationNumber 84
+stationOrSiteName PASVIK              
+stationType 0
+year 2015
+month 1
+day 26
+hour 10
+minute 0
+latitude 69.4552
+longitude 30.041000000000004
+heightOfStationGroundAboveMeanSeaLevel 27.0
+heightOfBarometerAboveMeanSeaLevel --
+nonCoordinatePressure --
+pressureReducedToMeanSeaLevel --
+3HourPressureChange --
+characteristicOfPressureTendency --
+24HourPressureChange --
+pressure --
+nonCoordinateGeopotentialHeight --
+heightOfSensorAboveLocalGroundOrDeckOfMarinePlatform [2.0 -- 2.0 -- 2.0 2.0 10.0 --]
+airTemperature 266.55
+dewpointTemperature 264.83
+relativeHumidity 86
+horizontalVisibility --
+totalPrecipitationPast24Hours --
+cloudCoverTotal --
+verticalSignificanceSurfaceObservations [-- --]
+cloudAmount [--]
+heightOfBaseOfCloud [--]
+cloudType [-- -- --]
+delayedDescriptorReplicationFactor [0 0 0]
+shortDelayedDescriptorReplicationFactor [0 0 0 0 0 0]
+stateOfGround --
+totalSnowDepth --
+groundMinimumTemperaturePast12Hours --
+presentWeather --
+timePeriod [-- -- -- -- -1 -1 0 -1 0 -10 -- -- -- --]
+pastWeather1 --
+pastWeather2 --
+totalSunshine [-- --]
+totalPrecipitationOrTotalWaterEquivalent [-- 0.0]
+maximumTemperatureAtHeightAndOverPeriodSpecified 266.55
+minimumTemperatureAtHeightAndOverPeriodSpecified 265.45
+instrumentationForWindMeasurement 8
+timeSignificance [2 --]
+windDirection --
+windSpeed --
+maximumWindGustDirection [-- --]
+maximumWindGustSpeed [-- --]
+typeOfInstrumentationForEvaporationMeasurement --
+evaporation --
+maximumWindSpeed10MinuteMeanWind --
+subsetNumber 3
+blockNumber 1
+stationNumber 270
+stationOrSiteName KVITHAMAR           
+stationType 0
+year 2015
+month 1
+day 26
+hour 10
+minute 0
+latitude 63.488200000000006
+longitude 10.8795
+heightOfStationGroundAboveMeanSeaLevel 40.0
+heightOfBarometerAboveMeanSeaLevel --
+nonCoordinatePressure --
+pressureReducedToMeanSeaLevel --
+3HourPressureChange --
+characteristicOfPressureTendency --
+24HourPressureChange --
+pressure --
+nonCoordinateGeopotentialHeight --
+heightOfSensorAboveLocalGroundOrDeckOfMarinePlatform [2.0 -- 2.0 -- 2.0 2.0 2.0 --]
+airTemperature 275.25
+dewpointTemperature 273.18
+relativeHumidity 86
+horizontalVisibility --
+totalPrecipitationPast24Hours --
+cloudCoverTotal --
+verticalSignificanceSurfaceObservations [-- --]
+cloudAmount [--]
+heightOfBaseOfCloud [--]
+cloudType [-- -- --]
+delayedDescriptorReplicationFactor [0 0 0]
+shortDelayedDescriptorReplicationFactor [0 0 0 0 0 0]
+stateOfGround --
+totalSnowDepth --
+groundMinimumTemperaturePast12Hours --
+presentWeather --
+timePeriod [-- -- -- -- -1 -1 0 -1 0 -10 -- -- -- --]
+pastWeather1 --
+pastWeather2 --
+totalSunshine [-- --]
+totalPrecipitationOrTotalWaterEquivalent [-- 0.0]
+maximumTemperatureAtHeightAndOverPeriodSpecified 275.65000000000003
+minimumTemperatureAtHeightAndOverPeriodSpecified 275.15000000000003
+instrumentationForWindMeasurement 8
+timeSignificance [2 --]
+windDirection --
+windSpeed --
+maximumWindGustDirection [-- --]
+maximumWindGustSpeed [-- --]
+typeOfInstrumentationForEvaporationMeasurement --
+evaporation --
+maximumWindSpeed10MinuteMeanWind --
+subsetNumber 4
+blockNumber 1
+stationNumber 272
+stationOrSiteName FROSTA              
+stationType 0
+year 2015
+month 1
+day 26
+hour 10
+minute 0
+latitude 63.56570000000001
+longitude 10.694
+heightOfStationGroundAboveMeanSeaLevel 70.0
+heightOfBarometerAboveMeanSeaLevel --
+nonCoordinatePressure --
+pressureReducedToMeanSeaLevel --
+3HourPressureChange --
+characteristicOfPressureTendency --
+24HourPressureChange --
+pressure --
+nonCoordinateGeopotentialHeight --
+heightOfSensorAboveLocalGroundOrDeckOfMarinePlatform [2.0 -- -- -- -- 2.0 2.0 --]
+airTemperature 276.25
+dewpointTemperature 274.26
+relativeHumidity 87
+horizontalVisibility --
+totalPrecipitationPast24Hours --
+cloudCoverTotal --
+verticalSignificanceSurfaceObservations [-- --]
+cloudAmount [--]
+heightOfBaseOfCloud [--]
+cloudType [-- -- --]
+delayedDescriptorReplicationFactor [0 0 0]
+shortDelayedDescriptorReplicationFactor [0 0 0 0 0 0]
+stateOfGround --
+totalSnowDepth --
+groundMinimumTemperaturePast12Hours --
+presentWeather --
+timePeriod [-- -- -- -- -- -1 0 -1 0 -10 -- -- -- --]
+pastWeather1 --
+pastWeather2 --
+totalSunshine [-- --]
+totalPrecipitationOrTotalWaterEquivalent [-- --]
+maximumTemperatureAtHeightAndOverPeriodSpecified 276.25
+minimumTemperatureAtHeightAndOverPeriodSpecified 275.85
+instrumentationForWindMeasurement 8
+timeSignificance [2 --]
+windDirection --
+windSpeed --
+maximumWindGustDirection [-- --]
+maximumWindGustSpeed [-- --]
+typeOfInstrumentationForEvaporationMeasurement --
+evaporation --
+maximumWindSpeed10MinuteMeanWind --
+subsetNumber 5
+blockNumber 1
+stationNumber 308
+stationOrSiteName FURUNESET           
+stationType 0
+year 2015
+month 1
+day 26
+hour 10
+minute 0
+latitude 61.29280000000001
+longitude 5.044300000000001
+heightOfStationGroundAboveMeanSeaLevel 7.0
+heightOfBarometerAboveMeanSeaLevel --
+nonCoordinatePressure --
+pressureReducedToMeanSeaLevel --
+3HourPressureChange --
+characteristicOfPressureTendency --
+24HourPressureChange --
+pressure --
+nonCoordinateGeopotentialHeight --
+heightOfSensorAboveLocalGroundOrDeckOfMarinePlatform [2.0 -- 2.0 -- 2.0 2.0 2.0 --]
+airTemperature 276.85
+dewpointTemperature 274.91
+relativeHumidity 87
+horizontalVisibility --
+totalPrecipitationPast24Hours --
+cloudCoverTotal --
+verticalSignificanceSurfaceObservations [-- --]
+cloudAmount [--]
+heightOfBaseOfCloud [--]
+cloudType [-- -- --]
+delayedDescriptorReplicationFactor [0 0 0]
+shortDelayedDescriptorReplicationFactor [0 0 0 0 0 0]
+stateOfGround --
+totalSnowDepth --
+groundMinimumTemperaturePast12Hours --
+presentWeather --
+timePeriod [-- -- -- -- -1 -1 0 -1 0 -10 -- -- -- --]
+pastWeather1 --
+pastWeather2 --
+totalSunshine [-- --]
+totalPrecipitationOrTotalWaterEquivalent [-- 2.5]
+maximumTemperatureAtHeightAndOverPeriodSpecified 278.15000000000003
+minimumTemperatureAtHeightAndOverPeriodSpecified 276.35
+instrumentationForWindMeasurement 8
+timeSignificance [2 --]
+windDirection --
+windSpeed --
+maximumWindGustDirection [-- --]
+maximumWindGustSpeed [-- --]
+typeOfInstrumentationForEvaporationMeasurement --
+evaporation --
+maximumWindSpeed10MinuteMeanWind --
+subsetNumber 6
+blockNumber 1
+stationNumber 371
+stationOrSiteName LOKEN I VOLBU       
+stationType 0
+year 2015
+month 1
+day 26
+hour 10
+minute 0
+latitude 61.12200000000001
+longitude 9.063
+heightOfStationGroundAboveMeanSeaLevel 521.0
+heightOfBarometerAboveMeanSeaLevel --
+nonCoordinatePressure --
+pressureReducedToMeanSeaLevel --
+3HourPressureChange --
+characteristicOfPressureTendency --
+24HourPressureChange --
+pressure --
+nonCoordinateGeopotentialHeight --
+heightOfSensorAboveLocalGroundOrDeckOfMarinePlatform [2.0 -- 2.0 -- 2.0 2.0 2.0 --]
+airTemperature 265.35
+dewpointTemperature 264.05
+relativeHumidity 89
+horizontalVisibility --
+totalPrecipitationPast24Hours --
+cloudCoverTotal --
+verticalSignificanceSurfaceObservations [-- --]
+cloudAmount [--]
+heightOfBaseOfCloud [--]
+cloudType [-- -- --]
+delayedDescriptorReplicationFactor [0 0 0]
+shortDelayedDescriptorReplicationFactor [0 0 0 0 0 0]
+stateOfGround --
+totalSnowDepth --
+groundMinimumTemperaturePast12Hours --
+presentWeather --
+timePeriod [-- -- -- -- -1 -1 0 -1 0 -10 -- -- -- --]
+pastWeather1 --
+pastWeather2 --
+totalSunshine [-- --]
+totalPrecipitationOrTotalWaterEquivalent [-- 0.0]
+maximumTemperatureAtHeightAndOverPeriodSpecified 265.85
+minimumTemperatureAtHeightAndOverPeriodSpecified 265.35
+instrumentationForWindMeasurement 8
+timeSignificance [2 --]
+windDirection --
+windSpeed --
+maximumWindGustDirection [-- --]
+maximumWindGustSpeed [-- --]
+typeOfInstrumentationForEvaporationMeasurement --
+evaporation --
+maximumWindSpeed10MinuteMeanWind --
+subsetNumber 7
+blockNumber 1
+stationNumber 381
+stationOrSiteName APELSVOLL           
+stationType 0
+year 2015
+month 1
+day 26
+hour 10
+minute 0
+latitude 60.7002
+longitude 10.8695
+heightOfStationGroundAboveMeanSeaLevel 264.0
+heightOfBarometerAboveMeanSeaLevel --
+nonCoordinatePressure --
+pressureReducedToMeanSeaLevel --
+3HourPressureChange --
+characteristicOfPressureTendency --
+24HourPressureChange --
+pressure --
+nonCoordinateGeopotentialHeight --
+heightOfSensorAboveLocalGroundOrDeckOfMarinePlatform [2.0 -- 2.0 -- 2.0 2.0 2.0 --]
+airTemperature 270.15
+dewpointTemperature 269.53000000000003
+relativeHumidity 95
+horizontalVisibility --
+totalPrecipitationPast24Hours --
+cloudCoverTotal --
+verticalSignificanceSurfaceObservations [-- --]
+cloudAmount [--]
+heightOfBaseOfCloud [--]
+cloudType [-- -- --]
+delayedDescriptorReplicationFactor [0 0 0]
+shortDelayedDescriptorReplicationFactor [0 0 0 0 0 0]
+stateOfGround --
+totalSnowDepth --
+groundMinimumTemperaturePast12Hours --
+presentWeather --
+timePeriod [-- -- -- -- -1 -1 0 -1 0 -10 -- -- -- --]
+pastWeather1 --
+pastWeather2 --
+totalSunshine [-- --]
+totalPrecipitationOrTotalWaterEquivalent [-- 0.0]
+maximumTemperatureAtHeightAndOverPeriodSpecified 270.25
+minimumTemperatureAtHeightAndOverPeriodSpecified 269.95
+instrumentationForWindMeasurement 8
+timeSignificance [2 --]
+windDirection --
+windSpeed --
+maximumWindGustDirection [-- --]
+maximumWindGustSpeed [-- --]
+typeOfInstrumentationForEvaporationMeasurement --
+evaporation --
+maximumWindSpeed10MinuteMeanWind --
+subsetNumber 8
+blockNumber 1
+stationNumber 382
+stationOrSiteName KISE                
+stationType 0
+year 2015
+month 1
+day 26
+hour 10
+minute 0
+latitude 60.773300000000006
+longitude 10.8055
+heightOfStationGroundAboveMeanSeaLevel 128.0
+heightOfBarometerAboveMeanSeaLevel --
+nonCoordinatePressure --
+pressureReducedToMeanSeaLevel --
+3HourPressureChange --
+characteristicOfPressureTendency --
+24HourPressureChange --
+pressure --
+nonCoordinateGeopotentialHeight --
+heightOfSensorAboveLocalGroundOrDeckOfMarinePlatform [2.0 -- 2.0 -- 2.0 2.0 2.0 --]
+airTemperature 270.45
+dewpointTemperature 269.47
+relativeHumidity 92
+horizontalVisibility --
+totalPrecipitationPast24Hours --
+cloudCoverTotal --
+verticalSignificanceSurfaceObservations [-- --]
+cloudAmount [--]
+heightOfBaseOfCloud [--]
+cloudType [-- -- --]
+delayedDescriptorReplicationFactor [0 0 0]
+shortDelayedDescriptorReplicationFactor [0 0 0 0 0 0]
+stateOfGround --
+totalSnowDepth --
+groundMinimumTemperaturePast12Hours --
+presentWeather --
+timePeriod [-- -- -- -- -1 -1 0 -1 0 -10 -- -- -- --]
+pastWeather1 --
+pastWeather2 --
+totalSunshine [-- --]
+totalPrecipitationOrTotalWaterEquivalent [-- 0.0]
+maximumTemperatureAtHeightAndOverPeriodSpecified 270.45
+minimumTemperatureAtHeightAndOverPeriodSpecified 270.15
+instrumentationForWindMeasurement 8
+timeSignificance [2 --]
+windDirection --
+windSpeed --
+maximumWindGustDirection [-- --]
+maximumWindGustSpeed [-- --]
+typeOfInstrumentationForEvaporationMeasurement --
+evaporation --
+maximumWindSpeed10MinuteMeanWind --
+subsetNumber 9
+blockNumber 1
+stationNumber 387
+stationOrSiteName FAVANG              
+stationType 0
+year 2015
+month 1
+day 26
+hour 10
+minute 0
+latitude 61.455000000000005
+longitude 10.1857
+heightOfStationGroundAboveMeanSeaLevel 200.0
+heightOfBarometerAboveMeanSeaLevel --
+nonCoordinatePressure --
+pressureReducedToMeanSeaLevel --
+3HourPressureChange --
+characteristicOfPressureTendency --
+24HourPressureChange --
+pressure --
+nonCoordinateGeopotentialHeight --
+heightOfSensorAboveLocalGroundOrDeckOfMarinePlatform [2.0 -- 2.0 -- 2.0 2.0 -- --]
+airTemperature 267.55
+dewpointTemperature 266.47
+relativeHumidity 91
+horizontalVisibility --
+totalPrecipitationPast24Hours --
+cloudCoverTotal --
+verticalSignificanceSurfaceObservations [-- --]
+cloudAmount [--]
+heightOfBaseOfCloud [--]
+cloudType [-- -- --]
+delayedDescriptorReplicationFactor [0 0 0]
+shortDelayedDescriptorReplicationFactor [0 0 0 0 0 0]
+stateOfGround --
+totalSnowDepth --
+groundMinimumTemperaturePast12Hours --
+presentWeather --
+timePeriod [-- -- -- -- -1 -1 0 -1 0 -10 -- -- -- --]
+pastWeather1 --
+pastWeather2 --
+totalSunshine [-- --]
+totalPrecipitationOrTotalWaterEquivalent [-- 0.0]
+maximumTemperatureAtHeightAndOverPeriodSpecified 267.85
+minimumTemperatureAtHeightAndOverPeriodSpecified 267.45
+instrumentationForWindMeasurement 8
+timeSignificance [2 --]
+windDirection --
+windSpeed --
+maximumWindGustDirection [-- --]
+maximumWindGustSpeed [-- --]
+typeOfInstrumentationForEvaporationMeasurement --
+evaporation --
+maximumWindSpeed10MinuteMeanWind --
+subsetNumber 10
+blockNumber 1
+stationNumber 413
+stationOrSiteName SAERHEIM            
+stationType 0
+year 2015
+month 1
+day 26
+hour 10
+minute 0
+latitude 58.76050000000001
+longitude 5.6505
+heightOfStationGroundAboveMeanSeaLevel 87.0
+heightOfBarometerAboveMeanSeaLevel --
+nonCoordinatePressure --
+pressureReducedToMeanSeaLevel --
+3HourPressureChange --
+characteristicOfPressureTendency --
+24HourPressureChange --
+pressure --
+nonCoordinateGeopotentialHeight --
+heightOfSensorAboveLocalGroundOrDeckOfMarinePlatform [2.0 -- 2.0 -- 2.0 2.0 2.0 --]
+airTemperature 277.45
+dewpointTemperature 275.85
+relativeHumidity 89
+horizontalVisibility --
+totalPrecipitationPast24Hours --
+cloudCoverTotal --
+verticalSignificanceSurfaceObservations [-- --]
+cloudAmount [--]
+heightOfBaseOfCloud [--]
+cloudType [-- -- --]
+delayedDescriptorReplicationFactor [0 0 0]
+shortDelayedDescriptorReplicationFactor [0 0 0 0 0 0]
+stateOfGround --
+totalSnowDepth --
+groundMinimumTemperaturePast12Hours --
+presentWeather --
+timePeriod [-- -- -- -- -1 -1 0 -1 0 -10 -- -60 -- -60]
+pastWeather1 --
+pastWeather2 --
+totalSunshine [-- --]
+totalPrecipitationOrTotalWaterEquivalent [-- 0.0]
+maximumTemperatureAtHeightAndOverPeriodSpecified 277.75
+minimumTemperatureAtHeightAndOverPeriodSpecified 277.15000000000003
+instrumentationForWindMeasurement 8
+timeSignificance [2 --]
+windDirection 274
+windSpeed 2.6
+maximumWindGustDirection [-- 312]
+maximumWindGustSpeed [-- 4.4]
+typeOfInstrumentationForEvaporationMeasurement --
+evaporation --
+maximumWindSpeed10MinuteMeanWind 2.8000000000000003
+subsetNumber 11
+blockNumber 1
+stationNumber 464
+stationOrSiteName LANDVIK             
+stationType 0
+year 2015
+month 1
+day 26
+hour 10
+minute 0
+latitude 58.34
+longitude 8.5225
+heightOfStationGroundAboveMeanSeaLevel 6.0
+heightOfBarometerAboveMeanSeaLevel --
+nonCoordinatePressure --
+pressureReducedToMeanSeaLevel --
+3HourPressureChange --
+characteristicOfPressureTendency --
+24HourPressureChange --
+pressure --
+nonCoordinateGeopotentialHeight --
+heightOfSensorAboveLocalGroundOrDeckOfMarinePlatform [2.0 -- 2.0 -- 2.0 2.0 2.0 --]
+airTemperature 275.95
+dewpointTemperature 275.52
+relativeHumidity 97
+horizontalVisibility --
+totalPrecipitationPast24Hours --
+cloudCoverTotal --
+verticalSignificanceSurfaceObservations [-- --]
+cloudAmount [--]
+heightOfBaseOfCloud [--]
+cloudType [-- -- --]
+delayedDescriptorReplicationFactor [0 0 0]
+shortDelayedDescriptorReplicationFactor [0 0 0 0 0 0]
+stateOfGround --
+totalSnowDepth --
+groundMinimumTemperaturePast12Hours --
+presentWeather --
+timePeriod [-- -- -- -- -1 -1 0 -1 0 -10 -- -60 -- -60]
+pastWeather1 --
+pastWeather2 --
+totalSunshine [-- --]
+totalPrecipitationOrTotalWaterEquivalent [-- 0.0]
+maximumTemperatureAtHeightAndOverPeriodSpecified 275.95
+minimumTemperatureAtHeightAndOverPeriodSpecified 274.95
+instrumentationForWindMeasurement 8
+timeSignificance [2 --]
+windDirection 272
+windSpeed 0.6000000000000001
+maximumWindGustDirection [-- 47]
+maximumWindGustSpeed [-- 1.7000000000000002]
+typeOfInstrumentationForEvaporationMeasurement --
+evaporation --
+maximumWindSpeed10MinuteMeanWind 1.0
+subsetNumber 12
+blockNumber 1
+stationNumber 485
+stationOrSiteName SANDE-GALLEBERG     
+stationType 0
+year 2015
+month 1
+day 26
+hour 10
+minute 0
+latitude 59.6193
+longitude 10.215000000000002
+heightOfStationGroundAboveMeanSeaLevel 60.0
+heightOfBarometerAboveMeanSeaLevel --
+nonCoordinatePressure --
+pressureReducedToMeanSeaLevel --
+3HourPressureChange --
+characteristicOfPressureTendency --
+24HourPressureChange --
+pressure --
+nonCoordinateGeopotentialHeight --
+heightOfSensorAboveLocalGroundOrDeckOfMarinePlatform [2.0 -- 2.0 -- 2.0 2.0 10.0 --]
+airTemperature 275.45
+dewpointTemperature 274.90000000000003
+relativeHumidity 96
+horizontalVisibility --
+totalPrecipitationPast24Hours --
+cloudCoverTotal --
+verticalSignificanceSurfaceObservations [-- --]
+cloudAmount [--]
+heightOfBaseOfCloud [--]
+cloudType [-- -- --]
+delayedDescriptorReplicationFactor [0 0 0]
+shortDelayedDescriptorReplicationFactor [0 0 0 0 0 0]
+stateOfGround --
+totalSnowDepth --
+groundMinimumTemperaturePast12Hours --
+presentWeather --
+timePeriod [-- -- -- -- -1 -1 0 -1 0 -10 -- -60 -- -60]
+pastWeather1 --
+pastWeather2 --
+totalSunshine [-- --]
+totalPrecipitationOrTotalWaterEquivalent [-- 0.0]
+maximumTemperatureAtHeightAndOverPeriodSpecified 275.75
+minimumTemperatureAtHeightAndOverPeriodSpecified 275.05
+instrumentationForWindMeasurement 8
+timeSignificance [2 --]
+windDirection 0
+windSpeed 0.0
+maximumWindGustDirection [-- 333]
+maximumWindGustSpeed [-- 0.0]
+typeOfInstrumentationForEvaporationMeasurement --
+evaporation --
+maximumWindSpeed10MinuteMeanWind 0.0

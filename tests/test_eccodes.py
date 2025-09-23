@@ -950,6 +950,7 @@ def test_bufr_multi_element_constant_arrays():
     numSubsets = eccodes.codes_get(bid, "numberOfSubsets")
     assert eccodes.codes_get_size(bid, "satelliteIdentifier") == numSubsets
     eccodes.codes_release(bid)
+    eccodes.codes_bufr_multi_element_constant_arrays_off()
 
 
 def test_bufr_new_from_samples_error():

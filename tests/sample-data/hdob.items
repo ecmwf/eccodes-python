@@ -1,0 +1,150 @@
+messageNumber 1
+edition 3
+masterTableNumber 0
+bufrHeaderSubCentre 0
+bufrHeaderCentre 98
+updateSequenceNumber 1
+dataCategory 4
+dataSubCategory 146
+masterTablesVersionNumber 18
+localTablesVersionNumber 0
+typicalYearOfCentury 22
+typicalMonth 5
+typicalDay 29
+typicalHour 16
+typicalMinute 0
+typicalDate 20220529
+typicalTime 160000
+rdbType 7
+oldSubtype 146
+localYear 2022
+localMonth 5
+localDay 29
+localHour 16
+localMinute 0
+localSecond 30
+rdbtimeDay 29
+rdbtimeHour 16
+rdbtimeMinute 26
+rdbtimeSecond 43
+rdbtimeTime 162643
+rectimeDay 29
+rectimeHour 16
+rectimeMinute 26
+rectimeSecond 43
+restricted 0
+correction1 0
+correction1Part 0
+correction2 0
+correction2Part 0
+correction3 0
+correction3Part 0
+correction4 0
+correction4Part 0
+qualityControl 70
+newSubtype 0
+numberOfSubsets 20
+localLongitude1 -88.93333
+localLatitude1 30.4
+localLongitude2 -88.88333
+localLatitude2 30.5
+localNumberOfObservations 20
+satelliteID 0
+observedData 1
+compressedData 1
+unexpandedDescriptors [311010 204002  12103]
+aircraftRegistrationNumberOrOtherIdentification ['HDAF306' 'HDAF306' 'HDAF306' 'HDAF306' 'HDAF306' 'HDAF306' 'HDAF306'
+ 'HDAF306' 'HDAF306' 'HDAF306' 'HDAF306' 'HDAF306' 'HDAF306' 'HDAF306'
+ 'HDAF306' 'HDAF306' 'HDAF306' 'HDAF306' 'HDAF306' 'HDAF306']
+observationSequenceNumber [-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --]
+aircraftFlightNumber [-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --]
+aircraftTailNumber [-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --]
+originationAirport [-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --]
+destinationAirport [-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --]
+year [[2022 2022 2022 2022 2022 2022 2022 2022 2022 2022 2022 2022 2022 2022
+  2022 2022 2022 2022 2022 2022]]
+year->associatedField [3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3.]
+year->associatedField->associatedFieldSignificance [8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8]
+month [[5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5]]
+month->associatedField [3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3.]
+month->associatedField->associatedFieldSignificance [8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8]
+day [[29 29 29 29 29 29 29 29 29 29 29 29 29 29 29 29 29 29 29 29]]
+day->associatedField [3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3.]
+day->associatedField->associatedFieldSignificance [8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8]
+hour [[16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16]]
+hour->associatedField [3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3.]
+hour->associatedField->associatedFieldSignificance [8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8]
+minute [[ 0  1  1  2  2  3  3  4  4  5  5  6  6  7  7  8  8  9  9 10]]
+minute->associatedField [3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3.]
+minute->associatedField->associatedFieldSignificance [8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8]
+second [[30  0 30  0 30  0 30  0 30  0 30  0 30  0 30  0 30  0 30  0]]
+second->associatedField [3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3.]
+second->associatedField->associatedFieldSignificance [8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8]
+latitude [[30.4     30.4     30.4     30.4     30.4     30.4     30.4     30.4
+  30.4     30.4     30.4     30.4     30.4     30.41667 30.43333 30.45
+  30.46667 30.48333 30.5     30.48333]]
+latitude->associatedField [0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+latitude->associatedField->associatedFieldSignificance [8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8]
+longitude [[-88.91667 -88.91667 -88.91667 -88.91667 -88.91667 -88.93333 -88.93333
+  -88.93333 -88.93333 -88.93333 -88.93333 -88.93333 -88.93333 -88.93333
+  -88.91667 -88.9     -88.88333 -88.88333 -88.9     -88.93333]]
+longitude->associatedField [0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+longitude->associatedField->associatedFieldSignificance [8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8]
+flightLevel [   8    8    5    5    5    5    5    5    6    7    8   10    8    7
+  189  373  679  916 1248 1501]
+flightLevel->associatedField [0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+flightLevel->associatedField->associatedFieldSignificance [8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8]
+globalNavigationSatelliteSystemAltitude [-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --]
+globalNavigationSatelliteSystemAltitude->associatedField [3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3.]
+globalNavigationSatelliteSystemAltitude->associatedField->associatedFieldSignificance [8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8]
+detailedPhaseOfFlight [-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --]
+detailedPhaseOfFlight->associatedField [3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3.]
+detailedPhaseOfFlight->associatedField->associatedFieldSignificance [8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8]
+windDirection [[  0   0   0   0   0   0   0   0   0   0   0   0   0 127 113 115 130 127
+  193 224]]
+windDirection->associatedField [0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+windDirection->associatedField->associatedFieldSignificance [8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8]
+windSpeed [[0.  0.  0.  0.  0.  0.  0.  0.  0.  0.  0.  0.  0.  3.6 4.6 3.6 3.6 4.1
+  4.1 5.7]]
+windSpeed->associatedField [0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+windSpeed->associatedField->associatedFieldSignificance [8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8]
+aircraftRollAngleQuality [-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --]
+aircraftRollAngleQuality->associatedField [3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3.]
+aircraftRollAngleQuality->associatedField->associatedFieldSignificance [8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8]
+aircraftTrueAirspeed [-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --]
+aircraftTrueAirspeed->associatedField [3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3.]
+aircraftTrueAirspeed->associatedField->associatedFieldSignificance [8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8]
+aircraftGroundSpeedUComponent [-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --]
+aircraftGroundSpeedUComponent->associatedField [3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3.]
+aircraftGroundSpeedUComponent->associatedField->associatedFieldSignificance [8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8]
+aircraftGroundSpeedVComponent [-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --]
+aircraftGroundSpeedVComponent->associatedField [3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3.]
+aircraftGroundSpeedVComponent->associatedField->associatedFieldSignificance [8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8]
+aircraftGroundSpeedWComponent [-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --]
+aircraftGroundSpeedWComponent->associatedField [3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3.]
+aircraftGroundSpeedWComponent->associatedField->associatedFieldSignificance [8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8]
+aircraftTrueHeading [-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --]
+aircraftTrueHeading->associatedField [3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3.]
+aircraftTrueHeading->associatedField->associatedFieldSignificance [8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8]
+airTemperature [[309.05 308.95 308.65 308.65 308.15 304.95 301.15 301.55 301.65 302.15
+  301.55 302.95 301.75 299.75 297.15 295.65 292.85 290.25 288.15 286.55]]
+airTemperature->associatedField [0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+airTemperature->associatedField->associatedFieldSignificance [8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8]
+aircraftHumiditySensors [-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --]
+aircraftHumiditySensors->associatedField [3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3.]
+aircraftHumiditySensors->associatedField->associatedFieldSignificance [8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8]
+mixingRatio [-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --]
+mixingRatio->associatedField [3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3.]
+mixingRatio->associatedField->associatedFieldSignificance [8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8]
+relativeHumidity [-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --]
+relativeHumidity->associatedField [3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3.]
+relativeHumidity->associatedField->associatedFieldSignificance [8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8]
+shortDelayedDescriptorReplicationFactor [0 0 0 0 0 0]
+moistureQuality [-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --]
+moistureQuality->associatedField [3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3. 3.]
+moistureQuality->associatedField->associatedFieldSignificance [8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8]
+delayedDescriptorReplicationFactor [0 0]
+dewpointTemperature [[292.25 292.45 292.25 292.35 292.45 292.45 292.25 290.75 290.05 289.15
+  289.45 287.75 287.75 291.95 290.45 289.05 287.15 285.85 283.55 280.75]]
+dewpointTemperature->associatedField [[0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]]
+dewpointTemperature->associatedField->associatedFieldSignificance [[8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8]]

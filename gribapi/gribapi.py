@@ -2470,6 +2470,19 @@ def grib_set_data_quality_checks(val):
     lib.grib_context_set_data_quality_checks(context, val)
 
 
+@require(basename=str)
+def grib_full_defs_path(basename):
+    """
+    @brief Get the full path of a definition file
+    """
+    context = lib.grib_context_get_default()
+    path = lib.grib_context_full_defs_path(context, basename.encode(ENC))
+    if path:
+        return ffi.string(path).decode(ENC)
+    else:
+        return ""
+
+
 @require(defs_path=str)
 def grib_set_definitions_path(defs_path):
     """

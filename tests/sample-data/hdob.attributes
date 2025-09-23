@@ -1,0 +1,416 @@
+messageNumber: 1
+aircraftRegistrationNumberOrOtherIdentification->code: '001008'
+aircraftRegistrationNumberOrOtherIdentification->units: CCITT IA5
+aircraftRegistrationNumberOrOtherIdentification->scale: 0
+aircraftRegistrationNumberOrOtherIdentification->reference: 0
+aircraftRegistrationNumberOrOtherIdentification->width: 64
+observationSequenceNumber->code: '001023'
+observationSequenceNumber->units: Numeric
+observationSequenceNumber->scale: 0
+observationSequenceNumber->reference: 0
+observationSequenceNumber->width: 9
+aircraftFlightNumber->code: '001006'
+aircraftFlightNumber->units: CCITT IA5
+aircraftFlightNumber->scale: 0
+aircraftFlightNumber->reference: 0
+aircraftFlightNumber->width: 64
+aircraftTailNumber->code: '001110'
+aircraftTailNumber->units: CCITT IA5
+aircraftTailNumber->scale: 0
+aircraftTailNumber->reference: 0
+aircraftTailNumber->width: 48
+originationAirport->code: '001111'
+originationAirport->units: CCITT IA5
+originationAirport->scale: 0
+originationAirport->reference: 0
+originationAirport->width: 24
+destinationAirport->code: '001112'
+destinationAirport->units: CCITT IA5
+destinationAirport->scale: 0
+destinationAirport->reference: 0
+destinationAirport->width: 24
+year->code: '004001'
+year->units: a
+year->scale: 0
+year->reference: 0
+year->width: 12
+year->associatedField->code: 0
+year->associatedField->units: associated units
+year->associatedField->scale: 0
+year->associatedField->reference: 0
+year->associatedField->width: 2
+year->associatedField->associatedFieldSignificance->code: '031021'
+year->associatedField->associatedFieldSignificance->units: CODE TABLE
+year->associatedField->associatedFieldSignificance->scale: 0
+year->associatedField->associatedFieldSignificance->reference: 0
+year->associatedField->associatedFieldSignificance->width: 6
+month->code: '004002'
+month->units: mon
+month->scale: 0
+month->reference: 0
+month->width: 4
+month->associatedField->code: 0
+month->associatedField->units: associated units
+month->associatedField->scale: 0
+month->associatedField->reference: 0
+month->associatedField->width: 2
+month->associatedField->associatedFieldSignificance->code: '031021'
+month->associatedField->associatedFieldSignificance->units: CODE TABLE
+month->associatedField->associatedFieldSignificance->scale: 0
+month->associatedField->associatedFieldSignificance->reference: 0
+month->associatedField->associatedFieldSignificance->width: 6
+day->code: '004003'
+day->units: d
+day->scale: 0
+day->reference: 0
+day->width: 6
+day->associatedField->code: 0
+day->associatedField->units: associated units
+day->associatedField->scale: 0
+day->associatedField->reference: 0
+day->associatedField->width: 2
+day->associatedField->associatedFieldSignificance->code: '031021'
+day->associatedField->associatedFieldSignificance->units: CODE TABLE
+day->associatedField->associatedFieldSignificance->scale: 0
+day->associatedField->associatedFieldSignificance->reference: 0
+day->associatedField->associatedFieldSignificance->width: 6
+hour->code: '004004'
+hour->units: h
+hour->scale: 0
+hour->reference: 0
+hour->width: 5
+hour->associatedField->code: 0
+hour->associatedField->units: associated units
+hour->associatedField->scale: 0
+hour->associatedField->reference: 0
+hour->associatedField->width: 2
+hour->associatedField->associatedFieldSignificance->code: '031021'
+hour->associatedField->associatedFieldSignificance->units: CODE TABLE
+hour->associatedField->associatedFieldSignificance->scale: 0
+hour->associatedField->associatedFieldSignificance->reference: 0
+hour->associatedField->associatedFieldSignificance->width: 6
+minute->code: '004005'
+minute->units: min
+minute->scale: 0
+minute->reference: 0
+minute->width: 6
+minute->associatedField->code: 0
+minute->associatedField->units: associated units
+minute->associatedField->scale: 0
+minute->associatedField->reference: 0
+minute->associatedField->width: 2
+minute->associatedField->associatedFieldSignificance->code: '031021'
+minute->associatedField->associatedFieldSignificance->units: CODE TABLE
+minute->associatedField->associatedFieldSignificance->scale: 0
+minute->associatedField->associatedFieldSignificance->reference: 0
+minute->associatedField->associatedFieldSignificance->width: 6
+second->code: '004006'
+second->units: s
+second->scale: 0
+second->reference: 0
+second->width: 6
+second->associatedField->code: 0
+second->associatedField->units: associated units
+second->associatedField->scale: 0
+second->associatedField->reference: 0
+second->associatedField->width: 2
+second->associatedField->associatedFieldSignificance->code: '031021'
+second->associatedField->associatedFieldSignificance->units: CODE TABLE
+second->associatedField->associatedFieldSignificance->scale: 0
+second->associatedField->associatedFieldSignificance->reference: 0
+second->associatedField->associatedFieldSignificance->width: 6
+latitude->code: '005001'
+latitude->units: deg
+latitude->scale: 5
+latitude->reference: -9000000
+latitude->width: 25
+latitude->associatedField->code: 0
+latitude->associatedField->units: associated units
+latitude->associatedField->scale: 0
+latitude->associatedField->reference: 0
+latitude->associatedField->width: 2
+latitude->associatedField->associatedFieldSignificance->code: '031021'
+latitude->associatedField->associatedFieldSignificance->units: CODE TABLE
+latitude->associatedField->associatedFieldSignificance->scale: 0
+latitude->associatedField->associatedFieldSignificance->reference: 0
+latitude->associatedField->associatedFieldSignificance->width: 6
+longitude->code: '006001'
+longitude->units: deg
+longitude->scale: 5
+longitude->reference: -18000000
+longitude->width: 26
+longitude->associatedField->code: 0
+longitude->associatedField->units: associated units
+longitude->associatedField->scale: 0
+longitude->associatedField->reference: 0
+longitude->associatedField->width: 2
+longitude->associatedField->associatedFieldSignificance->code: '031021'
+longitude->associatedField->associatedFieldSignificance->units: CODE TABLE
+longitude->associatedField->associatedFieldSignificance->scale: 0
+longitude->associatedField->associatedFieldSignificance->reference: 0
+longitude->associatedField->associatedFieldSignificance->width: 6
+flightLevel->code: '007010'
+flightLevel->units: m
+flightLevel->scale: 0
+flightLevel->reference: -1024
+flightLevel->width: 16
+flightLevel->associatedField->code: 0
+flightLevel->associatedField->units: associated units
+flightLevel->associatedField->scale: 0
+flightLevel->associatedField->reference: 0
+flightLevel->associatedField->width: 2
+flightLevel->associatedField->associatedFieldSignificance->code: '031021'
+flightLevel->associatedField->associatedFieldSignificance->units: CODE TABLE
+flightLevel->associatedField->associatedFieldSignificance->scale: 0
+flightLevel->associatedField->associatedFieldSignificance->reference: 0
+flightLevel->associatedField->associatedFieldSignificance->width: 6
+globalNavigationSatelliteSystemAltitude->code: '010053'
+globalNavigationSatelliteSystemAltitude->units: m
+globalNavigationSatelliteSystemAltitude->scale: 0
+globalNavigationSatelliteSystemAltitude->reference: -1000
+globalNavigationSatelliteSystemAltitude->width: 17
+globalNavigationSatelliteSystemAltitude->associatedField->code: 0
+globalNavigationSatelliteSystemAltitude->associatedField->units: associated units
+globalNavigationSatelliteSystemAltitude->associatedField->scale: 0
+globalNavigationSatelliteSystemAltitude->associatedField->reference: 0
+globalNavigationSatelliteSystemAltitude->associatedField->width: 2
+globalNavigationSatelliteSystemAltitude->associatedField->associatedFieldSignificance->code: '031021'
+globalNavigationSatelliteSystemAltitude->associatedField->associatedFieldSignificance->units: CODE TABLE
+globalNavigationSatelliteSystemAltitude->associatedField->associatedFieldSignificance->scale: 0
+globalNavigationSatelliteSystemAltitude->associatedField->associatedFieldSignificance->reference: 0
+globalNavigationSatelliteSystemAltitude->associatedField->associatedFieldSignificance->width: 6
+detailedPhaseOfFlight->code: '008009'
+detailedPhaseOfFlight->units: CODE TABLE
+detailedPhaseOfFlight->scale: 0
+detailedPhaseOfFlight->reference: 0
+detailedPhaseOfFlight->width: 4
+detailedPhaseOfFlight->associatedField->code: 0
+detailedPhaseOfFlight->associatedField->units: associated units
+detailedPhaseOfFlight->associatedField->scale: 0
+detailedPhaseOfFlight->associatedField->reference: 0
+detailedPhaseOfFlight->associatedField->width: 2
+detailedPhaseOfFlight->associatedField->associatedFieldSignificance->code: '031021'
+detailedPhaseOfFlight->associatedField->associatedFieldSignificance->units: CODE TABLE
+detailedPhaseOfFlight->associatedField->associatedFieldSignificance->scale: 0
+detailedPhaseOfFlight->associatedField->associatedFieldSignificance->reference: 0
+detailedPhaseOfFlight->associatedField->associatedFieldSignificance->width: 6
+windDirection->code: '011001'
+windDirection->units: deg
+windDirection->scale: 0
+windDirection->reference: 0
+windDirection->width: 9
+windDirection->associatedField->code: 0
+windDirection->associatedField->units: associated units
+windDirection->associatedField->scale: 0
+windDirection->associatedField->reference: 0
+windDirection->associatedField->width: 2
+windDirection->associatedField->associatedFieldSignificance->code: '031021'
+windDirection->associatedField->associatedFieldSignificance->units: CODE TABLE
+windDirection->associatedField->associatedFieldSignificance->scale: 0
+windDirection->associatedField->associatedFieldSignificance->reference: 0
+windDirection->associatedField->associatedFieldSignificance->width: 6
+windSpeed->code: ['011002']
+windSpeed->units: ['m/s']
+windSpeed->scale: [1]
+windSpeed->reference: [0]
+windSpeed->width: [12]
+windSpeed->associatedField->code: 0
+windSpeed->associatedField->units: associated units
+windSpeed->associatedField->scale: 0
+windSpeed->associatedField->reference: 0
+windSpeed->associatedField->width: 2
+windSpeed->associatedField->associatedFieldSignificance->code: '031021'
+windSpeed->associatedField->associatedFieldSignificance->units: CODE TABLE
+windSpeed->associatedField->associatedFieldSignificance->scale: 0
+windSpeed->associatedField->associatedFieldSignificance->reference: 0
+windSpeed->associatedField->associatedFieldSignificance->width: 6
+aircraftRollAngleQuality->code: '002064'
+aircraftRollAngleQuality->units: CODE TABLE
+aircraftRollAngleQuality->scale: 0
+aircraftRollAngleQuality->reference: 0
+aircraftRollAngleQuality->width: 2
+aircraftRollAngleQuality->associatedField->code: 0
+aircraftRollAngleQuality->associatedField->units: associated units
+aircraftRollAngleQuality->associatedField->scale: 0
+aircraftRollAngleQuality->associatedField->reference: 0
+aircraftRollAngleQuality->associatedField->width: 2
+aircraftRollAngleQuality->associatedField->associatedFieldSignificance->code: '031021'
+aircraftRollAngleQuality->associatedField->associatedFieldSignificance->units: CODE TABLE
+aircraftRollAngleQuality->associatedField->associatedFieldSignificance->scale: 0
+aircraftRollAngleQuality->associatedField->associatedFieldSignificance->reference: 0
+aircraftRollAngleQuality->associatedField->associatedFieldSignificance->width: 6
+aircraftTrueAirspeed->code: '011100'
+aircraftTrueAirspeed->units: m/s
+aircraftTrueAirspeed->scale: 1
+aircraftTrueAirspeed->reference: 0
+aircraftTrueAirspeed->width: 12
+aircraftTrueAirspeed->associatedField->code: 0
+aircraftTrueAirspeed->associatedField->units: associated units
+aircraftTrueAirspeed->associatedField->scale: 0
+aircraftTrueAirspeed->associatedField->reference: 0
+aircraftTrueAirspeed->associatedField->width: 2
+aircraftTrueAirspeed->associatedField->associatedFieldSignificance->code: '031021'
+aircraftTrueAirspeed->associatedField->associatedFieldSignificance->units: CODE TABLE
+aircraftTrueAirspeed->associatedField->associatedFieldSignificance->scale: 0
+aircraftTrueAirspeed->associatedField->associatedFieldSignificance->reference: 0
+aircraftTrueAirspeed->associatedField->associatedFieldSignificance->width: 6
+aircraftGroundSpeedUComponent->code: '011101'
+aircraftGroundSpeedUComponent->units: m/s
+aircraftGroundSpeedUComponent->scale: 1
+aircraftGroundSpeedUComponent->reference: -4096
+aircraftGroundSpeedUComponent->width: 13
+aircraftGroundSpeedUComponent->associatedField->code: 0
+aircraftGroundSpeedUComponent->associatedField->units: associated units
+aircraftGroundSpeedUComponent->associatedField->scale: 0
+aircraftGroundSpeedUComponent->associatedField->reference: 0
+aircraftGroundSpeedUComponent->associatedField->width: 2
+aircraftGroundSpeedUComponent->associatedField->associatedFieldSignificance->code: '031021'
+aircraftGroundSpeedUComponent->associatedField->associatedFieldSignificance->units: CODE TABLE
+aircraftGroundSpeedUComponent->associatedField->associatedFieldSignificance->scale: 0
+aircraftGroundSpeedUComponent->associatedField->associatedFieldSignificance->reference: 0
+aircraftGroundSpeedUComponent->associatedField->associatedFieldSignificance->width: 6
+aircraftGroundSpeedVComponent->code: '011102'
+aircraftGroundSpeedVComponent->units: m/s
+aircraftGroundSpeedVComponent->scale: 1
+aircraftGroundSpeedVComponent->reference: -4096
+aircraftGroundSpeedVComponent->width: 13
+aircraftGroundSpeedVComponent->associatedField->code: 0
+aircraftGroundSpeedVComponent->associatedField->units: associated units
+aircraftGroundSpeedVComponent->associatedField->scale: 0
+aircraftGroundSpeedVComponent->associatedField->reference: 0
+aircraftGroundSpeedVComponent->associatedField->width: 2
+aircraftGroundSpeedVComponent->associatedField->associatedFieldSignificance->code: '031021'
+aircraftGroundSpeedVComponent->associatedField->associatedFieldSignificance->units: CODE TABLE
+aircraftGroundSpeedVComponent->associatedField->associatedFieldSignificance->scale: 0
+aircraftGroundSpeedVComponent->associatedField->associatedFieldSignificance->reference: 0
+aircraftGroundSpeedVComponent->associatedField->associatedFieldSignificance->width: 6
+aircraftGroundSpeedWComponent->code: '011103'
+aircraftGroundSpeedWComponent->units: m/s
+aircraftGroundSpeedWComponent->scale: 1
+aircraftGroundSpeedWComponent->reference: -512
+aircraftGroundSpeedWComponent->width: 10
+aircraftGroundSpeedWComponent->associatedField->code: 0
+aircraftGroundSpeedWComponent->associatedField->units: associated units
+aircraftGroundSpeedWComponent->associatedField->scale: 0
+aircraftGroundSpeedWComponent->associatedField->reference: 0
+aircraftGroundSpeedWComponent->associatedField->width: 2
+aircraftGroundSpeedWComponent->associatedField->associatedFieldSignificance->code: '031021'
+aircraftGroundSpeedWComponent->associatedField->associatedFieldSignificance->units: CODE TABLE
+aircraftGroundSpeedWComponent->associatedField->associatedFieldSignificance->scale: 0
+aircraftGroundSpeedWComponent->associatedField->associatedFieldSignificance->reference: 0
+aircraftGroundSpeedWComponent->associatedField->associatedFieldSignificance->width: 6
+aircraftTrueHeading->code: '011104'
+aircraftTrueHeading->units: deg
+aircraftTrueHeading->scale: 0
+aircraftTrueHeading->reference: 0
+aircraftTrueHeading->width: 9
+aircraftTrueHeading->associatedField->code: 0
+aircraftTrueHeading->associatedField->units: associated units
+aircraftTrueHeading->associatedField->scale: 0
+aircraftTrueHeading->associatedField->reference: 0
+aircraftTrueHeading->associatedField->width: 2
+aircraftTrueHeading->associatedField->associatedFieldSignificance->code: '031021'
+aircraftTrueHeading->associatedField->associatedFieldSignificance->units: CODE TABLE
+aircraftTrueHeading->associatedField->associatedFieldSignificance->scale: 0
+aircraftTrueHeading->associatedField->associatedFieldSignificance->reference: 0
+aircraftTrueHeading->associatedField->associatedFieldSignificance->width: 6
+airTemperature->code: '012101'
+airTemperature->units: K
+airTemperature->scale: 2
+airTemperature->reference: 0
+airTemperature->width: 16
+airTemperature->associatedField->code: 0
+airTemperature->associatedField->units: associated units
+airTemperature->associatedField->scale: 0
+airTemperature->associatedField->reference: 0
+airTemperature->associatedField->width: 2
+airTemperature->associatedField->associatedFieldSignificance->code: '031021'
+airTemperature->associatedField->associatedFieldSignificance->units: CODE TABLE
+airTemperature->associatedField->associatedFieldSignificance->scale: 0
+airTemperature->associatedField->associatedFieldSignificance->reference: 0
+airTemperature->associatedField->associatedFieldSignificance->width: 6
+aircraftHumiditySensors->code: '002170'
+aircraftHumiditySensors->units: CODE TABLE
+aircraftHumiditySensors->scale: 0
+aircraftHumiditySensors->reference: 0
+aircraftHumiditySensors->width: 6
+aircraftHumiditySensors->associatedField->code: 0
+aircraftHumiditySensors->associatedField->units: associated units
+aircraftHumiditySensors->associatedField->scale: 0
+aircraftHumiditySensors->associatedField->reference: 0
+aircraftHumiditySensors->associatedField->width: 2
+aircraftHumiditySensors->associatedField->associatedFieldSignificance->code: '031021'
+aircraftHumiditySensors->associatedField->associatedFieldSignificance->units: CODE TABLE
+aircraftHumiditySensors->associatedField->associatedFieldSignificance->scale: 0
+aircraftHumiditySensors->associatedField->associatedFieldSignificance->reference: 0
+aircraftHumiditySensors->associatedField->associatedFieldSignificance->width: 6
+mixingRatio->code: '013002'
+mixingRatio->units: kg/kg
+mixingRatio->scale: 10
+mixingRatio->reference: 0
+mixingRatio->width: 30
+mixingRatio->associatedField->code: 0
+mixingRatio->associatedField->units: associated units
+mixingRatio->associatedField->scale: 0
+mixingRatio->associatedField->reference: 0
+mixingRatio->associatedField->width: 2
+mixingRatio->associatedField->associatedFieldSignificance->code: '031021'
+mixingRatio->associatedField->associatedFieldSignificance->units: CODE TABLE
+mixingRatio->associatedField->associatedFieldSignificance->scale: 0
+mixingRatio->associatedField->associatedFieldSignificance->reference: 0
+mixingRatio->associatedField->associatedFieldSignificance->width: 6
+relativeHumidity->code: '013003'
+relativeHumidity->units: %
+relativeHumidity->scale: 2
+relativeHumidity->reference: 0
+relativeHumidity->width: 14
+relativeHumidity->associatedField->code: 0
+relativeHumidity->associatedField->units: associated units
+relativeHumidity->associatedField->scale: 0
+relativeHumidity->associatedField->reference: 0
+relativeHumidity->associatedField->width: 2
+relativeHumidity->associatedField->associatedFieldSignificance->code: '031021'
+relativeHumidity->associatedField->associatedFieldSignificance->units: CODE TABLE
+relativeHumidity->associatedField->associatedFieldSignificance->scale: 0
+relativeHumidity->associatedField->associatedFieldSignificance->reference: 0
+relativeHumidity->associatedField->associatedFieldSignificance->width: 6
+shortDelayedDescriptorReplicationFactor->code: '031000'
+shortDelayedDescriptorReplicationFactor->units: Numeric
+shortDelayedDescriptorReplicationFactor->scale: 0
+shortDelayedDescriptorReplicationFactor->reference: 0
+shortDelayedDescriptorReplicationFactor->width: 1
+moistureQuality->code: '033026'
+moistureQuality->units: CODE TABLE
+moistureQuality->scale: 0
+moistureQuality->reference: 0
+moistureQuality->width: 6
+moistureQuality->associatedField->code: 0
+moistureQuality->associatedField->units: associated units
+moistureQuality->associatedField->scale: 0
+moistureQuality->associatedField->reference: 0
+moistureQuality->associatedField->width: 2
+moistureQuality->associatedField->associatedFieldSignificance->code: '031021'
+moistureQuality->associatedField->associatedFieldSignificance->units: CODE TABLE
+moistureQuality->associatedField->associatedFieldSignificance->scale: 0
+moistureQuality->associatedField->associatedFieldSignificance->reference: 0
+moistureQuality->associatedField->associatedFieldSignificance->width: 6
+delayedDescriptorReplicationFactor->code: '031001'
+delayedDescriptorReplicationFactor->units: Numeric
+delayedDescriptorReplicationFactor->scale: 0
+delayedDescriptorReplicationFactor->reference: 0
+delayedDescriptorReplicationFactor->width: 8
+dewpointTemperature->code: '012103'
+dewpointTemperature->units: K
+dewpointTemperature->scale: 2
+dewpointTemperature->reference: 0
+dewpointTemperature->width: 16
+dewpointTemperature->associatedField->code: 0
+dewpointTemperature->associatedField->units: associated units
+dewpointTemperature->associatedField->scale: 0
+dewpointTemperature->associatedField->reference: 0
+dewpointTemperature->associatedField->width: 2
+dewpointTemperature->associatedField->associatedFieldSignificance->code: '031021'
+dewpointTemperature->associatedField->associatedFieldSignificance->units: CODE TABLE
+dewpointTemperature->associatedField->associatedFieldSignificance->scale: 0
+dewpointTemperature->associatedField->associatedFieldSignificance->reference: 0
+dewpointTemperature->associatedField->associatedFieldSignificance->width: 6
