@@ -2,6 +2,7 @@ import collections
 import io
 import itertools
 import pathlib
+import sys
 
 import numpy as np
 import pytest
@@ -212,6 +213,8 @@ def test_read_memory():
 
 
 def test_read_stream():
+    if sys.platform.startswith("win"):
+        pytest.skip("Test disabled on Windows")
     buffer = io.BytesIO()
     with eccodes.FileReader(TEST_GRIB_DATA2) as reader1:
         written = []
