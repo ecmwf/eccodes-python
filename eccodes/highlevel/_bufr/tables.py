@@ -8,7 +8,6 @@
 
 import csv
 import re
-
 from collections import ChainMap, UserDict
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -17,8 +16,8 @@ from typing import Iterator, List, Optional, Tuple, Union
 import eccodes
 import gribapi
 
-class Code(int):
 
+class Code(int):
     def __new__(cls, code: int):
         return int.__new__(cls, code)
 
@@ -35,25 +34,29 @@ class Code(int):
 
     @property
     def Y(self) -> int:
-        return int(self) %  1000
+        return int(self) % 1000
 
     @property
     def FX(self) -> Tuple[int, int]:
         return self.F, self.X
 
+
 CodeLike = Union[Code, int]
+
 
 @dataclass
 class Descriptor:
     code: Code = 0
-    name: str = ''
+    name: str = ""
+
 
 @dataclass
 class Element(Descriptor):
-    units: str = ''
+    units: str = ""
     scale: int = 0
     reference: int = 0
     width: int = 0
+
 
 @dataclass(unsafe_hash=True)
 class Version:
@@ -62,8 +65,8 @@ class Version:
     centre: int = 0
     subcentre: int = 0
 
-class _Singleton(type(UserDict)):
 
+class _Singleton(type(UserDict)):
     cache = {}
 
     def __call__(cls, *args):
@@ -74,35 +77,45 @@ class _Singleton(type(UserDict)):
             cls.cache[cls, args] = obj
         return obj
 
-class Table(UserDict, metaclass=_Singleton):
 
+class Table(UserDict, metaclass=_Singleton):
     def __init__(self, version: Version, local: bool) -> None:
-        base_path = Path('bufr', 'tables', '0')
+        base_path = Path("bufr", "tables", "0")
         if local:
-            dashed_version_number = '%d-%d' % (version.master, version.local)
-            path = base_path.joinpath('local', dashed_version_number, str(version.centre), str(version.subcentre))
-            if not gribapi.grib_full_defs_path(str(path / 'element.table')):
-                path = base_path.joinpath('local', str(version.local), str(version.centre), str(version.subcentre))
+            dashed_version_number = "%d-%d" % (version.master, version.local)
+            path = base_path.joinpath(
+                "local",
+                dashed_version_number,
+                str(version.centre),
+                str(version.subcentre),
+            )
+            if not gribapi.grib_full_defs_path(str(path / "element.table")):
+                path = base_path.joinpath(
+                    "local",
+                    str(version.local),
+                    str(version.centre),
+                    str(version.subcentre),
+                )
         else:
-            path = base_path.joinpath('wmo', str(version.master))
+            path = base_path.joinpath("wmo", str(version.master))
         self.version = version
         self.path = path
         self.data = {}
 
-class ElementTable(Table):
 
+class ElementTable(Table):
     def __init__(self, version: Version, local: bool) -> None:
         super().__init__(version, local)
-        self.path /= 'element.table'
+        self.path /= "element.table"
         try:
             text = codes_read_file(self.path)
         except RuntimeError as e:
             if local:
-                return # ignore non-existing local tables
+                return  # ignore non-existing local tables
             else:
                 raise e
-        reader = csv.reader(text.splitlines(), delimiter='|')
-        next(reader) # skip header row
+        reader = csv.reader(text.splitlines(), delimiter="|")
+        next(reader)  # skip header row
         for r in reader:
             c = Code(int(r[0]))
             e = Element(c, r[1], r[4], int(r[5]), int(r[6]), int(r[7]))
@@ -115,24 +128,24 @@ class ElementTable(Table):
             message = "No such element in tables version %s (%s): %s"
             raise KeyError(message % (self.version, self.path, code))
 
-class SequenceTable(Table):
 
+class SequenceTable(Table):
     def __init__(self, version: Version, local: bool) -> None:
         super().__init__(version, local)
-        self.path /= 'sequence.def'
+        self.path /= "sequence.def"
         try:
             text = codes_read_file(self.path)
         except RuntimeError as e:
             if local:
-                return # ignore non-existing local tables
+                return  # ignore non-existing local tables
             else:
                 raise e
-        tokens = re.split(']\n?', text)
-        tokens = tokens[:-1] # strip the last, empty token
+        tokens = re.split("]\n?", text)
+        tokens = tokens[:-1]  # strip the last, empty token
         for token in tokens:
-            pair = token.split('= [')
+            pair = token.split("= [")
             code = int(pair[0].strip().strip('"'))
-            sequence = [Code(c) for c in pair[1].split(',')]
+            sequence = [Code(c) for c in pair[1].split(",")]
             self.data[code] = sequence
 
     def __getitem__(self, code: CodeLike) -> List[Code]:
@@ -142,24 +155,26 @@ class SequenceTable(Table):
             message = "No such element in tables version %s (%s): %s"
             raise KeyError(message % (self.version, self.path, code))
 
-class CombinedTable(Table):
 
+class CombinedTable(Table):
     def __init__(self, table_class, version):
-        self.master  = table_class(version, False)
-        self.local   = table_class(version, True)
+        self.master = table_class(version, False)
+        self.local = table_class(version, True)
         self.version = version
-        self.data    = ChainMap(self.local.data, self.master.data) # [1]
+        self.data = ChainMap(self.local.data, self.master.data)  # [1]
 
     # [1] Note that the individual mappings in the ChainMap are searched from first to last.
 
-class Tables:
 
+class Tables:
     def __init__(self, version):
         self.sequences = CombinedTable(SequenceTable, version)
-        self.elements  = CombinedTable(ElementTable, version)
-        self.version  = version
+        self.elements = CombinedTable(ElementTable, version)
+        self.version = version
 
-    def expand_codes(self, code_s: Union[CodeLike, List[CodeLike]], recursive=True) -> Iterator[Code]:
+    def expand_codes(
+        self, code_s: Union[CodeLike, List[CodeLike]], recursive=True
+    ) -> Iterator[Code]:
         if isinstance(code_s, int):
             codes = [code_s]
         else:
@@ -174,7 +189,9 @@ class Tables:
             else:
                 yield c
 
-    def expand_descriptors(self, codes_s: Union[CodeLike, List[CodeLike]], recursive=True) -> Iterator[Descriptor]:
+    def expand_descriptors(
+        self, codes_s: Union[CodeLike, List[CodeLike]], recursive=True
+    ) -> Iterator[Descriptor]:
         previous_code = Code(0)
         for code in self.expand_codes(codes_s, recursive):
             name = None
@@ -182,18 +199,19 @@ class Tables:
                 try:
                     name = self.elements[code].name
                 except KeyError as error:
-                    if previous_code.FX == (2, 6): # Operator: Signify data width
+                    if previous_code.FX == (2, 6):  # Operator: Signify data width
                         # TODO: raise warning
-                        name = ''
+                        name = ""
                     else:
                         raise error
                 previous_code = code
             yield Descriptor(code, name)
 
+
 import ctypes
 import os
 
-libc = ctypes.CDLL(None) # automatically finds and loads the C standard library
+libc = ctypes.CDLL(None)  # automatically finds and loads the C standard library
 
 fseek = libc.fseek
 fseek.argtypes = [ctypes.c_void_p, ctypes.c_long, ctypes.c_int]
@@ -217,8 +235,9 @@ libeccodes = ctypes.CDLL(eccodes.codes_get_library_path())
 codes_fopen = libeccodes.codes_fopen
 codes_fopen.restype = ctypes.c_void_p
 
+
 def codes_has_file(path: Union[str, os.PathLike]) -> bool:
-    stream = libeccodes.codes_fopen(str(path).encode(), b'r')
+    stream = libeccodes.codes_fopen(str(path).encode(), b"r")
     if stream:
         libc.fclose(stream)
         has = True
@@ -226,11 +245,12 @@ def codes_has_file(path: Union[str, os.PathLike]) -> bool:
         has = False
     return has
 
+
 def codes_read_file(path: Union[str, os.PathLike]) -> str:
     full_path = gribapi.grib_full_defs_path(str(path))
-    stream = libeccodes.codes_fopen(full_path.encode(), b'r')
+    stream = libeccodes.codes_fopen(full_path.encode(), b"r")
     if not stream:
-        raise RuntimeError(f'Tables path does not exist: {path}')
+        raise RuntimeError(f"Tables path does not exist: {path}")
     try:
         fseek(stream, 0, SEEK_END)
         buffer_size = ftell(stream)
@@ -241,4 +261,3 @@ def codes_read_file(path: Union[str, os.PathLike]) -> str:
     finally:
         fclose(stream)
     return string
-

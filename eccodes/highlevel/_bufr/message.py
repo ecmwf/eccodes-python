@@ -8,14 +8,14 @@
 
 import datetime as dt
 
-from .coder   import Coder
-from .common  import *
-from .data    import Data
-from .header  import Header
-from .view    import View
+from .coder import Coder
+from .common import *
+from .data import Data
+from .header import Header
+from .view import View
+
 
 class Message(View):
-
     def __init__(self, source) -> None:
         if isinstance(source, Coder):
             coder = source
@@ -26,8 +26,7 @@ class Message(View):
         self._coder = coder
 
     def __contains__(self, key: str) -> bool:
-        """Return True if `key` is defined, otherwise return False.
-        """
+        """Return True if `key` is defined, otherwise return False."""
         return (key in self.header) or (key in self.data)
 
     def __enter__(self):
@@ -70,16 +69,18 @@ class Message(View):
 
     def __str__(self) -> str:
         import pprint
+
         d = self.as_dict()
         return pprint.pformat(d, sort_dicts=False)
 
     @classmethod
     def from_samples(cls, sample_name):
-        """Creates a new message from the sample.
-        """
+        """Creates a new message from the sample."""
         return cls(Coder(sample_name))
 
-    def copy(self, *, subsets: Optional[Union[NDArray, Sequence, slice]] = None) -> 'BUFRMessage':
+    def copy(
+        self, *, subsets: Optional[Union[NDArray, Sequence, slice]] = None
+    ) -> "BUFRMessage":
         """Returns a new copy of the message.
 
         If the optional argument `subsets` is specified, only the selected subsets
@@ -88,15 +89,19 @@ class Message(View):
         with numpy's `datetime64` objects, or with the built-in `datetime` objects.
         For such slices the stop bounds are inclusive.
         """
-        self._commit() # [1]
-        if subsets is not None\
-                and isinstance(subsets, slice) \
-                and (isinstance(subsets.start, (np.datetime64, dt.datetime)) or \
-                     isinstance(subsets.stop,  (np.datetime64, dt.datetime))):
+        self._commit()  # [1]
+        if (
+            subsets is not None
+            and isinstance(subsets, slice)
+            and (
+                isinstance(subsets.start, (np.datetime64, dt.datetime))
+                or isinstance(subsets.stop, (np.datetime64, dt.datetime))
+            )
+        ):
             datetime = self.data.get_datetime(rank=1)
             start = dt.datetime.min if subsets.start is None else subsets.start
-            stop  = dt.datetime.max if subsets.stop  is None else subsets.stop
-            mask  = np.logical_and(datetime >= start, datetime <= stop)
+            stop = dt.datetime.max if subsets.stop is None else subsets.stop
+            mask = np.logical_and(datetime >= start, datetime <= stop)
             coder = self._coder.clone(mask)
         else:
             coder = self._coder.clone(subsets)
@@ -106,11 +111,14 @@ class Message(View):
         # [1] In theory we could avoid committing (and hence packing) if we
         #     copied the "original" data plus Data's cache and tree structure. TODO
 
-    def copy_to(self, other: 'BUFRMessage',
-                header_only=False, data_only=False,
-                skip_template_keys=False) -> None:
-        """Copies common keys/values from this message to `other`.
-        """
+    def copy_to(
+        self,
+        other: "BUFRMessage",
+        header_only=False,
+        data_only=False,
+        skip_template_keys=False,
+    ) -> None:
+        """Copies common keys/values from this message to `other`."""
         if header_only and data_only:
             raise ValueError("`header_only` and `data_only` can't both be true")
         if not data_only:
@@ -119,8 +127,7 @@ class Message(View):
             self.data.copy_to(other.data)
 
     def get_count(self, key: str) -> int:
-        """Returns the number of elements designated by the given key.
-        """
+        """Returns the number of elements designated by the given key."""
         if self._coder._unpacked:
             try:
                 count = self.data.get_count(key)
@@ -134,8 +141,7 @@ class Message(View):
         return count
 
     def get_shape(self, key: str) -> Tuple[int, ...]:
-        """Returns shape of the given key.
-        """
+        """Returns shape of the given key."""
         if self._coder._unpacked:
             try:
                 shape = self.data.get_shape(key)
@@ -149,8 +155,7 @@ class Message(View):
         return shape
 
     def get_size(self, key: str) -> int:
-        """Returns size of the given key.
-        """
+        """Returns size of the given key."""
         if self._coder._unpacked:
             try:
                 size = self.data.get_size(key)
@@ -210,27 +215,25 @@ class Message(View):
                 self.data.set_missing(key)
 
     def get_buffer(self) -> bytes:
-        """Returns a buffer containing the encoded message.
-        """
+        """Returns a buffer containing the encoded message."""
         self._commit()
         return self._coder.get_buffer()
 
     def as_dict(self, ranked=False, depth=0, **kwds) -> Dict:
-        """Returns dict-like representation of the message items.
-        """
-        header_only = kwds.pop('header_only', False)
-        data_only = kwds.pop('data_only', False)
+        """Returns dict-like representation of the message items."""
+        header_only = kwds.pop("header_only", False)
+        data_only = kwds.pop("data_only", False)
         if not data_only:
-            h = self.header.as_dict(ranked, depth-1, **kwds)
+            h = self.header.as_dict(ranked, depth - 1, **kwds)
         if not header_only:
-            d = self.data.as_dict(ranked, depth-1, **kwds)
+            d = self.data.as_dict(ranked, depth - 1, **kwds)
         if header_only:
             m = h
         elif data_only:
             m = d
         else:
             if depth > 0:
-                m = {'header': h, 'data': d}
+                m = {"header": h, "data": d}
             else:
                 m = h | d
         return m
@@ -264,11 +267,15 @@ class Message(View):
 
     def write(self, file: BinaryIO) -> int:
         import warnings
-        warnings.warn("Method write() is deprecated. Use method write_to() instead.", DeprecationWarning)
+
+        warnings.warn(
+            "Method write() is deprecated. Use method write_to() instead.",
+            DeprecationWarning,
+        )
         return self.write_to(file)
 
     def write_to(self, file: BinaryIO) -> int:
-        """ Encodes the message (if not already encoded) and writes it to a file.
+        """Encodes the message (if not already encoded) and writes it to a file.
 
         Returns the size of the encoded message in bytes.
 
@@ -307,7 +314,7 @@ class Message(View):
         `update_header_from_data_before_packing` to `False`.
         """
         datetime_counts = {}
-        for key in ('year', 'month', 'day', 'hour', 'minute'):
+        for key in ("year", "month", "day", "hour", "minute"):
             try:
                 entry = self.data._entries[key]
             except KeyError:
@@ -319,11 +326,13 @@ class Message(View):
             else:
                 datetime_counts[key] = self.data.get_count(key)
         else:
-            if all(c == datetime_counts['year'] for c in datetime_counts.values()):
+            if all(c == datetime_counts["year"] for c in datetime_counts.values()):
                 datetime_array = self.data.get_datetime()
             else:
                 max_common_rank = min(datetime_counts.values())
-                datetime_array = self.data.get_datetime(rank=slice(1, max_common_rank + 1))
+                datetime_array = self.data.get_datetime(
+                    rank=slice(1, max_common_rank + 1)
+                )
             min_datetime = np.min(datetime_array)
             if min_datetime is np.ma.masked:
                 has_datetime = False
@@ -332,72 +341,77 @@ class Message(View):
                 has_datetime = True
 
         if has_datetime:
-            items = ['Year', 'YearOfCentury', 'Day', 'Hour', 'Minute', 'Second']
-            if not (_any_dirty(self.header, 'typical', items) and skip_dirty):
-                if self.header['edition'] == 3:
-                    self.header['typicalYearOfCentury'] = datetime.year % 100
+            items = ["Year", "YearOfCentury", "Day", "Hour", "Minute", "Second"]
+            if not (_any_dirty(self.header, "typical", items) and skip_dirty):
+                if self.header["edition"] == 3:
+                    self.header["typicalYearOfCentury"] = datetime.year % 100
                 else:
-                    self.header['typicalYear'] = datetime.year
-                self.header['typicalMonth']  = datetime.month
-                self.header['typicalDay']    = datetime.day
-                self.header['typicalHour']   = datetime.hour
-                self.header['typicalMinute'] = datetime.minute
-                self.header['typicalSecond'] = datetime.second
+                    self.header["typicalYear"] = datetime.year
+                self.header["typicalMonth"] = datetime.month
+                self.header["typicalDay"] = datetime.day
+                self.header["typicalHour"] = datetime.hour
+                self.header["typicalMinute"] = datetime.minute
+                self.header["typicalSecond"] = datetime.second
 
-        if self.header['section2Present'] and self.header['bufrHeaderCentre'] == 98:
+        if self.header["section2Present"] and self.header["bufrHeaderCentre"] == 98:
             if has_datetime:
-                items = ['Year', 'Day', 'Hour', 'Minute', 'Second']
-                if not (skip_dirty and _any_dirty(self.header, 'local', items)):
-                    self.header['localYear']   = datetime.year
-                    self.header['localMonth']  = datetime.month
-                    self.header['localDay']    = datetime.day
-                    self.header['localHour']   = datetime.hour
-                    self.header['localMinute'] = datetime.minute
-                    self.header['localSecond'] = datetime.second
+                items = ["Year", "Day", "Hour", "Minute", "Second"]
+                if not (skip_dirty and _any_dirty(self.header, "local", items)):
+                    self.header["localYear"] = datetime.year
+                    self.header["localMonth"] = datetime.month
+                    self.header["localDay"] = datetime.day
+                    self.header["localHour"] = datetime.hour
+                    self.header["localMinute"] = datetime.minute
+                    self.header["localSecond"] = datetime.second
             now = dt.datetime.now(dt.timezone.utc)
-            for prefix in ('rdbtime', 'rectime'):
-                items = ['Day', 'Hour', 'Minute', 'Second']
+            for prefix in ("rdbtime", "rectime"):
+                items = ["Day", "Hour", "Minute", "Second"]
                 if not (skip_dirty and _any_dirty(self.header, prefix, items)):
-                    self.header[f'{prefix}Day'] = now.day
-                    self.header[f'{prefix}Hour'] = now.hour
-                    self.header[f'{prefix}Minute'] = now.minute
-                    self.header[f'{prefix}Second'] = now.second
+                    self.header[f"{prefix}Day"] = now.day
+                    self.header[f"{prefix}Hour"] = now.hour
+                    self.header[f"{prefix}Minute"] = now.minute
+                    self.header[f"{prefix}Second"] = now.second
             try:
-                lat_entry = self.data._entries['latitude']
-                lon_entry = self.data._entries['longitude']
+                lat_entry = self.data._entries["latitude"]
+                lon_entry = self.data._entries["longitude"]
             except KeyError:
                 has_latlon = False
             else:
-                if has_latlon := (lat_entry.array is not None) and (lon_entry.array is not None):
+                if has_latlon := (lat_entry.array is not None) and (
+                    lon_entry.array is not None
+                ):
                     lat = lat_entry.array.ravel()
                     lon = lon_entry.array.ravel()
-            if self.header['compressedData']:
-                if cast(int, self.header['numberOfSubsets']) > 1:
+            if self.header["compressedData"]:
+                if cast(int, self.header["numberOfSubsets"]) > 1:
                     if has_latlon:
-                        items = ['Latitude1', 'Latitude2', 'Longitude1', 'Longitude2']
-                        if not (skip_dirty and _any_dirty(self.header, 'local', items)):
-                            self.header['localLatitude1']  = numpy.min(lat)
-                            self.header['localLatitude2']  = numpy.max(lat)
-                            self.header['localLongitude1'] = numpy.min(lon)
-                            self.header['localLongitude2'] = numpy.max(lon)
-                    self.header['localNumberOfObservations'] = self.header['numberOfSubsets']
+                        items = ["Latitude1", "Latitude2", "Longitude1", "Longitude2"]
+                        if not (skip_dirty and _any_dirty(self.header, "local", items)):
+                            self.header["localLatitude1"] = numpy.min(lat)
+                            self.header["localLatitude2"] = numpy.max(lat)
+                            self.header["localLongitude1"] = numpy.min(lon)
+                            self.header["localLongitude2"] = numpy.max(lon)
+                    self.header["localNumberOfObservations"] = self.header[
+                        "numberOfSubsets"
+                    ]
                 else:
                     if has_latlon:
-                        items = ['Latitude1', 'Longitude1']
-                        if not (skip_dirty and _any_dirty(self.header, 'local', items)):
-                            self.header['localLatitude1']  = lat[0]
-                            self.header['localLongitude1'] = lon[0]
+                        items = ["Latitude1", "Longitude1"]
+                        if not (skip_dirty and _any_dirty(self.header, "local", items)):
+                            self.header["localLatitude1"] = lat[0]
+                            self.header["localLongitude1"] = lon[0]
             else:
                 if has_latlon:
-                    items = ['Latitude1', 'Longitude1']
-                    if not (skip_dirty and _any_dirty(self.header, 'local', items)):
-                        self.header['localLatitude']  = lat[0]
-                        self.header['localLongitude'] = lon[0]
+                    items = ["Latitude1", "Longitude1"]
+                    if not (skip_dirty and _any_dirty(self.header, "local", items)):
+                        self.header["localLatitude"] = lat[0]
+                        self.header["localLongitude"] = lon[0]
+
 
 def _any_dirty(header: Header, prefix: str, keys: Sequence[str]) -> bool:
     for key in keys:
         try:
-            entry = header._cache[f'{prefix}{key}']
+            entry = header._cache[f"{prefix}{key}"]
         except KeyError:
             continue
         else:
@@ -405,5 +419,6 @@ def _any_dirty(header: Header, prefix: str, keys: Sequence[str]) -> bool:
                 return True
     else:
         return False
+
 
 BUFRMessage = Message

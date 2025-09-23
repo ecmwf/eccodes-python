@@ -8,12 +8,13 @@
 
 import datetime as dt
 
-from .common  import *
+from .common import *
 from .helpers import get_datetime, set_datetime
 
+
 class View:
-    """A base class with some common methods: getters, setters, etc.
-    """
+    """A base class with some common methods: getters, setters, etc."""
+
     def __contains__(self, key: str) -> bool:
         raise NotImplementedError
 
@@ -46,8 +47,13 @@ class View:
             value = default
         return value
 
-    def get_datetime(self, rank: Optional[Union[int, slice]] = None, prefix: str = '',
-                     year: Optional[int] = None, month: Optional[int] = None) -> NDArray:
+    def get_datetime(
+        self,
+        rank: Optional[Union[int, slice]] = None,
+        prefix: str = "",
+        year: Optional[int] = None,
+        month: Optional[int] = None,
+    ) -> NDArray:
         """
         Returns an array of type `datetime64` derived from datetime-related keys/values.
 
@@ -58,7 +64,7 @@ class View:
 
         If `prefix` is specified, the datetime is derived from keys '{prefix}Year',
         '{prefix}Month', etc.
-        
+
         Optionally, the year and the month can be overwritten/forced to a specific value.
         This can be useful, for instance, if there is no dedicated year or month key.
         For example, ECMWF's section 2 defines 'rdbtimeDay', 'rdbtimeHour', etc.,
@@ -75,8 +81,12 @@ class View:
     def set(self, key: str, value: ValueLike) -> None:
         raise NotImplementedError
 
-    def set_datetime(self, value: Union[DateLike, np.ndarray],
-                     rank: Optional[int] = None, prefix: str = '') -> None:
+    def set_datetime(
+        self,
+        value: Union[DateLike, np.ndarray],
+        rank: Optional[int] = None,
+        prefix: str = "",
+    ) -> None:
         """
         Sets datetime-related keys (i.e., 'year', 'month', etc.).
 
@@ -88,7 +98,7 @@ class View:
         if len(args) == 1:
             arg = args[0]
             if isinstance(arg, View):
-                for key, value in arg.items(skip='read_only'):
+                for key, value in arg.items(skip="read_only"):
                     self[key] = value
             if isinstance(arg, abc.Mapping):
                 for key, value in arg.items():
@@ -97,8 +107,11 @@ class View:
                 for key, value in arg:
                     self[key] = value
             else:
-                raise TypeError('Expected a mapping or an iterable of key-value pairs; got %s' % type(arg))
+                raise TypeError(
+                    "Expected a mapping or an iterable of key-value pairs; got %s"
+                    % type(arg)
+                )
         elif len(args) > 1:
-            raise ValueError('Expected 1 positional argument; got %d' % len(args))
+            raise ValueError("Expected 1 positional argument; got %d" % len(args))
         else:
             self.update(kwargs)

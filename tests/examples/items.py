@@ -18,11 +18,12 @@ import sys
 from eccodes import *
 from eccodes.highlevel import *
 
+
 def run_example(input, output=sys.stdout):
     reader = FileReader(input, CODES_PRODUCT_BUFR)
     for i, message in enumerate(reader, start=1):
-        print('messageNumber', i, file=output)
-        if message['compressedData'] or message['numberOfSubsets'] == 1:
+        print("messageNumber", i, file=output)
+        if message["compressedData"] or message["numberOfSubsets"] == 1:
             for k, v in message.items():
                 print(k, v, file=output)
         else:
@@ -30,11 +31,12 @@ def run_example(input, output=sys.stdout):
                 print(k, v, file=output)
             # For uncompressed multi-subset messages, print items one subset at a time. [1]
             for j, subset in enumerate(message.data, start=1):
-                print('subsetNumber', j, file=output)
+                print("subsetNumber", j, file=output)
                 for k, v in subset.items():
                     print(k, v, file=output)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     run_example(sys.argv[1])
 
 # Footnotes:

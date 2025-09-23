@@ -9,22 +9,23 @@
 from copy import copy
 from itertools import repeat
 
-from .common  import *
+from .common import *
 from .helpers import RaggedArray, SingletonDict
-from .tables  import Code, Element
+from .tables import Code, Element
 
-INT_UNITS = re.compile(r'%|.*CODE TABLE.*|.*FLAG TABLE.*|Numeric|a|d|h|min|mon|s')
+INT_UNITS = re.compile(r"%|.*CODE TABLE.*|.*FLAG TABLE.*|Numeric|a|d|h|min|mon|s")
+
 
 @dataclass
 class Node:
     parent: Any = field(repr=False)
-    ordinal: int = 0 # [1]
-    level: int = 0 # [2]
-    depth: int = 0 # [3]
+    ordinal: int = 0  # [1]
+    level: int = 0  # [2]
+    depth: int = 0  # [3]
     children: List = field(default_factory=list)
     starts: Dict[MultiIndex, Counter] = field(default_factory=dict)
-    slices: Dict[MultiIndex, slice]   = field(default_factory=dict)
-    max_levels: Dict[str, int] = field(default_factory=dict) # [4]
+    slices: Dict[MultiIndex, slice] = field(default_factory=dict)
+    max_levels: Dict[str, int] = field(default_factory=dict)  # [4]
 
     def __post_init__(self):
         if self.parent:
@@ -45,9 +46,11 @@ class Node:
     #     subnodes, and their subnotes, transitively. This is used in DataView
     #     objects to infer shapes of the respective array views.
 
+
 @dataclass
 class WrapperNode(Node):
     counts: Dict[MultiIndex, Counter] = field(default_factory=dict)
+
 
 @dataclass
 class ReplicationNode(Node):
@@ -57,13 +60,15 @@ class ReplicationNode(Node):
     reset: bool = True
 
     def __post_init__(self):
-        super().__post_init__();
+        super().__post_init__()
         self.factors = RaggedArray.empty(self.level)
+
 
 @dataclass
 class LeafNode(Node):
     keys: List[Key] = field(default_factory=list)
     counts: SingletonDict = field(default_factory=SingletonDict)
+
 
 @dataclass
 class AssociationNode(Node):
@@ -82,9 +87,10 @@ class AssociationNode(Node):
     keys: List[Key] = field(default_factory=list)
     counts: Dict[MultiIndex, Counter] = field(default_factory=dict)
 
+
 def build_tree(coder):
     tables = coder.get_tables()
-    operators = {4: []} # key: Code.X, value: a stack of Code.Y values (aka operands)
+    operators = {4: []}  # key: Code.X, value: a stack of Code.Y values (aka operands)
 
     def parse(parent, codes, level=0):
         keys = []
@@ -120,19 +126,25 @@ def build_tree(coder):
                     next = codes.pop(0)
                 # Process bitmap
                 if next != 237000:
-                    if next.F == 1: # replication
-                        assert next.X == 1 # replicate only one element
-                        if next.Y == 0: # delayed replication
+                    if next.F == 1:  # replication
+                        assert next.X == 1  # replicate only one element
+                        if next.Y == 0:  # delayed replication
                             next = codes.pop(0)
-                            assert next.FX == (0, 31) # delayed replication factor
+                            assert next.FX == (0, 31)  # delayed replication factor
                             element = tables.elements[next]
-                            node.keys.append(Key(element.name, element=element, flags=CODED|SCALAR|FACTOR|READ_ONLY))
-                        else: # fixed replication
+                            node.keys.append(
+                                Key(
+                                    element.name,
+                                    element=element,
+                                    flags=CODED | SCALAR | FACTOR | READ_ONLY,
+                                )
+                            )
+                        else:  # fixed replication
                             node.bitmap_size = next.Y
                         next = codes.pop(0)
-                    else: # no replication
+                    else:  # no replication
                         node.bitmap_size = 1
-                    assert next == 31031 # dataPresentIndicator
+                    assert next == 31031  # dataPresentIndicator
                     element = tables.elements[next]
                     # TODO node.keys.append(Key(element.name, element=element, flags=CODED|BITMAP|READ_ONLY))
                 # Operator: Reuse bitmap
@@ -141,7 +153,7 @@ def build_tree(coder):
                 # The next element is expected to be 'centre'
                 next = codes.pop(0)
                 element = tables.elements[next]
-                assert element.name == 'centre'
+                assert element.name == "centre"
                 node.center = element
                 node.keys.append(Key(element.name, element=element, flags=CODED))
                 # The next elements are expected to be 'generatingApplication'
@@ -149,7 +161,7 @@ def build_tree(coder):
                 # the local table too (e.g. 001201 from local/1/98/0).
                 next = codes.pop(0)
                 element = tables.elements[next]
-                assert element.name == 'generatingApplication'
+                assert element.name == "generatingApplication"
                 node.generating_application = element
                 node.keys.append(Key(element.name, element=element, flags=CODED))
                 next = codes.pop(0)
@@ -160,33 +172,39 @@ def build_tree(coder):
                     node.keys.append(Key(element.name, element=element, flags=CODED))
                     next = codes.pop(0)
                 # Process the actual quality element (e.g. percentConfidence)
-                if next.F == 1: # replication
-                    assert next.X == 1 # replicate only one element
-                    if next.Y == 0: # delayed replication
+                if next.F == 1:  # replication
+                    assert next.X == 1  # replicate only one element
+                    if next.Y == 0:  # delayed replication
                         next = codes.pop(0)
                         node.value_factor = next
-                        assert next.FX == (0, 31) # delayed replication factor
+                        assert next.FX == (0, 31)  # delayed replication factor
                         element = tables.elements[next]
-                        node.keys.append(Key(element.name, element=element, flags=CODED|SCALAR|FACTOR|READ_ONLY))
-                    else: # fixed replication
+                        node.keys.append(
+                            Key(
+                                element.name,
+                                element=element,
+                                flags=CODED | SCALAR | FACTOR | READ_ONLY,
+                            )
+                        )
+                    else:  # fixed replication
                         node.value_size = next.Y
                     next = codes.pop(0)
-                else: # no replication
+                else:  # no replication
                     pass
                 if node.operator == 222000:
-                    assert next.FX == (0, 33) # expecting Class 33 element
+                    assert next.FX == (0, 33)  # expecting Class 33 element
                     node.element = tables.elements[next]
                 else:
                     if node.operator == 223000:
                         assert next == 223255
-                        name = 'substitutedValue'
+                        name = "substitutedValue"
                     elif node.operator == 224000:
                         assert next == 224255
-                        name = 'firstOrderStatisticalValue'
+                        name = "firstOrderStatisticalValue"
                     elif node.operator == 225000:
                         assert next == 225255
-                        name = 'differenceStatisticalValue'
-                    node.element = Element(next, name, '', 0, 0, 0)
+                        name = "differenceStatisticalValue"
+                    node.element = Element(next, name, "", 0, 0, 0)
                 # When there is no prior replication, the associated element can
                 # appear two or more times (aka "inlined" replication).
                 if not node.value_factor and node.value_size is None:
@@ -212,7 +230,7 @@ def build_tree(coder):
                 # Operator: Add associated field
                 elif next.X == 4:
                     if next.Y > 0:
-                        if codes[0] != 31021: # Associated field significance
+                        if codes[0] != 31021:  # Associated field significance
                             # TODO: malformed message: raise warning
                             operators[4].append(8)
                         else:
@@ -226,13 +244,23 @@ def build_tree(coder):
                         codes.pop(0)
             # Replication
             elif next.F == 1:
-                span  = next.X
+                span = next.X
                 # Delayed replication
                 if next.Y == 0:
                     next = codes.pop(0)
-                    assert next.FX == (0, 31) and next.Y in (0, 1, 2, 11, 12) # delayed repl. factor
+                    assert next.FX == (0, 31) and next.Y in (
+                        0,
+                        1,
+                        2,
+                        11,
+                        12,
+                    )  # delayed repl. factor
                     element = tables.elements[next]
-                    key = Key(element.name, element=element, flags=CODED|SCALAR|FACTOR|READ_ONLY)
+                    key = Key(
+                        element.name,
+                        element=element,
+                        flags=CODED | SCALAR | FACTOR | READ_ONLY,
+                    )
                     keys.append(key)
                     leaf = LeafNode(parent, len(children), level, keys=keys)
                     children.append(leaf)
@@ -246,7 +274,7 @@ def build_tree(coder):
                 # Fixed replication
                 else:
                     assert next.X <= len(codes)
-                    codes = codes[:next.X] * next.Y + codes[next.X:]
+                    codes = codes[: next.X] * next.Y + codes[next.X :]
             # Element
             elif next.F == 0:
                 element = tables.elements[next]
@@ -260,10 +288,12 @@ def build_tree(coder):
                 keys.append(key)
                 # Append associated field keys
                 for Y in operators[4]:
-                    name = f'{element.name}->associatedField'
-                    key = Key(name, element=Element(0, name, 'associated units', 0, 0, 2))
+                    name = f"{element.name}->associatedField"
+                    key = Key(
+                        name, element=Element(0, name, "associated units", 0, 0, 2)
+                    )
                     keys.append(key)
-                    name = f'{name}->associatedFieldSignificance'
+                    name = f"{name}->associatedFieldSignificance"
                     key = Key(name, element=tables.elements[31021])
                     keys.append(key)
             else:
@@ -272,10 +302,10 @@ def build_tree(coder):
 
     # Parse (unexpanded) descriptors
 
-    codes = coder.get('unexpandedDescriptors')
+    codes = coder.get("unexpandedDescriptors")
     codes = [Code(c) for c in codes.tolist()]
-    subset_count = coder.get('numberOfSubsets')
-    compressed = coder.get('compressedData')
+    subset_count = coder.get("numberOfSubsets")
+    compressed = coder.get("compressedData")
     root = WrapperNode(parent=None)
 
     if compressed or subset_count == 1:
@@ -292,6 +322,7 @@ def build_tree(coder):
 
     def assign_factors(root: Node, global_factors: Dict[int, NDArray]) -> None:
         counter = Counter()
+
         def recurse(node, index):
             if isinstance(node, WrapperNode):
                 for child in node.children:
@@ -319,7 +350,7 @@ def build_tree(coder):
                         at = counter[code]
                         counter[code] += 1
                         node.bitmap_size = global_factors[code][at]
-                if node.value_size is None: 
+                if node.value_size is None:
                     code = node.value_factor
                     assert code.FX == (0, 31)
                     at = counter[code]
@@ -327,10 +358,13 @@ def build_tree(coder):
                     node.value_size = global_factors[code][at]
             else:
                 assert False
+
         recurse(root, ())
         for code, count in counter.items():
-            if (remaining := len(global_factors[code]) - count):
-                raise RuntimeError(f'There are {remaining} unprocessed replication factors')
+            if remaining := len(global_factors[code]) - count:
+                raise RuntimeError(
+                    f"There are {remaining} unprocessed replication factors"
+                )
 
     assign_factors(root, global_factors)
 
@@ -338,6 +372,7 @@ def build_tree(coder):
 
     def make_entries(root: Node) -> Dict[str, DataEntry]:
         entries: Dict[str, DataEntry] = {}
+
         def recurse(node):
             if isinstance(node, (WrapperNode, ReplicationNode)):
                 for child in node.children:
@@ -358,6 +393,7 @@ def build_tree(coder):
                                 entry.uniform_element = None
             else:
                 assert False
+
         recurse(root)
         return entries
 
@@ -375,7 +411,9 @@ def build_tree(coder):
 
     def assign_bitmaps(root: Node, global_bitmap: NDArray) -> None:
         bitmap_for_reuse = None
-        global_bitmap = copy(global_bitmap) # parameter must be copied to be used as nonlocal
+        global_bitmap = copy(
+            global_bitmap
+        )  # parameter must be copied to be used as nonlocal
         for node in root.children:
             if not isinstance(node, AssociationNode):
                 continue
@@ -383,8 +421,8 @@ def build_tree(coder):
                 assert bitmap_for_reuse is not None
                 node.bitmap = bitmap_for_reuse
             else:
-                node.bitmap = global_bitmap[:node.bitmap_size]
-                global_bitmap = global_bitmap[node.bitmap_size:]
+                node.bitmap = global_bitmap[: node.bitmap_size]
+                global_bitmap = global_bitmap[node.bitmap_size :]
                 if node.for_reuse:
                     bitmap_for_reuse = node.bitmap
             assert node.bitmap is not None
@@ -410,6 +448,7 @@ def build_tree(coder):
             for k, v in other.items():
                 this[k].extend(v)
             return this
+
         def recurse(node, counter, index):
             indices = defaultdict(list)
             if isinstance(node, WrapperNode):
@@ -431,6 +470,7 @@ def build_tree(coder):
             else:
                 assert False
             return indices, counter
+
         indices, counter = recurse(root, 0, ())
         indices = {k: numpy.array(v) for k, v in indices.items()}
         return indices, counter
@@ -455,32 +495,38 @@ def build_tree(coder):
             rank = ranks[node.element.name]
             assert node.bitmap is not None
             bitmap_offset = node.bitmap_end - len(node.bitmap)
-            a = Association(node.element, rank, dtype, node.bitmap, bitmap_offset, indices)
+            a = Association(
+                node.element, rank, dtype, node.bitmap, bitmap_offset, indices
+            )
             associations[node.element.name, rank] = a
         return associations
 
     associations = make_associations(root)
 
     # Do we still need this? TODO
-    bitmap_nodes = [(i, c) for i, c in enumerate(root.children) if isinstance(c, AssociationNode)]
+    bitmap_nodes = [
+        (i, c) for i, c in enumerate(root.children) if isinstance(c, AssociationNode)
+    ]
     if bitmap_nodes:
         for i, node in reversed(bitmap_nodes):
             for element in (node.center, node.generating_application):
                 if element.name not in indices:
                     indices[element.name] = numpy.array([next_index])
                 else:
-                    indices[element.name] = numpy.append(indices[element.name], next_index)
+                    indices[element.name] = numpy.append(
+                        indices[element.name], next_index
+                    )
                 next_index += 1
 
     # Append associated entries
 
     for a in associations.values():
         for pg in list(entries.values()):
-            a_name = '->'.join(repeat(a.element.name, a.element_rank))
+            a_name = "->".join(repeat(a.element.name, a.element_rank))
             # if pg.flags & SCALAR:
             #     continue # TODO: are there cases where 'center' and 'originatingApplication' appear outside of bitmap sequence?
             if a.any_rank_set(pg.name):
-                name = f'{pg.name}->{a_name}'
+                name = f"{pg.name}->{a_name}"
                 ag = DataEntry(name, association=a, primary=pg)
                 ag.flags = pg.flags
                 if pg.uniform_element:
@@ -500,7 +546,9 @@ def build_tree(coder):
                 for child in node.children:
                     recurse(child, associated)
             elif isinstance(node, LeafNode):
-                name_suffix = '->'.join(repeat(associated.element.name, associated.element_rank))
+                name_suffix = "->".join(
+                    repeat(associated.element.name, associated.element_rank)
+                )
                 copy_units = associated.element.code.FX != (0, 33)
                 keys = []
                 for key in node.keys:
@@ -512,13 +560,18 @@ def build_tree(coder):
                             element.units = key.element.units
                         else:
                             element = associated.element
-                        key = Key(f'{key.name}->{name_suffix}', secondary=name_suffix, element=element)
+                        key = Key(
+                            f"{key.name}->{name_suffix}",
+                            secondary=name_suffix,
+                            element=element,
+                        )
                         keys.append(key)
                 node.keys = keys
             elif isinstance(node, AssociationNode):
                 pass
             else:
                 assert False
+
         for each in associations:
             recurse(root, each)
 
@@ -544,4 +597,3 @@ def build_tree(coder):
     # Return
 
     return root, entries, associations
-

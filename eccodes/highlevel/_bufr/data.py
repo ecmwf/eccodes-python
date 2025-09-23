@@ -6,15 +6,22 @@
 # granted to it by virtue of its status as an intergovernmental organisation
 # nor does it submit to any jurisdiction.
 
-from .coder   import Coder
-from .common  import *
+from .coder import Coder
+from .common import *
 from .helpers import ensure_masked_array, flatten, missing_of
-from .tree    import AssociationNode, LeafNode, Node, ReplicationNode, WrapperNode, build_tree
-from .tables  import Element
-from .view    import View
+from .tables import Element
+from .tree import (
+    AssociationNode,
+    LeafNode,
+    Node,
+    ReplicationNode,
+    WrapperNode,
+    build_tree,
+)
+from .view import View
+
 
 class Data(View):
-
     _coder: Coder
     _subset_count: int = 0
     _compressed: bool = False
@@ -35,10 +42,10 @@ class Data(View):
             eq = False
         return eq
 
-    def __getitem__(self, subscript: Union[int, str]) -> Union['DataBlock', ValueLike]:
+    def __getitem__(self, subscript: Union[int, str]) -> Union["DataBlock", ValueLike]:
         return self._top_view.__getitem__(subscript)
 
-    def __iter__(self) -> Iterator['DataBlock']:
+    def __iter__(self) -> Iterator["DataBlock"]:
         yield from self._top_view.__iter__()
 
     def __len__(self) -> int:
@@ -51,18 +58,16 @@ class Data(View):
         return self._top_view.__str__()
 
     def as_dict(self, ranked=False, depth=0, **kwds) -> Dict:
-        """Returns dict-like representation of the data section items.
-        """
+        """Returns dict-like representation of the data section items."""
         return self._top_view.as_dict(ranked, depth, **kwds)
 
-    def copy_to(self, other: 'Data') -> None:
-        """Copies common keys/values in this data section to `other`.
-        """
+    def copy_to(self, other: "Data") -> None:
+        """Copies common keys/values in this data section to `other`."""
         self._coder.unpack()
         self._commit()
         codes_bufr_copy_data(self._coder._handle, other._coder._handle)
         # Workaround for ECC-2022
-        self._top_view # [1]
+        self._top_view  # [1]
         for a in self._associations.values():
             if a.element_rank > 1:
                 for g in a.entries.values():
@@ -71,8 +76,7 @@ class Data(View):
         # [1] This ensures that we have built all bitmap associations.
 
     def get_count(self, key: str) -> int:
-        """Returns the number of ranked items designated by the given key.
-        """
+        """Returns the number of ranked items designated by the given key."""
         return self._top_view.get_count(key)
 
     def get_shape(self, key: str) -> Tuple[int, ...]:
@@ -98,7 +102,7 @@ class Data(View):
 
     def _commit(self) -> None:
         for entry in self._entries.values():
-            if entry.array is None or entry.flags & (READ_ONLY|COMPUTED):
+            if entry.array is None or entry.flags & (READ_ONLY | COMPUTED):
                 continue
             else:
                 self._coder.commit(entry)
@@ -106,9 +110,9 @@ class Data(View):
 
     @cached_property
     def _top_view(self):
-        self._subset_count = cast(int, self._coder.get('numberOfSubsets'))
-        self._compressed = cast(bool, self._coder.get('compressedData'))
-        root, self._entries, self._associations = build_tree(self._coder) # [1]
+        self._subset_count = cast(int, self._coder.get("numberOfSubsets"))
+        self._compressed = cast(bool, self._coder.get("compressedData"))
+        root, self._entries, self._associations = build_tree(self._coder)  # [1]
         top_level = ()
         top_view = DataBlock(self, root, top_level)
         for entry in self._entries.values():
@@ -121,9 +125,9 @@ class Data(View):
             elif entry.flags & SCALAR:
                 entry.shape = (slice.stop, 1)
                 if entry.flags & FACTOR:
-                    assert entry.array is not None # [2]
+                    assert entry.array is not None  # [2]
             elif entry.flags & BITMAP:
-                entry.shape = (slice.stop, None) # [3]
+                entry.shape = (slice.stop, None)  # [3]
             else:
                 if self._compressed:
                     entry.shape = (slice.stop, self._subset_count)
@@ -143,14 +147,14 @@ class Data(View):
         # [3] At the moment the size of bitmap arrays is determined in Coder.checkout().
         #     Is there a way to infer it earlier? TODO
 
-class DataBlock(View):
 
+class DataBlock(View):
     def __init__(self, data: Data, node, index: MultiIndex) -> None:
         self._data: Data = data
         self._node = node
         self._index: MultiIndex = index
         self._slices: Dict[str, slice] = resolve_slices(node, index)
-        self._sub_blocks: Dict[int, 'DataBlock'] = {}
+        self._sub_blocks: Dict[int, "DataBlock"] = {}
 
     def __contains__(self, subscript: str) -> bool:
         key = Key.from_string(subscript)
@@ -178,7 +182,7 @@ class DataBlock(View):
                     if v1.dtype.type == np.str_:
                         if not v2.dtype.type == np.str_:
                             break
-                        if not np.char.compare_chararrays(v1, v2, '==', rstrip=True):
+                        if not np.char.compare_chararrays(v1, v2, "==", rstrip=True):
                             break
                     else:
                         if not np.all(v1.data == v2.data):
@@ -204,23 +208,25 @@ class DataBlock(View):
         else:
             return len(node.children)
 
-    def __iter__(self) -> Iterator['DataBlock']:
+    def __iter__(self) -> Iterator["DataBlock"]:
         node = self._node
         if node.children and isinstance(node.children[0], ReplicationNode):
             assert len(node.children) == 1
             replication = node.children[0]
             for factor in range(replication.factors[self._index]):
                 index = self._index + (factor,)
-                if len(replication.children) == 1 and isinstance(replication.children[0], LeafNode):
+                if len(replication.children) == 1 and isinstance(
+                    replication.children[0], LeafNode
+                ):
                     block = DataBlock(self._data, replication.children[0], index)
                 else:
-                    block =  DataBlock(self._data, replication, index)
+                    block = DataBlock(self._data, replication, index)
                 yield block
         else:
             for child in node.children:
                 yield DataBlock(self._data, child, self._index)
 
-    def __getitem__(self, subscript: Union[int, str]) -> Union['DataBlock', ValueLike]:
+    def __getitem__(self, subscript: Union[int, str]) -> Union["DataBlock", ValueLike]:
         if isinstance(subscript, str):
             key = Key.from_string(subscript)
             entry = self._get_entry(key)
@@ -230,7 +236,9 @@ class DataBlock(View):
                     value = getattr(entry.uniform_element, key.attribute)
                 else:
                     if not entry.elements:
-                        resolve_elements(self._data._entries, self._data._top_view._node)
+                        resolve_elements(
+                            self._data._entries, self._data._top_view._node
+                        )
                         assert entry.elements
                     if isinstance(sub, slice):
                         value = [getattr(e, key.attribute) for e in entry.elements[sub]]
@@ -253,7 +261,9 @@ class DataBlock(View):
                     block = self._sub_blocks[ordinal]
                 except KeyError:
                     index = self._index + (ordinal,)
-                    if len(replication.children) == 1 and isinstance(replication.children[0], LeafNode):
+                    if len(replication.children) == 1 and isinstance(
+                        replication.children[0], LeafNode
+                    ):
                         block = DataBlock(self._data, replication.children[0], index)
                     else:
                         block = DataBlock(self._data, replication, index)
@@ -269,7 +279,9 @@ class DataBlock(View):
                     self._sub_blocks[ordinal] = block
             return block
         else:
-            raise TypeError("subscript must be either 'int' or 'str'; got %s" % type(subscript))
+            raise TypeError(
+                "subscript must be either 'int' or 'str'; got %s" % type(subscript)
+            )
 
     def __setitem__(self, key: str, value: ValueLike) -> None:
         key = Key.from_string(key)
@@ -282,24 +294,24 @@ class DataBlock(View):
         if isinstance(subscript, slice):
             array[subscript] = value
         else:
-            array[subscript:subscript+1] = value
+            array[subscript : subscript + 1] = value
 
     def __str__(self) -> str:
         import pprint
+
         d = self.as_dict()
         return pprint.pformat(d, sort_dicts=False)
 
     def as_dict(self, ranked=False, depth=0, **kwds) -> Dict:
-        """Returns dict-like representation of the DataBlock items.
-        """
+        """Returns dict-like representation of the DataBlock items."""
         if self._node.depth < depth and len(self) > 0:
             d = {}
             for i, block in enumerate(self):
                 # block = cast('DataBlock', self[i])
                 d[i] = block.as_dict(ranked, depth, **kwds)
         else:
-            counts_only = kwds.pop('counts_only', False)
-            shapes_only = kwds.pop('shapes_only', False)
+            counts_only = kwds.pop("counts_only", False)
+            shapes_only = kwds.pop("shapes_only", False)
             if counts_only:
                 d = {k: self.get_count(k) for k in self.keys(ranked, **kwds)}
             elif shapes_only:
@@ -309,8 +321,7 @@ class DataBlock(View):
         return d
 
     def get_count(self, key: str) -> int:
-        """Returns the number of elements designated by the given key.
-        """
+        """Returns the number of elements designated by the given key."""
         key = Key.from_string(key)
         try:
             slice = self._slices[key.name]
@@ -328,7 +339,7 @@ class DataBlock(View):
         return count
 
     def get_shape(self, key: str) -> Tuple[int, ...]:
-        key = Key.from_string(key) 
+        key = Key.from_string(key)
         entry = self._get_entry(key)
         subscript = self._get_subscript(entry, key)
         if isinstance(subscript, slice):
@@ -370,7 +381,9 @@ class DataBlock(View):
     def set_missing(self, key: str) -> None:
         key = Key.from_string(key)
         if key.attribute:
-            raise ValueCannotBeMissingError(f"Attribute '{key.string}' can't have missing value")
+            raise ValueCannotBeMissingError(
+                f"Attribute '{key.string}' can't have missing value"
+            )
         else:
             entry = self._get_entry(key)
             slice = self._get_slice(entry, key)
@@ -386,22 +399,22 @@ class DataBlock(View):
             yield key, cast(ValueLike, self[key])
 
     def keys(self, ranked=False, **kwds) -> Iterator[str]:
-        only_flags = ensure_flags(kwds.get('only', Flags.CODED))
-        skip_flags = ensure_flags(kwds.get('skip', Flags(0)))
+        only_flags = ensure_flags(kwds.get("only", Flags.CODED))
+        skip_flags = ensure_flags(kwds.get("skip", Flags(0)))
         if ranked:
             ranks = Counter()
             for key in iterate_keys(self._node, self._index):
                 ranks[key.name] += 1
                 rank = ranks[key.name]
-                yield f'#{rank}#{key.name}'
+                yield f"#{rank}#{key.name}"
         else:
             for name, slice in self._slices.items():
                 if slice.stop <= slice.start:
-                    continue # Ignore keys inside empty replications
+                    continue  # Ignore keys inside empty replications
                 try:
                     entry = self._data._entries[name]
                 except KeyError:
-                    continue # Ignore unset associated keys
+                    continue  # Ignore unset associated keys
                 if not entry.flags & only_flags:
                     continue
                 if entry.flags & skip_flags:
@@ -418,14 +431,14 @@ class DataBlock(View):
     def _get_array(self, entry):
         if entry.array is None:
             array = self._data._coder.checkout(entry)
-            if not self._data._coder._compressed: # TODO: correct shape in Coder
+            if not self._data._coder._compressed:  # TODO: correct shape in Coder
                 array = array.ravel()
-            if array.dtype.type == np.str_ and np.__version__ < '1.24':
-                array = np.ma.masked_where(array == '', array, copy=False) # [1]
-                array.fill_value = ''
+            if array.dtype.type == np.str_ and np.__version__ < "1.24":
+                array = np.ma.masked_where(array == "", array, copy=False)  # [1]
+                array.fill_value = ""
             else:
                 array = np.ma.masked_equal(array, missing_of(array.dtype), copy=False)
-            entry.array = array  
+            entry.array = array
         if entry.flags & Flags.SCALAR:
             array = entry.array.ravel()
         else:
@@ -445,7 +458,7 @@ class DataBlock(View):
             subscript = slice.start
         elif slice_len == 1:
             max_level = self._node.max_levels[entry.name]
-            if self._node.level == max_level: # [1]
+            if self._node.level == max_level:  # [1]
                 subscript = slice.start
             else:
                 subscript = slice
@@ -466,11 +479,14 @@ class DataBlock(View):
         if key.rank:
             rank_count = slice_.stop - slice_.start
             if key.rank > rank_count:
-                message = f"Rank %d is out of bounds; max. rank of '%s' in this view is %d"
+                message = (
+                    f"Rank %d is out of bounds; max. rank of '%s' in this view is %d"
+                )
                 raise NotFoundError(message % (key.rank, entry.name, rank_count))
             start = slice_.start + key.rank - 1
             slice_ = slice(start, start + 1)
         return slice_
+
 
 def iterate_keys(node, index: MultiIndex) -> Iterator[Key]:
     """Recursively iterates over keys of `node` and all of its sub-nodes given
@@ -495,9 +511,9 @@ def iterate_keys(node, index: MultiIndex) -> Iterator[Key]:
     else:
         assert False
 
+
 def resolve_slices(node, index: MultiIndex) -> Dict[str, slice]:
-    """Given the replication index, resolves ranks for each entry in the node.
-    """
+    """Given the replication index, resolves ranks for each entry in the node."""
     try:
         slices = node.slices[index]
     except KeyError:
@@ -511,9 +527,9 @@ def resolve_slices(node, index: MultiIndex) -> Dict[str, slice]:
         node.slices[index] = slices
     return slices
 
+
 def resolve_starts(node, index: MultiIndex) -> Counter:
-    """Given the replication index, resolves rank starts for each entry in the node.
-    """
+    """Given the replication index, resolves rank starts for each entry in the node."""
     try:
         starts = node.starts[index]
     except KeyError:
@@ -521,7 +537,7 @@ def resolve_starts(node, index: MultiIndex) -> Counter:
             starts = Counter()
         elif not isinstance(node, ReplicationNode):
             if node.ordinal > 0:
-                upper_sibling = node.parent.children[node.ordinal-1]
+                upper_sibling = node.parent.children[node.ordinal - 1]
                 starts = resolve_starts(upper_sibling, index).copy()
                 counts = resolve_counts(upper_sibling, index)
                 starts += counts
@@ -538,9 +554,9 @@ def resolve_starts(node, index: MultiIndex) -> Counter:
         node.starts[index] = starts
     return starts
 
+
 def resolve_counts(node, index: MultiIndex) -> Counter:
-    """Given the replication index, resolves rank counts for each entry in the node.
-    """
+    """Given the replication index, resolves rank counts for each entry in the node."""
     try:
         counts = node.counts[index]
     except KeyError:
@@ -553,19 +569,23 @@ def resolve_counts(node, index: MultiIndex) -> Counter:
                 counts += resolve_counts(child, index)
             if len(index) == node.level:
                 node.counts[index] = counts
-    if (isinstance(node, LeafNode)
-            and isinstance(node.parent, ReplicationNode)
-            and len(index) < node.level):
+    if (
+        isinstance(node, LeafNode)
+        and isinstance(node.parent, ReplicationNode)
+        and len(index) < node.level
+    ):
         total_factor = sum(flatten(node.parent.factors[index]))
         counts = counts.copy()
         for name in counts:
             counts[name] *= total_factor
     return counts
 
+
 def resolve_elements(entries, root: Node):
     """Traverses nodes of the data tree and gathers lists of expanded elements
     for each of the entries.
     """
+
     def recurse(node, index):
         if isinstance(node, WrapperNode):
             for child in node.children:
@@ -579,16 +599,16 @@ def resolve_elements(entries, root: Node):
             for key in node.keys:
                 try:
                     entry = entries[key.name]
-                except KeyError: # [1]
+                except KeyError:  # [1]
                     continue
                 if not entry.uniform_element:
                     entry.elements.append(key.element)
         else:
             assert False
+
     recurse(root, index=())
 
     # [1] Currently we append associated keys for each and every primary key
     #     of the LeafNode, but we add them to entries only if there is at least
     #     one rank covered by the bitmap. Check if this is OK or whether it needs
     #     to be optimized. TODO
-

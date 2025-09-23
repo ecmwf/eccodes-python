@@ -6,109 +6,133 @@
 # granted to it by virtue of its status as an intergovernmental organisation
 # nor does it submit to any jurisdiction.
 
-from .coder   import Coder, INPUT_TEMPLATE_KEYS, TEMPLATE_KEYS
-from .common  import *
-from .helpers import get_datetime, get_date, get_time, set_datetime, set_date, set_time
-from .view    import View
+from .coder import INPUT_TEMPLATE_KEYS, TEMPLATE_KEYS, Coder
+from .common import *
+from .helpers import get_date, get_datetime, get_time, set_date, set_datetime, set_time
+from .view import View
+
 
 @dataclass
 class Entry:
-    name: str = ''
+    name: str = ""
     value: Optional[ValueLike] = None
     dirty: bool = False
     computed: bool = False
     derive: Optional[Callable] = None
     project: Optional[Callable] = None
 
+
 def derive_datetime(header, key):
-    prefix = key.split('DateTime')[0]
-    datetime  = get_datetime(header, prefix=prefix)
+    prefix = key.split("DateTime")[0]
+    datetime = get_datetime(header, prefix=prefix)
     return datetime
 
+
 def derive_date(header, key):
-    prefix = key.split('Date')[0]
+    prefix = key.split("Date")[0]
     date = get_date(header, prefix=prefix)
     return date
 
+
 def derive_time(header, key):
-    prefix = key.split('Time')[0]
+    prefix = key.split("Time")[0]
     time = get_time(header, prefix=prefix)
     return time
 
+
 def derive_rdbtime_datetime(header, key):
-    date = derive_rdbtime_date(header, 'rdbtimeDate')
-    time = derive_time(header, 'rdbtimeTime')
+    date = derive_rdbtime_date(header, "rdbtimeDate")
+    time = derive_time(header, "rdbtimeTime")
     datetime = date + time
     return datetime
 
+
 def derive_rdbtime_date(header, key):
-    assert key == 'rdbtimeDate'
+    assert key == "rdbtimeDate"
     string = header._coder.get(key, validate=False)
     y, m, d = string[0:4], string[4:6], string[6:8]
-    date = np.datetime64(f'{y}-{m}-{d}', 'D')
+    date = np.datetime64(f"{y}-{m}-{d}", "D")
     return date
 
+
 def project_datetime(header, key, value):
-    prefix = key.split('DateTime')[0]
+    prefix = key.split("DateTime")[0]
     set_datetime(header, value, prefix=prefix)
 
+
 def project_date(header, key, value):
-    prefix = key.split('Date')[0]
+    prefix = key.split("Date")[0]
     set_date(header, value, prefix=prefix)
 
+
 def project_time(header, key, value):
-    prefix = key.split('Time')[0]
+    prefix = key.split("Time")[0]
     set_time(header, value, prefix=prefix)
 
-def project_edition_3_typical_year(header, key, value):
-    assert key == 'typicalYear'
-    assert header['edition'] == 3
-    header['typicalCentury'] = value // 100 + 1
-    header['typicalYearOfCentury'] = value % 100
 
-COMMON_COMPUTED_KEYS = set([
-    'typicalDateTime', 'typicalDate', 'typicalTime',
-    'localDateTime', 'localDate', 'localTime',
-    'rdbtimeDateTime', 'rdbtimeDate', 'rdbtimeTime',
-    'rectimeTime', 
-    'md5Data',
-])
+def project_edition_3_typical_year(header, key, value):
+    assert key == "typicalYear"
+    assert header["edition"] == 3
+    header["typicalCentury"] = value // 100 + 1
+    header["typicalYearOfCentury"] = value % 100
+
+
+COMMON_COMPUTED_KEYS = set(
+    [
+        "typicalDateTime",
+        "typicalDate",
+        "typicalTime",
+        "localDateTime",
+        "localDate",
+        "localTime",
+        "rdbtimeDateTime",
+        "rdbtimeDate",
+        "rdbtimeTime",
+        "rectimeTime",
+        "md5Data",
+    ]
+)
 
 _COMPUTED_ENTRIES = {
- None: [Entry(key, computed=True) for key in COMMON_COMPUTED_KEYS],
-    3: [Entry('typicalYear', computed=True, project=project_edition_3_typical_year)],
-    4: [Entry('typicalCentury', computed=True), Entry('typicalYearOfCentury', computed=True)],
+    None: [Entry(key, computed=True) for key in COMMON_COMPUTED_KEYS],
+    3: [Entry("typicalYear", computed=True, project=project_edition_3_typical_year)],
+    4: [
+        Entry("typicalCentury", computed=True),
+        Entry("typicalYearOfCentury", computed=True),
+    ],
 }
 
 COMPUTED_ENTRIES = {}
 for edition in _COMPUTED_ENTRIES.keys():
-    COMPUTED_ENTRIES[edition] = {entry.name: entry for entry in _COMPUTED_ENTRIES[edition]}
+    COMPUTED_ENTRIES[edition] = {
+        entry.name: entry for entry in _COMPUTED_ENTRIES[edition]
+    }
 
 for key, entry in COMPUTED_ENTRIES[None].items():
-    if key == 'rdbtimeDateTime':
+    if key == "rdbtimeDateTime":
         entry.derive = derive_rdbtime_datetime
-    elif key == 'rdbtimeDate':
+    elif key == "rdbtimeDate":
         entry.derive = derive_rdbtime_date
-    elif key.endswith('DateTime'):
+    elif key.endswith("DateTime"):
         entry.derive = derive_datetime
         entry.project = project_datetime
-    elif key.endswith('Date'):
+    elif key.endswith("Date"):
         entry.derive = derive_date
         entry.project = project_date
-    elif key.endswith('Time'):
+    elif key.endswith("Time"):
         entry.derive = derive_time
         entry.project = project_time
 
+
 class Header(View):
-    """Provides access to BUFR header entries.
-    """
+    """Provides access to BUFR header entries."""
 
     _coder: Coder
     _cache: Dict[str, Entry]
 
     def __init__(self, coder: Coder) -> None:
         self._coder = coder
-        edition = cast(int, coder.get('edition', validate=False))
+        edition = cast(int, coder.get("edition", validate=False))
         self._cache = COMPUTED_ENTRIES[None].copy()
         self._cache.update(COMPUTED_ENTRIES[edition])
 
@@ -118,8 +142,8 @@ class Header(View):
     def __eq__(self, other: object) -> bool:
         if isinstance(other, Header):
             eq = False
-            items1 =  self.items(skip='read_only')
-            items2 = other.items(skip='read_only')
+            items1 = self.items(skip="read_only")
+            items2 = other.items(skip="read_only")
             for (k1, v1), (k2, v2) in zip(items1, items2):
                 if k1 != k2:
                     break
@@ -156,8 +180,8 @@ class Header(View):
         return value
 
     def __setitem__(self, key: str, value: ValueLike) -> None:
-        if key == 'edition':
-            current_edition = cast(int, self._coder.get('edition', validate=False))
+        if key == "edition":
+            current_edition = cast(int, self._coder.get("edition", validate=False))
             if value != current_edition:
                 for k in COMPUTED_ENTRIES[current_edition].keys():
                     self._cache.pop(k, None)
@@ -181,14 +205,14 @@ class Header(View):
 
     def __str__(self) -> str:
         import pprint
+
         d = self.as_dict()
         return pprint.pformat(d, sort_dicts=False)
 
-    def copy_to(self, other: 'Header', skip_template_keys=False) -> None:
-        """Copies common items from this header to `other`.
-        """
-        for key, value in self.items(skip='read_only'):
-            if key == 'unexpandedDescriptors':
+    def copy_to(self, other: "Header", skip_template_keys=False) -> None:
+        """Copies common items from this header to `other`."""
+        for key, value in self.items(skip="read_only"):
+            if key == "unexpandedDescriptors":
                 break
             try:
                 other[key] = value
@@ -196,7 +220,7 @@ class Header(View):
                 continue
         if not skip_template_keys:
             if other._coder._baked_template:
-                raise EncodingError('Cannot change baked template')
+                raise EncodingError("Cannot change baked template")
             self._coder.unpack()
             for skey, okey in zip(TEMPLATE_KEYS, INPUT_TEMPLATE_KEYS):
                 if okey not in other._cache:
@@ -208,8 +232,7 @@ class Header(View):
                         other._coder.set(okey, value)
 
     def get_count(self, key: str) -> int:
-        """Returns the number of elements designated by the given key.
-        """
+        """Returns the number of elements designated by the given key."""
         self.__getitem__(key)
         return 1
 
@@ -248,10 +271,9 @@ class Header(View):
         raise ValueCannotBeMissingError(f"Header key '{key}' can't have missing value'")
 
     def as_dict(self, ranked=False, depth=0, **kwds) -> Dict:
-        """Returns dict-like representation of the header items.
-        """
-        counts_only = kwds.pop('counts_only', False)
-        shapes_only = kwds.pop('shapes_only', False)
+        """Returns dict-like representation of the header items."""
+        counts_only = kwds.pop("counts_only", False)
+        shapes_only = kwds.pop("shapes_only", False)
         if counts_only:
             d = {k: self.get_count(k) for k in self.keys(ranked, **kwds)}
         elif shapes_only:
@@ -261,22 +283,28 @@ class Header(View):
         return d
 
     def _commit(self) -> None:
-        return # [1]
+        return  # [1]
         if self._cache:
-            for key in ['edition', 'bufrHeaderCentre', 'masterTableNumber']: # must be set first
+            for key in [
+                "edition",
+                "bufrHeaderCentre",
+                "masterTableNumber",
+            ]:  # must be set first
                 try:
                     value = self._cache.pop(key)
                 except KeyError:
                     continue
-                self._coder.set(key, value, validate=False) # [2]
+                self._coder.set(key, value, validate=False)  # [2]
             for key, value in self._cache.items():
-                self._coder.set(key, value, validate=False, ignore_read_only_error=True) # [2]
+                self._coder.set(
+                    key, value, validate=False, ignore_read_only_error=True
+                )  # [2]
 
         # [1] Currently, when setting header keys, we pass the values right through
         #     into the coder, so there is no need to flush the cache before packing.
         #     But we will probably need this in the future when adding support for
         #     dynamically resizeable replication blocks, which will require full
         #     virtualisation of BUFR messages. TODO
-        #     
+        #
         # [2] Just a reminder that we don't need to use header_only=True here
         #     because the keys in the cache are header-only by definition.

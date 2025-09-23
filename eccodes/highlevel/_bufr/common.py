@@ -7,35 +7,49 @@
 # nor does it submit to any jurisdiction.
 
 import datetime as dt
+import enum
 import re
 import sys
-
 from collections import Counter, abc, defaultdict
 from copy import deepcopy
 from dataclasses import dataclass, field, fields
-from enum import auto; import enum
+from enum import auto
 from functools import cached_property
 from pathlib import Path
+from typing import (
+    Any,
+    BinaryIO,
+    Callable,
+    Dict,
+    Iterator,
+    List,
+    Optional,
+    Sequence,
+    Set,
+    Tuple,
+    Union,
+    cast,
+)
 
-from typing import Any, BinaryIO, Callable, Dict, Iterator, List, Optional, Set
-from typing import Sequence, Tuple, Union, cast
+import numpy
+import numpy as np
 from numpy.ma import MaskedArray
 from numpy.typing import DTypeLike, NDArray
 
 import eccodes
-import numpy; import numpy as np
-
-from eccodes.eccodes import *
 from eccodes.eccodes import KeyValueNotFoundError as NotFoundError
+from eccodes.eccodes import *
 
-from .tables  import Element
+from .tables import Element
+
 
 @dataclass
 class Behaviour:
-    assumed_scalar_elements: Set = field(default_factory=set) # [1]
-    on_assumed_scalar_element_invalid_size: str = 'warn' # [2]
-    autorelease_handle: bool = True # [3]
-    update_header_from_data_before_packing: bool = True # [4]
+    assumed_scalar_elements: Set = field(default_factory=set)  # [1]
+    on_assumed_scalar_element_invalid_size: str = "warn"  # [2]
+    autorelease_handle: bool = True  # [3]
+    update_header_from_data_before_packing: bool = True  # [4]
+
 
 # [1] By default, values of data elements in uncompressed, multi-subset messages
 #     are one-/two-dimensional arrays, even if there is only one common value for
@@ -58,26 +72,34 @@ class Behaviour:
 #     keys such as 'typicalYear', 'localMonth', 'localLatitude', etc.
 
 
-DEFAULT_BEHAVIOUR = Behaviour(assumed_scalar_elements=set([
-        # 'originatorOfRetrievedAtmosphericConstituent',
-        # 'satelliteChannelBandWidth',
-        # 'satelliteChannelCentreFrequency',
-        # 'satelliteIdentifier',
-        # 'satelliteInstruments',
-    ]))
+DEFAULT_BEHAVIOUR = Behaviour(
+    assumed_scalar_elements=set(
+        [
+            # 'originatorOfRetrievedAtmosphericConstituent',
+            # 'satelliteChannelBandWidth',
+            # 'satelliteChannelCentreFrequency',
+            # 'satelliteIdentifier',
+            # 'satelliteInstruments',
+        ]
+    )
+)
 
 current_behaviour = deepcopy(DEFAULT_BEHAVIOUR)
+
 
 def get_behaviour():
     global current_behaviour
     return deepcopy(current_behaviour)
+
 
 def set_behaviour(new_behaviour):
     global current_behaviour
     for f in fields(new_behaviour):
         setattr(current_behaviour, f.name, getattr(new_behaviour, f.name))
 
+
 from contextlib import contextmanager
+
 
 @contextmanager
 def change_behaviour():
@@ -88,30 +110,36 @@ def change_behaviour():
     finally:
         set_behaviour(saved_behaviour)
 
+
 MultiIndex = Tuple[int, ...]
 
 DateLike = Union[dt.date, dt.datetime, np.datetime64, str]
 TimeLike = Union[DateLike, dt.timedelta, np.timedelta64]
 ValueLike = Union[bool, int, float, str, List, NDArray]
 
+
 class Flags(enum.Flag):
-    CODED     = auto()
-    COMPUTED  = auto()
-    FACTOR    = auto()
+    CODED = auto()
+    COMPUTED = auto()
+    FACTOR = auto()
     READ_ONLY = auto()
-    BITMAP    = auto()
-    SCALAR    = auto()
+    BITMAP = auto()
+    SCALAR = auto()
 
-CODED     = Flags.CODED
-COMPUTED  = Flags.COMPUTED
-FACTOR    = Flags.FACTOR
+
+CODED = Flags.CODED
+COMPUTED = Flags.COMPUTED
+FACTOR = Flags.FACTOR
 READ_ONLY = Flags.READ_ONLY
-BITMAP    = Flags.BITMAP
-SCALAR    = Flags.SCALAR
+BITMAP = Flags.BITMAP
+SCALAR = Flags.SCALAR
 
-FLAGS = dict(coded=CODED, computed=COMPUTED, factor=FACTOR, read_only=READ_ONLY, bitmap=BITMAP)
+FLAGS = dict(
+    coded=CODED, computed=COMPUTED, factor=FACTOR, read_only=READ_ONLY, bitmap=BITMAP
+)
 
 FlagsLike = Optional[Union[Flags, str, Sequence[str]]]
+
 
 def ensure_flags(value: FlagsLike) -> Flags:
     if value is None:
@@ -136,9 +164,9 @@ def ensure_flags(value: FlagsLike) -> Flags:
         raise TypeError("Invalid type: %s", type(value))
     return flags
 
+
 @dataclass
 class Key:
-
     name: str
     rank: Optional[int] = None
     primary: str = ""
@@ -151,10 +179,12 @@ class Key:
     @staticmethod
     def from_string(string: str):
         name, rank, primary, secondary, attribute = "", None, "", "", ""
-        if string.startswith('/'):
-            raise NotFoundError(f"{string}: Search keys with the '/<query>/<name>' syntax are not supported yet")
-        elif string.startswith('#'):
-            second_hash = string.find('#', 2)
+        if string.startswith("/"):
+            raise NotFoundError(
+                f"{string}: Search keys with the '/<query>/<name>' syntax are not supported yet"
+            )
+        elif string.startswith("#"):
+            second_hash = string.find("#", 2)
             if second_hash == -1:
                 raise NotFoundError(f"'{string}': Missing second '#' character")
             rank = int(string[1:second_hash])
@@ -162,45 +192,51 @@ class Key:
                 raise NotFoundError(f"'{string}': Rank must be a positive number")
         else:
             second_hash = -1
-        last_arrow = string.rfind('->', -11, -4)
+        last_arrow = string.rfind("->", -11, -4)
         if last_arrow != -1:
-            if string[last_arrow+2:] in ('code', 'units', 'reference', 'scale', 'width'):
-                attribute = string[last_arrow+2:]
+            if string[last_arrow + 2 :] in (
+                "code",
+                "units",
+                "reference",
+                "scale",
+                "width",
+            ):
+                attribute = string[last_arrow + 2 :]
             else:
                 last_arrow = -1
         else:
             last_arrow = len(string)
-        first_arrow = string.find('->', second_hash+1, last_arrow)
+        first_arrow = string.find("->", second_hash + 1, last_arrow)
         if first_arrow != -1:
-            secondary = string[first_arrow+2:last_arrow]
+            secondary = string[first_arrow + 2 : last_arrow]
         else:
             first_arrow = last_arrow
-        primary = string[second_hash+1:first_arrow]
-        name = string[second_hash+1:last_arrow]
+        primary = string[second_hash + 1 : first_arrow]
+        name = string[second_hash + 1 : last_arrow]
         key = Key(name, rank, primary, secondary, attribute, string)
         return key
 
     def __post_init__(self):
         if not self.string:
             if self.rank:
-                self.string = f'#{self.rank}#'
+                self.string = f"#{self.rank}#"
             self.string += self.name
             if self.attribute:
-                self.string += f'->{self.attribute}'
+                self.string += f"->{self.attribute}"
         if not self.primary:
             self.primary = self.name
 
+
 @dataclass
 class Association:
-
     element: Element
     element_rank: int
     element_dtype: DTypeLike
     bitmap: NDArray
     bitmap_offset: int
     indices: Dict[str, NDArray]
-    slices: Dict[str, slice] = field(init=False, default_factory=dict) # [1]
-    entries: Dict[str, 'DataEntry'] = field(init=False, default_factory=dict) # [2]
+    slices: Dict[str, slice] = field(init=False, default_factory=dict)  # [1]
+    entries: Dict[str, "DataEntry"] = field(init=False, default_factory=dict)  # [2]
 
     # [1] Slices of elements sequence numbers which are within the scope of the bitmap.
     #
@@ -218,41 +254,42 @@ class Association:
             self.slices[key] = slice(start, stop)
 
     def rank_mask(self, key: str):
-        """ Returns a mask indicating which ranks of the given primary key have
-            an actual associated value.
+        """Returns a mask indicating which ranks of the given primary key have
+        an actual associated value.
         """
         slice = self.slices[key]
-        indices = self.indices[key] # all
-        mask = numpy.repeat(False, len(indices)) # the default for  ranks outside bitmap's scope
-        indices = indices[slice]    # only within bitmap's scope
-        indices = indices - self.bitmap_offset # relative to bitmap
+        indices = self.indices[key]  # all
+        mask = numpy.repeat(
+            False, len(indices)
+        )  # the default for  ranks outside bitmap's scope
+        indices = indices[slice]  # only within bitmap's scope
+        indices = indices - self.bitmap_offset  # relative to bitmap
         mask[slice] = self.bitmap[indices]
         return mask
 
     def any_rank_set(self, key: str) -> bool:
-        """ Returns `True` if any rank of the given primary key has an actual
-            associated value.
+        """Returns `True` if any rank of the given primary key has an actual
+        associated value.
         """
         try:
             mask = self.rank_mask(key)
-        except KeyError: # key was defined *after* the bitmap association
+        except KeyError:  # key was defined *after* the bitmap association
             return False
         return bool(numpy.any(mask))
 
+
 @dataclass
 class DataEntry:
-
     name: str
     shape: Tuple = ()
     uniform_element: Optional[Element] = None
     elements: List[Element] = field(default_factory=list)
     array: Optional[NDArray] = None
     association: Optional[Association] = None
-    primary: Optional['DataEntry'] = None
+    primary: Optional["DataEntry"] = None
     flags: Flags = CODED
 
     @property
     def size(self) -> int:
         assert len(self.shape) == 2
         return self.shape[0] * self.shape[1]
-

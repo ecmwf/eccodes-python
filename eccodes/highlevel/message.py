@@ -4,6 +4,7 @@ from contextlib import contextmanager
 import numpy as np
 
 import eccodes
+
 from ._bufr import BUFRMessage
 
 _TYPES_MAP = {

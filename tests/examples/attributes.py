@@ -18,26 +18,25 @@ import sys
 from eccodes import *
 from eccodes.highlevel import *
 
-ATTRIBUTES = ['code', 'units', 'scale', 'reference', 'width'] # See BUFR Code Table B
+ATTRIBUTES = ["code", "units", "scale", "reference", "width"]  # See BUFR Code Table B
+
 
 def run_example(input, output=sys.stdout):
-
     # Loop over the messages in the file
     for number, bufr in enumerate(FileReader(input, CODES_PRODUCT_BUFR), start=1):
-
-        print(f'messageNumber: {number}', file=output)
+        print(f"messageNumber: {number}", file=output)
 
         # Loop over all keys in the message
         for name in bufr.keys():
-
             # Print element's attributes. Attributes themselves are keys.
             for attribute in ATTRIBUTES:
                 try:
-                    key = f'{name}->{attribute}'
+                    key = f"{name}->{attribute}"
                     value = bufr[key]
-                    print(f'{key}: {value}', file=output)
+                    print(f"{key}: {value}", file=output)
                 except eccodes.KeyValueNotFoundError:
                     pass
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     run_example(sys.argv[1])
