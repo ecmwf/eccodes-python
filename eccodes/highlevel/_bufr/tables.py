@@ -15,7 +15,7 @@ from pathlib import Path
 from typing import Iterator, List, Optional, Tuple, Union
 
 import eccodes
-
+import gribapi
 
 class Code(int):
 
@@ -77,11 +77,11 @@ class _Singleton(type(UserDict)):
 class Table(UserDict, metaclass=_Singleton):
 
     def __init__(self, version: Version, local: bool) -> None:
-        base_path = Path(eccodes.codes_definition_path(), 'bufr', 'tables', '0')
+        base_path = Path('bufr', 'tables', '0')
         if local:
             dashed_version_number = '%d-%d' % (version.master, version.local)
             path = base_path.joinpath('local', dashed_version_number, str(version.centre), str(version.subcentre))
-            if not codes_has_file(path / 'element.table'):
+            if not gribapi.grib_full_defs_path(str(path / 'element.table')):
                 path = base_path.joinpath('local', str(version.local), str(version.centre), str(version.subcentre))
         else:
             path = base_path.joinpath('wmo', str(version.master))
@@ -227,7 +227,8 @@ def codes_has_file(path: Union[str, os.PathLike]) -> bool:
     return has
 
 def codes_read_file(path: Union[str, os.PathLike]) -> str:
-    stream = libeccodes.codes_fopen(str(path).encode(), b'r')
+    full_path = gribapi.grib_full_defs_path(str(path))
+    stream = libeccodes.codes_fopen(full_path.encode(), b'r')
     if not stream:
         raise RuntimeError(f'Tables path does not exist: {path}')
     try:
