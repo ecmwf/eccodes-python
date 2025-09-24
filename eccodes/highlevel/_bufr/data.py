@@ -6,6 +6,10 @@
 # granted to it by virtue of its status as an intergovernmental organisation
 # nor does it submit to any jurisdiction.
 
+from functools import cached_property
+
+# flake8: noqa: 405
+
 from .coder import Coder
 from .common import *
 from .helpers import ensure_masked_array, flatten, missing_of

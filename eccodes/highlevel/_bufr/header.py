@@ -6,6 +6,8 @@
 # granted to it by virtue of its status as an intergovernmental organisation
 # nor does it submit to any jurisdiction.
 
+# flake8: noqa: 405
+
 from .coder import INPUT_TEMPLATE_KEYS, TEMPLATE_KEYS, Coder
 from .common import *
 from .helpers import get_date, get_datetime, get_time, set_date, set_datetime, set_time

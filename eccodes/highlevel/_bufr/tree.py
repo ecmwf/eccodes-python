@@ -6,8 +6,11 @@
 # granted to it by virtue of its status as an intergovernmental organisation
 # nor does it submit to any jurisdiction.
 
+import re
 from copy import copy
 from itertools import repeat
+
+# flake8: noqa: 405
 
 from .common import *
 from .helpers import RaggedArray, SingletonDict

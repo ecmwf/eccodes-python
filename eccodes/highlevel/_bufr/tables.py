@@ -7,11 +7,13 @@
 # nor does it submit to any jurisdiction.
 
 import csv
+import ctypes
+import os
 import re
 from collections import ChainMap, UserDict
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from pathlib import Path
-from typing import Iterator, List, Optional, Tuple, Union
+from typing import Iterator, List, Tuple, Union
 
 import eccodes
 import gribapi
@@ -207,9 +209,6 @@ class Tables:
                 previous_code = code
             yield Descriptor(code, name)
 
-
-import ctypes
-import os
 
 libc = ctypes.CDLL(None, winmode=0)  # automatically finds and loads the C standard library
 

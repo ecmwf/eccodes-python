@@ -8,6 +8,8 @@
 
 import datetime as dt
 
+# flake8: noqa: 405
+
 from .coder import Coder
 from .common import *
 from .data import Data

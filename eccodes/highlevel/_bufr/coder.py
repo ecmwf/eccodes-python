@@ -8,10 +8,13 @@
 
 import io
 import warnings
+from functools import cached_property
+
+# flake8: noqa: F405
 
 from .common import *
 from .helpers import ensure_array, missing_of
-from .tables import Code, Element, Tables, Version
+from .tables import Tables, Version
 
 TEMPLATE_KEYS = dict.fromkeys(
     [
