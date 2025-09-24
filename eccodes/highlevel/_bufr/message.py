@@ -8,7 +8,8 @@
 
 import datetime as dt
 
-# flake8: noqa: 405
+# flake8: noqa: F405
+#   ruff: noqa: F403
 
 from .coder import Coder
 from .common import *

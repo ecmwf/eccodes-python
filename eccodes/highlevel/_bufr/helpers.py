@@ -6,7 +6,8 @@
 # granted to it by virtue of its status as an intergovernmental organisation
 # nor does it submit to any jurisdiction.
 
-# flake8: noqa: 405
+# flake8: noqa: F405
+#   ruff: noqa: F403
 
 from .common import *
 

@@ -11,6 +11,7 @@ import warnings
 from functools import cached_property
 
 # flake8: noqa: F405
+#   ruff: noqa: F403
 
 from .common import *
 from .helpers import ensure_array, missing_of
@@ -709,7 +710,7 @@ def keys_of(
         for key in keys:
             if key == "unexpandedDescriptors":
                 next_key = next(keys, None)
-                if next_key == None:
+                if next_key is None:
                     if not header_only:
                         raise RuntimeError(data_keys_unaccessible)
                 else:
