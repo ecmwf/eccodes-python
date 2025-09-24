@@ -211,7 +211,7 @@ class Tables:
 import ctypes
 import os
 
-libc = ctypes.CDLL(None)  # automatically finds and loads the C standard library
+libc = ctypes.CDLL(None, winmode=0)  # automatically finds and loads the C standard library
 
 fseek = libc.fseek
 fseek.argtypes = [ctypes.c_void_p, ctypes.c_long, ctypes.c_int]
