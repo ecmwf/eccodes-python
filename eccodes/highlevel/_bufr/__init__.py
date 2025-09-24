@@ -7,7 +7,9 @@ from .helpers import missing_of
 from .message import BUFRMessage
 
 __all__ = [
-    'change_behaviour', 'get_behaviour', 'set_behaviour',
-    'missing_of',
-    'BUFRMessage',
+    "change_behaviour",
+    "get_behaviour",
+    "set_behaviour",
+    "missing_of",
+    "BUFRMessage",
 ]
