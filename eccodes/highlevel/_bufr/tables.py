@@ -214,7 +214,7 @@ class Tables:
 libcname = "msvcrt" if sys.platform.startswith("win") else None
 
 libc = ctypes.CDLL(
-    None, winmode=0
+    libcname, winmode=0
 )  # automatically finds and loads the C standard library
 
 fseek = libc.fseek
