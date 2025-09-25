@@ -8,15 +8,12 @@
 
 import datetime as dt
 import enum
-import re
-import sys
-from collections import Counter, abc, defaultdict
+from collections import Counter, abc, defaultdict  # noqa
+from contextlib import contextmanager
 from copy import deepcopy
-from dataclasses import dataclass, field, fields
+from dataclasses import dataclass, field, fields  # noqa
 from enum import auto
-from functools import cached_property
-from pathlib import Path
-from typing import (
+from typing import (  # noqa
     Any,
     BinaryIO,
     Callable,
@@ -33,12 +30,11 @@ from typing import (
 
 import numpy
 import numpy as np
-from numpy.ma import MaskedArray
-from numpy.typing import DTypeLike, NDArray
+from numpy.ma import MaskedArray  # noqa
+from numpy.typing import DTypeLike, NDArray  # noqa
 
-import eccodes
 from eccodes.eccodes import KeyValueNotFoundError as NotFoundError
-from eccodes.eccodes import *
+from eccodes.eccodes import *  # noqa
 
 from .tables import Element
 
@@ -88,22 +84,19 @@ current_behaviour = deepcopy(DEFAULT_BEHAVIOUR)
 
 
 def get_behaviour():
-    global current_behaviour
+    global current_behaviour  # noqa
     return deepcopy(current_behaviour)
 
 
 def set_behaviour(new_behaviour):
-    global current_behaviour
+    global current_behaviour  # noqa
     for f in fields(new_behaviour):
         setattr(current_behaviour, f.name, getattr(new_behaviour, f.name))
 
 
-from contextlib import contextmanager
-
-
 @contextmanager
 def change_behaviour():
-    global current_behaviour
+    global current_behaviour  # noqa
     saved_behaviour = get_behaviour()
     try:
         yield current_behaviour

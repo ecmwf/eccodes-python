@@ -1,7 +1,6 @@
-## Tour
----
+# Tour
 
-This document showcases some of the features of the high-level eccodes-python interface.
+This document showcases some of the features of the high-level BUFR interface.
 
 To follow along make sure you've imported `eccodes.highlevel` module:
 
@@ -48,7 +47,7 @@ are properly released _right after use_, even in the occurrence of exception.
 ### Inspecting messages
 
 The most straightforward way to inspect the contents of a BUFR message is by
-printing it with the builtin `print()` function:
+printing it with the built-in `print()` function:
 
 ```python
 >>> print(bufr)
@@ -57,7 +56,7 @@ printing it with the builtin `print()` function:
 This pretty prints the message in a dict-like representation which is obtain
 via the `as_dict()` method.
 
-We can call the the `as_dict()` method ourselves, which will return the actuall
+We can call the `as_dict()` method ourselves, which will return the actual
 dictionary, not a string:
 
 ```
@@ -66,7 +65,7 @@ dictionary, not a string:
 ...
 ```
 `as_dict()` provides many useful options such as listing keys with their rank
-prefixes or changing the depth of expansion of hierarhical data section blocks.
+prefixes or changing the depth of expansion of hierarchical data section blocks.
 
 ### Getting and setting values
 

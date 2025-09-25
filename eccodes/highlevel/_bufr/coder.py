@@ -8,10 +8,15 @@
 
 import io
 import warnings
+from functools import cached_property
 
 from .common import *
 from .helpers import ensure_array, missing_of
-from .tables import Code, Element, Tables, Version
+from .tables import Tables, Version
+
+# flake8: noqa: F405
+#   ruff: noqa: F403
+
 
 TEMPLATE_KEYS = dict.fromkeys(
     [
@@ -706,7 +711,7 @@ def keys_of(
         for key in keys:
             if key == "unexpandedDescriptors":
                 next_key = next(keys, None)
-                if next_key == None:
+                if next_key is None:
                     if not header_only:
                         raise RuntimeError(data_keys_unaccessible)
                 else:

@@ -19,7 +19,7 @@ jobs:
       - run: pip install black flake8 isort
       - run: black --version
       - run: isort --check .
-      - run: black --check .
+      - run: black --check --diff -v .
       - run: flake8 .
 
   checks:

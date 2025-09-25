@@ -13,6 +13,9 @@
 #
 # Usage: attributes.py input.bufr
 
+# flake8: noqa: F403
+# flake8: noqa: F405
+
 import sys
 
 from eccodes import *

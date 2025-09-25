@@ -6,12 +6,17 @@
 # granted to it by virtue of its status as an intergovernmental organisation
 # nor does it submit to any jurisdiction.
 
+import re
 from copy import copy
 from itertools import repeat
 
 from .common import *
 from .helpers import RaggedArray, SingletonDict
 from .tables import Code, Element
+
+# flake8: noqa: F405
+#   ruff: noqa: F403
+
 
 INT_UNITS = re.compile(r"%|.*CODE TABLE.*|.*FLAG TABLE.*|Numeric|a|d|h|min|mon|s")
 
@@ -381,7 +386,7 @@ def build_tree(coder):
                 for key in node.keys:
                     try:
                         entry = entries[key.name]
-                    except:
+                    except KeyError:
                         entry = DataEntry(key.name, flags=key.flags)
                         if entry.name in current_behaviour.assumed_scalar_elements:
                             entry.flags |= SCALAR
