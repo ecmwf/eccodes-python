@@ -1,11 +1,13 @@
 import io
+import sys
 from contextlib import contextmanager
 
 import numpy as np
 
 import eccodes
 
-from ._bufr import BUFRMessage  # noqa
+if not sys.platform.startswith("win"):
+    from ._bufr import BUFRMessage  # noqa
 
 _TYPES_MAP = {
     "float": float,
