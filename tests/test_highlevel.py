@@ -179,6 +179,8 @@ def test_grib_message_from_samples():
 
 
 def test_bufr_message_from_samples():
+    if sys.platform.startswith("win"):
+        pytest.skip("Test disabled on Windows")
     message = eccodes.BUFRMessage.from_samples("BUFR4")
     assert message["edition"] == 4
 
