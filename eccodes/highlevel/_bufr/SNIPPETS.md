@@ -1,8 +1,8 @@
 # Snippets
 
-The aim of this document is to gather a list of code snippets showcasing some
-of the most common (but also less common) BUFR-related tasks using both the
-low-level and the high-level eccodes-python API.
+This document seeks to compile a collection of code snippets demonstrating common
+(but also less common) BUFR-handling tasks, utilising both the low-level and the
+high-level interface.
 
 ## Reading from file
 
@@ -38,7 +38,7 @@ for bufr in FileReader(path, eccodes.CODES_PRODUCT_BUFR):
 ```
 
 We can also use Python's `with` statement (aka context manager) to ensure
-that `BUFRMessage` resources are peroperly released after its use:
+that `BUFRMessage` resources are properly released after its use:
 
 ```python
 for bufr in FileReader(path, eccodes.CODES_PRODUCT_BUFR):
@@ -176,7 +176,7 @@ Specifically, the need to set 'input...ReplicationFactor' upfront.)
 ### The low-level way
 
 ```python
-old = codes_bufr_new_from_file(non_local_file)
+old = codes_bufr_new_from_file(foreign_file)
 new = codes_bufr_new_from_samples('BUFR4_local_satellite')
 # Copy header keys (section 1 only)
 it = codes_bufr_keys_iterator_new(old)
@@ -230,7 +230,7 @@ for n in range(1, subset_count + 1):
     print(f'Working on subset {n}')
     block_number = codes_get(bufr, f'/subsetNumber={n}/blockNumber')
     ...
-    # BUT THIS IS CURRENTLY NOT ALLOWED
+    # BUT THIS IS CURRENTLY NOT ALLOWED!!!
     # pressure1 = codes_get(bufr, f'/subsetNumber={n}/#1#pressure')
     ...
 ```
@@ -248,7 +248,7 @@ for n, subset in enumerate(bufr.data, start=1):
 
 ## Working with uncompressed multi-subset messages with nested replications
 
-The following is an example of a BUFR message with wind profiler data (see tests/sample-data/rwp\_jma.bufr).
+The following is an example of a wind profiler BUFR message (see tests/sample-data/rwp\_jma.bufr).
 Each subset in this uncompressed BUFR message represents a unique station.
 Within each subset there is one static block at the top which contains some
 common metadata, followed by a doubly-nested delayed replication block with
@@ -256,9 +256,9 @@ the actual profile data.
 The outer replication corresponds to profiles measured at different times, and
 the inner replication contains the individual level data for each of the profiles.
 The tricky part about this message is that the number of profiles and the number
-of levels is not constant, and so we can't navigate the structure by doing a simple
+of levels varies across stations, which means we can't navigate the structure by doing a simple
 rank arithmetic.
-We have to employ more envolved calculations in order to navigate the structure correctly.
+We have to employ more involved calculations in order to navigate the structure correctly.
 
 ### The low-level way
 
@@ -357,7 +357,7 @@ or
 ```python
 new = bufr.copy(subsets=slice(1, 9))
 ```
-Note that the bounds in the high-level example follow the standard Python
+Note that the bounds in the high-level example follow standard Python
 convention, whereas in the low-level example they are 1-based and inclusive!
 
 ## Extracting subsets by date & time
@@ -386,7 +386,7 @@ start = datetime(2000, 2, 4, 8, 16)
 end = start + timedelta(seconds=32)
 new = bufr.copy(subsets=slice(start, end))
 ```
-Note that for datetime slices the bounds are inclusive on both sides!
+Note that the bounds of datetime slices are inclusive on both sides!
 
 ## Extracting subsets within a lat-lon area
 
@@ -404,8 +404,7 @@ new = codes_clone(bufr)
 
 ### The high-level way
 
-Unlike in the previous high-level examples, there is no builtin option to
-extract subsets by area directly.
+Unlike in the previous examples, there is no built-in option to extract subsets by area.
 However, we can pass an arbitrary boolean mask argument to the `copy()`
 method, which provides unlimited flexibility:
 
@@ -457,8 +456,8 @@ codes_write(bufr, file)
 file = open('output.bufr', 'wb')
 bufr.write_to(file)
 ```
-Notice that in contrast to the the low-level example, we didn't need to
-pack the message explictly before writing.
+Notice that in contrast to the low-level example, we didn't need to
+pack the message explicitly before writing.
 This was done for us automatically.
 But, if needed, packing can also be triggered manually at any time by calling
 the `pack()` method.
