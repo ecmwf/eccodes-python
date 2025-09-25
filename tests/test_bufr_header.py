@@ -6,6 +6,9 @@
 # granted to it by virtue of its status as an intergovernmental organisation
 # nor does it submit to any jurisdiction.
 
+# flake8: noqa: F403
+# flake8: noqa: F405
+
 import pytest as pt
 
 from eccodes.highlevel._bufr.message import *

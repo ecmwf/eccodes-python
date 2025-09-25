@@ -18,7 +18,6 @@ from .view import View
 #   ruff: noqa: F403
 
 
-
 class Message(View):
     def __init__(self, source) -> None:
         if isinstance(source, Coder):

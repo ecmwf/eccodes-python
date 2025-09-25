@@ -25,7 +25,6 @@ from .view import View
 #   ruff: noqa: F403
 
 
-
 class Data(View):
     _coder: Coder
     _subset_count: int = 0
