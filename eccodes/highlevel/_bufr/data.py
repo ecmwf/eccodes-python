@@ -6,10 +6,14 @@
 # granted to it by virtue of its status as an intergovernmental organisation
 # nor does it submit to any jurisdiction.
 
+from functools import cached_property
+
+# flake8: noqa: F405
+#   ruff: noqa: F403
+
 from .coder import Coder
 from .common import *
 from .helpers import ensure_masked_array, flatten, missing_of
-from .tables import Element
 from .tree import (
     AssociationNode,
     LeafNode,
@@ -480,7 +484,7 @@ class DataBlock(View):
             rank_count = slice_.stop - slice_.start
             if key.rank > rank_count:
                 message = (
-                    f"Rank %d is out of bounds; max. rank of '%s' in this view is %d"
+                    "Rank %d is out of bounds; max. rank of '%s' in this view is %d"
                 )
                 raise NotFoundError(message % (key.rank, entry.name, rank_count))
             start = slice_.start + key.rank - 1
