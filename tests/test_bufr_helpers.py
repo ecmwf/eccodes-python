@@ -45,7 +45,7 @@ def test_ragged_array_getset():
 
 def test_ragged_array_insert():
     a0 = RaggedArray.empty(ndim=0)
-    assert a0.data == None
+    assert a0.data is None
     assert a0.ndim == 0
     a0.insert((), 0)
     assert a0[()] == 0
