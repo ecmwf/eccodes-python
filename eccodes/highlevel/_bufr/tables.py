@@ -10,6 +10,7 @@ import csv
 import ctypes
 import os
 import re
+import sys
 from collections import ChainMap, UserDict
 from dataclasses import dataclass
 from pathlib import Path
@@ -209,6 +210,8 @@ class Tables:
                 previous_code = code
             yield Descriptor(code, name)
 
+
+libcname = "msvcrt" if sys.platform.startswith("win") else None
 
 libc = ctypes.CDLL(
     None, winmode=0
