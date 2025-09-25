@@ -10,12 +10,13 @@ import io
 import warnings
 from functools import cached_property
 
-# flake8: noqa: F405
-#   ruff: noqa: F403
-
 from .common import *
 from .helpers import ensure_array, missing_of
 from .tables import Tables, Version
+
+# flake8: noqa: F405
+#   ruff: noqa: F403
+
 
 TEMPLATE_KEYS = dict.fromkeys(
     [

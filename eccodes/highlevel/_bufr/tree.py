@@ -10,12 +10,13 @@ import re
 from copy import copy
 from itertools import repeat
 
-# flake8: noqa: F405
-#   ruff: noqa: F403
-
 from .common import *
 from .helpers import RaggedArray, SingletonDict
 from .tables import Code, Element
+
+# flake8: noqa: F405
+#   ruff: noqa: F403
+
 
 INT_UNITS = re.compile(r"%|.*CODE TABLE.*|.*FLAG TABLE.*|Numeric|a|d|h|min|mon|s")
 

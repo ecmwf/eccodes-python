@@ -8,14 +8,15 @@
 
 import datetime as dt
 
-# flake8: noqa: F405
-#   ruff: noqa: F403
-
 from .coder import Coder
 from .common import *
 from .data import Data
 from .header import Header
 from .view import View
+
+# flake8: noqa: F405
+#   ruff: noqa: F403
+
 
 
 class Message(View):

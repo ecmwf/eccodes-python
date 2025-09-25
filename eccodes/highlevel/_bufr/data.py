@@ -8,9 +8,6 @@
 
 from functools import cached_property
 
-# flake8: noqa: F405
-#   ruff: noqa: F403
-
 from .coder import Coder
 from .common import *
 from .helpers import ensure_masked_array, flatten, missing_of
@@ -23,6 +20,10 @@ from .tree import (
     build_tree,
 )
 from .view import View
+
+# flake8: noqa: F405
+#   ruff: noqa: F403
+
 
 
 class Data(View):
