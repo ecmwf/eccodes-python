@@ -66,12 +66,12 @@ def test_ragged_array_insert():
 
 
 def test_ragged_array_bool():
-    assert bool(RaggedArray(0)) == False
-    assert bool(RaggedArray([])) == False
-    assert bool(RaggedArray([[]])) == False
-    assert bool(RaggedArray(1)) == True
-    assert bool(RaggedArray([0])) == True
-    assert bool(RaggedArray([[0]])) == True
+    assert not bool(RaggedArray(0))
+    assert not bool(RaggedArray([]))
+    assert not bool(RaggedArray([[]]))
+    assert bool(RaggedArray(1))
+    assert bool(RaggedArray([0]))
+    assert bool(RaggedArray([[0]]))
 
 
 # Test get_datetime()

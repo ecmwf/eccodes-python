@@ -31,8 +31,8 @@ def fixture(monkeypatch):
 )
 def test_workaround_for_ECC_2015():
     old = BUFRMessage(open("./sample-data/hdob.bufr"))
-    new = old.copy(subsets=[0])
-    new = old.copy(subsets=[1])  # would fail without the workaround
+    old.copy(subsets=[0])
+    old.copy(subsets=[1])  # would fail without the workaround
 
 
 def test_workaround_for_ECC_1624():

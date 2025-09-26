@@ -118,8 +118,8 @@ def test_message_sample_defaults():
     assert bufr["bufrHeaderCentre"] == 98
     assert bufr["bufrHeaderSubCentre"] == 0
     assert bufr["numberOfSubsets"] == 1
-    assert bufr["compressedData"] == False
-    assert bufr["section2Present"] == False
+    assert not bufr["compressedData"]
+    assert not bufr["section2Present"]
     assert np.all(bufr["unexpandedDescriptors"] == 307080)
     bufr = BUFRMessage("BUFR3_local")
     assert bufr["edition"] == 3
@@ -129,8 +129,8 @@ def test_message_sample_defaults():
     assert bufr["bufrHeaderCentre"] == 98
     assert bufr["bufrHeaderSubCentre"] == 0
     assert bufr["numberOfSubsets"] == 1
-    assert bufr["compressedData"] == False
-    assert bufr["section2Present"] == True
+    assert not bufr["compressedData"]
+    assert bufr["section2Present"]
     assert np.all(bufr["unexpandedDescriptors"] == 307080)
     bufr = BUFRMessage("BUFR4_local")
     assert bufr["edition"] == 4
@@ -140,7 +140,7 @@ def test_message_sample_defaults():
     assert bufr["bufrHeaderCentre"] == 98
     assert bufr["bufrHeaderSubCentre"] == 0
     assert bufr["numberOfSubsets"] == 1
-    assert bufr["compressedData"] == False
+    assert not bufr["compressedData"]
     assert np.all(bufr["unexpandedDescriptors"] == 307080)
     bufr = BUFRMessage("BUFR3_local_satellite")
     assert bufr["edition"] == 3
@@ -150,7 +150,7 @@ def test_message_sample_defaults():
     assert bufr["bufrHeaderCentre"] == 98
     assert bufr["bufrHeaderSubCentre"] == 0
     assert bufr["numberOfSubsets"] == 128
-    assert bufr["compressedData"] == True
+    assert bufr["compressedData"]
     assert np.all(bufr["unexpandedDescriptors"] == 310014)
     bufr = BUFRMessage("BUFR4_local_satellite")
     assert bufr["edition"] == 4
@@ -160,7 +160,7 @@ def test_message_sample_defaults():
     assert bufr["bufrHeaderCentre"] == 98
     assert bufr["bufrHeaderSubCentre"] == 0
     assert bufr["numberOfSubsets"] == 128
-    assert bufr["compressedData"] == True
+    assert bufr["compressedData"]
     assert np.all(bufr["unexpandedDescriptors"] == 310008)
 
 
@@ -172,7 +172,7 @@ def test_message_new_from_sample():
     bufr["masterTablesVersionNumber"] = 18
     bufr["localTablesVersionNumber"] = 0
     bufr["numberOfSubsets"] = 2
-    bufr["compressedData"] = True
+    bufr["compressedData"]
     # Input replication factors are optional; will default to 0 if not set.
     bufr["inputDelayedDescriptorReplicationFactor"] = [0, 0]
     bufr["inputShortDelayedDescriptorReplicationFactor"] = [0, 0, 0, 0, 0, 0]
