@@ -5,6 +5,7 @@ Changelog for eccodes-python
 2.44.0 (2025-mm-dd)
 --------------------
 
+- ECC-2102: Improved high-level interface for BUFR
 - ECC-2108: Implement a way of switching off error output to stderr
 - GitHub pull request #129: Update MemoryReader to read more than one field
 
