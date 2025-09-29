@@ -456,7 +456,7 @@ def test_grib_clone_headers_only1():
         longitudeOfLastGridPointInDegrees=355.0,
         iDirectionIncrementGiven=1,
         jDirectionIncrementGiven=1,
-        numberOfGridPoints=2664,  # for edition 2
+        numberOfGridPoints=2664,  # =72*37 (for both editions)
     )
     for sample in ("reduced_gg_pl_160_grib2", "reduced_gg_pl_160_grib1"):
         handle = eccodes.codes_grib_new_from_samples(sample)
