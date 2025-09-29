@@ -437,7 +437,7 @@ def test_grib_clone():
 
 
 def test_grib_clone_headers_only1():
-    if eccodes.codes_get_api_version(int) < 23400:
+    if eccodes.codes_get_api_version(int) < 24400:
         pytest.skip("ecCodes version too old")
     meta = dict(
         Ni=72,
@@ -454,16 +454,22 @@ def test_grib_clone_headers_only1():
         latitudeOfLastGridPointInDegrees=-90.0,
         longitudeOfFirstGridPointInDegrees=0.0,
         longitudeOfLastGridPointInDegrees=355.0,
-        numberOfDataPoints=2664,  # for edition 2
+        iDirectionIncrementGiven=1,
+        jDirectionIncrementGiven=1,
+        numberOfGridPoints=2664,  # for edition 2
     )
-    handle = eccodes.codes_grib_new_from_samples("reduced_gg_pl_160_grib2")
-    c = eccodes.codes_clone(handle, headers_only=True)
-    # set keys to change grid
-    eccodes.codes_set_key_vals(c, meta)
-    lon = eccodes.codes_get_array(c, "longitudes")
-    print(f"len lon={len(lon)}")
-    eccodes.codes_release(handle)
-    eccodes.codes_release(c)
+    for sample in ("reduced_gg_pl_160_grib2", "reduced_gg_pl_160_grib1"):
+        handle = eccodes.codes_grib_new_from_samples(sample)
+        c = eccodes.codes_clone(handle, headers_only=True)
+        # set keys to change grid
+        eccodes.codes_set_key_vals(c, meta)
+        lon = eccodes.codes_get_array(c, "longitudes")
+        print(f"GRIB sample {sample}: len lon={len(lon)}")
+        assert len(lon) == 72 * 37
+        eccodes.codes_set(c, "messageValidityChecks", "grid")
+        assert eccodes.codes_get(c, "isMessageValid") == 1
+        eccodes.codes_release(handle)
+        eccodes.codes_release(c)
 
 
 def test_grib_clone_headers_only2():
