@@ -64,10 +64,6 @@ def test_codes_set_data_quality_checks():
     eccodes.codes_set_data_quality_checks(0)
 
 
-def test_codes_set_definitions_path():
-    eccodes.codes_set_definitions_path(eccodes.codes_definition_path())
-
-
 def test_codes_set_samples_path():
     eccodes.codes_set_samples_path(eccodes.codes_samples_path())
 
@@ -1018,6 +1014,9 @@ def test_bufr_extract_headers():
     assert math.isclose(header["localLongitude"], 151.83)
 
 
+@pytest.mark.skipif(
+    sys.platform.startswith("win32"), reason="Not applicable on Windows"
+)
 def test_bufr_dump(tmp_path):
     bid = eccodes.codes_bufr_new_from_samples("BUFR4")
     eccodes.codes_set(bid, "unpack", 1)

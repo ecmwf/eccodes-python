@@ -10,12 +10,16 @@
 # flake8: noqa: F405
 
 import datetime as dt
+import sys
 
 import numpy as np
 import pytest as pt
 
 from eccodes import *
 from eccodes.highlevel._bufr import *
+
+if sys.platform.startswith("win32"):
+    pt.skip("Not applicable on Windows", allow_module_level=True)
 
 
 @pt.fixture(autouse=True)

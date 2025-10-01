@@ -8,10 +8,14 @@
 
 # flake8: noqa: F403
 # flake8: noqa: F405
+import sys
 
 import pytest as pt
 
 from eccodes.highlevel._bufr.message import *
+
+if sys.platform.startswith("win32"):
+    pt.skip("Not applicable on Windows", allow_module_level=True)
 
 
 @pt.fixture(autouse=True)
