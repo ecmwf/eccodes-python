@@ -7,9 +7,13 @@
 # nor does it submit to any jurisdiction.
 
 import io
+import sys
 from pathlib import Path
 
 import pytest
+
+if sys.platform.startswith("win32"):
+    pytest.skip("Not applicable on Windows", allow_module_level=True)
 
 
 @pytest.fixture(autouse=True)
