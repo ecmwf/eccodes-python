@@ -10,6 +10,7 @@ import csv
 import ctypes
 import os
 import re
+import sys
 from collections import ChainMap, UserDict
 from dataclasses import dataclass
 from pathlib import Path
@@ -210,8 +211,10 @@ class Tables:
             yield Descriptor(code, name)
 
 
+libcname = "msvcrt" if sys.platform.startswith("win") else None
+
 libc = ctypes.CDLL(
-    None, winmode=0
+    libcname, winmode=0
 )  # automatically finds and loads the C standard library
 
 fseek = libc.fseek
