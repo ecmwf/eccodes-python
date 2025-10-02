@@ -127,8 +127,8 @@ the following environment variable before importing eccodes::
 Usage
 -----
 
-See examples of how to use high-level BUFR interface: `TOUR.md <eccodes/highlevel/_bufr/TOUR.md>`_
-and `SNIPPETS.md <eccodes/highlevel/_bufr/SNIPPETS.md>`_.
+See examples of how to use the high-level BUFR interface: `BUFR_Tour.md <eccodes/highlevel/_bufr/BUFR_Tour.md>`_
+and `BUFR_Snippets.md <eccodes/highlevel/_bufr/BUFR_Snippets.md>`_.
 
 Refer to the *ecCodes* `documentation pages <https://confluence.ecmwf.int/display/ECC/Documentation>`_
 for usage.
