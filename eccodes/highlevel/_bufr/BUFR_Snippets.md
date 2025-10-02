@@ -1,4 +1,4 @@
-# Snippets
+# BUFR Snippets
 
 This document seeks to compile a collection of code snippets demonstrating common
 (but also less common) BUFR-handling tasks, utilising both the low-level and the

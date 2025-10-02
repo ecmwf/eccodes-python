@@ -1,4 +1,4 @@
-# Tour
+# BUFR Tour
 
 This document showcases some of the features of the high-level BUFR interface.
 
