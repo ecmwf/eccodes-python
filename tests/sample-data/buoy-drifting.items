@@ -1,0 +1,158 @@
+messageNumber 1
+edition 3
+masterTableNumber 0
+bufrHeaderSubCentre 0
+bufrHeaderCentre 98
+updateSequenceNumber 0
+dataCategory 1
+dataSubCategory 182
+masterTablesVersionNumber 22
+localTablesVersionNumber 0
+typicalYearOfCentury 15
+typicalMonth 7
+typicalDay 31
+typicalHour 10
+typicalMinute 41
+typicalDate 20150731
+typicalTime 104100
+numberOfSubsets 1
+observedData 1
+compressedData 0
+unexpandedDescriptors [315009]
+marineObservingPlatformIdentifier 3657
+longStationName SVP_B-PMT-PACIFIC_GYRE - PFO    
+dataBuoyType 1
+timeSignificance [26 25  2]
+year [2015 2015]
+month [7 7]
+day [31 31]
+hour [10 10]
+minute [41  0]
+latitude -55.98893
+longitude -17.17771
+platformTransmitterIdNumber 0126974     
+dataCollectionLocationSystem 1
+directionOfMotionOfMovingObservingPlatform --
+platformDriftSpeed --
+qualityOfBuoySatelliteTransmission 0
+qualityOfBuoyLocation 1
+locationQualityClassRangeOfRadiusOf66Confidence 3
+batteryVoltageLargeRange 8.200000000000001
+drogueType 1
+lagrangianDrifterDrogueStatus 1
+drogueDepth 15
+lagrangianDrifterSubmergenceTimeSubmerged 2
+temperatureObservationPrecision [-- -- --]
+oceanographicWaterTemperature [273.95 273.95]
+methodOfSalinityOrDepthMeasurement [-- --]
+seaSurfaceSalinity --
+surfaceType --
+iceThickness --
+shortDelayedDescriptorReplicationFactor [1 0 1 1]
+indicatorForDigitization [--]
+delayedDescriptorReplicationFactor [1]
+depthBelowWaterSurface [0.]
+salinity [--]
+nonCoordinatePressure --
+pressureReducedToMeanSeaLevel 99110.0
+anemometerType [--]
+heightOfSensorAboveWaterSurface [--]
+timePeriod [--]
+windDirection [--]
+windSpeed [--]
+durationOfWaveRecord [--]
+significantWaveHeight [--]
+maximumWaveHeight [--]
+averageWavePeriod [--]
+spectralPeakWavePeriod [--]
+directionFromWhichDominantWavesAreComing [--]
+directionalSpreadOfDominantWave [--]
+messageNumber 2
+edition 3
+masterTableNumber 0
+bufrHeaderSubCentre 0
+bufrHeaderCentre 98
+updateSequenceNumber 0
+dataCategory 1
+dataSubCategory 182
+masterTablesVersionNumber 22
+localTablesVersionNumber 0
+typicalYearOfCentury 16
+typicalMonth 11
+typicalDay 1
+typicalHour 0
+typicalMinute 0
+typicalDate 20161101
+typicalTime 000000
+rdbType 1
+oldSubtype 182
+localYear 2016
+localMonth 11
+localDay 1
+localHour 0
+localMinute 0
+localSecond 0
+rdbtimeDay 1
+rdbtimeHour 0
+rdbtimeMinute 24
+rdbtimeSecond 31
+rdbtimeTime 002431
+rectimeDay 10
+rectimeHour 10
+rectimeMinute 0
+rectimeSecond 0
+restricted 0
+correction1 0
+correction1Part 0
+correction2 0
+correction2Part 0
+correction3 0
+correction3Part 0
+correction4 0
+correction4Part 0
+qualityControl 70
+newSubtype 0
+numberOfSubsets 1
+localLatitude 61.3414
+localLongitude -10.3232
+ident 47549
+observedData 1
+compressedData 0
+unexpandedDescriptors [315009 225000 236000 101041  31031   1031   1032   8024 101002 225255]
+marineObservingPlatformIdentifier 4700549
+longStationName 300234063516680                 
+dataBuoyType 1
+timeSignificance [26 25]
+year [2016 2016]
+month [11 11]
+day [1 1]
+hour [0 0]
+minute [0 0]
+latitude 61.34140000000001
+longitude -10.323200000000002
+platformTransmitterIdNumber 300234063516
+dataCollectionLocationSystem 2
+directionOfMotionOfMovingObservingPlatform --
+platformDriftSpeed --
+qualityOfBuoySatelliteTransmission 0
+qualityOfBuoyLocation 0
+locationQualityClassRangeOfRadiusOf66Confidence 3
+batteryVoltageLargeRange 14.4
+drogueType 1
+lagrangianDrifterDrogueStatus 1
+drogueDepth 15
+lagrangianDrifterSubmergenceTimeSubmerged 1
+temperatureObservationPrecision [--]
+oceanographicWaterTemperature [283.35]
+methodOfSalinityOrDepthMeasurement [--]
+seaSurfaceSalinity --
+surfaceType --
+iceThickness --
+shortDelayedDescriptorReplicationFactor [0 0 0 0]
+nonCoordinatePressure 102880.0
+nonCoordinatePressure->differenceStatisticalValue --
+pressureReducedToMeanSeaLevel 102880.0
+pressureReducedToMeanSeaLevel->differenceStatisticalValue --
+centre 98
+generatingApplication 10
+differenceStatistics 40

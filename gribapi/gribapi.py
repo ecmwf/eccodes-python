@@ -464,6 +464,15 @@ def grib_multi_support_reset_file(fileobj):
     lib.grib_multi_support_reset_file(context, fileobj)
 
 
+@require(fileobj=file)
+def grib_context_set_logging(fileobj):
+    """
+    @brief Send logging messages to fileobj
+    """
+    context = lib.grib_context_get_default()
+    lib.grib_context_set_logging_file(context, fileobj)
+
+
 @require(msgid=int)
 def grib_release(msgid):
     """
@@ -2459,6 +2468,19 @@ def grib_set_data_quality_checks(val):
     assert val == 0 or val == 1 or val == 2
     context = lib.grib_context_get_default()
     lib.grib_context_set_data_quality_checks(context, val)
+
+
+@require(basename=str)
+def grib_full_defs_path(basename):
+    """
+    @brief Get the full path of a definition file
+    """
+    context = lib.grib_context_get_default()
+    path = lib.grib_context_full_defs_path(context, basename.encode(ENC))
+    if path:
+        return ffi.string(path).decode(ENC)
+    else:
+        return ""
 
 
 @require(defs_path=str)

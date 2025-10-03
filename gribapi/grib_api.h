@@ -139,9 +139,11 @@ void grib_multi_support_on(grib_context* c);
 void grib_multi_support_off(grib_context* c);
 void grib_multi_support_reset_file(grib_context* c, FILE* f);
 long grib_get_api_version(void);
+void grib_context_set_logging_file(grib_context* c, FILE* f);
 
 char* grib_samples_path(const grib_context *c);
 char* grib_definition_path(const grib_context *c);
+char* grib_context_full_defs_path(grib_context* c, const char* basename);
 
 grib_keys_iterator* grib_keys_iterator_new(grib_handle* h,unsigned long filter_flags, const char* name_space);
 bufr_keys_iterator* codes_bufr_keys_iterator_new(grib_handle* h, unsigned long filter_flags);
@@ -392,3 +394,5 @@ typedef struct codes_bufr_header {
 #define GRIB_WRONG_BITMAP_SIZE		-66
 /** Functionality not enabled */
 #define GRIB_FUNCTIONALITY_NOT_ENABLED		-67
+/** Runtime error */
+#define GRIB_RUNTIME_ERROR		-80

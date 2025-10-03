@@ -33,7 +33,7 @@ echo git $url $sha1 > versions
 
 vcpkg install pkgconf
 
-for p in libpng
+for p in libpng openjpeg
 do
     vcpkg install $p:$WINARCH-windows
     n=$(echo $p | sed 's/\[.*//')

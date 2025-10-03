@@ -15,6 +15,7 @@ Tests of the ecCodes Python3 bindings
 
 import math
 import os.path
+import sys
 
 import numpy as np
 import pytest
@@ -63,10 +64,6 @@ def test_codes_set_data_quality_checks():
     eccodes.codes_set_data_quality_checks(0)
 
 
-def test_codes_set_definitions_path():
-    eccodes.codes_set_definitions_path(eccodes.codes_definition_path())
-
-
 def test_codes_set_samples_path():
     eccodes.codes_set_samples_path(eccodes.codes_samples_path())
 
@@ -113,6 +110,21 @@ def test_codes_get_native_type():
     assert eccodes.codes_get_native_type(gid, "section_1") is None
     with pytest.raises(eccodes.NullHandleError):
         eccodes.codes_get_native_type(0, "aKey")  # NULL handle
+
+
+def test_set_logging_file():
+    if eccodes.codes_get_api_version(int) < 24400:
+        pytest.skip("ecCodes version too old")
+
+    nullDeviceFile = "/dev/null"
+    if os.path.exists(nullDeviceFile):
+        with open(nullDeviceFile, "w") as fnull:
+            eccodes.codes_context_set_logging(fnull)
+            with pytest.raises(eccodes.FileNotFoundError):
+                eccodes.codes_grib_new_from_samples("Silenced")
+            eccodes.codes_context_set_logging(sys.stderr)
+            with pytest.raises(eccodes.FileNotFoundError):
+                eccodes.codes_grib_new_from_samples("Restored")
 
 
 def test_new_from_file():
@@ -420,7 +432,43 @@ def test_grib_clone():
     eccodes.codes_release(clone)
 
 
-def test_grib_clone_headers_only():
+def test_grib_clone_headers_only1():
+    if eccodes.codes_get_api_version(int) < 24400:
+        pytest.skip("ecCodes version too old")
+    meta = dict(
+        Ni=72,
+        Nj=37,
+        Nx=72,
+        Ny=37,
+        gridType="regular_ll",
+        iDirectionIncrementInDegrees=5.0,
+        iScansNegatively=0,
+        jDirectionIncrementInDegrees=5.0,
+        jPointsAreConsecutive=0,
+        jScansPositively=0,
+        latitudeOfFirstGridPointInDegrees=90.0,
+        latitudeOfLastGridPointInDegrees=-90.0,
+        longitudeOfFirstGridPointInDegrees=0.0,
+        longitudeOfLastGridPointInDegrees=355.0,
+        iDirectionIncrementGiven=1,
+        jDirectionIncrementGiven=1,
+        numberOfGridPoints=2664,  # =72*37 (for both editions)
+    )
+    for sample in ("reduced_gg_pl_160_grib2", "reduced_gg_pl_160_grib1"):
+        handle = eccodes.codes_grib_new_from_samples(sample)
+        c = eccodes.codes_clone(handle, headers_only=True)
+        # set keys to change grid
+        eccodes.codes_set_key_vals(c, meta)
+        lon = eccodes.codes_get_array(c, "longitudes")
+        print(f"GRIB sample {sample}: len lon={len(lon)}")
+        assert len(lon) == 72 * 37
+        eccodes.codes_set(c, "messageValidityChecks", "grid")
+        assert eccodes.codes_get(c, "isMessageValid") == 1
+        eccodes.codes_release(handle)
+        eccodes.codes_release(c)
+
+
+def test_grib_clone_headers_only2():
     if eccodes.codes_get_api_version(int) < 23400:
         pytest.skip("ecCodes version too old")
 
@@ -525,6 +573,10 @@ def test_grib_get_values():
 
 
 def test_grib_geoiterator():
+    # version 2.44 has different sample values. See ECC-2110
+    if eccodes.codes_get_api_version(int) < 24400:
+        pytest.skip("ecCodes version too old")
+
     gid = eccodes.codes_grib_new_from_samples("reduced_gg_pl_256_grib2")
     iterid = eccodes.codes_grib_iterator_new(gid, 0)
     i = 0
@@ -535,7 +587,7 @@ def test_grib_geoiterator():
         [lat, lon, value] = result
         assert -90.0 < lat < 90.00
         assert 0.0 <= lon < 360.0
-        # assert math.isclose(value, 1.0, abs_tol=0.001)
+        assert math.isclose(value, 273.15, abs_tol=0.001)
         i += 1
     assert i == 348528
     eccodes.codes_grib_iterator_delete(iterid)
@@ -930,6 +982,7 @@ def test_bufr_multi_element_constant_arrays():
     numSubsets = eccodes.codes_get(bid, "numberOfSubsets")
     assert eccodes.codes_get_size(bid, "satelliteIdentifier") == numSubsets
     eccodes.codes_release(bid)
+    eccodes.codes_bufr_multi_element_constant_arrays_off()
 
 
 def test_bufr_new_from_samples_error():
@@ -997,6 +1050,9 @@ def test_bufr_extract_headers():
     assert math.isclose(header["localLongitude"], 151.83)
 
 
+@pytest.mark.skipif(
+    sys.platform.startswith("win32"), reason="Not applicable on Windows"
+)
 def test_bufr_dump(tmp_path):
     bid = eccodes.codes_bufr_new_from_samples("BUFR4")
     eccodes.codes_set(bid, "unpack", 1)

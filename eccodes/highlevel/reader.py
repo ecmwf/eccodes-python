@@ -74,12 +74,21 @@ class MemoryReader(ReaderBase):
     def __init__(self, buf, kind=eccodes.CODES_PRODUCT_GRIB):
         super().__init__(kind=kind)
         self.buf = buf
+        self._index = 0
 
     def _next_handle(self):
         if self.buf is None:
             return None
-        handle = eccodes.codes_new_from_message(self.buf)
-        self.buf = None
+        handle = eccodes.codes_new_from_message(self.buf[self._index :])
+
+        try:
+            handle_length = eccodes.codes_get(handle, "totalLength")
+        except eccodes.GribInternalError:
+            return None
+
+        self._index += handle_length
+        if self._index >= len(self.buf):
+            self.buf = None
         return handle
 
 

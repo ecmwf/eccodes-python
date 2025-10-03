@@ -35,6 +35,10 @@ class GribInternalError(Exception):
         return self.msg
 
 
+class RuntimeError(GribInternalError):
+    """Runtime error."""
+
+
 class FunctionalityNotEnabledError(GribInternalError):
     """Functionality not enabled."""
 
@@ -304,6 +308,7 @@ class EndOfFileError(GribInternalError):
 
 
 ERROR_MAP = {
+    -80: RuntimeError,
     -67: FunctionalityNotEnabledError,
     -66: WrongBitmapSizeError,
     -65: OutOfRangeError,

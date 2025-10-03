@@ -1,0 +1,90 @@
+messageNumber 1
+edition 3
+masterTableNumber 0
+bufrHeaderSubCentre 0
+bufrHeaderCentre 98
+updateSequenceNumber 0
+dataCategory 2
+dataSubCategory 96
+masterTablesVersionNumber 13
+localTablesVersionNumber 1
+typicalYearOfCentury 17
+typicalMonth 2
+typicalDay 16
+typicalHour 8
+typicalMinute 10
+typicalDate 20170216
+typicalTime 081000
+rdbType 4
+oldSubtype 96
+localYear 2017
+localMonth 2
+localDay 16
+localHour 8
+localMinute 10
+localSecond 0
+rdbtimeDay 16
+rdbtimeHour 9
+rdbtimeMinute 18
+rdbtimeSecond 50
+rdbtimeTime 091850
+rectimeDay 10
+rectimeHour 10
+rectimeMinute 0
+rectimeSecond 0
+restricted 0
+correction1 0
+correction1Part 1
+correction2 0
+correction2Part 0
+correction3 0
+correction3Part 0
+correction4 0
+correction4Part 0
+qualityControl 70
+newSubtype 0
+numberOfSubsets 1
+localLatitude 34.9
+localLongitude 132.07
+ident 47755
+observedData 1
+compressedData 0
+unexpandedDescriptors [301032   2003   2101   2106 201132 202130   2121 202000 201000 201133
+ 202129  25001 202000 201000  25020  25021   8021   4025 111000  31001
+   7007 204001  31021  11001 204000  11002 204001  31021  11006 204000
+  21030]
+blockNumber 47
+stationNumber 755
+stationType --
+year 2017
+month 2
+day 16
+hour 9
+minute 0
+latitude 34.9
+longitude 132.07
+heightOfStation 20
+measuringEquipmentType 6
+antennaType --
+3DbBeamwidth --
+meanFrequency --
+rangeGateLength --
+meanSpeedEstimation --
+windComputationEnhancement --
+timeSignificance 2
+timePeriod -10
+delayedDescriptorReplicationFactor 24
+height [ 291  582  873 1164 1455 1747 2038 2329 2620 2911 3202 3493 3784 4075
+ 4366 4657 4949 5240 5531 5822 6113 6404 6695 6986]
+windDirection [224 228 -- 220 228 232 -- -- -- -- -- -- 237 240 240 -- -- -- -- -- 249
+ 248 246 245]
+windDirection->associatedField [0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+windDirection->associatedField->associatedFieldSignificance [1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]
+windSpeed [10.100000000000001 13.0 -- 17.5 21.6 23.5 -- -- -- -- -- --
+ 18.400000000000002 19.400000000000002 20.1 -- -- -- -- --
+ 23.400000000000002 24.3 25.400000000000002 25.1]
+w [-0.17 -0.2 -- -1.1500000000000001 -0.42 -0.56 -- -- -- -- -- -- -0.28
+ -0.44 -0.24 -- -- -- -- -- -1.1300000000000001 -1.06 -0.93 -0.92]
+w->associatedField [0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+w->associatedField->associatedFieldSignificance [1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]
+signalToNoiseRatio [29 38 -- 23 29 29 -- -- -- -- -- -- 17 25 19 -- -- -- -- -- 22 24 25 19]
