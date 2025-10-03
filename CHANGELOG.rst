@@ -2,7 +2,7 @@
 Changelog for eccodes-python
 ============================
 
-2.44.0 (2025-mm-dd)
+2.44.0 (2025-10-03)
 --------------------
 
 - ECC-2102: Improved high-level interface for BUFR
