@@ -1,5 +1,6 @@
 include .dockerignore
 include *.rst
+recursive-include eccodes *.md
 include *.yml
 include Dockerfile
 include LICENSE
