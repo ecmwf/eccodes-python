@@ -24,5 +24,12 @@ jobs:
   pypi:
     needs: [wheel-windows]
     uses: ecmwf/reusable-workflows/.github/workflows/cd-pypi.yml@v2
+    with:
+      env_vars: |
+        {
+          "DEPEND_ON_ECCODESLIB": "1"
+        }
+      buildargs: --no-isolation
     secrets: inherit
+    
 
