@@ -17,6 +17,8 @@ import sys
 
 import setuptools
 
+binary = os.getenv("DEPEND_ON_ECCODESLIB", "") == "1"
+
 
 def read(path):
     file_path = os.path.join(os.path.dirname(__file__), *path.split("/"))
@@ -90,8 +92,13 @@ install_requires += [
     "attrs",
     "cffi",
     "findlibs",
-    "eccodeslib;platform_system!='Windows'",
 ]
+
+# only add eccodeslib as dependency if building a distribution that should depend on it
+if binary:
+    install_requires += [
+        "eccodeslib;platform_system!='Windows'",
+    ]
 
 setuptools.setup(
     name="eccodes",
