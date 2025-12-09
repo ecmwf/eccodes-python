@@ -14,8 +14,8 @@ from .gribapi import *  # noqa
 from .gribapi import __version__, lib
 
 # The minimum recommended version for the ecCodes package
-min_recommended_version_str = "2.42.0"
-min_recommended_version_int = 24200
+min_recommended_version_str = "2.43.0"
+min_recommended_version_int = 24300
 
 if lib.grib_get_api_version() < min_recommended_version_int:
     import warnings
