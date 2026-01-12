@@ -5,9 +5,10 @@ Changelog for eccodes-python
 2.45.0 (2025-mm-dd)
 --------------------
 
-- Option "--no-binary" does not work
+- GitHub issue 372: Option "--no-binary" does not work
   See: `#372 <https://github.com/ecmwf/eccodes/issues/372>`_.
-
+- GitHub issue 145: test run fails
+  See: `#145 <https://github.com/ecmwf/eccodes/issues/145>`_.
 
 2.44.0 (2025-10-03)
 --------------------
