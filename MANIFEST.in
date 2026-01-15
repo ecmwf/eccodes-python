@@ -1,5 +1,6 @@
 include .dockerignore
 include *.rst
+recursive-include eccodes *.md
 include *.yml
 include Dockerfile
 include LICENSE
@@ -16,5 +17,8 @@ recursive-include docs *.rst
 recursive-include gribapi *.h
 recursive-include tests *.grib2
 recursive-include tests *.grib
+recursive-include tests *.bufr
+recursive-include tests *.items
+recursive-include tests *.attributes
 recursive-include tests *.ipynb
 recursive-include tests *.py
