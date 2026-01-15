@@ -2,7 +2,7 @@
 Changelog for eccodes-python
 ============================
 
-2.45.0 (2025-mm-dd)
+2.45.0 (2025-01-16)
 --------------------
 
 - GitHub issue 372: Option "--no-binary" does not work
