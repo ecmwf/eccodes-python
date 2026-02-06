@@ -4,6 +4,7 @@ masterTableNumber 0
 bufrHeaderSubCentre 0
 bufrHeaderCentre 98
 updateSequenceNumber 0
+section1Flags 0
 dataCategory 1
 dataSubCategory 182
 masterTablesVersionNumber 22
@@ -73,6 +74,7 @@ masterTableNumber 0
 bufrHeaderSubCentre 0
 bufrHeaderCentre 98
 updateSequenceNumber 0
+section1Flags 128
 dataCategory 1
 dataSubCategory 182
 masterTablesVersionNumber 22
