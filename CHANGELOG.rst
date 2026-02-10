@@ -6,6 +6,7 @@ Changelog for eccodes-python
 --------------------
 
 - Fix path to BUFR md files
+- Add support for Python version 3.14
 
 2.45.0 (2025-01-16)
 --------------------
