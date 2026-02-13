@@ -380,7 +380,7 @@ class DataBlock(View):
         return is_missing
 
     def set(self, key: str, value: ValueLike) -> None:
-        self.__setitem__(self, key, value)
+        self.__setitem__(key, value)
 
     def set_missing(self, key: str) -> None:
         key = Key.from_string(key)
