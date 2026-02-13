@@ -345,9 +345,7 @@ class Coder:
                         codes_set(self._handle, f"#{rank}#{key}", value)
         else:
             if array.dtype.type == np.str_:
-                if array.size == 1:  # [1]
-                    codes_set(self._handle, key, array.data[0][0])
-                elif array.size > 1 and not np.any(array != array.data[0][0]):
+                if array.size > 1 and not np.any(array != array.data[0][0]):
                     codes_set_array(self._handle, key, array.data[0][0:1])
                 else:
                     codes_set_array(self._handle, key, array.data.ravel())
@@ -384,8 +382,6 @@ class Coder:
             codes_release(self._clone_handle)
             self._clone_handle = 0
 
-        # [1] This is a workaround for ECC-1623.
-        #
         # [2] If all values in an array are the same, encode only a single scalar value.
         #
         # [3] The key 'centre' is also an alias for the header key 'headerCentre',
