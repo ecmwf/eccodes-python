@@ -346,7 +346,7 @@ class Coder:
         else:
             if array.dtype.type == np.str_:
                 if array.size == 1:  # [1]
-                    codes_set(self._handle, key, array.data[0][0])
+                    codes_set(self._handle, key, array.data[0])
                 elif array.size > 1 and not np.any(array != array.data[0][0]):
                     codes_set_array(self._handle, key, array.data[0][0:1])
                 else:
