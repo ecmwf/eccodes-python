@@ -5,6 +5,7 @@ Changelog for eccodes-python
 2.46.0 (2026-02-dd)
 --------------------
 
+- ECC-2219: High-level BUFR interface: set method not working for data keys
 - Fix path to BUFR md files
 - Add support for Python version 3.14
 
