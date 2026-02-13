@@ -334,7 +334,7 @@ def test_data_assignment_with_non_native_types():
     bufr["latitude"] = np.float32(0)
 
 
-def test_data_set_string_uncompressed(): # ECC-2220
+def test_data_set_string_uncompressed():  # ECC-2220
     bufr = BUFRMessage("BUFR4")
     bufr["unexpandedDescriptors"] = [1025]
     bufr["stormIdentifier"] = "70A"
@@ -343,7 +343,7 @@ def test_data_set_string_uncompressed(): # ECC-2220
     assert bufr["stormIdentifier"] == "70A"
 
 
-def test_data_set_string_compressed(): # ECC-2220
+def test_data_set_string_compressed():  # ECC-2220
     bufr = BUFRMessage("BUFR4")
     bufr["compressedData"] = 1
     bufr["unexpandedDescriptors"] = [1025]
