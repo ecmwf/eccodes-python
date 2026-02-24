@@ -2,7 +2,7 @@
 Changelog for eccodes-python
 ============================
 
-2.46.0 (2026-02-dd)
+2.46.0 (2026-02-24)
 --------------------
 
 - ECC-2219: High-level BUFR interface: set method not working for data keys
