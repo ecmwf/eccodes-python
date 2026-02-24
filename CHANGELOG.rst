@@ -2,6 +2,14 @@
 Changelog for eccodes-python
 ============================
 
+2.46.0 (2026-02-24)
+--------------------
+
+- ECC-2219: High-level BUFR interface: set method not working for data keys
+- ECC-2220: Fix inadvertent string truncation in uncompressed BUFR messages
+- Fix path to BUFR md files
+- Add support for Python version 3.14
+
 2.45.0 (2025-01-16)
 --------------------
 
