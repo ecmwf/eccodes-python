@@ -1,3 +1,6 @@
+# syntax=docker/dockerfile:1.4
+# Requires Docker BuildKit due to the cache mounts.
+#
 # Run tests in a more reproducible and isolated environment.
 #
 # Build the docker image once with:
@@ -17,7 +20,7 @@ RUN apt-get -y update && apt-get install -y --no-install-recommends \
 COPY . /src/
 
 RUN --mount=type=cache,target=/root/.cache/pip cd /src \
-    && pip install --upgrade pip \
+    && python -m pip install --upgrade pip \
     && make local-install-test-req \
     && make local-develop \
     && make local-install-dev-req \
