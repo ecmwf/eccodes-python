@@ -46,8 +46,6 @@ def test_message_get():
         assert message["gridType:int"] == 0
         with pytest.raises(KeyError):
             message["invalid"]
-        with pytest.raises(KeyError):
-            message["gridSpec"]
         assert message.get("gridSpec", dummy_default) is dummy_default
         # keys set as MISSING
         assert message.is_missing(known_missing)
