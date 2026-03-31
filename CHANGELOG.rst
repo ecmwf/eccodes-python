@@ -2,6 +2,12 @@
 Changelog for eccodes-python
 ============================
 
+2.47.0 (2026-mm-dd)
+--------------------
+
+- Bump pygments from 2.15.0 to 2.20.0 in /ci (#164)
+- Bump requests from 2.32.4 to 2.33.0 in /ci (#163)
+
 2.46.0 (2026-02-24)
 --------------------
 
