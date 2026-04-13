@@ -6,25 +6,25 @@
 #
 apipkg==1.5
     # via execnet
-atomicwrites==1.3.0
-    # via pytest
-attrs==19.1.0
-    # via pytest
 coverage==4.5.3
     # via pytest-cov
 execnet==1.5.0
     # via pytest-cache
+iniconfig==2.3.0
+    # via pytest
 mccabe==0.6.1
     # via pytest-mccabe
-more-itertools==5.0.0
+packaging==26.0
     # via pytest
 pep8==1.7.1
     # via pytest-pep8
-pluggy==0.9.0
+pluggy==1.6.0
     # via pytest
 pyflakes==2.1.1
     # via pytest-flakes
-pytest==4.3.1
+pygments==2.20.0
+    # via pytest
+pytest==9.0.3
     # via
     #   -r requirements-tests.in
     #   pytest-cache
@@ -46,7 +46,3 @@ pytest-pep8==1.0.6
     # via -r requirements-tests.in
 pytest-runner==4.4
     # via -r requirements-tests.in
-six==1.12.0
-    # via
-    #   more-itertools
-    #   pytest
