@@ -24,7 +24,7 @@ markupsafe==2.1.5
     # via jinja2
 packaging==19.0
     # via sphinx
-pygments==2.15.0
+pygments==2.20.0
     # via sphinx
 pyparsing==2.3.1
     # via packaging
@@ -32,7 +32,7 @@ pytest-runner==4.4
     # via -r requirements-docs.in
 pytz==2018.9
     # via babel
-requests==2.32.4
+requests==2.33.0
     # via sphinx
 six==1.12.0
     # via
