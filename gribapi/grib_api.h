@@ -73,6 +73,7 @@ void grib_index_delete(grib_index* index);
 int grib_count_in_file(grib_context* c, FILE* f,int* n);
 grib_handle* grib_handle_new_from_file(grib_context* c, FILE* f, int* error);
 grib_handle* grib_handle_new_from_message_copy(grib_context* c, const void* data, size_t data_len);
+grib_handle* grib_handle_new_from_partial_message_copy(grib_context* c, const void* data, size_t data_len);
 grib_handle* grib_handle_new_from_samples (grib_context* c, const char* sample_name);
 grib_handle* grib_handle_clone(const grib_handle* h);
 grib_handle* grib_handle_clone_headers_only(const grib_handle* h);
