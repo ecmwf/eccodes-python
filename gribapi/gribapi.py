@@ -2403,7 +2403,7 @@ def grib_get_message(msgid):
 
 
 @require(message=(bytes, str, memoryview))
-def grib_new_from_message(message):
+def grib_new_from_message(message, partial=False):
     """
     @brief Create a handle from a message in memory.
 
@@ -2421,7 +2421,12 @@ def grib_new_from_message(message):
     if isinstance(message, str):
         message = message.encode(ENC)
 
-    h = lib.grib_handle_new_from_message_copy(ffi.NULL, message, len(message))
+    if partial:
+        h = lib.grib_handle_new_from_partial_message_copy(
+            ffi.NULL, message, len(message)
+        )
+    else:
+        h = lib.grib_handle_new_from_message_copy(ffi.NULL, message, len(message))
     if h == ffi.NULL:
         raise errors.MessageInvalidError("new_from_message failed")
     return put_handle(h)

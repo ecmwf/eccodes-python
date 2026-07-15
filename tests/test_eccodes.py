@@ -199,6 +199,25 @@ def test_new_from_message():
     # eccodes.codes_release(newgid)
 
 
+def test_new_from_partial_message():
+    fpath = get_sample_fullpath("gg_sfc_grib2.tmpl")
+    if fpath is None:
+        return
+    with open(fpath, "rb") as f:
+        # Num bytes to read just for the meta-data
+        # SECTION_1 ( length = 21 )
+        # SECTION_2 ( length = 17 )
+        # SECTION_3 ( length = 264 )
+        # SECTION_4 ( length = 34 )
+        data = f.read(400)
+        newgid = eccodes.codes_new_from_message(data, partial=True)
+        assert eccodes.codes_get(newgid, "longitudeOfLastGridPoint") == 358125000
+        assert eccodes.codes_get(newgid, "gridType") == "reduced_gg"
+        assert eccodes.codes_get(newgid, "N") == 48
+        assert eccodes.codes_get(newgid, "Nj") == 96
+        eccodes.codes_release(newgid)
+
+
 def test_new_from_message_memoryview():
     # ECC-2081
     fpath = get_sample_fullpath("gg_sfc_grib1.tmpl")
