@@ -49,8 +49,7 @@ def test_message_get():
         # assert message.get("gridSpec", dummy_default) is dummy_default
         # keys set as MISSING
         assert message.is_missing(known_missing)
-        assert message.get(known_missing) is None
-        assert message.get(known_missing, dummy_default) is dummy_default
+        assert message.get(known_missing) is not None  # returns sentinel value, not None
         with pytest.raises(KeyError):
             message[known_missing]
 

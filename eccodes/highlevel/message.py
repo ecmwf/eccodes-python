@@ -13,13 +13,15 @@ _TYPES_MAP = {
     "str": str,
 }
 
+_KEY_NOT_FOUND_ERRORS = (eccodes.KeyValueNotFoundError, eccodes.FunctionNotImplementedError)
+
 
 @contextmanager
 def raise_keyerror(name):
     """Make operations on a key raise a KeyError if not found"""
     try:
         yield
-    except (eccodes.KeyValueNotFoundError, eccodes.FunctionNotImplementedError):
+    except _KEY_NOT_FOUND_ERRORS:
         raise KeyError(name)
 
 
@@ -47,12 +49,12 @@ class Message:
                 ktype = _TYPES_MAP[stype]
             except KeyError:
                 raise ValueError(f"Unknown key type {stype!r}")
-        with raise_keyerror(name):
-            if eccodes.codes_is_missing(self._handle, name):
-                raise KeyError(name)
-            if eccodes.codes_get_size(self._handle, name) > 1:
-                return eccodes.codes_get_array(self._handle, name, ktype=ktype)
+        try:
             return eccodes.codes_get(self._handle, name, ktype=ktype)
+        except (eccodes.ArrayTooSmallError, eccodes.BufferTooSmallError):
+            return eccodes.codes_get_array(self._handle, name, ktype=ktype)
+        except _KEY_NOT_FOUND_ERRORS:
+            raise KeyError(name)
 
     def get(self, name, default=None, ktype=None):
         """Get the value of a key
@@ -98,11 +100,13 @@ class Message:
             )
 
         for name, value in key_values.items():
-            with raise_keyerror(name):
+            try:
                 if np.ndim(value) > 0:
                     eccodes.codes_set_array(self._handle, name, value)
                 else:
                     eccodes.codes_set(self._handle, name, value)
+            except _KEY_NOT_FOUND_ERRORS:
+                raise KeyError(name)
 
         if check_values:
             # Check values just set
@@ -124,8 +128,10 @@ class Message:
         KeyError
             If the key is not set
         """
-        with raise_keyerror(name):
+        try:
             return eccodes.codes_get_array(self._handle, name)
+        except _KEY_NOT_FOUND_ERRORS:
+            raise KeyError(name)
 
     def get_size(self, name):
         """Get the size of the given key
@@ -135,8 +141,10 @@ class Message:
         KeyError
             If the key is not set
         """
-        with raise_keyerror(name):
+        try:
             return eccodes.codes_get_size(self._handle, name)
+        except _KEY_NOT_FOUND_ERRORS:
+            raise KeyError(name)
 
     def get_data_points(self):
         raise NotImplementedError
@@ -149,8 +157,10 @@ class Message:
         KeyError
             If the key is not set
         """
-        with raise_keyerror(name):
+        try:
             return bool(eccodes.codes_is_missing(self._handle, name))
+        except _KEY_NOT_FOUND_ERRORS:
+            raise KeyError(name)
 
     def set_array(self, name, value):
         """Set the value of the given key
@@ -160,8 +170,10 @@ class Message:
         KeyError
             If the key does not exist
         """
-        with raise_keyerror(name):
+        try:
             return eccodes.codes_set_array(self._handle, name, value)
+        except _KEY_NOT_FOUND_ERRORS:
+            raise KeyError(name)
 
     def set_missing(self, name):
         """Set the given key as missing
@@ -171,10 +183,18 @@ class Message:
         KeyError
             If the key does not exist
         """
-        with raise_keyerror(name):
+        try:
             return eccodes.codes_set_missing(self._handle, name)
+        except _KEY_NOT_FOUND_ERRORS:
+            raise KeyError(name)
 
     def __getitem__(self, name):
+        name_clean = name.partition(":")[0]
+        try:
+            if eccodes.codes_is_missing(self._handle, name_clean):
+                raise KeyError(name)
+        except _KEY_NOT_FOUND_ERRORS:
+            raise KeyError(name)
         return self._get(name)
 
     def __setitem__(self, name, value):
