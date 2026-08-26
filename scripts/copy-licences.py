@@ -66,6 +66,7 @@ PATTERNS = {
 
 ALIASES = {
     "libeccodes_memfs": "libeccodes",
+    "libz": "libzlib1",
 }
 
 if False:
