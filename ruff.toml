@@ -1,0 +1,12 @@
+# Ruff configuration for eccodes-python.
+#
+# `select` pins the rule set to pyflakes plus the pycodestyle error subset
+# (Ruff's own default before 0.16), which mirrors what the existing flake8
+# setup in tox.ini enforces. Ruff 0.16 widened its defaults to a much larger
+# curated set; adopting those would require rewriting a large part of the code
+# base, so opt in explicitly instead of inheriting whatever a given Ruff
+# release defaults to.
+target-version = "py39"
+
+[lint]
+select = ["E4", "E7", "E9", "F"]
