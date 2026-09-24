@@ -33,8 +33,8 @@ import numpy as np
 from numpy.ma import MaskedArray  # noqa
 from numpy.typing import DTypeLike, NDArray  # noqa
 
-from eccodes.eccodes import KeyValueNotFoundError as NotFoundError
 from eccodes.eccodes import *  # noqa
+from eccodes.eccodes import KeyValueNotFoundError as NotFoundError
 
 from .tables import Element
 

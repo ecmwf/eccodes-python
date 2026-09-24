@@ -145,6 +145,21 @@ jobs:
 
     ################################################################
 
+      - name: Set up Python 3.14
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.14"
+          architecture: ${{ matrix.architecture }}
+
+      - run: ./scripts/wheel-windows.sh "3.14"
+      - uses: actions/upload-artifact@v4
+        name: Upload wheel 3.14
+        with:
+          name: wheel-windows-3.14-${{ matrix.architecture }}
+          path: wheelhouse/*.whl
+
+    ################################################################
+
 
   test:
     needs: build
@@ -152,7 +167,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13"]
+        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13", "3.14"]
         architecture: ["x64"]
 
     defaults:
@@ -196,7 +211,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13"]
+        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13", "3.14"]
         architecture: ["x64"]
 
     steps:
