@@ -23,7 +23,7 @@ import sys
 
 import cffi
 
-__version__ = "2.49.0"
+__version__ = "2.50.0"
 
 LOG = logging.getLogger(__name__)
 
