@@ -1,3 +1,6 @@
+# syntax=docker/dockerfile:1.4
+# Requires Docker BuildKit due to the cache mounts.
+#
 # Run tests in a more reproducible and isolated environment.
 #
 # Build the docker image once with:
@@ -5,17 +8,19 @@
 # Run the container with:
 #   docker run --rm -it -v `pwd`:/src eccodes-python
 #
-FROM bopen/ubuntu-pyenv:latest
+FROM python:3.9-slim
 
 ARG DEBIAN_FRONTEND="noninteractive"
 
 RUN apt-get -y update && apt-get install -y --no-install-recommends \
+        build-essential \
         libeccodes0 \
  && rm -rf /var/lib/apt/lists/*
 
 COPY . /src/
 
-RUN cd /src \
+RUN --mount=type=cache,target=/root/.cache/pip cd /src \
+    && python -m pip install --upgrade pip \
     && make local-install-test-req \
     && make local-develop \
     && make local-install-dev-req \
