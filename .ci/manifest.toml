@@ -1,0 +1,48 @@
+[package]
+name = "eccodes-python"
+repo = "ecmwf/eccodes-python"
+visibility = "public"
+fork-pull-requests = false
+compiler-inputs = []
+ci-pre-commit = false
+full-history = true
+
+[[deps]]
+repo = "ecmwf/eccodes"
+package = "eccodes"
+ref = "develop"
+compiler-inputs = ["cxx-compiler"]
+
+# A pure-Python upstream, built on the GitHub runner rather than in this container.
+[[deps]]
+repo = "ecmwf/findlibs"
+package = "findlibs"
+ref = "develop"
+compiler-inputs = []
+python-version-input = "python-version"
+platform-input = "python-platform"
+build-type-input = "python-build-type"
+
+[matrix.test]
+triggers = ["upstream-change", "rebuild-request"]
+
+# The container and compiler of eccodes' build, whose library the tests load.
+[matrix.test.defaults]
+job-script = "./.ci/test.sh.j2"
+runs-on = "ubuntu-latest"
+container = "eccr.ecmwf.int/public-ci-images/ubuntu24.04-gcc13-gfortran13"
+platform = "ubuntu-24.04"
+cxx-compiler = "g++-13"
+c-compiler = "gcc-13"
+build-type = "RelWithDebInfo"
+python-platform = "gh-ubuntu-26.04"
+python-build-type = "Release"
+
+[[matrix.test.include]]
+python-version = "3.11"
+
+[[matrix.test.include]]
+python-version = "3.12"
+
+[[matrix.test.include]]
+python-version = "3.13"
