@@ -12,6 +12,7 @@ repo = "ecmwf/eccodes"
 package = "eccodes"
 ref = "develop"
 compiler-inputs = ["cxx-compiler"]
+options = "eckit-geo"
 
 # A pure-Python upstream, built on the GitHub runner rather than in this container.
 [[deps]]
