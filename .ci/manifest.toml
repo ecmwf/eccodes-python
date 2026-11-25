@@ -3,6 +3,7 @@ name = "eccodes-python"
 repo = "ecmwf/eccodes-python"
 visibility = "public"
 fork-pull-requests = false
+allow-stale-deps = true
 compiler-inputs = []
 ci-pre-commit = false
 full-history = true
